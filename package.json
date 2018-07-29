@@ -1,9 +1,9 @@
 {
-  "name": "teraccoon_lesson_authoring",
+  "name": "TeraConnect",
   "version": "1.0.0",
   "description": "the authoring tool for recorded lesson.",
-  "main": "index.js",
-  "repository": "https://github.com/SuperDogHuman/teraccoon_lesson_authoring.git",
+  "main": "index.html",
+  "repository": "https://github.com/SuperDogHuman/teraconn.git",
   "author": "SuperDog <super.dog.less.than.human@gmail.com>",
   "license": "MIT",
   "dependencies": {
@@ -11,9 +11,12 @@
     "reactstrap": "^6.1.0"
   },
   "devDependencies": {
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
     "parcel-bundler": "^1.9.0"
   },
   "scripts": {
-    "build": "yarn run parcel build index.js"
+    "build": "parcel build index.html"
   }
 }
