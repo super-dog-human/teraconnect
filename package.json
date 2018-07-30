@@ -10,6 +10,7 @@
     "axios": "^0.18.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "react-fontawesome": "^1.6.1",
     "react-router-dom": "^4.3.1",
     "reactstrap": "^6.1.0"
   },
@@ -20,6 +21,7 @@
     "parcel-bundler": "^1.9.0"
   },
   "scripts": {
-    "build": "parcel build index.html"
+    "serve": "http-server -c-1 --cors ../teraconn_server/app_engine/src/teraconnect-authoring/static/teraconnect",
+    "build": "rm ../teraconn_server/app_engine/src/teraconnect-authoring/static/teraconnect/*; parcel build index.html --out-dir ../teraconn_server/app_engine/src/teraconnect-authoring/static/teraconnect"
   }
 }
