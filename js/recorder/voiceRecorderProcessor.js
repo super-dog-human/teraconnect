@@ -17,7 +17,7 @@ class Recorder extends AudioWorkletProcessor {
             this.isRecording = event.data.isRecording;
             if (this.isRecording) {
                 this.recordingStartSecond = currentTime;
-            } else {
+            } else if (this.buffers.length > 0) {
                 this.saveRecord();
             }
         };
