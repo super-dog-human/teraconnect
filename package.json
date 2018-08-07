@@ -8,11 +8,16 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.18.0",
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
+    "imports-loader": "^0.8.0",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
     "react-fontawesome": "^1.6.1",
+    "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
-    "reactstrap": "^6.1.0"
+    "reactstrap": "^6.3.1",
+    "redux": "^4.0.0",
+    "styled-jsx": "^3.0.0",
+    "three": "^0.95.0"
   },
   "devDependencies": {
     "babel-plugin-transform-runtime": "^6.23.0",
@@ -20,8 +25,17 @@
     "babel-preset-react": "^6.24.1",
     "parcel-bundler": "^1.9.0"
   },
+  "babel": {
+    "presets": [
+      "env",
+      "react"
+    ],
+    "plugins": [
+      "styled-jsx/babel"
+    ]
+  },
   "scripts": {
     "parcel": "parcel index.html",
-    "build": "rm ../teraconn_server/app_engine/src/teraconnect-authoring/static/teraconnect/*; parcel build index.html --out-dir ../teraconn_server/app_engine/src/teraconnect-authoring/static/teraconnect"
+    "build": "rm ../teraconn_server/app_engine/src/teraconnect-authoring/static/teraconnect/*; parcel build index.html --no-source-maps --out-dir ../teraconn_server/app_engine/src/teraconnect-authoring/static/teraconnect"
   }
 }

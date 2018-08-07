@@ -1,5 +1,7 @@
 import React from 'react';
-import TextForm from './text_forms';
+import Menu from '../menu';
+import TextForms from './textForms';
+import Player from './player';
 
 export default class Lessons extends React.Component {
   constructor(props) {
@@ -8,9 +10,11 @@ export default class Lessons extends React.Component {
 
   render() {
     return(
-    <div>
-      <TextForm lessonID={this.props.match.params.id}/>
-    </div>
+      <div>
+        <Menu /> { /* FIXME use HoCs */}
+        <Player lessonID={this.props.match.params.id}/>
+        <TextForms lessonID={this.props.match.params.id}/>
+      </div>
     )
   }
 }

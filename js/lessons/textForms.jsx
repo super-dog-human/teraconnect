@@ -1,7 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-import { Input, Nav, Navbar, NavItem } from 'reactstrap';
+import { Input } from 'reactstrap';
 import FontAwesome from 'react-fontawesome'
 
 const API_URL = "https://api.teraconnect.org/voice_text/";
@@ -10,8 +9,11 @@ export default class TextForm extends React.Component {
     constructor(props) {
       super(props);
       this.state = { voice_texts: [] };
+    }
+
+    componentDidMount() {
       axios
-        .get(API_URL + props.lessonID)
+        .get(API_URL + this.props.lessonID)
         .then((results) => {
           const voice_texts = results.data;
           if (voice_texts) {
@@ -26,23 +28,6 @@ export default class TextForm extends React.Component {
     render() {
       return(
         <div id="lessons">
-          <Navbar expand="md" className="app-color-beige">
-            <Nav className="mx-auto">
-                <NavItem>
-                  <Link to='#'>レビュー</Link>
-                </NavItem>
-                <NavItem>
-                  <Link to='#'>授業を作る</Link>
-                </NavItem>
-                <NavItem>
-                  <Link to='#'>教材を作る</Link>
-                </NavItem>
-                <NavItem>
-                  <Link to='#'>分析</Link>
-                </NavItem>
-            </Nav>
-          </Navbar>
-
           <div id="lines">
             {
               this.state.voice_texts.map((t, i) => {

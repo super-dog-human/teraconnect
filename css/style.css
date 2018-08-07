@@ -41,20 +41,17 @@ footer > div {
     font-size: 14px;
 }
 
-a { cursor: not-allowed }
-/* FIXME */
-
 header a { text-decoration: none; }
 header a:link { color: #ffffff; }
 header a:visited { color: #ffffff; }
 header a:hover { text-decoration: none; color: #ffffff; }
 header a:active { color: #ffffff; }
 
-#lessons nav {
+#menu nav {
     height: 55px;
 }
 
-#lessons > nav > ul > li {
+#menu > nav > ul > li {
     padding-top: 6px;
     display: block;
     min-width: 120px;
@@ -62,7 +59,7 @@ header a:active { color: #ffffff; }
     font-weight: bold;
 }
 
-#lessons > nav > ul > li::after {
+#menu > nav > ul > li::after {
     padding-top: 3px;
     display: block;
     content: "";
@@ -70,27 +67,28 @@ header a:active { color: #ffffff; }
     height: 3px;
 }
 
-#lessons > nav > ul > li:hover::after {
+#menu > nav > ul > li:hover::after {
     display: block;
     background-color: #EC9F05;
 }
 
-#lessons > nav > ul > li:nth-of-type(3)::after {
+#menu > nav > ul > li:nth-of-type(2)::after {
     display: block;
     background-color: #EC9F05;
 }
 
-#lessons > nav a { text-decoration: none; }
-#lessons > nav a:link { color: #616163; }
-#lessons > nav a:visited { color: #616163; }
-#lessons > nav a:hover { color: #616163; }
-#lessons > nav a:active { color: #616163; }
+#menu > nav a { text-decoration: none; }
+#menu > nav a:link { color: #616163; }
+#menu > nav a:visited { color: #616163; }
+#menu > nav a:hover { color: #616163; }
+#menu > nav a:active { color: #616163; }
 
 
 #lessons > #lines {
     min-height: 500px;
     background-color: #616163;
     padding-top: 50px;
+    padding-bottom: 50px;
 }
 
 #lessons > #lines > .line {
