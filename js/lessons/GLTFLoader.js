@@ -1143,11 +1143,10 @@ THREE.GLTFLoader = ( function () {
 	 */
 	function createDefaultMaterial() {
 
-		return new THREE.MeshStandardMaterial( {
+		return new THREE.MeshBasicMaterial( {
 			color: 0xFFFFFF,
 			emissive: 0x000000,
-			metalness: 1,
-			roughness: 1,
+			alphaTest: 0.1,
 			transparent: false,
 			depthTest: true,
 			side: THREE.FrontSide
@@ -2086,7 +2085,7 @@ THREE.GLTFLoader = ( function () {
 			// Specification:
 			// https://github.com/KhronosGroup/glTF/tree/master/specification/2.0#metallic-roughness-material
 
-			materialType = THREE.MeshStandardMaterial;
+			materialType = THREE.MeshBasicMaterial;
 
 			var metallicRoughness = materialDef.pbrMetallicRoughness || {};
 
@@ -2107,9 +2106,6 @@ THREE.GLTFLoader = ( function () {
 				pending.push( parser.assignTexture( materialParams, 'map', metallicRoughness.baseColorTexture.index ) );
 
 			}
-
-			materialParams.metalness = metallicRoughness.metallicFactor !== undefined ? metallicRoughness.metallicFactor : 1.0;
-			materialParams.roughness = metallicRoughness.roughnessFactor !== undefined ? metallicRoughness.roughnessFactor : 1.0;
 
 			if ( metallicRoughness.metallicRoughnessTexture !== undefined ) {
 

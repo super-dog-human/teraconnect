@@ -25,23 +25,23 @@ export default function (lessonID) {
 }
 
 function avatarDOM(avatarURL) {
-    let controls, dom, camera, scene, renderer;
+    let controls, dom, camera, scene, renderer, skinnedMeshes;
 
     init();
     animate();
     return dom;
 
     function init() {
-        camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.25, 20 );
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.25, 20);
         camera.position.set(0, 1.6, - 2.2);
 
         controls = new THREE.OrbitControls(camera);
-        controls.target.set(0, 0.9, 0);
+        controls.target.set(0, 1, 0);
         controls.update();
 
         scene = new THREE.Scene();
 
-        const light = new THREE.HemisphereLight(0xbbbbff, 0x444422);
+        const light = new THREE.AmbientLight(0xbbbbff);
         light.position.set(0, 1, 0);
         scene.add(light);
 
@@ -49,31 +49,14 @@ function avatarDOM(avatarURL) {
         loader.load(avatarURL, function (vrm) {
             vrm.scene.traverse(function (object) {
                 if (object.material) {
-                    if (Array.isArray(object.material)) {
-                        console.log("is array.");
-                        for (var i = 0, il = object.material.length; i < il; i ++) {
-                            const material = new THREE.MeshBasicMaterial();
-                            THREE.Material.prototype.copy.call(material, object.material[i]);
-                            material.color.copy(object.material[i].color);
-                            material.map = object.material[ i ].map;
-                            material.lights = false;
-                            object.material[i] = material;
-                        }
-                    } else {
-                        const material = new THREE.MeshBasicMaterial();
-                        THREE.Material.prototype.copy.call(material, object.material);
-                        material.color.copy(object.material.color);
-                        material.map = object.material.map;
-                        material.lights = false;
-                        material.alphaTest = 0.1;
-                        object.material = material;
+                    if (!Array.isArray(object.material)) {
+                        object.material.alphaTest = 0.1;
                     }
-                } else {
-                    console.log(object);
                 }
-            } );
+            });
             scene.add(vrm.scene);
-            vrm.scene.position.z += 1;
+            skinnedMeshes = vrm.scene.children[1].children;
+
             console.log('loaded.');
         } );
 
@@ -83,11 +66,21 @@ function avatarDOM(avatarURL) {
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.gammaOutput = true;
         dom = renderer.domElement;
+
         window.addEventListener('resize', onWindowResize, false);
     }
 
     function animate() {
         requestAnimationFrame(animate);
+
+        if (skinnedMeshes != undefined) {
+            skinnedMeshes.forEach((skin) => {
+                skin.skeleton.bones.forEach((bone) => {
+//                    console.log(bone.name);
+//                    bone.rotation.y = 0.5;
+                });
+            });
+        }
         renderer.render(scene, camera);
     }
 
