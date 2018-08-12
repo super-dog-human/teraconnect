@@ -36,7 +36,7 @@ function jumpAnimationAt(timeSec) {
 }
 
 function avatarDOM(avatarURL) {
-    const boneNames = ["J_Bip_C_Head", "J_Adj_L_UpperArm", "J_Bip_L_LowerArm", "J_Adj_R_UpperArm", "J_Bip_R_LowerArm"];
+    const bones = {};
     const clock = new THREE.Clock();
     let controls, dom, camera, scene, renderer;
 
@@ -62,14 +62,20 @@ function avatarDOM(avatarURL) {
             vrm.scene.traverse(function (object) {
                 if (object.material) {
                     if (!Array.isArray(object.material)) {
-                        object.material.alphaTest = 0.1;
+                        object.material.transparent = true;
+                        object.material.alphaTest = 0.5;
                     }
+                } else if (object.isBone) {
+                    bones[object.name] = object;
                 }
             });
             scene.add(vrm.scene);
 
-            setAnimation(vrm.scene);
+            setAnimations(vrm.scene);
             animate();
+
+//            const skeletonHelper = new THREE.SkeletonHelper(vrm.scene);
+//            scene.add(skeletonHelper);
         } );
 
         renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -80,38 +86,99 @@ function avatarDOM(avatarURL) {
         dom = renderer.domElement;
 
         window.addEventListener('resize', onWindowResize, false);
+        window.onbeforeunload = function(e) {
+            scene.remove(scene.children)
+            return;
+        };
     }
 
-    function setAnimation(vrm) {
+    function setAnimations(vrm) {
+        // initial arm positions.
+        bones.J_Adj_L_UpperArm.parent.rotateZ(70 * Math.PI / 180);
+        bones.J_Adj_R_UpperArm.parent.rotateZ(-70 * Math.PI / 180);
+
+        const breathBones = [bones.J_Bip_C_Head, bones.J_Adj_C_UpperChest, bones.J_Adj_C_Spine];
+        const breathKeypoints = [
+            {
+                keys: [
+                    // head
+                    {
+                        rot: [0, 0, 0, 1],
+                        time: 0,
+                    },
+                    {
+                        rot: [-0.01, 0, 0, 1],
+                        time: 1,
+                    },
+                    {
+                        rot: [0, 0, 0, 1],
+                        time: 2,
+                    },
+                    {
+                        rot: [0.01, 0, 0, 1],
+                        time: 3,
+                    },
+                    {
+                        rot: [0, 0, 0, 1],
+                        time: 4,
+                    },
+                    {
+                        rot: [-0.01, 0, 0, 1],
+                        time: 5,
+                    },
+                    {
+                        rot: [0, 0, 0, 1],
+                        time: 6,
+                    },
+
+                ]
+            },
+            {
+                // upper chest
+                keys: [
+                    {
+                        scl: [1, 1, 1],
+                        rot: [0, 0, 0, 1],
+                        time: 0,
+                    },
+                    {
+                        scl: [1.02, 1, 1.02],
+                        rot: [0.05, 0, 0, 1],
+                        time: 3,
+                    },
+                    {
+                        scl: [1, 1, 1],
+                        rot: [0, 0, 0, 1],
+                        time: 6,
+                    }
+                ],
+            },
+            {
+                // spine
+                keys: [
+                    {
+                        rot: [0, 0, 0, 1],
+                        time: 0,
+                    },
+                    {
+                        rot: [0, 1, 0, 1],
+                        time: 3,
+                    },
+                    {
+                        rot: [0, 0, 0, 1],
+                        time: 6,
+                    }
+                ]
+            }
+        ];
+        const breathClip = THREE.AnimationClip.parseAnimation({
+            name: "breath",
+            hierarchy: breathKeypoints,
+          }, breathBones);
+
         const skin = vrm.children[1].children[0];
-        const bones = skin.skeleton.bones.filter((b) => {
-            return boneNames.includes(b.name);
-        });
-
-        const clip = THREE.AnimationClip.parseAnimation({
-            hierarchy: [
-                {
-                    length: 2,
-                    keys: [
-                        {
-                            rot: [-0, 0, 0, 1],
-                            time: 0,
-                        },
-                        {
-                            rot: [-0, 2, 0, 1],
-                            time: 1,
-                        },
-                        {
-                            rot: [-0, 0, 0, 1],
-                            time: 2,
-                        }
-                    ],
-                },
-            ]
-          }, bones);
-
         animationMixer = new THREE.AnimationMixer(skin);
-        animationAction = animationMixer.clipAction(clip);
+        animationAction = animationMixer.clipAction(breathClip);
         animationAction.play();
     }
 
