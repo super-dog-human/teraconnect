@@ -3,36 +3,24 @@ import * as THREE from 'three';
 import './GLTFLoader';
 import './OrbitControls'
 
-const API_URL        = "https://api.teraconnect.org/";
-const LESSON_API_URL = API_URL + "lessons/{lessonID}";
-const AVATAR_API_URL = API_URL + "avatars/{avatarID}/url";
-
 let animationAction, animationMixer;
 
-export default function (lessonID) {
-    const lessonURL = LESSON_API_URL.replace("{lessonID}", lessonID);
-    return axios.get(lessonURL)
-        .then((response) => {
-            const avatarID = response.data.avatar.id;
-            const avatarURL = AVATAR_API_URL.replace("{avatarID}", avatarID);
-            return axios.get(avatarURL);
-        })
-        .then((response) => {
-//            const avatarFileURL = response.data.signed_url;
-            const avatarFileURL = `http://localhost:1234/bdiuotgrbj8g00l9t3ng.vrm`;
-            return avatarDOM(avatarFileURL);
-        })
-        .catch((err) => {
-            console.error(err);
-        });
+export default function (avatarFileURL) {
+    return avatarDOM(avatarFileURL);
 }
 
-function switchAnimation(isPlaying) {
-    if (isPlaying) animationAction.play();
-}
+export function controller() {
+    function loadLessonAnimation(keypoints) {
+        //
+    }
 
-function jumpAnimationAt(timeSec) {
+    function switchAnimation(isPlaying) {
+        if (isPlaying) animationAction.play();
+    }
 
+    function jumpAnimationAt(timeSec) {
+
+    }
 }
 
 function avatarDOM(avatarURL) {
@@ -76,7 +64,7 @@ function avatarDOM(avatarURL) {
 
 //            const skeletonHelper = new THREE.SkeletonHelper(vrm.scene);
 //            scene.add(skeletonHelper);
-        } );
+        });
 
         renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setClearColor(new THREE.Color(0xEEEEEE));
@@ -94,80 +82,39 @@ function avatarDOM(avatarURL) {
 
     function setAnimations(vrm) {
         // initial arm positions.
-        bones.J_Adj_L_UpperArm.parent.rotateZ(70 * Math.PI / 180);
-        bones.J_Adj_R_UpperArm.parent.rotateZ(-70 * Math.PI / 180);
+        const rad70 = 1.2217304763960306;
+        bones.J_Adj_L_UpperArm.parent.rotateZ(rad70);
+        bones.J_Adj_R_UpperArm.parent.rotateZ(-rad70);
 
+        // breathing animation.
         const breathBones = [bones.J_Bip_C_Head, bones.J_Adj_C_UpperChest, bones.J_Adj_C_Spine];
         const breathKeypoints = [
             {
+                // head
                 keys: [
-                    // head
-                    {
-                        rot: [0, 0, 0, 1],
-                        time: 0,
-                    },
-                    {
-                        rot: [-0.01, 0, 0, 1],
-                        time: 1,
-                    },
-                    {
-                        rot: [0, 0, 0, 1],
-                        time: 2,
-                    },
-                    {
-                        rot: [0.01, 0, 0, 1],
-                        time: 3,
-                    },
-                    {
-                        rot: [0, 0, 0, 1],
-                        time: 4,
-                    },
-                    {
-                        rot: [-0.01, 0, 0, 1],
-                        time: 5,
-                    },
-                    {
-                        rot: [0, 0, 0, 1],
-                        time: 6,
-                    },
-
+                    { rot: [0, 0, 0, 1],     time: 0, },
+                    { rot: [-0.01, 0, 0, 1], time: 1, },
+                    { rot: [0, 0, 0, 1],     time: 2, },
+                    { rot: [0.01, 0, 0, 1],  time: 3, },
+                    { rot: [0, 0, 0, 1],     time: 4, },
+                    { rot: [-0.01, 0, 0, 1], time: 5, },
+                    { rot: [0, 0, 0, 1],     time: 6, },
                 ]
             },
             {
                 // upper chest
                 keys: [
-                    {
-                        scl: [1, 1, 1],
-                        rot: [0, 0, 0, 1],
-                        time: 0,
-                    },
-                    {
-                        scl: [1.02, 1, 1.02],
-                        rot: [0.05, 0, 0, 1],
-                        time: 3,
-                    },
-                    {
-                        scl: [1, 1, 1],
-                        rot: [0, 0, 0, 1],
-                        time: 6,
-                    }
+                    { scl: [1, 1, 1],       rot: [0, 0, 0, 1],    time: 0, },
+                    { scl: [1.02, 1, 1.02], rot: [0.05, 0, 0, 1], time: 3, },
+                    { scl: [1, 1, 1],       rot: [0, 0, 0, 1],    time: 6, },
                 ],
             },
             {
                 // spine
                 keys: [
-                    {
-                        rot: [0, 0, 0, 1],
-                        time: 0,
-                    },
-                    {
-                        rot: [0, 1, 0, 1],
-                        time: 3,
-                    },
-                    {
-                        rot: [0, 0, 0, 1],
-                        time: 6,
-                    }
+                    { rot: [0, 0, 0, 1], time: 0, },
+                    { rot: [0, 1, 0, 1], time: 3, },
+                    { rot: [0, 0, 0, 1], time: 6, },
                 ]
             }
         ];
