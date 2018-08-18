@@ -22,7 +22,7 @@ export default class LessonAvatar {
 
         this.animationMixer = new THREE.AnimationMixer(this.skin);
         this.setDefaultAnimation();
-        this.setRecordAnimation();
+        this.setRecordedAnimation();
 
         this.animate();
     }
@@ -79,7 +79,7 @@ export default class LessonAvatar {
         this.animationMixer.clipAction(breathClip);
     }
 
-    setRecordAnimation() {
+    setRecordedAnimation() {
         const poseBones = [
             this.bones.J_Adj_L_UpperArm.parent,
             this.bones.J_Adj_R_UpperArm.parent,
@@ -98,7 +98,9 @@ export default class LessonAvatar {
             hierarchy: poseKeys,
         }, poseBones);
 
-        this.animationMixer.clipAction(poseClip);
+        const action = this.animationMixer.clipAction(poseClip);
+        action.repetitions = 0;
+
     }
 
     play(isStart) {
