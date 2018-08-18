@@ -4,11 +4,9 @@ import { Route } from 'react-router-dom';
 import Header from './header'
 import Footer from './footer'
 import Home from './home'
-import Editor from './lessonEditor/index'
-import Recorder from './lessonRecorder/index'
-import Player from './lessonPlayer/index'
-
-const API_URL = "https://api.teraconnect.org/voice_text/";
+import Editor from './lessonEditor'
+import Recorder from './lessonRecorder'
+import Player from './lessonPlayer'
 
 const App = () => (
   <div>

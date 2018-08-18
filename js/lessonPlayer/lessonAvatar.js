@@ -1,94 +1,46 @@
-import axios from 'axios';
 import * as THREE from 'three';
 import './GLTFLoader';
 import './OrbitControls'
 
-let animationAction, animationMixer;
-
-export default function (avatarFileURL) {
-    return avatarDOM(avatarFileURL);
-}
-
-export function controller() {
-    function loadLessonAnimation(keypoints) {
-        //
+export default class LessonAvatar {
+    constructor() {
+        this.clock = new THREE.Clock();
+        this.lesson = {};
+        this.material = {};
+        this.bones = {};
+        this.controls;
+        this.camera;
+        this.scene;
+        this.renderer;
+        this.skin;
+        this.animationMixer;
     }
 
-    function switchAnimation(isPlaying) {
-        if (isPlaying) animationAction.play();
+    loadLesson(lesson, material) {
+        this.lesson   = lesson;
+        this.material = material;
+
+        this.animationMixer = new THREE.AnimationMixer(this.skin);
+        this.setDefaultAnimation();
+        this.setRecordAnimation();
+
+        this.animate();
     }
 
-    function jumpAnimationAt(timeSec) {
-
-    }
-}
-
-function avatarDOM(avatarURL) {
-    const bones = {};
-    const clock = new THREE.Clock();
-    let controls, dom, camera, scene, renderer;
-
-    init();
-    return dom;
-
-    function init() {
-        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.25, 20);
-        camera.position.set(0, 1.6, - 2.2);
-
-        controls = new THREE.OrbitControls(camera);
-        controls.target.set(0, 1, 0);
-        controls.update();
-
-        scene = new THREE.Scene();
-
-        const light = new THREE.AmbientLight(0xbbbbff);
-        light.position.set(0, 1, 0);
-        scene.add(light);
-
-        const loader = new THREE.GLTFLoader();
-        loader.load(avatarURL, (vrm) => {
-            vrm.scene.traverse(function (object) {
-                if (object.material) {
-                    if (!Array.isArray(object.material)) {
-                        object.material.transparent = true;
-                        object.material.alphaTest = 0.5;
-                    }
-                } else if (object.isBone) {
-                    bones[object.name] = object;
-                }
-            });
-            scene.add(vrm.scene);
-
-            setAnimations(vrm.scene);
-            animate();
-
-//            const skeletonHelper = new THREE.SkeletonHelper(vrm.scene);
-//            scene.add(skeletonHelper);
-        });
-
-        renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setClearColor(new THREE.Color(0xEEEEEE));
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.gammaOutput = true;
-        dom = renderer.domElement;
-
-        window.addEventListener('resize', onWindowResize, false);
-        window.onbeforeunload = function(e) {
-            scene.remove(scene.children)
-            return;
-        };
-    }
-
-    function setAnimations(vrm) {
-        // initial arm positions.
+    setDefaultAnimation() {
+        // initial arm positions
         const rad70 = 1.2217304763960306;
-        bones.J_Adj_L_UpperArm.parent.rotateZ(rad70);
-        bones.J_Adj_R_UpperArm.parent.rotateZ(-rad70);
+        this.bones.J_Adj_L_UpperArm.parent.rotateZ(rad70);
+        this.bones.J_Adj_R_UpperArm.parent.rotateZ(-rad70);
 
-        // breathing animation.
-        const breathBones = [bones.J_Bip_C_Head, bones.J_Adj_C_UpperChest, bones.J_Adj_C_Spine];
-        const breathKeypoints = [
+        // breathing animation
+        const breathBones = [
+            this.bones.J_Bip_C_Head,
+            this.bones.J_Adj_C_UpperChest,
+            this.bones.J_Adj_C_Spine,
+        ];
+
+        const breathKeys = [
             {
                 // head
                 keys: [
@@ -116,28 +68,136 @@ function avatarDOM(avatarURL) {
                     { rot: [0, 1, 0, 1], time: 3, },
                     { rot: [0, 0, 0, 1], time: 6, },
                 ]
-            }
+            },
         ];
+
         const breathClip = THREE.AnimationClip.parseAnimation({
             name: "breath",
-            hierarchy: breathKeypoints,
-          }, breathBones);
+            hierarchy: breathKeys,
+        }, breathBones);
 
-        const skin = vrm.children[1].children[0];
-        animationMixer = new THREE.AnimationMixer(skin);
-        animationAction = animationMixer.clipAction(breathClip);
-        animationAction.play();
+        this.animationMixer.clipAction(breathClip);
     }
 
-    function animate() {
-        requestAnimationFrame(animate);
-        animationMixer.update(clock.getDelta());
-        renderer.render(scene, camera);
+    setRecordAnimation() {
+        const poseBones = [
+            this.bones.J_Adj_L_UpperArm.parent,
+            this.bones.J_Adj_R_UpperArm.parent,
+            this.bones.J_Bip_L_LowerArm,
+            this.bones.J_Bip_R_LowerArm,
+        ];
+
+        const poseKeys = [];
+        poseKeys.push({ keys: this.lesson.poseKey.leftShoulders });
+        poseKeys.push({ keys: this.lesson.poseKey.rightShoulders });
+        poseKeys.push({ keys: this.lesson.poseKey.leftElbows });
+        poseKeys.push({ keys: this.lesson.poseKey.rightElbows });
+
+        const poseClip = THREE.AnimationClip.parseAnimation({
+            name: "pose",
+            hierarchy: poseKeys,
+        }, poseBones);
+
+        this.animationMixer.clipAction(poseClip);
     }
 
-    function onWindowResize() {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize( window.innerWidth, window.innerHeight );
+    play(isStart) {
+        if (isStart) {
+            this.animationMixer._actions.forEach((action) => {
+                action.paused = false;
+                action.play();
+            });
+        } else {
+            this.animationMixer._actions.forEach((action) => {
+                action.paused = true;
+            });
+        }
+        //this.animationMixer.stopAllAction();
+    }
+
+    jumpAnimationAt(timeSec) {
+        this.animationAction.startAt(timeSec);
+    }
+
+    animate() {
+        requestAnimationFrame(() => this.animate());
+        this.animationMixer.update(this.clock.getDelta());
+        // show graphics / texts
+        this.renderer.render(this.scene, this.camera);
+    }
+
+    createDom(avatarURL) {
+        this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.25, 20);
+        this.camera.position.set(0, 1.6, - 2.2);
+
+        this.controls = new THREE.OrbitControls(this.camera);
+        this.controls.target.set(0, 1, 0);
+        this.controls.update();
+
+        this.scene = new THREE.Scene();
+        window.onbeforeunload = () => {
+            this.scene.remove(this.scene.children)
+            return;
+        };
+
+        const light = new THREE.AmbientLight(0xbbbbff);
+        light.position.set(0, 1, 0);
+        this.scene.add(light);
+
+        return new Promise((resolve) => {
+            new THREE.GLTFLoader().load(
+                avatarURL, (vrm) => { resolve(vrm); }
+            );
+        }).then((vrm) =>{
+            this.skin = vrm.scene.children[1].children[0];
+
+            vrm.scene.traverse((object) => {
+                if (object.material) {
+                    if (!Array.isArray(object.material)) {
+                        object.material.transparent = true;
+                        object.material.alphaTest = 0.5;
+                    }
+                } else if (object.isBone) {
+                    this.bones[object.name] = object;
+                }
+            });
+
+            // set upper arm bones to top level.
+            const boneInverses = this.skin.skeleton.boneInverses;
+            const defaultMatrix4 = new THREE.Matrix4();
+            defaultMatrix4.set(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);
+            boneInverses.push(defaultMatrix4, defaultMatrix4);
+
+            const bones = this.skin.skeleton.bones;
+            bones.push(this.bones.J_Adj_L_UpperArm.parent, this.bones.J_Adj_R_UpperArm.parent);
+            this.skin.skeleton = new THREE.Skeleton(bones, boneInverses);
+
+            this.scene.add(vrm.scene);
+
+            this.renderer = new THREE.WebGLRenderer({ antialias: true });
+            this.renderer.setClearColor(new THREE.Color(0xFFFFFF));
+            this.renderer.setPixelRatio(window.devicePixelRatio);
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+            this.renderer.gammaOutput = true;
+
+            return this.renderer.domElement;
+        });
     }
 }
+
+
+/*
+var texture = new THREE.TextureLoader().load('path/to/file.jpg',
+(tex) => { // 読み込み完了時
+    // 縦横比を保って適当にリサイズ
+    const w = 5;
+    const h = tex.image.height/(tex.image.width/w);
+
+    // 平面
+    const geometry = new THREE.PlaneGeometry(1, 1);
+    const material = new THREE.MeshPhongMaterial( { map:texture } );
+    const plane = new THREE.Mesh( geometry, material );
+    plane.scale.set(w, h, 1);
+    scene.add( plane );
+});
+*/
