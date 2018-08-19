@@ -2,55 +2,58 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import LessonLoader from './lessonLoader';
 import LessonAvatar from './lessonAvatar';
-import PlayerController from './playerController';
+import LessonPlayer from './lessonPlayer';
 
-export default class LessonPlayer extends React.Component {
+export default class LessonPlayerScreen extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
+        this.container;
+        this.playerElement;
 
-        window.onblur = ((e) => {
-        // TODO stop avatar motion.
-        });
-
-        window.onfocus = ((e) => {
-        // TODO resume avatar motion.
-        });
-  }
+        this.state = {
+            avatar: null,
+            loader: null,
+        };
+    }
 
     componentDidMount() {
         const loader = new LessonLoader(this.props.match.params.id);
         const avatar = new LessonAvatar();
+
+        const multiplier = 0.5625; // 16:9
+        const playerWidth = this.container.clientWidth;
+        const playerHeight = Math.round(playerWidth * multiplier);
+
         if (this.props.isPreview) {
             loader.loadForPreview();
             // TODO
         } else {
             loader.loadForPlayAsync().then(() => {
-                return avatar.createDom(loader.avatarFileURL);
+                return avatar.createDom(loader.avatarFileURL, playerWidth, playerHeight);
             })
             .then((dom) => {
-                ReactDOM.findDOMNode(this).append(dom);
-                avatar.loadLesson(loader.lesson, loader.material);
-
-                avatar.play(true);
+                ReactDOM.findDOMNode(this.playerElement).append(dom);
+                avatar.loadLesson(loader.lesson.poseKey);
+                this.setState({ avatar: avatar, loader: loader });
             });
         }
     }
 
-    componentWillUnmount() {
-        // scene remove in avatar
-        // window.URL.revokeObjectURL();
-        // clear redux
-    }
-
     render() {
         return (
-        <div id="player">
-            <PlayerController />
-        </div>
+            <div id="lesson-player-screen" ref={(e) => { this.container = e; }}>
+                <LessonPlayer avatar={this.state.avatar} loader={this.state.loader} ref={(e) => { this.playerElement = e; }} />
+            </div>
         );
+    }
+
+
+    componentWillUnmount() {
+        this.state.loader.clearBeforeUnload();
+        this.state.avatar.clearBeforeUnload();
     }
 }
 
-LessonPlayer.defaultProps = {
+LessonPlayerScreen.defaultProps = {
   isPreview: false
 };

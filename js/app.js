@@ -6,7 +6,7 @@ import Footer from './footer'
 import Home from './home'
 import Editor from './lessonEditor'
 import Recorder from './lessonRecorder'
-import Player from './lessonPlayer'
+import PlayerScreen from './lessonPlayer'
 
 const App = () => (
   <div>
@@ -21,7 +21,7 @@ const Main = () => (
     <Route exact path='/'                   component={Home} />
     <Route exact path='/lessons/:id/edit'   component={Editor} />
     <Route exact path='/lessons/:id/record' component={Recorder} />
-    <Route exact path='/:id'                component={Player} />
+    <Route exact path='/:id'                component={PlayerScreen} />
   </main>
 )
 

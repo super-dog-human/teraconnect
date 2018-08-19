@@ -4,9 +4,7 @@ import './OrbitControls'
 
 export default class LessonAvatar {
     constructor() {
-        this.clock = new THREE.Clock();
-        this.lesson = {};
-        this.material = {};
+        this.poseKey = {};
         this.bones = {};
         this.controls;
         this.camera;
@@ -16,23 +14,15 @@ export default class LessonAvatar {
         this.animationMixer;
     }
 
-    loadLesson(lesson, material) {
-        this.lesson   = lesson;
-        this.material = material;
+    loadLesson(poseKey) {
+        this.poseKey = poseKey;
 
         this.animationMixer = new THREE.AnimationMixer(this.skin);
         this.setDefaultAnimation();
         this.setRecordedAnimation();
-
-        this.animate();
     }
 
     setDefaultAnimation() {
-        // initial arm positions
-        const rad70 = 1.2217304763960306;
-        this.bones.J_Adj_L_UpperArm.parent.rotateZ(rad70);
-        this.bones.J_Adj_R_UpperArm.parent.rotateZ(-rad70);
-
         // breathing animation
         const breathBones = [
             this.bones.J_Bip_C_Head,
@@ -88,10 +78,10 @@ export default class LessonAvatar {
         ];
 
         const poseKeys = [];
-        poseKeys.push({ keys: this.lesson.poseKey.leftShoulders });
-        poseKeys.push({ keys: this.lesson.poseKey.rightShoulders });
-        poseKeys.push({ keys: this.lesson.poseKey.leftElbows });
-        poseKeys.push({ keys: this.lesson.poseKey.rightElbows });
+        poseKeys.push({ keys: this.poseKey.leftShoulders });
+        poseKeys.push({ keys: this.poseKey.rightShoulders });
+        poseKeys.push({ keys: this.poseKey.leftElbows });
+        poseKeys.push({ keys: this.poseKey.rightElbows });
 
         const poseClip = THREE.AnimationClip.parseAnimation({
             name: "pose",
@@ -100,48 +90,38 @@ export default class LessonAvatar {
 
         const action = this.animationMixer.clipAction(poseClip);
         action.repetitions = 0;
-
-    }
-
-    play(isStart) {
-        if (isStart) {
-            this.animationMixer._actions.forEach((action) => {
-                action.paused = false;
-                action.play();
-            });
-        } else {
-            this.animationMixer._actions.forEach((action) => {
-                action.paused = true;
-            });
-        }
-        //this.animationMixer.stopAllAction();
     }
 
     jumpAnimationAt(timeSec) {
         this.animationAction.startAt(timeSec);
     }
 
-    animate() {
-        requestAnimationFrame(() => this.animate());
-        this.animationMixer.update(this.clock.getDelta());
-        // show graphics / texts
+    animate(deltaTime) {
+        this.animationMixer.update(deltaTime);
         this.renderer.render(this.scene, this.camera);
     }
 
-    createDom(avatarURL) {
-        this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.25, 20);
-        this.camera.position.set(0, 1.6, - 2.2);
+    play(isStart) {
+        if (isStart) {
+            // FIXME shouldn't use _actions property
+            this.animationMixer._actions.forEach((action) => {
+                action.paused = false;
+                action.play();
+            });
+        } else {
+            this.animationMixer.stopAllAction();
+        }
+    }
+
+    createDom(avatarURL, domWidth, domHeight) {
+        this.camera = new THREE.PerspectiveCamera(45, domWidth / domHeight, 0.25, 20);
+        this.camera.position.set(0, 1.4, -2.2);
 
         this.controls = new THREE.OrbitControls(this.camera);
         this.controls.target.set(0, 1, 0);
         this.controls.update();
 
         this.scene = new THREE.Scene();
-        window.onbeforeunload = () => {
-            this.scene.remove(this.scene.children)
-            return;
-        };
-
         const light = new THREE.AmbientLight(0xbbbbff);
         light.position.set(0, 1, 0);
         this.scene.add(light);
@@ -174,32 +154,24 @@ export default class LessonAvatar {
             bones.push(this.bones.J_Adj_L_UpperArm.parent, this.bones.J_Adj_R_UpperArm.parent);
             this.skin.skeleton = new THREE.Skeleton(bones, boneInverses);
 
+            // initialize arm positions
+            const rad70 = 1.2217304763960306;
+            this.bones.J_Adj_L_UpperArm.parent.rotateZ(rad70);
+            this.bones.J_Adj_R_UpperArm.parent.rotateZ(-rad70);
+
             this.scene.add(vrm.scene);
 
-            this.renderer = new THREE.WebGLRenderer({ antialias: true });
-            this.renderer.setClearColor(new THREE.Color(0xFFFFFF));
+            this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             this.renderer.setPixelRatio(window.devicePixelRatio);
-            this.renderer.setSize(window.innerWidth, window.innerHeight);
+            this.renderer.setSize(domWidth, domHeight);
             this.renderer.gammaOutput = true;
+            this.renderer.render(this.scene, this.camera);
 
             return this.renderer.domElement;
         });
     }
+
+    clearBeforeUnload() {
+        this.scene.remove(this.scene.children);
+    }
 }
-
-
-/*
-var texture = new THREE.TextureLoader().load('path/to/file.jpg',
-(tex) => { // 読み込み完了時
-    // 縦横比を保って適当にリサイズ
-    const w = 5;
-    const h = tex.image.height/(tex.image.width/w);
-
-    // 平面
-    const geometry = new THREE.PlaneGeometry(1, 1);
-    const material = new THREE.MeshPhongMaterial( { map:texture } );
-    const plane = new THREE.Mesh( geometry, material );
-    plane.scale.set(w, h, 1);
-    scene.add( plane );
-});
-*/
