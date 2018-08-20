@@ -5,6 +5,8 @@ import LessonAvatar from './lessonAvatar';
 import LessonPlayer from './lessonPlayer';
 
 export default class LessonPlayerScreen extends React.Component {
+    static RATIO_16_TO_9() { return 0.5625 };
+
     constructor(props) {
         super(props)
         this.container;
@@ -20,28 +22,39 @@ export default class LessonPlayerScreen extends React.Component {
         const loader = new LessonLoader(this.props.match.params.id);
         const avatar = new LessonAvatar();
 
-        const multiplier = 0.5625; // 16:9
-        const playerWidth = this.container.clientWidth;
-        const playerHeight = Math.round(playerWidth * multiplier);
-
         if (this.props.isPreview) {
             loader.loadForPreview();
             // TODO
         } else {
             loader.loadForPlayAsync().then(() => {
-                return avatar.createDom(loader.avatarFileURL, playerWidth, playerHeight);
+                const size = this.containerSize();
+                return avatar.createDom(loader.avatarFileURL, size.width, size.height);
             })
             .then((dom) => {
+                dom.setAttribute('id', 'avatar-canvas');
+                dom.setAttribute('style', 'display: block; position: absolute; top: 0;');
                 ReactDOM.findDOMNode(this.playerElement).append(dom);
+
+                window.addEventListener('resize', (() => {
+                    const size = this.containerSize();
+                    avatar.updateSize(size.width, size.height);
+                }));
+
                 avatar.loadLesson(loader.lesson.poseKey);
                 this.setState({ avatar: avatar, loader: loader });
             });
         }
     }
 
+    containerSize() {
+        const playerWidth = this.container.clientWidth;
+        const playerHeight = Math.round(playerWidth * this.constructor.RATIO_16_TO_9());
+        return { width: playerWidth, height: playerHeight };
+    }
+
     render() {
         return (
-            <div id="lesson-player-screen" ref={(e) => { this.container = e; }}>
+            <div ref={(e) => { this.container = e; }}>
                 <LessonPlayer avatar={this.state.avatar} loader={this.state.loader} ref={(e) => { this.playerElement = e; }} />
             </div>
         );

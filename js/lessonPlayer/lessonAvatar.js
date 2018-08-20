@@ -171,6 +171,10 @@ export default class LessonAvatar {
         });
     }
 
+    updateSize(width, height) {
+        this.renderer.setSize(width, height);
+    }
+
     clearBeforeUnload() {
         this.scene.remove(this.scene.children);
     }

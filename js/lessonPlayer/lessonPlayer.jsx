@@ -22,23 +22,21 @@ export default class LessonPlayer extends React.Component {
         return(
             <div id="lesson-player">
                 <div id="control-panel">
-                    <button className="control-btn">
-                        <FontAwesome name="play-circle" onClick={this.playClick} />
+                    <button className="control-btn" onClick={this.playClick}>
+                        <FontAwesome name="play-circle" />
                     </button>
                 </div>
                 <style jsx>{`
                     #lesson-player {
-                        background-color: #fff;
                         position: relative;
-                    }
-                    #lesson-play canvas {
-                        position: absolute;
+                        padding-top: 56.25%;
                     }
                     #control-panel {
+                        position: absolute;
+                        top: 0;
+                        z-index: 100;
                         width: 100%;
                         height: 100%;
-                        position: absolute;
-                        background-color: black;
                         opacity: 0;
                     }
                     #control-panel:hover {
