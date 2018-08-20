@@ -66,7 +66,8 @@ export default class LessonAvatar {
             hierarchy: breathKeys,
         }, breathBones);
 
-        this.animationMixer.clipAction(breathClip);
+        const action = this.animationMixer.clipAction(breathClip);
+        action.play();
     }
 
     setRecordedAnimation() {
@@ -90,6 +91,7 @@ export default class LessonAvatar {
 
         const action = this.animationMixer.clipAction(poseClip);
         action.repetitions = 0;
+        action.play();
     }
 
     jumpAnimationAt(timeSec) {
@@ -106,10 +108,11 @@ export default class LessonAvatar {
             // FIXME shouldn't use _actions property
             this.animationMixer._actions.forEach((action) => {
                 action.paused = false;
-                action.play();
             });
         } else {
-            this.animationMixer.stopAllAction();
+            this.animationMixer._actions.forEach((action) => {
+                action.paused = true;
+            });
         }
     }
 

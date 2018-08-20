@@ -5,24 +5,36 @@ import FontAwesome from 'react-fontawesome'
 export default class LessonPlayer extends React.Component {
     constructor(props) {
         super(props);
+
         this.timelines = [];
         this.clock = new Clock(false);
         this.oldElapsedTime = 0;
 
-        this.playClick = this.playClick.bind(this);
+        this.state = {
+            isLoading: true,
+            isPlaying: false,
+        }
+        this.panelClick = this.panelClick.bind(this);
     }
 
-    playClick() {
-        console.log(this);
-        this.play(true);
+    panelClick() {
+        if (this.state.isPlaying){
+            this.play(false);
+            this.setState({ isPlaying: false });
+        } else {
+            this.play(true);
+            this.setState({ isPlaying: true });
+        }
     }
-
-// pause-circle
+    //  style={{ display: this.state.isLoading ? 'table-cell' : 'none' }}
     render() {
         return(
             <div id="lesson-player">
+                <div id="loading-indicator">
+                    <FontAwesome name="spinner" spin style={{ display: this.state.isLoading ? 'inline-block' : 'none' }} />
+                </div>
                 <div id="control-panel">
-                    <button className="control-btn" onClick={this.playClick}>
+                    <button className="control-btn" style={{ display: this.state.isLoading ? 'none' : 'block' }} onClick={this.panelClick}>
                         <FontAwesome name="play-circle" />
                     </button>
                 </div>
@@ -30,6 +42,16 @@ export default class LessonPlayer extends React.Component {
                     #lesson-player {
                         position: relative;
                         padding-top: 56.25%;
+                    }
+                    #loading-indicator {
+                        position: absolute;
+                        display: table-cell;
+                        top: 0;
+                        z-index: 100;
+                        width: 100%;
+                        height: 100%;
+                        font-size: 300px;
+                        opacity: 0.5;
                     }
                     #control-panel {
                         position: absolute;
@@ -43,6 +65,7 @@ export default class LessonPlayer extends React.Component {
                         opacity: 0.4;
                     }
                     .control-btn {
+                        border: none;
                         cursor: pointer;
                         display: table;
                         width: 100%;
@@ -50,7 +73,6 @@ export default class LessonPlayer extends React.Component {
                         font-size: 300px;
                     }
                     .control-btn span {
-                        display: table-cell;
                         text-align: center;
                         vertical-align: middle;
                     }
@@ -60,9 +82,14 @@ export default class LessonPlayer extends React.Component {
     }
 
     componentDidUpdate() {
+        if (!this.state.isLoading) return;
+
+        console.log('componentDidUpdate');
         this.timelines = this.props.loader.lesson.timelines;
         this.animate();
         // set fadeout after length sec.
+
+        this.setState({ isLoading: false });
     }
 
     play(isStart) {
