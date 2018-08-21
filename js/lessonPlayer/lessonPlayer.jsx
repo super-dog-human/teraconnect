@@ -2,6 +2,7 @@ import React from 'react';
 import { Clock } from 'three';
 import FontAwesome from 'react-fontawesome'
 import LessonTexts from './lessonTexts';
+import LessonGraphics from './lessonGraphics';
 import LessonVoicePlayer from './lessonVoicePlayer';
 
 export default class LessonPlayer extends React.Component {
@@ -39,7 +40,10 @@ export default class LessonPlayer extends React.Component {
                         <FontAwesome name="play-circle" />
                     </button>
                 </div>
+
                 <LessonTexts texts={this.state.texts}/>
+                <LessonGraphics graphics={this.state.graphics} />
+
                 <style jsx>{`
                     #lesson-player {
                         position: relative;
@@ -126,7 +130,7 @@ export default class LessonPlayer extends React.Component {
         const since = this.oldElapsedTime;
         const until = this.clock.elapsedTime;
 
-        this.hideTimeline(until);
+        this.hideTimelineTextIfNeeded(until);
 
         this.lesson.timelines.filter((t) => {
             return t.timeSec > since && t.timeSec <= until;
@@ -155,7 +159,7 @@ export default class LessonPlayer extends React.Component {
         this.setState({ texts: newTexts });
     }
 
-    hideTimeline(elapsedTime) {
+    hideTimelineTextIfNeeded(elapsedTime) {
         const currentTextLength = this.state.texts.length;
         if (currentTextLength == 0) return;
 
@@ -169,20 +173,32 @@ export default class LessonPlayer extends React.Component {
     }
 
     showTimelineGraphic(graphics) {
-        /*
         if (graphics == null || graphics.length == 0) return;
 
         graphics.forEach((graphic) => {
-            const div = document.createElement('div');
-            div.setAttribute('style', 'position: absolute; top: 0; z-index: -100; width: 100%; margin: auto; text-align: center; vertical-align: middle;');
+            let newGraphics = [];
+            switch(graphic.action) {
+                case 'show':
+                    graphic.url = this.material.graphics[graphic.id].url;
+                    newGraphics = this.state.graphics;
+                    newGraphics.push(graphic);
+                    this.setState({ graphics: newGraphics });
+                    break;
 
-            const img = document.createElement('img');
-            const url = this.material.graphics[graphic.id].url;
-            img.src = url;
+                case 'hide':
+                    const currentGraphicsLength = this.state.graphics.length;
+                    if (currentGraphicsLength == 0) break;
 
-            div.append(img);
-            ReactDOM.findDOMNode(this.element).append(div);
+                    const targetGraphicID = graphic.id;
+                    newGraphics = this.state.graphics.filter((graphic) => {
+                        return graphic.id != targetGraphicID;
+                    });
+
+                    if (newGraphics.length != this.state.graphics) {
+                        this.setState({ graphics: newGraphics });
+                    }
+                    break;
+            }
         });
-        */
     }
 }
