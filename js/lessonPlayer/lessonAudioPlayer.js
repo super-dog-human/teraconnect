@@ -1,17 +1,21 @@
 export default class LessonAudioPlayer {
     constructor() {
         this.context = new AudioContext();
-        this.audioElement;
+        this.audioElement = new Audio();
         this.durationSec = 0;
 
         return this.context.audioWorklet.addModule('audioPlayProcessor.js')
             .then(() => {
                 this.audioProcessor = new AudioWorkletNode(this.context, 'audioPlayProcessor');
                 this.audioProcessor.connect(this.context.destination);
+
+                const source = this.context.createMediaElementSource(this.audioElement);
+                source.connect(this.audioProcessor);
+/*
                 this.audioProcessor.port.onmessage = () => {
-                    this.audioElement.pause();
-                    this.audioElement = null;
+                    console.log('voice stoppped by duration order.');
                 };
+*/
 
                 return this;
             });
@@ -19,23 +23,13 @@ export default class LessonAudioPlayer {
 
     setAudio(url, durationSec, currentSec=0) {
         this.durationSec = durationSec;
-
-        if (this.audioElement) {
-            this.audioElement.pause();
-            this.audioElement = null;
-        }
-
-        this.audioElement = new Audio(url);
+        this.audioElement.src = url;
         this.audioElement.addEventListener('loadstart', () => {
-            const source = this.context.createMediaElementSource(this.audioElement);
-            source.connect(this.audioProcessor);
             this.play(true, currentSec);
         });
     }
 
     play(isStart, startSec=0) {
-        if (!this.audioElement) return;
-
         if (isStart) {
             this.audioProcessor.port.postMessage({
                 currentTime: this.audioElement.currentTime,

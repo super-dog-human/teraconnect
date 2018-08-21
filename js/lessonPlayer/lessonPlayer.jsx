@@ -141,8 +141,6 @@ export default class LessonPlayer extends React.Component {
         this.audioPlayer.setAudio(url, voice.durationSec);
     }
 
-
-
     showTimelineText(text) {
         if (!text) return;
 

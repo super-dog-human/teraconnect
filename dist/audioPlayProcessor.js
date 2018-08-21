@@ -18,7 +18,7 @@ class AudioPlayer extends AudioWorkletProcessor {
         if (!this.isPlaying) return true;
 
         if (this.isPlayingComplete()) {
-            this.port.postMessage({ isCompleted: true });
+//          this.port.postMessage({ isCompleted: true });
             this.isPlaying = false;
             return true;
         }
