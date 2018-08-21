@@ -138,9 +138,7 @@ export default class LessonPlayer extends React.Component {
         if (!voice) return;
 
         const url = this.material.voices[voice.fileID].url;
-//      this.audioPlayer.setAudio(url, voice.durationSec).then((player) => {
-        this.audioPlayer.setAudio(url, 2.0, 0);
-//        this.audioPlayer.play(true);
+        this.audioPlayer.setAudio(url, voice.durationSec);
     }
 
 
