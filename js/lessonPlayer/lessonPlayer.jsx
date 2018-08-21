@@ -1,8 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { Clock } from 'three';
 import FontAwesome from 'react-fontawesome'
-import LessonAudioPlayer from './lessonAudioPlayer';
+import LessonTexts from './lessonTexts';
+import LessonVoicePlayer from './lessonVoicePlayer';
 
 export default class LessonPlayer extends React.Component {
     constructor(props) {
@@ -12,21 +12,23 @@ export default class LessonPlayer extends React.Component {
         this.material       = {};
         this.clock          = new Clock(false);
         this.oldElapsedTime = 0;
-        this.playerElement;
-        new LessonAudioPlayer().then((player) => {
-            this.audioPlayer = player;
+        this.element;
+        new LessonVoicePlayer().then((player) => {
+            this.voicePlayer = player;
         });
 
         this.state = {
             isLoading: true,
             isPlaying: false,
+            texts:     [],
+            graphics:  [],
         }
         this.panelClick = this.panelClick.bind(this);
     }
 
     render() {
         return(
-            <div id="lesson-player" ref={(e) => { this.playerElement = e; }} >
+            <div id="lesson-player" ref={(e) => { this.element = e; }} >
                 <div id="loading-indicator">
                     <FontAwesome name="spinner" spin style={{ display: this.state.isLoading ? 'inline-block' : 'none' }} />
                 </div>
@@ -35,6 +37,7 @@ export default class LessonPlayer extends React.Component {
                         <FontAwesome name="play-circle" />
                     </button>
                 </div>
+                <LessonTexts texts={this.state.texts}/>
                 <style jsx>{`
                     #lesson-player {
                         position: relative;
@@ -105,7 +108,7 @@ export default class LessonPlayer extends React.Component {
             this.clock.stop();
         }
 
-        this.audioPlayer.play(isStart); // for stop and resume
+        this.voicePlayer.play(isStart); // for stop and resume
         this.props.avatar.play(isStart);
     }
 
@@ -123,11 +126,13 @@ export default class LessonPlayer extends React.Component {
         const since = this.oldElapsedTime;
         const until = this.clock.elapsedTime;
 
+        this.hideTimeline(until);
+
         this.lesson.timelines.filter((t) => {
             return t.timeSec > since && t.timeSec <= until;
         }).forEach((timeline) => {
             this.playTimelineVoice(timeline.voice);
-            this.showTimelineText(timeline.text);
+            this.showTimelineText(timeline.text, until);
             this.showTimelineGraphic(timeline.graphics);
         });
 
@@ -137,24 +142,34 @@ export default class LessonPlayer extends React.Component {
     playTimelineVoice(voice) {
         if (!voice) return;
 
-        const url = this.material.voices[voice.fileID].url;
-        this.audioPlayer.setAudio(url, voice.durationSec);
+        const url = this.material.voices[voice.id].url;
+        this.voicePlayer.setAndPlay(url, voice.durationSec);
     }
 
-    showTimelineText(text) {
+    showTimelineText(text, elapsedTime) {
         if (!text) return;
 
-        const div = document.createElement('div');
-        div.setAttribute('style', 'position: absolute; top: 0; z-index: 10; width: 100%; margin: auto; text-align: center; vertical-align: middle;');
+        const newTexts = this.state.texts;
+        text.hiddenAtSec = text.durationSec + elapsedTime;
+        newTexts.push(text);
+        this.setState({ texts: newTexts });
+    }
 
-        const span = document.createElement('span');
-        span.innerHTML = text.body;
+    hideTimeline(elapsedTime) {
+        const currentTextLength = this.state.texts.length;
+        if (currentTextLength == 0) return;
 
-        div.append(span);
-        ReactDOM.findDOMNode(this.playerElement).append(div);
+        const newTexts = this.state.texts.filter((text) => {
+            return text.hiddenAtSec > elapsedTime;
+        });
+
+        if (newTexts.length != currentTextLength) {
+            this.setState({ texts: newTexts });
+        }
     }
 
     showTimelineGraphic(graphics) {
+        /*
         if (graphics == null || graphics.length == 0) return;
 
         graphics.forEach((graphic) => {
@@ -166,8 +181,8 @@ export default class LessonPlayer extends React.Component {
             img.src = url;
 
             div.append(img);
-            ReactDOM.findDOMNode(this.playerElement).append(div);
+            ReactDOM.findDOMNode(this.element).append(div);
         });
-
+        */
     }
 }

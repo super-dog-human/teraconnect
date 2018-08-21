@@ -1,4 +1,4 @@
-export default class LessonAudioPlayer {
+export default class LessonVoicePlayer {
     constructor() {
         this.context = new AudioContext();
         this.audioElement = new Audio();
@@ -21,7 +21,7 @@ export default class LessonAudioPlayer {
             });
     }
 
-    setAudio(url, durationSec, currentSec=0) {
+    setAndPlay(url, durationSec, currentSec=0) {
         this.durationSec = durationSec;
         this.audioElement.src = url;
         this.audioElement.addEventListener('loadstart', () => {
