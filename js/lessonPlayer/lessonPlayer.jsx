@@ -1,14 +1,21 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { Clock } from 'three';
 import FontAwesome from 'react-fontawesome'
+import LessonAudioPlayer from './lessonAudioPlayer';
 
 export default class LessonPlayer extends React.Component {
     constructor(props) {
         super(props);
 
-        this.timelines = [];
-        this.clock = new Clock(false);
+        this.lesson         = {};
+        this.material       = {};
+        this.clock          = new Clock(false);
         this.oldElapsedTime = 0;
+        this.playerElement;
+        new LessonAudioPlayer().then((player) => {
+            this.audioPlayer = player;
+        });
 
         this.state = {
             isLoading: true,
@@ -17,19 +24,9 @@ export default class LessonPlayer extends React.Component {
         this.panelClick = this.panelClick.bind(this);
     }
 
-    panelClick() {
-        if (this.state.isPlaying){
-            this.play(false);
-            this.setState({ isPlaying: false });
-        } else {
-            this.play(true);
-            this.setState({ isPlaying: true });
-        }
-    }
-    //  style={{ display: this.state.isLoading ? 'table-cell' : 'none' }}
     render() {
         return(
-            <div id="lesson-player">
+            <div id="lesson-player" ref={(e) => { this.playerElement = e; }} >
                 <div id="loading-indicator">
                     <FontAwesome name="spinner" spin style={{ display: this.state.isLoading ? 'inline-block' : 'none' }} />
                 </div>
@@ -84,12 +81,21 @@ export default class LessonPlayer extends React.Component {
     componentDidUpdate() {
         if (!this.state.isLoading) return;
 
-        console.log('componentDidUpdate');
-        this.timelines = this.props.loader.lesson.timelines;
+        this.lesson   = this.props.loader.lesson;
+        this.material = this.props.loader.material;
         this.animate();
-        // set fadeout after length sec.
 
         this.setState({ isLoading: false });
+    }
+
+    panelClick() {
+        if (this.state.isPlaying){
+            this.setState({ isPlaying: false });
+            this.play(false);
+        } else {
+            this.setState({ isPlaying: true });
+            this.play(true);
+        }
     }
 
     play(isStart) {
@@ -98,10 +104,18 @@ export default class LessonPlayer extends React.Component {
         } else {
             this.clock.stop();
         }
+
+        this.audioPlayer.play(isStart); // for stop and resume
         this.props.avatar.play(isStart);
     }
 
     animate() {
+        if (this.clock.elapsedTime >= this.lesson.durationSec) {
+            this.play(false);
+            return;
+            // TODO show control panel after playing.
+        }
+
         requestAnimationFrame(() => this.animate());
 
         this.props.avatar.animate(this.clock.getDelta());
@@ -109,9 +123,10 @@ export default class LessonPlayer extends React.Component {
         const since = this.oldElapsedTime;
         const until = this.clock.elapsedTime;
 
-        this.timelines.filter((t) => {
+        this.lesson.timelines.filter((t) => {
             return t.timeSec > since && t.timeSec <= until;
         }).forEach((timeline) => {
+            this.playTimelineVoice(timeline.voice);
             this.showTimelineText(timeline.text);
             this.showTimelineGraphic(timeline.graphics);
         });
@@ -119,11 +134,44 @@ export default class LessonPlayer extends React.Component {
         this.oldElapsedTime = this.clock.elapsedTime;
     }
 
-    showTimelineText(text) {
+    playTimelineVoice(voice) {
+        if (!voice) return;
 
+        const url = this.material.voices[voice.fileID].url;
+//      this.audioPlayer.setAudio(url, voice.durationSec).then((player) => {
+        this.audioPlayer.setAudio(url, 2.0, 0);
+//        this.audioPlayer.play(true);
+    }
+
+
+
+    showTimelineText(text) {
+        if (!text) return;
+
+        const div = document.createElement('div');
+        div.setAttribute('style', 'position: absolute; top: 0; z-index: 10; width: 100%; margin: auto; text-align: center; vertical-align: middle;');
+
+        const span = document.createElement('span');
+        span.innerHTML = text.body;
+
+        div.append(span);
+        ReactDOM.findDOMNode(this.playerElement).append(div);
     }
 
     showTimelineGraphic(graphics) {
+        if (graphics == null || graphics.length == 0) return;
+
+        graphics.forEach((graphic) => {
+            const div = document.createElement('div');
+            div.setAttribute('style', 'position: absolute; top: 0; z-index: -100; width: 100%; margin: auto; text-align: center; vertical-align: middle;');
+
+            const img = document.createElement('img');
+            const url = this.material.graphics[graphic.id].url;
+            img.src = url;
+
+            div.append(img);
+            ReactDOM.findDOMNode(this.playerElement).append(div);
+        });
 
     }
 }

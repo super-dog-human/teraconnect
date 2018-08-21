@@ -68,5 +68,5 @@ export default class LessonPlayerScreen extends React.Component {
 }
 
 LessonPlayerScreen.defaultProps = {
-  isPreview: false
+    isPreview: false
 };

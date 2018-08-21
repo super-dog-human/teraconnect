@@ -95,7 +95,9 @@ export default class LessonAvatar {
     }
 
     jumpAnimationAt(timeSec) {
-        this.animationAction.startAt(timeSec);
+        this.animationMixer._actions.forEach((action) => {
+            action.startAt(timeSec);
+        });
     }
 
     animate(deltaTime) {

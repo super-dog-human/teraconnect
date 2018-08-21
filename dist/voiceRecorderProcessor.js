@@ -1,5 +1,4 @@
 class Recorder extends AudioWorkletProcessor {
-
     constructor() {
         super();
 
