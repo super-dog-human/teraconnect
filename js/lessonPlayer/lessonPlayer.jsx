@@ -28,11 +28,13 @@ export default class LessonPlayer extends React.Component {
 
     render() {
         return(
-            <div id="lesson-player" ref={(e) => { this.element = e; }} >
-                <div id="loading-indicator">
-                    <FontAwesome name="spinner" spin style={{ display: this.state.isLoading ? 'inline-block' : 'none' }} />
-                </div>
+            <div id="lesson-player" ref={(e) => { this.element = e; }}>
                 <div id="control-panel">
+                    <div id="loading-indicator" style={{ display: this.state.isLoading ? 'table' : 'none' }}>
+                        <div id="loading-indicator-icon">
+                            <FontAwesome name="spinner" spin />
+                        </div>
+                    </div>
                     <button className="control-btn" style={{ display: this.state.isLoading ? 'none' : 'block' }} onClick={this.panelClick}>
                         <FontAwesome name="play-circle" />
                     </button>
@@ -45,12 +47,15 @@ export default class LessonPlayer extends React.Component {
                     }
                     #loading-indicator {
                         position: absolute;
-                        display: table-cell;
                         top: 0;
-                        z-index: 100;
                         width: 100%;
                         height: 100%;
-                        font-size: 300px;
+                    }
+                    #loading-indicator-icon {
+                        display: table-cell;
+                        text-align: center;
+                        vertical-align: middle;
+                        font-size: 10vw;
                         opacity: 0.5;
                     }
                     #control-panel {
@@ -59,22 +64,17 @@ export default class LessonPlayer extends React.Component {
                         z-index: 100;
                         width: 100%;
                         height: 100%;
-                        opacity: 0;
-                    }
-                    #control-panel:hover {
-                        opacity: 0.4;
                     }
                     .control-btn {
                         border: none;
                         cursor: pointer;
-                        display: table;
                         width: 100%;
                         height: 100%;
-                        font-size: 300px;
+                        font-size: 10vw;
+                        opacity: 0;
                     }
-                    .control-btn span {
-                        text-align: center;
-                        vertical-align: middle;
+                    .control-btn:hover {
+                        opacity: 0.2;
                     }
                 `}</style>
             </div>
