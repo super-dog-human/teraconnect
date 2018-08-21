@@ -19,7 +19,7 @@ const LessonText = ({text}) => (
                 padding: 1vw;
                 white-space: pre-wrap;
                 font-weight: bold;
-                font-size: ${text.size}vw;
+                font-size: ${text.sizeVW}vw;
                 color: ${text.bodyColor};
                 text-shadow:
                     ${text.borderColor} 0.5vw 0px,  ${text.borderColor} -0.5vw 0px,

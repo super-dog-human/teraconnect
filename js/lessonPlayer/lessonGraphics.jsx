@@ -2,8 +2,8 @@ import React from 'react';
 
 const LessonGraphic = ({graphic}) => (
     <div className="lesson-graphic">
-        <div className="lesson-graphic-body">
-            <img src={graphic.url} />
+        <div className="lesson-graphic-cell">
+            <img src={graphic.url} id="lesson-graphic-body" />
         </div>
         <style jsx>{`
             .lesson-graphic {
@@ -13,11 +13,16 @@ const LessonGraphic = ({graphic}) => (
                 height :100%;
                 display: table;
             }
-            .lesson-graphic-body {
+            .lesson-graphic-cell {
                 position: relative;
                 display: table-cell;
-                text-align: center;
-                vertical-align: middle;
+                text-align: ${graphic.horizontalAlign};
+                vertical-align: ${graphic.verticalAlign};
+            }
+            #lesson-graphic-body {
+                width: ${graphic.sizePct}%;
+                max-height: ${graphic.sizePct}%;
+                object-fit: contain;
             }
         `}</style>
     </div>
@@ -40,3 +45,5 @@ export default ({graphics}) => (
     `}</style>
     </div>
 )
+
+// fill or keep size
