@@ -9,10 +9,11 @@ export default class LessonPlayer extends React.Component {
     constructor(props) {
         super(props);
 
-        this.lesson         = {};
-        this.material       = {};
-        this.clock          = new Clock(false);
-        this.oldElapsedTime = 0;
+        this.lesson            = {};
+        this.material          = {};
+        this.clock             = new Clock(false);
+        this.preElapsedTime    = 0;
+        this.pausedElapsedTime = 0;
         this.element;
         new LessonVoicePlayer().then((player) => {
             this.voicePlayer = player;
@@ -25,6 +26,8 @@ export default class LessonPlayer extends React.Component {
             graphics:  [],
         }
         this.panelClick = this.panelClick.bind(this);
+
+        this.animate();
     }
 
     render() {
@@ -92,17 +95,14 @@ export default class LessonPlayer extends React.Component {
 
         this.lesson   = this.props.loader.lesson;
         this.material = this.props.loader.material;
-        this.animate();
 
         this.setState({ isLoading: false });
     }
 
     panelClick() {
         if (this.state.isPlaying){
-            this.setState({ isPlaying: false });
             this.play(false);
         } else {
-            this.setState({ isPlaying: true });
             this.play(true);
         }
     }
@@ -110,8 +110,11 @@ export default class LessonPlayer extends React.Component {
     play(isStart) {
         if (isStart) {
             this.clock.start();
+            this.setState({ isPlaying: true });
         } else {
+            this.pausedElapsedTime += this.clock.elapsedTime;
             this.clock.stop();
+            this.setState({ isPlaying: false });
         }
 
         this.voicePlayer.play(isStart); // for stop and resume
@@ -119,30 +122,35 @@ export default class LessonPlayer extends React.Component {
     }
 
     animate() {
-        if (this.clock.elapsedTime >= this.lesson.durationSec) {
-            this.play(false);
-            return;
-            // TODO show control panel after playing.
-        }
-
         requestAnimationFrame(() => this.animate());
+
+        if (!this.state.isPlaying) return;
+
+        const elapsedTime = this.clock.elapsedTime + this.pausedElapsedTime;
+
+        if (elapsedTime >= this.lesson.durationSec) {
+            this.play(false);
+            this.preElapsedTime = 0;
+            this.pausedElapsedTime = 0;
+            return;
+        }
 
         this.props.avatar.animate(this.clock.getDelta());
 
-        const since = this.oldElapsedTime;
-        const until = this.clock.elapsedTime;
+        const since = this.preElapsedTime;
+        const until = elapsedTime;
 
-        this.hideTimelineTextIfNeeded(until);
+        this.hideTimelineTextIfNeeded(elapsedTime);
 
         this.lesson.timelines.filter((t) => {
             return t.timeSec > since && t.timeSec <= until;
         }).forEach((timeline) => {
             this.playTimelineVoice(timeline.voice);
-            this.showTimelineText(timeline.text, until);
+            this.showTimelineText(timeline.text, elapsedTime);
             this.showTimelineGraphic(timeline.graphics);
         });
 
-        this.oldElapsedTime = this.clock.elapsedTime;
+        this.preElapsedTime = elapsedTime;
     }
 
     playTimelineVoice(voice) {

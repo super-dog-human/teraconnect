@@ -16,7 +16,6 @@ export default class LessonVoicePlayer {
                     console.log('voice stoppped by duration order.');
                 };
 */
-
                 return this;
             });
     }

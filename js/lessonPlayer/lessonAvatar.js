@@ -88,8 +88,7 @@ export default class LessonAvatar {
             hierarchy: poseKeys,
         }, poseBones);
 
-        const action = this.animationMixer.clipAction(poseClip);
-        action.repetitions = 0;
+        this.animationMixer.clipAction(poseClip);
     }
 
     jumpAnimationAt(timeSec) {
@@ -156,7 +155,7 @@ export default class LessonAvatar {
             // set upper arm bones to top level.
             this.skin.skeleton.bones.push(this.bones.J_Adj_L_UpperArm.parent, this.bones.J_Adj_R_UpperArm.parent);
             const defaultMatrix4 = new THREE.Matrix4();
-            defaultMatrix4.set(1, 0, 0, 0, 0, 1, -0, 0, -0, 0, 1, 0, 0, 0, 0, 1);
+            defaultMatrix4.set(1, 0, 0, 0, 0, 1, -0, 0, -0, 0, 1, 0, 0, 0, 0, 1); // this is sloppy values.
             this.skin.skeleton.boneInverses.push(defaultMatrix4, defaultMatrix4);
 
             this.scene.add(vrm.scene);
