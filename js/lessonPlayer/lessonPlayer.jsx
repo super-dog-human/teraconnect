@@ -184,7 +184,6 @@ export default class LessonPlayer extends React.Component {
                     newGraphics.push(graphic);
                     this.setState({ graphics: newGraphics });
                     break;
-
                 case 'hide':
                     const currentGraphicsLength = this.state.graphics.length;
                     if (currentGraphicsLength == 0) break;

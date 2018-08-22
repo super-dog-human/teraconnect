@@ -62,8 +62,8 @@ export default class LessonPlayerScreen extends React.Component {
 
 
     componentWillUnmount() {
-        this.state.loader.clearBeforeUnload();
-        this.state.avatar.clearBeforeUnload();
+        if (this.state.loader) this.state.loader.clearBeforeUnload();
+        if (this.state.avatar) this.state.avatar.clearBeforeUnload();
     }
 }
 

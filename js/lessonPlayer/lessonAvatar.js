@@ -67,7 +67,6 @@ export default class LessonAvatar {
         }, breathBones);
 
         const action = this.animationMixer.clipAction(breathClip);
-        action.play();
     }
 
     setRecordedAnimation() {
@@ -91,7 +90,6 @@ export default class LessonAvatar {
 
         const action = this.animationMixer.clipAction(poseClip);
         action.repetitions = 0;
-        action.play();
     }
 
     jumpAnimationAt(timeSec) {
@@ -110,6 +108,7 @@ export default class LessonAvatar {
             // FIXME shouldn't use _actions property
             this.animationMixer._actions.forEach((action) => {
                 action.paused = false;
+                action.play();
             });
         } else {
             this.animationMixer._actions.forEach((action) => {
@@ -149,20 +148,16 @@ export default class LessonAvatar {
                 }
             });
 
-            // set upper arm bones to top level.
-            const boneInverses = this.skin.skeleton.boneInverses;
-            const defaultMatrix4 = new THREE.Matrix4();
-            defaultMatrix4.set(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);
-            boneInverses.push(defaultMatrix4, defaultMatrix4);
-
-            const bones = this.skin.skeleton.bones;
-            bones.push(this.bones.J_Adj_L_UpperArm.parent, this.bones.J_Adj_R_UpperArm.parent);
-            this.skin.skeleton = new THREE.Skeleton(bones, boneInverses);
-
             // initialize arm positions
             const rad70 = 1.2217304763960306;
             this.bones.J_Adj_L_UpperArm.parent.rotateZ(rad70);
             this.bones.J_Adj_R_UpperArm.parent.rotateZ(-rad70);
+
+            // set upper arm bones to top level.
+            this.skin.skeleton.bones.push(this.bones.J_Adj_L_UpperArm.parent, this.bones.J_Adj_R_UpperArm.parent);
+            const defaultMatrix4 = new THREE.Matrix4();
+            defaultMatrix4.set(1, 0, 0, 0, 0, 1, -0, 0, -0, 0, 1, 0, 0, 0, 0, 1);
+            this.skin.skeleton.boneInverses.push(defaultMatrix4, defaultMatrix4);
 
             this.scene.add(vrm.scene);
 
