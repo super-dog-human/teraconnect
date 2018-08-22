@@ -19,6 +19,7 @@ export default class LessonAvatar {
 
         this.animationMixer = new THREE.AnimationMixer(this.skin);
         this.setDefaultAnimation();
+//      this.setBlinkAnimation();
         this.setRecordedAnimation();
     }
 
@@ -67,6 +68,12 @@ export default class LessonAvatar {
         }, breathBones);
 
         this.animationMixer.clipAction(breathClip);
+    }
+
+    setBlinkAnimation() {
+        const morphTargets = this.skin.geometry.morphAttributes.normal.slice(0, 7);
+        const blinkClip = THREE.AnimationClip.CreateFromMorphTargetSequence('speak', morphTargets, 30);
+        this.animationMixer.clipAction(blinkClip).setDuration(0.1);
     }
 
     setRecordedAnimation() {
