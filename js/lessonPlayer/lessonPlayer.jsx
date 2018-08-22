@@ -31,12 +31,12 @@ export default class LessonPlayer extends React.Component {
         return(
             <div id="lesson-player" ref={(e) => { this.element = e; }}>
                 <div id="control-panel">
-                    <div id="loading-indicator" style={{ display: this.state.isLoading ? 'table' : 'none' }}>
+                    <div id="loading-indicator">
                         <div id="loading-indicator-icon">
                             <FontAwesome name="spinner" spin />
                         </div>
                     </div>
-                    <button className="control-btn" style={{ display: this.state.isLoading ? 'none' : 'block' }} onClick={this.panelClick}>
+                    <button className="control-btn" onClick={this.panelClick}>
                         <FontAwesome name="play-circle" />
                     </button>
                 </div>
@@ -52,6 +52,7 @@ export default class LessonPlayer extends React.Component {
                     #loading-indicator {
                         position: absolute;
                         top: 0;
+                        display: ${this.state.isLoading ? 'table' : 'none'};
                         width: 100%;
                         height: 100%;
                     }
@@ -70,6 +71,7 @@ export default class LessonPlayer extends React.Component {
                         height: 100%;
                     }
                     .control-btn {
+                        display: ${this.state.isLoading ? 'none' : 'block'};
                         border: none;
                         cursor: pointer;
                         width: 100%;
@@ -78,7 +80,7 @@ export default class LessonPlayer extends React.Component {
                         opacity: 0;
                     }
                     .control-btn:hover {
-                        opacity: 0.2;
+                        opacity: ${this.state.isLoading || this.state.isPlaying ? 0: 0.2};
                     }
                 `}</style>
             </div>
