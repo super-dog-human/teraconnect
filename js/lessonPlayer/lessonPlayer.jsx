@@ -110,14 +110,15 @@ export default class LessonPlayer extends React.Component {
     play(isStart) {
         if (isStart) {
             this.clock.start();
+            if (this.pausedElapsedTime > 0) this.voicePlayer.play(true);
             this.setState({ isPlaying: true });
         } else {
             this.pausedElapsedTime += this.clock.elapsedTime;
             this.clock.stop();
+            this.voicePlayer.play(false);
             this.setState({ isPlaying: false });
         }
 
-        this.voicePlayer.play(isStart); // for stop and resume
         this.props.avatar.play(isStart);
     }
 
