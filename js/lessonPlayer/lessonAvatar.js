@@ -66,7 +66,7 @@ export default class LessonAvatar {
             hierarchy: breathKeys,
         }, breathBones);
 
-        const action = this.animationMixer.clipAction(breathClip);
+        this.animationMixer.clipAction(breathClip);
     }
 
     setRecordedAnimation() {
