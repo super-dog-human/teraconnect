@@ -23,6 +23,8 @@ const LessonGraphic = ({graphic}) => (
                 width: ${graphic.sizePct}%;
                 max-height: ${graphic.sizePct}%;
                 object-fit: contain;
+                animation-duration: 0.1s;
+                animation-name: ${'fade-in'};
             }
         `}</style>
     </div>
