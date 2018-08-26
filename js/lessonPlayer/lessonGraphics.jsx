@@ -47,5 +47,3 @@ export default ({graphics}) => (
     `}</style>
     </div>
 )
-
-// fill or keep size

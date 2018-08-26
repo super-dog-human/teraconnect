@@ -133,6 +133,8 @@ export default class LessonPlayer extends React.Component {
             this.play(false);
             this.preElapsedTime = 0;
             this.pausedElapsedTime = 0;
+            this.setState({ texts: [], graphics: [] });
+
             return;
         }
 
