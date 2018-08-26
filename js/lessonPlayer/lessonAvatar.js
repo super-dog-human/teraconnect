@@ -71,11 +71,16 @@ export default class LessonAvatar {
     }
 
     setBlinkAnimation() {
-        /*
-        const morphTargets = this.skin.geometry.morphAttributes.normal.slice(2, 5);
-        const blinkClip = THREE.AnimationClip.CreateFromMorphTargetSequence('blink', morphTargets, 30);
-        this.animationMixer.clipAction(blinkClip).setDuration(5);
-        */
+        const closeEyeMorph = this.skin.geometry.morphAttributes.normal[12];
+        const duration = 0.2;
+        this.setMorphingAnimation('blink', [closeEyeMorph], duration);
+    }
+
+    setMorphingAnimation(name, morphs, incremental) {
+        const defaultMorph = this.skin.geometry.morphAttributes.normal[27];
+        morphs.unshift(defaultMorph);
+        const animationClip = THREE.AnimationClip.CreateFromMorphTargetSequence(name, morphs, 30);
+        this.animationMixer.clipAction(animationClip).setDuration(incremental);
     }
 
     setRecordedAnimation() {
@@ -108,18 +113,6 @@ export default class LessonAvatar {
     }
 
     animate(deltaTime) {
-        const indexes = [2, 12];
-        this.morphTargets.forEach((target) => {
-            indexes.forEach((i) => {
-                const influence = target.morphTargetInfluences[i];
-                if (influence >= 1) {
-                    target.morphTargetInfluences[i] = 0;
-                } else {
-                    target.morphTargetInfluences[i] += 0.01;
-                }
-            });
-        });
-
         this.animationMixer.update(deltaTime);
         this.renderer.render(this.scene, this.camera);
     }
@@ -173,9 +166,6 @@ export default class LessonAvatar {
                 });
             });
 
-            this.morphTargets = [];
-            this.recursionBoneAllocation([vrm.scene], this.morphTargets);
-
             // initialize arm positions
             const rad70 = 1.2217304763960306;
             this.bones.J_Adj_L_UpperArm.parent.rotateZ(rad70);
@@ -196,19 +186,6 @@ export default class LessonAvatar {
             this.renderer.render(this.scene, this.camera);
 
             return this.renderer.domElement;
-        });
-    }
-
-    recursionBoneAllocation(objects, morphTargets) {
-        objects.forEach(object => {
-            if (typeof object.morphTargetInfluences !== "undefined") {
-                morphTargets.push(object);
-            }
-
-            if (!   object.children) return;
-            if (object.children.length > 0) {
-                this.recursionBoneAllocation(object.children, morphTargets);
-            }
         });
     }
 
