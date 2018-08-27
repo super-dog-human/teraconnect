@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import './GLTFLoader';
-import './OrbitControls'
 
 export default class LessonAvatar {
     constructor() {
@@ -156,12 +155,9 @@ export default class LessonAvatar {
     }
 
     createDom(avatarURL, domWidth, domHeight) {
-        this.camera = new THREE.PerspectiveCamera(45, domWidth / domHeight, 0.25, 20);
-        this.camera.position.set(0, 1.4, -2.2);
-
-        this.controls = new THREE.OrbitControls(this.camera);
-        this.controls.target.set(0, 1, 0);
-        this.controls.update();
+        this.camera = new THREE.PerspectiveCamera(45, domWidth / domHeight, 1, 10);
+        this.camera.position.set(0, 1.2, -2.2);
+        this.camera.lookAt(new THREE.Vector3(0, 1.1, 0));
 
         this.scene = new THREE.Scene();
         const light = new THREE.AmbientLight(0xbbbbff);
