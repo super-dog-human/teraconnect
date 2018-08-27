@@ -7,6 +7,8 @@
   "author": "SuperDog <super.dog.less.than.human@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@tensorflow-models/posenet": "^0.2.2",
+    "@tensorflow/tfjs": "^0.12.5",
     "axios": "^0.18.0",
     "imports-loader": "^0.8.0",
     "jszip": "^3.1.5",

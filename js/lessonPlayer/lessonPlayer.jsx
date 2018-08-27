@@ -114,6 +114,7 @@ export default class LessonPlayer extends React.Component {
 
     animate() {
         requestAnimationFrame(() => this.animate());
+        console.log(this.clock.elapsedTime);
 
         if (!this.state.isPlaying) return;
 
@@ -124,6 +125,7 @@ export default class LessonPlayer extends React.Component {
             this.preElapsedTime = 0;
             this.pausedElapsedTime = 0;
             this.setState({ texts: [], voices: [], graphics: [] });
+            // TODO init pauses
             return;
         }
 

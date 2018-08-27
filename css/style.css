@@ -77,43 +77,6 @@ header a:visited { color: #ffffff; }
 header a:hover { text-decoration: none; color: #ffffff; }
 header a:active { color: #ffffff; }
 
-#menu nav {
-    height: 55px;
-}
-
-#menu > nav > ul > li {
-    padding-top: 6px;
-    display: block;
-    min-width: 120px;
-    text-align: center;
-    font-weight: bold;
-}
-
-#menu > nav > ul > li::after {
-    padding-top: 3px;
-    display: block;
-    content: "";
-    background-color: #E5DFCE;
-    height: 3px;
-}
-
-#menu > nav > ul > li:hover::after {
-    display: block;
-    background-color: #EC9F05;
-}
-
-#menu > nav > ul > li:nth-of-type(2)::after {
-    display: block;
-    background-color: #EC9F05;
-}
-
-#menu > nav a { text-decoration: none; }
-#menu > nav a:link { color: #616163; }
-#menu > nav a:visited { color: #616163; }
-#menu > nav a:hover { color: #616163; }
-#menu > nav a:active { color: #616163; }
-
-
 #lessons > #lines {
     min-height: 500px;
     background-color: #616163;

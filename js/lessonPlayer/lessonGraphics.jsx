@@ -35,15 +35,15 @@ export default ({graphics}) => (
         graphics.map((graphic, i) => {
             return <LessonGraphic graphic={graphic} key={i} className="lesson-graphic" />;
         })
-    }
-    <style jsx>{`
-        #lesson-graphics {
-            position: absolute;
-            top: 0;
-            width: 100%;
-            height :100%;
-            z-index: -100;
         }
-    `}</style>
+        <style jsx>{`
+            #lesson-graphics {
+                position: absolute;
+                top: 0;
+                width: 100%;
+                height :100%;
+                z-index: -100;
+            }
+        `}</style>
     </div>
 )

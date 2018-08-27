@@ -39,7 +39,6 @@ export default class LessonPlayerScreen extends React.Component {
                 }));
 
                 this.state.avatar.loadLesson(this.state.loader.lesson.poseKey);
-                console.log('update state to false');
                 this.setState({ isLoading: false });
             });
         }

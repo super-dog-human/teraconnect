@@ -40,15 +40,15 @@ export default ({texts}) => (
         texts.map((text, i) => {
             return <LessonText text={text} key={i} className="lesson-text"/>;
         })
-    }
-    <style jsx>{`
-        #lesson-texts {
-            position: absolute;
-            top: 0;
-            width: 100%;
-            height :100%;
-            z-index: 10;
         }
-    `}</style>
+        <style jsx>{`
+            #lesson-texts {
+                position: absolute;
+                top: 0;
+                width: 100%;
+                height :100%;
+                z-index: 10;
+            }
+        `}</style>
     </div>
 )
