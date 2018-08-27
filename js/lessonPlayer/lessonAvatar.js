@@ -147,8 +147,12 @@ export default class LessonAvatar {
     }
 
     changeFacial(facialName, score=1) {
-        const index = AvatarFacial.indexOf(facialName);
-        this.skin.morphTargetInfluences[index] = score;
+        if (facialName == 'Default') {
+            this.skin.morphTargetInfluences.fill(0);
+        } else {
+            const index = AvatarFacial.indexOf(facialName);
+            this.skin.morphTargetInfluences[index] = score;
+        }
     }
 
     createDom(avatarURL, domWidth, domHeight) {

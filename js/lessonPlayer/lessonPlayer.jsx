@@ -137,12 +137,22 @@ export default class LessonPlayer extends React.Component {
         this.props.loader.lesson.timelines.filter((t) => {
             return t.timeSec > since && t.timeSec <= until;
         }).forEach((timeline) => {
+            this.avatarAction(timeline.spAction);
             this.playTimelineVoice(timeline.voice, elapsedTime);
             this.showTimelineText(timeline.text, elapsedTime);
             this.showTimelineGraphic(timeline.graphics);
         });
 
         this.preElapsedTime = elapsedTime;
+    }
+
+    avatarAction(action) {
+        if (!action) return;
+
+        const facialName = action.facialExpression;
+        if (facialName) {
+            this.props.avatar.changeFacial(facialName);
+        }
     }
 
     playTimelineVoice(voice, elapsedTime) {
