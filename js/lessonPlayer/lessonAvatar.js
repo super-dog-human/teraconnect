@@ -12,14 +12,16 @@ export default class LessonAvatar {
         this.renderer;
         this.skin;
         this.animationMixer;
+        this.isSpeaking;
     }
 
     loadLesson(poseKey) {
         this.poseKey = poseKey;
 
         this.animationMixer = new THREE.AnimationMixer(this.skin);
+        this.lipSyncAnimationMixer = new THREE.AnimationMixer(this.skin);
         this.setDefaultAnimation();
-        this.setBlinkAnimation();
+        this.setLipSyncAnimation();
         this.setRecordedAnimation();
     }
 
@@ -70,17 +72,14 @@ export default class LessonAvatar {
         this.animationMixer.clipAction(breathClip);
     }
 
-    setBlinkAnimation() {
-        const closeEyeMorph = this.skin.geometry.morphAttributes.normal[12];
-        const duration = 0.2;
-        this.setMorphingAnimation('blink', [closeEyeMorph], duration);
-    }
+    setLipSyncAnimation () {
+        const defaultIndex = AvatarFacial.indexOf('MouthNeutral');
+        const defaultMorph = this.skin.geometry.morphAttributes.normal[defaultIndex];
 
-    setMorphingAnimation(name, morphs, incremental) {
-        const defaultMorph = this.skin.geometry.morphAttributes.normal[27];
-        morphs.unshift(defaultMorph);
-        const animationClip = THREE.AnimationClip.CreateFromMorphTargetSequence(name, morphs, 30);
-        this.animationMixer.clipAction(animationClip).setDuration(incremental);
+        const mouthAIndex = AvatarFacial.indexOf('MouthA');
+        const mouthMorph = this.skin.geometry.morphAttributes.normal[mouthAIndex];
+        const animationClip = THREE.AnimationClip.CreateFromMorphTargetSequence('lipSync', [defaultMorph, mouthMorph], 30);
+        this.animationMixer.clipAction(animationClip).setDuration(0.4);
     }
 
     setRecordedAnimation() {
@@ -119,8 +118,8 @@ export default class LessonAvatar {
 
     play(isStart) {
         if (isStart) {
-            // FIXME shouldn't use _actions property
             this.animationMixer._actions.forEach((action) => {
+                if (action.getClip().name == 'lipSync' && !this.isSpeaking) return;
                 action.paused = false;
                 action.play();
             });
@@ -129,6 +128,27 @@ export default class LessonAvatar {
                 action.paused = true;
             });
         }
+    }
+
+    playLipSync(isSpeaking) {
+        this.animationMixer._actions.forEach((action) => {
+            if (action.getClip().name != 'lipSync') return;
+
+            if (isSpeaking) {
+                action.paused = false;
+                action.play();
+            } else {
+                action.paused = true;
+                this.changeFacial('MouthA', 0);
+            }
+        });
+
+        this.isSpeaking = isSpeaking;
+    }
+
+    changeFacial(facialName, score=1) {
+        const index = AvatarFacial.indexOf(facialName);
+        this.skin.morphTargetInfluences[index] = score;
     }
 
     createDom(avatarURL, domWidth, domHeight) {
@@ -195,5 +215,56 @@ export default class LessonAvatar {
 
     clearBeforeUnload() {
         this.scene.remove(this.scene.children);
+    }
+}
+
+class AvatarFacial {
+    static indexOf(facialName) {
+        return [
+            'AllAngry',
+            'AllFun',
+            'AllJoy',
+            'AllSorrow',
+            'AllSurprised',
+            'BrwAngry',
+            'BrwFun',
+            'BrwJoy',
+            'BrwSorrow',
+            'BrwSurprised',
+            'EyeNatural',
+            'EyeAngry',
+            'EyeClose',
+            'EyeCloseR',
+            'EyeCloseL',
+            'EyeJoy',
+            'EyeJoyR',
+            'EyeJoyL',
+            'EyeSorrow',
+            'EyeSurprised',
+            'EyeExtra',
+            'MouthClose',
+            'MouthUp',
+            'MouthDown',
+            'MouthAngry',
+            'MouthSmall',
+            'MouthLarge',
+            'MouthNeutral',
+            'MouthFun',
+            'MouthJoy',
+            'MouthSorrow',
+            'MouthSurprised',
+            'MouthA',
+            'MouthI',
+            'MouthU',
+            'MouthE',
+            'MouthO',
+            'Fung1',
+            'Fung1Low',
+            'Fung1Up',
+            'Fung2',
+            'Fung2Low',
+            'Fung2Up',
+            'EyeExtraOn',
+        ].indexOf(facialName);
     }
 }

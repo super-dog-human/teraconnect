@@ -13,22 +13,20 @@ export default class LessonPlayerScreen extends React.Component {
         this.playerElement;
 
         this.state = {
-            avatar: null,
-            loader: null,
+            isLoading: true,
+            avatar:    new LessonAvatar(),
+            loader:    new LessonLoader(props.match.params.id),
         };
     }
 
     componentDidMount() {
-        const loader = new LessonLoader(this.props.match.params.id);
-        const avatar = new LessonAvatar();
-
         if (this.props.isPreview) {
-            loader.loadForPreview();
+            this.state.loader.loadForPreview();
             // TODO
         } else {
-            loader.loadForPlayAsync().then(() => {
+            this.state.loader.loadForPlayAsync().then(() => {
                 const size = this.containerSize();
-                return avatar.createDom(loader.avatarFileURL, size.width, size.height);
+                return this.state.avatar.createDom(this.state.loader.avatarFileURL, size.width, size.height);
             })
             .then((dom) => {
                 dom.setAttribute('id', 'avatar-canvas');
@@ -37,11 +35,12 @@ export default class LessonPlayerScreen extends React.Component {
 
                 window.addEventListener('resize', (() => {
                     const size = this.containerSize();
-                    avatar.updateSize(size.width, size.height);
+                    this.state.avatar.updateSize(size.width, size.height);
                 }));
 
-                avatar.loadLesson(loader.lesson.poseKey);
-                this.setState({ avatar: avatar, loader: loader });
+                this.state.avatar.loadLesson(this.state.loader.lesson.poseKey);
+                console.log('update state to false');
+                this.setState({ isLoading: false });
             });
         }
     }
@@ -55,11 +54,10 @@ export default class LessonPlayerScreen extends React.Component {
     render() {
         return (
             <div ref={(e) => { this.container = e; }}>
-                <LessonPlayer avatar={this.state.avatar} loader={this.state.loader} ref={(e) => { this.playerElement = e; }} />
+                <LessonPlayer avatar={this.state.avatar} loader={this.state.loader} isLoading={this.state.isLoading} ref={(e) => { this.playerElement = e; }} />
             </div>
         );
     }
-
 
     componentWillUnmount() {
         if (this.state.loader) this.state.loader.clearBeforeUnload();

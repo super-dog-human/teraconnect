@@ -9,22 +9,21 @@ export default class LessonPlayer extends React.Component {
     constructor(props) {
         super(props);
 
-        this.lesson            = {};
-        this.material          = {};
         this.clock             = new Clock(false);
         this.preElapsedTime    = 0;
         this.pausedElapsedTime = 0;
         this.element;
-        new LessonVoicePlayer().then((player) => {
+        new LessonVoicePlayer(props.avatar).then((player) => {
             this.voicePlayer = player;
         });
 
         this.state = {
-            isLoading: true,
             isPlaying: false,
             texts:     [],
+            voices:    [],
             graphics:  [],
         }
+
         this.panelClick = this.panelClick.bind(this);
 
         this.animate();
@@ -55,7 +54,7 @@ export default class LessonPlayer extends React.Component {
                     #loading-indicator {
                         position: absolute;
                         top: 0;
-                        display: ${this.state.isLoading ? 'table' : 'none'};
+                        display: ${this.props.isLoading ? 'table' : 'none'};
                         width: 100%;
                         height: 100%;
                     }
@@ -74,7 +73,7 @@ export default class LessonPlayer extends React.Component {
                         height: 100%;
                     }
                     .control-btn {
-                        display: ${this.state.isLoading ? 'none' : 'block'};
+                        display: ${this.props.isLoading ? 'none' : 'block'};
                         border: none;
                         cursor: pointer;
                         width: 100%;
@@ -83,20 +82,11 @@ export default class LessonPlayer extends React.Component {
                         opacity: 0;
                     }
                     .control-btn:hover {
-                        opacity: ${this.state.isLoading || this.state.isPlaying ? 0: 0.2};
+                        opacity: ${this.props.isLoading || this.state.isPlaying ? 0: 0.2};
                     }
                 `}</style>
             </div>
         )
-    }
-
-    componentDidUpdate() {
-        if (!this.state.isLoading) return;
-
-        this.lesson   = this.props.loader.lesson;
-        this.material = this.props.loader.material;
-
-        this.setState({ isLoading: false });
     }
 
     panelClick() {
@@ -129,12 +119,11 @@ export default class LessonPlayer extends React.Component {
 
         const elapsedTime = this.clock.elapsedTime + this.pausedElapsedTime;
 
-        if (elapsedTime >= this.lesson.durationSec) {
+        if (elapsedTime >= this.props.loader.lesson.durationSec) {
             this.play(false);
             this.preElapsedTime = 0;
             this.pausedElapsedTime = 0;
-            this.setState({ texts: [], graphics: [] });
-
+            this.setState({ texts: [], voices: [], graphics: [] });
             return;
         }
 
@@ -145,10 +134,10 @@ export default class LessonPlayer extends React.Component {
 
         this.hideTimelineTextIfNeeded(elapsedTime);
 
-        this.lesson.timelines.filter((t) => {
+        this.props.loader.lesson.timelines.filter((t) => {
             return t.timeSec > since && t.timeSec <= until;
         }).forEach((timeline) => {
-            this.playTimelineVoice(timeline.voice);
+            this.playTimelineVoice(timeline.voice, elapsedTime);
             this.showTimelineText(timeline.text, elapsedTime);
             this.showTimelineGraphic(timeline.graphics);
         });
@@ -156,11 +145,16 @@ export default class LessonPlayer extends React.Component {
         this.preElapsedTime = elapsedTime;
     }
 
-    playTimelineVoice(voice) {
+    playTimelineVoice(voice, elapsedTime) {
         if (!voice) return;
 
-        const url = this.material.voices[voice.id].url;
+        const url = this.props.loader.material.voices[voice.id].url;
         this.voicePlayer.setAndPlay(url, voice.durationSec);
+
+        voice.stopAtSec = voice.durationSec + elapsedTime;
+        const newVoices = this.state.voices;
+        newVoices.push(voice);
+        this.setState({ voices: newVoices });
     }
 
     showTimelineText(text, elapsedTime) {
@@ -173,15 +167,15 @@ export default class LessonPlayer extends React.Component {
     }
 
     hideTimelineTextIfNeeded(elapsedTime) {
-        const currentTextLength = this.state.texts.length;
-        if (currentTextLength == 0) return;
+        const currentShowingTextLength = this.state.texts.length;
+        if (currentShowingTextLength == 0) return;
 
-        const newTexts = this.state.texts.filter((text) => {
+        const shouldShowingTexts = this.state.texts.filter((text) => {
             return text.hiddenAtSec > elapsedTime;
         });
 
-        if (newTexts.length != currentTextLength) {
-            this.setState({ texts: newTexts });
+        if (shouldShowingTexts.length < currentShowingTextLength) {
+            this.setState({ texts: shouldShowingTexts });
         }
     }
 
@@ -192,7 +186,7 @@ export default class LessonPlayer extends React.Component {
             let newGraphics = [];
             switch(graphic.action) {
                 case 'show':
-                    graphic.url = this.material.graphics[graphic.id].url;
+                    graphic.url = this.props.loader.material.graphics[graphic.id].url;
                     newGraphics = this.state.graphics;
                     newGraphics.push(graphic);
                     this.setState({ graphics: newGraphics });

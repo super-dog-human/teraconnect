@@ -1,5 +1,6 @@
 export default class LessonVoicePlayer {
-    constructor() {
+    constructor(avatar) {
+        this.avatar = avatar; // for update avatar lip-sync exact.
         this.context = new AudioContext();
         this.audioElement = new Audio();
         this.durationSec = 0;
@@ -11,11 +12,11 @@ export default class LessonVoicePlayer {
 
                 const source = this.context.createMediaElementSource(this.audioElement);
                 source.connect(this.audioProcessor);
-/*
+
                 this.audioProcessor.port.onmessage = () => {
-                    console.log('voice stoppped by duration order.');
+                    this.avatar.playLipSync(false);
                 };
-*/
+
                 return this;
             });
     }
@@ -35,8 +36,10 @@ export default class LessonVoicePlayer {
                 durationSec: this.durationSec,
             });
             this.audioElement.play(startSec);
+            this.avatar.playLipSync(true);
         } else {
             this.audioElement.pause();
+            this.avatar.playLipSync(false);
         }
     }
 }
