@@ -3,64 +3,74 @@ import ReactDOM from 'react-dom';
 import LessonLoader from './lessonLoader';
 import LessonAvatar from './lessonAvatar';
 import LessonPlayer from './lessonPlayer';
+import * as Const from '../common/constants';
 
 export default class LessonPlayerScreen extends React.Component {
-    static RATIO_16_TO_9() { return 0.5625 };
-
     constructor(props) {
         super(props)
         this.container;
         this.playerElement;
 
+        this.avatar = new LessonAvatar();
+        this.loader = new LessonLoader(props.match.params.id);
         this.state = {
             isLoading: true,
-            avatar:    new LessonAvatar(),
-            loader:    new LessonLoader(props.match.params.id),
         };
     }
 
     componentDidMount() {
         if (this.props.isPreview) {
-            this.state.loader.loadForPreview();
+            this.loader.loadForPreview();
             // TODO
         } else {
-            this.state.loader.loadForPlayAsync().then(() => {
-                const size = this.containerSize();
-                return this.state.avatar.createDom(this.state.loader.avatarFileURL, size.width, size.height);
+            this.loader.loadForPlayAsync().then(() => {
+                const size = containerSize();
+                return this.avatar.createDom(this.loader.avatarFileURL, size.width, size.height);
             })
             .then((dom) => {
                 dom.setAttribute('id', 'avatar-canvas');
-                dom.setAttribute('style', 'display: block; position: absolute; top: 0;');
                 ReactDOM.findDOMNode(this.playerElement).append(dom);
 
                 window.addEventListener('resize', (() => {
-                    const size = this.containerSize();
-                    this.state.avatar.updateSize(size.width, size.height);
+                    const size = containerSize();
+                    this.avatar.updateSize(size.width, size.height);
                 }));
 
-                this.state.avatar.loadLesson(this.state.loader.lesson.poseKey);
+                this.avatar.setDefaultAnimation();
+                this.avatar.loadRecordedAnimation(this.loader.lesson.poseKey);
                 this.setState({ isLoading: false });
+            });
+
+            const containerSize = (() => {
+                let playerWidth, playerHeight;
+                if (this.container.clientHeight / this.container.clientWidth > Const.RATIO_16_TO_9) {
+                    playerWidth  = this.container.clientWidth;
+                    playerHeight = Math.round(this.container.clientWidth * Const.RATIO_16_TO_9);
+                } else {
+                    playerWidth  = Math.round(this.container.clientHeight / Const.RATIO_16_TO_9);
+                    playerHeight = this.container.clientHeight;
+                }
+                return { width: playerWidth, height: playerHeight };
             });
         }
     }
 
-    containerSize() {
-        const playerWidth = this.container.clientWidth;
-        const playerHeight = Math.round(playerWidth * this.constructor.RATIO_16_TO_9());
-        return { width: playerWidth, height: playerHeight };
-    }
-
     render() {
         return (
-            <div ref={(e) => { this.container = e; }}>
-                <LessonPlayer avatar={this.state.avatar} loader={this.state.loader} isLoading={this.state.isLoading} ref={(e) => { this.playerElement = e; }} />
+            <div id="lesson-player" ref={(e) => { this.container = e; }}>
+                <LessonPlayer avatar={this.avatar} loader={this.loader} isLoading={this.state.isLoading} ref={(e) => { this.playerElement = e; }} />
+                <style jsx>{`
+                    #lesson-player {
+                        text-align: center;
+                    }
+                `}</style>
             </div>
         );
     }
 
     componentWillUnmount() {
-        if (this.state.loader) this.state.loader.clearBeforeUnload();
-        if (this.state.avatar) this.state.avatar.clearBeforeUnload();
+        if (this.loader) this.loader.clearBeforeUnload();
+        if (this.avatar) this.avatar.clearBeforeUnload();
     }
 }
 

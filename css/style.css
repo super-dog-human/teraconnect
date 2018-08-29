@@ -60,17 +60,6 @@ body {
     background-color: #D8D8D8;
 }
 
-footer {
-    height: 50px;
-}
-
-footer > div {
-    padding-top: 14px;
-    text-align: center;
-    color: #ffffff;
-    font-size: 14px;
-}
-
 header a { text-decoration: none; }
 header a:link { color: #ffffff; }
 header a:visited { color: #ffffff; }

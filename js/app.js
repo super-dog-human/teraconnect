@@ -9,20 +9,27 @@ import Recorder from './lessonRecorder'
 import PlayerScreen from './lessonPlayer'
 
 const App = () => (
-  <div>
-    <Header />
-    <Main />
-    <Footer />
-  </div>
+    <div>
+        <Header />
+        <Main />
+        <Footer />
+    </div>
 )
 
 const Main = () => (
-  <main>
-    <Route exact path='/'                   component={Home} />
-    <Route exact path='/lessons/:id/edit'   component={Editor} />
-    <Route exact path='/lessons/:id/record' component={Recorder} />
-    <Route exact path='/:id'                component={PlayerScreen} />
-  </main>
+    <main>
+        <Route exact path='/'                   component={Home} />
+        <Route exact path='/lessons/:id/edit'   component={Editor} />
+        <Route exact path='/lessons/:id/record' component={Recorder} />
+        <Route exact path='/:id'                component={PlayerScreen} />
+        <style jsx>{`
+            main {
+                padding-top: 64px;
+                padding-bottom: 50px;
+                height: 100%;
+            }
+        `}</style>
+    </main>
 )
 
 export default App

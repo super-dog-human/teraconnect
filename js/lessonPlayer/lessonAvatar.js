@@ -14,17 +14,18 @@ export default class LessonAvatar {
         this.isSpeaking;
     }
 
-    loadLesson(poseKey) {
-        this.poseKey = poseKey;
-
+    setDefaultAnimation() {
         this.animationMixer = new THREE.AnimationMixer(this.skin);
-        this.lipSyncAnimationMixer = new THREE.AnimationMixer(this.skin);
-        this.setDefaultAnimation();
+        this.setBreathAnimation();
         this.setLipSyncAnimation();
+    }
+
+    loadRecordedAnimation(poseKey) {
+        this.poseKey = poseKey;
         this.setRecordedAnimation();
     }
 
-    setDefaultAnimation() {
+    setBreathAnimation() {
         // breathing animation
         const breathBones = [
             this.bones.J_Bip_C_Head,
@@ -54,7 +55,7 @@ export default class LessonAvatar {
                 ],
             },
             {
-                // spine
+                // this.animationMixer
                 keys: [
                     { rot: [0, 0, 0, 1], time: 0, },
                     { rot: [0, 1, 0, 1], time: 3, },
@@ -152,6 +153,10 @@ export default class LessonAvatar {
             const index = AvatarFacial.indexOf(facialName);
             this.skin.morphTargetInfluences[index] = score;
         }
+    }
+
+    moveBones(pose) {
+        // radが格納されているobject
     }
 
     createDom(avatarURL, domWidth, domHeight) {

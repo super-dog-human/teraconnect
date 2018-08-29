@@ -4,6 +4,7 @@ import FontAwesome from 'react-fontawesome'
 import LessonTexts from './lessonTexts';
 import LessonGraphics from './lessonGraphics';
 import LessonVoicePlayer from './lessonVoicePlayer';
+import * as Const from '../common/constants';
 
 export default class LessonPlayer extends React.Component {
     constructor(props) {
@@ -49,7 +50,16 @@ export default class LessonPlayer extends React.Component {
                 <style jsx>{`
                     #lesson-player {
                         position: relative;
-                        padding-top: 56.25%;
+                        height: ${Const.RATIO_16_TO_9 * 100}vw;
+                        max-width: 100%;
+                        max-height: 100%;
+                    }
+                    #control-panel {
+                        position: absolute;
+                        top: 0;
+                        z-index: 100;
+                        width: 100%;
+                        height: 100%;
                     }
                     #loading-indicator {
                         position: absolute;
@@ -64,13 +74,6 @@ export default class LessonPlayer extends React.Component {
                         vertical-align: middle;
                         font-size: 10vw;
                         opacity: 0.5;
-                    }
-                    #control-panel {
-                        position: absolute;
-                        top: 0;
-                        z-index: 100;
-                        width: 100%;
-                        height: 100%;
                     }
                     .control-btn {
                         display: ${this.props.isLoading ? 'none' : 'block'};
@@ -114,7 +117,6 @@ export default class LessonPlayer extends React.Component {
 
     animate() {
         requestAnimationFrame(() => this.animate());
-        console.log(this.clock.elapsedTime);
 
         if (!this.state.isPlaying) return;
 
