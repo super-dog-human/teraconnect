@@ -2,23 +2,25 @@ import React from 'react';
 import Menu from '../menu';
 import { setupPoseDetector, detectPoseInRealTime } from './poseDetector';
 //import { loadDetector, setPreviewVideoSize, detectPoseInRealTime } from './voiceRecorder';
+import LessonRecorder from './lessonRecorder';
 import AvatarPreview from './avatarPreview';
-import * as Const from '../common/constants';
 
-export default class LessonRecorder extends React.Component {
+export default class LessonRecorderScreen extends React.Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            previewScaleX: 1,
-            previewScaleY: 1,
-            isRecording: false,
             detectedPose: {},
+            facialName: 'Default',
+            isRecording: false,
         };
 
         // TODO loading resources.
         this.avatarURL = "http://localhost:1234/bdiuotgrbj8g00l9t3ng.vrm";
         this.avatarPreview;
+        this.recorder = new LessonRecorder();
+
+        //         this.setState({ facialName: 'asdf' });
     }
 
     async componentDidMount() {
@@ -34,7 +36,7 @@ export default class LessonRecorder extends React.Component {
                 <Menu selectedIndex='2' />
 
                 <div id="lesson-recorder" ref={(e) => { this.avatarPreview = e; }}>
-                    <AvatarPreview avatar={{ url: this.avatarURL, pose: this.state.detectedPose }} />
+                    <AvatarPreview avatarURL={this.avatarURL} pose={this.state.detectedPose} facialName={this.state.facialName} isRecording={this.state.isRecording} />
 
                     <video id="pose-video" playsInline></video>
                     <div id="pose-keypoint">
@@ -85,10 +87,14 @@ export default class LessonRecorder extends React.Component {
     }
 
     async poseDetectionFrame() {
-//        if (!this.state.isRecording) return;
+        if (!this.state.isRecording) return;
+
+        const currentTime = performance.now();
+//        console.log(currentTime);
 
         const pose = await detectPoseInRealTime();
-        this.setState({ detectedPose: pose });
+        const avatarPose = this.recorder.addAvatarPose(pose, currentTime);
+        this.setState({ detectedPose: avatarPose });
 
         requestAnimationFrame(() => this.poseDetectionFrame());
     }

@@ -2,17 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import LessonAvatar from '../lessonPlayer/lessonAvatar';
 import { Clock } from 'three';
-import * as Const from '../common/constants';
 
 export default class AvatarPreview extends React.Component {
     constructor(props) {
         super(props)
         this.avatar = new LessonAvatar();
         this.clock  = new Clock(true);
+        this.preFacialName = '';
     }
 
     async componentDidMount() {
-        const dom = await this.avatar.createDom(this.props.avatar.url, this.container);
+        const dom = await this.avatar.createDom(this.props.avatarURL, this.container);
 
         this.avatar.setDefaultAnimation();
         this.avatar.play(true);
@@ -27,12 +27,19 @@ export default class AvatarPreview extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (Object.keys(nextProps.avatar.pose).length == 0) return;
+        if (!nextProps.isRecording) {
+            this.avatar.setInitPose();
+            return;
+        }
 
-        if (nextProps.avatar.pose == {}) return;
-        // this.clock.getDelta()を元に時刻も渡す
-        const elapsedTimeSec = 0;
-        this.avatar.moveBones(nextProps.avatar.pose, elapsedTimeSec);
+        if (Object.keys(nextProps.pose).length > 0) {
+            this.avatar.moveBones(nextProps.pose);
+        }
+
+        if (nextProps.facialName != this.preFacialName) {
+            this.avatar.changeFacial(nextProps.facialName);
+            this.preFacialName = nextProps.facialName;
+        }
     }
 
     animate() {
