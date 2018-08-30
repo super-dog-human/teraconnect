@@ -13,9 +13,7 @@ export default class LessonAvatar {
         this.skin;
         this.animationMixer;
         this.isSpeaking;
-        this.accuracyThresholdMin = 0.5;
-        this.rad35 = 0.61086523819802;
-        this.rad45 = 0.7853981633974483;
+        this.accuracyThresholdMin = 0.7;
         this.rad70 = 1.2217304763960306;
         this.rad90 = 1.5707963267948966;
     }
@@ -171,6 +169,7 @@ export default class LessonAvatar {
 
         reflectionPoseToArms(this, pose.leftElbow, pose.leftShoulder, pose.leftWrist, 'left');
         reflectionPoseToArms(this, pose.rightElbow, pose.rightShoulder, pose.rightWrist, 'right');
+        reflectionPoseToNeck(this, pose.nose, pose.leftEar, pose.rightEar);
 
         function reflectionPoseToArms(self, elbow, shoulder, wrist, side) {
             if (!elbow || !shoulder || !wrist) return;
@@ -184,7 +183,7 @@ export default class LessonAvatar {
                 Math.atan2(wrist.x - elbow.x, wrist.y - elbow.y) + self.rad90 - shoulderZRad;
 
             const elbowXRad = (Math.abs(elbowZRad) > self.rad90 || Math.abs(elbowZRad) > 0 ) ? Math.PI : 0;
-            const parmXRad = (Math.abs(elbowZRad) > self.rad90) ? -self.rad90 : 0;
+            const parmXRad  = (Math.abs(elbowZRad) > self.rad90) ? -self.rad90 : 0;
 
             if (side == 'left') {
                 self.bones.J_Adj_L_UpperArm.parent.rotation.z = -shoulderZRad;
@@ -200,6 +199,29 @@ export default class LessonAvatar {
                 self.bones.J_Bip_R_Hand.rotation.x            = parmXRad;
             }
         }
+
+        function reflectionPoseToNeck(self, nose, leftEar, rightEar) {
+            if (!nose && !leftEar && !rightEar) return;
+
+            if (nose && rightEar && leftEar) {
+                const rightFaceLength = nose.x - rightEar.x;
+                const leftFaceLength = leftEar.x - nose.x;
+                const faceAngleRatio = (rightFaceLength > leftFaceLength) ?
+                    1 - (leftFaceLength / rightFaceLength) :
+                    -1 + (rightFaceLength / leftFaceLength);
+
+                self.bones.J_Bip_C_Neck.rotation.y = Math.round(faceAngleRatio * 10) / 10;
+            }
+
+            /*
+                leftEar
+                leftEye
+                nose
+                rightEar
+                rightEye
+            */
+        }
+
 /*
         this.poseHistory.leftElbows.push({ rot: bone.leftElbows.rotation, time: time });
 */
