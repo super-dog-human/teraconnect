@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import LessonLoader from './lessonLoader';
 import LessonAvatar from './lessonAvatar';
 import LessonPlayer from './lessonPlayer';
-import * as Const from '../common/constants';
 
 export default class LessonPlayerScreen extends React.Component {
     constructor(props) {
@@ -18,40 +17,23 @@ export default class LessonPlayerScreen extends React.Component {
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         if (this.props.isPreview) {
             this.loader.loadForPreview();
             // TODO
         } else {
-            this.loader.loadForPlayAsync().then(() => {
-                const size = containerSize();
-                return this.avatar.createDom(this.loader.avatarFileURL, size.width, size.height);
-            })
-            .then((dom) => {
-                dom.setAttribute('id', 'avatar-canvas');
-                ReactDOM.findDOMNode(this.playerElement).append(dom);
+            await this.loader.loadForPlayAsync()
+            const dom = await this.avatar.createDom(this.loader.avatarFileURL, this.container);
+            dom.setAttribute('id', 'avatar-canvas');
+            ReactDOM.findDOMNode(this.playerElement).append(dom);
 
-                window.addEventListener('resize', (() => {
-                    const size = containerSize();
-                    this.avatar.updateSize(size.width, size.height);
-                }));
+            window.addEventListener('resize', (() => {
+                this.avatar.updateSize(this.container);
+            }));
 
-                this.avatar.setDefaultAnimation();
-                this.avatar.loadRecordedAnimation(this.loader.lesson.poseKey);
-                this.setState({ isLoading: false });
-            });
-
-            const containerSize = (() => {
-                let playerWidth, playerHeight;
-                if (this.container.clientHeight / this.container.clientWidth > Const.RATIO_16_TO_9) {
-                    playerWidth  = this.container.clientWidth;
-                    playerHeight = Math.round(this.container.clientWidth * Const.RATIO_16_TO_9);
-                } else {
-                    playerWidth  = Math.round(this.container.clientHeight / Const.RATIO_16_TO_9);
-                    playerHeight = this.container.clientHeight;
-                }
-                return { width: playerWidth, height: playerHeight };
-            });
+            this.avatar.setDefaultAnimation();
+            this.avatar.loadRecordedAnimation(this.loader.lesson.poseKey);
+            this.setState({ isLoading: false });
         }
     }
 

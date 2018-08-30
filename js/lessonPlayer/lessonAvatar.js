@@ -1,10 +1,12 @@
 import * as THREE from 'three';
 import './GLTFLoader';
+import * as Const from '../common/constants';
 
 export default class LessonAvatar {
     constructor() {
         this.poseKey = {};
         this.bones = {};
+        this.poseHistories = [];
         this.controls;
         this.camera;
         this.scene;
@@ -12,6 +14,11 @@ export default class LessonAvatar {
         this.skin;
         this.animationMixer;
         this.isSpeaking;
+        this.accuracyThresholdMin = 0.5;
+        this.rad35 = 0.61086523819802;
+        this.rad45 = 0.7853981633974483;
+        this.rad70 = 1.2217304763960306;
+        this.rad90 = 1.5707963267948966;
     }
 
     setDefaultAnimation() {
@@ -155,12 +162,54 @@ export default class LessonAvatar {
         }
     }
 
-    moveBones(pose) {
-        // radが格納されているobject
+    moveBones(pose, time) {
+        for (let part in pose) {
+            if (part == 'score') continue;
+            if (!pose[part]) continue;
+            if (pose[part].score >= this.accuracyThresholdMin) continue;
+            pose[part] = null;
+        }
+
+        reflectionPoseToArms(this, pose.leftElbow, pose.leftShoulder, pose.leftWrist, 'left');
+        reflectionPoseToArms(this, pose.rightElbow, pose.rightShoulder, pose.rightWrist, 'right');
+
+        function reflectionPoseToArms(self, elbow, shoulder, wrist, side) {
+            if (!elbow || !shoulder || !wrist) return;
+
+            const shoulderZRad = (side == 'left') ?
+                Math.atan2(elbow.x - shoulder.x, elbow.y - shoulder.y) - self.rad90 :
+                Math.atan2(shoulder.x - elbow.x, shoulder.y - elbow.y) - self.rad90;
+
+            const elbowZRad = (side == 'left') ?
+                Math.atan2(elbow.x - wrist.x, elbow.y - wrist.y) + self.rad90 - shoulderZRad :
+                Math.atan2(wrist.x - elbow.x, wrist.y - elbow.y) + self.rad90 - shoulderZRad;
+
+            const elbowXRad = (Math.abs(elbowZRad) > self.rad90 || Math.abs(elbowZRad) > 0 ) ? Math.PI : 0;
+
+            const parmXRad = (Math.abs(elbowZRad) > self.rad90) ? -self.rad90 : 0;
+
+            if (side == 'left') {
+                self.bones.J_Adj_L_UpperArm.parent.rotation.z = -shoulderZRad;
+                self.bones.J_Bip_L_LowerArm.rotation.z        = elbowZRad;
+                self.bones.J_Bip_L_LowerArm.rotation.x        = elbowXRad;
+                self.bones.J_Bip_L_LowerArm.rotation.y        = 0.5;
+                self.bones.J_Bip_L_Hand.rotation.x            = parmXRad;
+            } else {
+                self.bones.J_Adj_R_UpperArm.parent.rotation.z = -shoulderZRad;
+                self.bones.J_Bip_R_LowerArm.rotation.z        = elbowZRad;
+                self.bones.J_Bip_R_LowerArm.rotation.x        = -elbowXRad;
+                self.bones.J_Bip_L_LowerArm.rotation.y        = 0.5;
+                self.bones.J_Bip_R_Hand.rotation.x            = parmXRad;
+            }
+        }
+/*
+        this.poseHistory.leftElbows.push({ rot: bone.leftElbows.rotation, time: time });
+*/
     }
 
-    createDom(avatarURL, domWidth, domHeight) {
-        this.camera = new THREE.PerspectiveCamera(45, domWidth / domHeight, 1, 10);
+    createDom(avatarURL, container) {
+        const domSize = this.domSize(container);
+        this.camera = new THREE.PerspectiveCamera(45, domSize.width / domSize.height, 1, 10);
         this.camera.position.set(0, 1.2, -2.2);
         this.camera.lookAt(new THREE.Vector3(0, 1.1, 0));
 
@@ -192,9 +241,9 @@ export default class LessonAvatar {
             });
 
             // initialize arm positions
-            const rad70 = 1.2217304763960306;
-            this.bones.J_Adj_L_UpperArm.parent.rotateZ(rad70);
-            this.bones.J_Adj_R_UpperArm.parent.rotateZ(-rad70);
+
+            this.bones.J_Adj_L_UpperArm.parent.rotateZ(this.rad70);
+            this.bones.J_Adj_R_UpperArm.parent.rotateZ(-this.rad70);
 
             // set upper arm bones to top level.
             this.skin.skeleton.bones.push(this.bones.J_Adj_L_UpperArm.parent, this.bones.J_Adj_R_UpperArm.parent);
@@ -204,9 +253,9 @@ export default class LessonAvatar {
 
             this.scene.add(vrm.scene);
 
-            this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
             this.renderer.setPixelRatio(window.devicePixelRatio);
-            this.renderer.setSize(domWidth, domHeight);
+            this.renderer.setSize(domSize.width, domSize.height);
             this.renderer.gammaOutput = true;
             this.renderer.render(this.scene, this.camera);
 
@@ -214,8 +263,22 @@ export default class LessonAvatar {
         });
     }
 
-    updateSize(width, height) {
-        this.renderer.setSize(width, height);
+    updateSize(container) {
+        const size = this.domSize(container);
+        this.renderer.setSize(size.width, size.height);
+    }
+
+    domSize(container) {
+        let playerWidth, playerHeight;
+        if (container.clientHeight / container.clientWidth > Const.RATIO_16_TO_9) {
+            playerWidth  = container.clientWidth;
+            playerHeight = Math.round(container.clientWidth * Const.RATIO_16_TO_9);
+        } else {
+            playerWidth  = Math.round(container.clientHeight / Const.RATIO_16_TO_9);
+            playerHeight = container.clientHeight;
+        }
+
+        return { width: playerWidth, height: playerHeight };
     }
 
     clearBeforeUnload() {

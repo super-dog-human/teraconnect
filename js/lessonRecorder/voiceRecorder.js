@@ -1,15 +1,12 @@
-const lessonID     = location.search.split('?')[1];
-let recorder       = null;
-let isReady        = false;
-let unityGameInstance;
+let lessonID;
+let recorder = null;
+let isReady  = false;
 
-exports.setGameInstance = function(gameInstance) {
-    unityGameInstance = gameInstance;
-}
 exports.start = startVoiceRecording;
 exports.stop  = stopVoiceRecording;
 
 function startVoiceRecording() {
+    lessonID = lessonID;
     if (isReady) {
         recorder.port.postMessage({ isRecording: true });
     } else {
