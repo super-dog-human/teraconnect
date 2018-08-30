@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import './GLTFLoader';
-import './OrbitControls';
 import * as Const from '../common/constants';
 
 export default class LessonAvatar {
@@ -8,7 +7,6 @@ export default class LessonAvatar {
         this.poseKey = {};
         this.bones = {};
         this.poseHistories = [];
-        this.controls;
         this.camera;
         this.scene;
         this.renderer;
@@ -213,9 +211,6 @@ export default class LessonAvatar {
         this.camera.position.set(0, 1.2, -2.2);
         this.camera.lookAt(new THREE.Vector3(0, 1.1, 0));
 
-        const controls = new THREE.OrbitControls(this.camera);
-        controls.update();
-
         this.scene = new THREE.Scene();
         const light = new THREE.AmbientLight(0xbbbbff);
         light.position.set(0, 1, 0);
@@ -244,7 +239,6 @@ export default class LessonAvatar {
             });
 
             // initialize arm positions
-
             this.bones.J_Adj_L_UpperArm.parent.rotateZ(this.rad70);
             this.bones.J_Adj_R_UpperArm.parent.rotateZ(-this.rad70);
 
