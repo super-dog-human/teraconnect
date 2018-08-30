@@ -93,7 +93,7 @@ export default class LessonRecorderScreen extends React.Component {
 //        console.log(currentTime);
 
         const pose = await detectPoseInRealTime();
-        const avatarPose = this.recorder.addAvatarPose(pose, currentTime);
+        const avatarPose = this.recorder.recordAvatarPose(pose, currentTime);
         this.setState({ detectedPose: avatarPose });
 
         requestAnimationFrame(() => this.poseDetectionFrame());

@@ -17,7 +17,7 @@ export default class LessonRecorder {
         };
     }
 
-    addAvatarPose(pose, time) {
+    recordAvatarPose(pose, time) {
         for (let part in pose) {
             if (part == 'score') continue;
             if (!pose[part]) continue;
@@ -26,13 +26,13 @@ export default class LessonRecorder {
         }
 
         const avatarPose = {};
-        reflectionPoseToArms(this, pose.leftElbow, pose.leftShoulder, pose.leftWrist, 'left');
-        reflectionPoseToArms(this, pose.rightElbow, pose.rightShoulder, pose.rightWrist, 'right');
-        reflectionPoseToNeck(this, pose.nose, pose.leftEar, pose.rightEar);
+        recordAvatarArmPose(this, pose.leftElbow, pose.leftShoulder, pose.leftWrist, 'left');
+        recordAvatarArmPose(this, pose.rightElbow, pose.rightShoulder, pose.rightWrist, 'right');
+        recordAvatarNeckPose(this, pose.nose, pose.leftEar, pose.rightEar);
 
         return avatarPose;
 
-        function reflectionPoseToArms(self, elbow, shoulder, wrist, side) {
+        function recordAvatarArmPose(self, elbow, shoulder, wrist, side) {
             if (!elbow || !shoulder || !wrist) return;
 
             const shoulderZRad = (side == 'left') ?
@@ -69,7 +69,7 @@ export default class LessonRecorder {
             }
         }
 
-        function reflectionPoseToNeck(self, nose, leftEar, rightEar) {
+        function recordAvatarNeckPose(self, nose, leftEar, rightEar) {
             if (!nose || !leftEar || !rightEar) return;
 
             const rightFaceLength = nose.x - rightEar.x;
