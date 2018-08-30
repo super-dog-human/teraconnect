@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import './GLTFLoader';
+import './OrbitControls';
 import * as Const from '../common/constants';
 
 export default class LessonAvatar {
@@ -185,20 +186,19 @@ export default class LessonAvatar {
                 Math.atan2(wrist.x - elbow.x, wrist.y - elbow.y) + self.rad90 - shoulderZRad;
 
             const elbowXRad = (Math.abs(elbowZRad) > self.rad90 || Math.abs(elbowZRad) > 0 ) ? Math.PI : 0;
-
             const parmXRad = (Math.abs(elbowZRad) > self.rad90) ? -self.rad90 : 0;
 
             if (side == 'left') {
                 self.bones.J_Adj_L_UpperArm.parent.rotation.z = -shoulderZRad;
                 self.bones.J_Bip_L_LowerArm.rotation.z        = elbowZRad;
                 self.bones.J_Bip_L_LowerArm.rotation.x        = elbowXRad;
-                self.bones.J_Bip_L_LowerArm.rotation.y        = 0.5;
+                self.bones.J_Bip_L_LowerArm.rotation.y        = -0.5;
                 self.bones.J_Bip_L_Hand.rotation.x            = parmXRad;
             } else {
                 self.bones.J_Adj_R_UpperArm.parent.rotation.z = -shoulderZRad;
                 self.bones.J_Bip_R_LowerArm.rotation.z        = elbowZRad;
                 self.bones.J_Bip_R_LowerArm.rotation.x        = -elbowXRad;
-                self.bones.J_Bip_L_LowerArm.rotation.y        = 0.5;
+                self.bones.J_Bip_R_LowerArm.rotation.y        = 0.5;
                 self.bones.J_Bip_R_Hand.rotation.x            = parmXRad;
             }
         }
@@ -212,6 +212,9 @@ export default class LessonAvatar {
         this.camera = new THREE.PerspectiveCamera(45, domSize.width / domSize.height, 1, 10);
         this.camera.position.set(0, 1.2, -2.2);
         this.camera.lookAt(new THREE.Vector3(0, 1.1, 0));
+
+        const controls = new THREE.OrbitControls(this.camera);
+        controls.update();
 
         this.scene = new THREE.Scene();
         const light = new THREE.AmbientLight(0xbbbbff);
