@@ -10,6 +10,8 @@ export default class LessonAvatar {
         this.scene;
         this.renderer;
         this.skin;
+        this.positionObject;
+        this.moveDirection;
         this.animationMixer;
         this.isSpeaking;
     }
@@ -73,10 +75,10 @@ export default class LessonAvatar {
     }
 
     setLipSyncAnimation () {
-        const defaultIndex = AvatarFacial.indexOf('MouthNeutral');
+        const defaultIndex = AvatarFace.indexOf('MouthNeutral');
         const defaultMorph = this.skin.geometry.morphAttributes.normal[defaultIndex];
 
-        const mouthAIndex = AvatarFacial.indexOf('MouthA');
+        const mouthAIndex = AvatarFace.indexOf('MouthA');
         const mouthMorph = this.skin.geometry.morphAttributes.normal[mouthAIndex];
         const animationClip = THREE.AnimationClip.CreateFromMorphTargetSequence('lipSync', [defaultMorph, mouthMorph], 30);
         this.animationMixer.clipAction(animationClip).setDuration(0.4);
@@ -91,7 +93,7 @@ export default class LessonAvatar {
             this.bones.J_Bip_L_LowerArm,
             this.bones.J_Bip_R_LowerArm,
             this.bones.J_Bip_C_Neck,
-            this.bones.J_Bip_C_Neck.parent.parent,
+            this.positionObject,
         ];
 
         const poseKeys = [
@@ -121,6 +123,7 @@ export default class LessonAvatar {
 
     animate(deltaTime) {
         this.animationMixer.update(deltaTime);
+        this.movePosition(deltaTime);
         this.renderer.render(this.scene, this.camera);
     }
 
@@ -147,18 +150,19 @@ export default class LessonAvatar {
                 action.play();
             } else {
                 action.paused = true;
-                this.changeFacial('MouthA', 0);
+                this.changeFace('MouthA', 0);
             }
         });
 
         this.isSpeaking = isSpeaking;
     }
 
-    changeFacial(facialName, score=1) {
-        if (facialName == 'Default') {
-            this.skin.morphTargetInfluences.fill(0);
+    changeFace(faceName, score=1) {
+        this.skin.morphTargetInfluences.fill(0);
+        if (faceName == 'Default') {
+            return;
         } else {
-            const index = AvatarFacial.indexOf(facialName);
+            const index = AvatarFace.indexOf(faceName);
             this.skin.morphTargetInfluences[index] = score;
         }
     }
@@ -186,10 +190,52 @@ export default class LessonAvatar {
         }
     }
 
+    movePosition(deltaTime) {
+        if (!this.moveDirection) return;
+
+        const position = this.positionObject.position;
+        switch(this.moveDirection) {
+            case 'left':
+                position.x -= deltaTime;
+                break;
+            case 'right':
+                position.x += deltaTime;
+                break;
+            case 'front':
+                position.z -= deltaTime;
+                break;
+            case 'back':
+                position.z += deltaTime;
+                break;
+        }
+
+        console.log('x: ' + position.x);
+        console.log('z: ' + position.z);
+
+        if (position.x < -2 || position.x > 2 || position.z < 17 || position.z > 18.5) {
+            this.moveDirection = null;
+        }
+    }
+
+    moveTo(direction) {
+        console.log(direction);
+
+        if (direction == 'stop') {
+            this.moveDirection = null;
+            return;
+        }
+
+        this.moveDirection = direction;
+    }
+
+    currentPosition() {
+        return this.positionObject.position;
+    }
+
     createDom(avatarURL, container) {
         const domSize = this.domSize(container);
-        this.camera = new THREE.PerspectiveCamera(45, domSize.width / domSize.height, 1, 10);
-        this.camera.position.set(0, 1.2, -2.2);
+        this.camera = new THREE.PerspectiveCamera(45, domSize.width / domSize.height, 1, 100);
+        this.camera.position.set(0, 1.2, 20);
         this.camera.lookAt(new THREE.Vector3(0, 1.1, 0));
 
         this.scene = new THREE.Scene();
@@ -202,23 +248,29 @@ export default class LessonAvatar {
                 avatarURL, (vrm) => { resolve(vrm); }
             );
         }).then((vrm) =>{
-            this.skin = vrm.scenes[0].children[1];
+            this.skin = vrm.scene.children[1];
 
-            vrm.scenes.forEach((scene) => {
-                scene.traverse((object) => {
-                    if (object.isBone) this.bones[object.name] = object;
-                    if (!object.material) return;
+            vrm.scene.traverse((object) => {
+                if (object.isBone) this.bones[object.name] = object;
+                if (!object.material) return;
 
-                    if (Array.isArray(object.material)) {
-                        object.material.forEach((material) => {
-                            material.alphaTest = 0.5;
-                        });
-                    } else {
-                        object.material.alphaTest = 0.5;
-                    }
-                });
+                if (Array.isArray(object.material)) {
+                    object.material.forEach((material) => {
+                        material.alphaTest = 0.5;
+                    });
+                } else {
+                    object.material.alphaTest = 0.5;
+                }
             });
 
+            // set upper arm bones to top level.
+            this.positionObject = this.bones.J_Adj_C_Chest.parent.parent.parent.parent; // wtf
+            this.skin.skeleton.bones.push(this.bones.J_Adj_L_UpperArm.parent, this.bones.J_Adj_R_UpperArm.parent, this.positionObject);
+            const defaultMatrix4 = new THREE.Matrix4();
+            defaultMatrix4.set(1, 0, 0, 0, 0, 1, -0, 0, -0, 0, 1, 0, 0, 0, 0, 1); // this is sloppy values.
+            this.skin.skeleton.boneInverses.push(defaultMatrix4, defaultMatrix4, defaultMatrix4);
+
+            this.initAvatarPosition();
             this.initBonePosition();
 
             this.scene.add(vrm.scene);
@@ -233,6 +285,12 @@ export default class LessonAvatar {
         });
     }
 
+    initAvatarPosition() {
+        this.movePositions = [0, 0, 0];
+        this.positionObject.rotation.set(0, Math.PI, 0);
+        this.positionObject.position.set(0, 0, 18);
+    }
+
     initBonePosition() {
         this.bones.J_Adj_L_UpperArm.parent.rotation.z = Const.RAD_70;
         this.bones.J_Adj_R_UpperArm.parent.rotation.z = -Const.RAD_70;
@@ -241,7 +299,7 @@ export default class LessonAvatar {
         this.bones.J_Bip_R_LowerArm.rotation.set(0, 0, 0);
         this.bones.J_Bip_L_Hand.rotation.set(0, 0, 0);
         this.bones.J_Bip_R_Hand.rotation.set(0, 0, 0);
-        this.bones.J_Bip_C_Neck.rotation.y = 0;
+        this.bones.J_Bip_C_Neck.rotation.set(0, 0, 0);
     }
 
     updateSize(container) {
@@ -267,8 +325,8 @@ export default class LessonAvatar {
     }
 }
 
-class AvatarFacial {
-    static indexOf(facialName) {
+class AvatarFace {
+    static indexOf(faceName) {
         return [
             'AllAngry',
             'AllFun',
@@ -314,6 +372,6 @@ class AvatarFacial {
             'Fung2Low',
             'Fung2Up',
             'EyeExtraOn',
-        ].indexOf(facialName);
+        ].indexOf(faceName);
     }
 }

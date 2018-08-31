@@ -5,6 +5,7 @@ import * as Const from '../common/constants';
 export default class LessonRecorder {
     constructor() {
         this.accuracyThresholdMin = 0.7;
+        this.elapsedTimeSec = 0;
         this.avatarPoseHistory = {
             leftHands:      [],
             rightHands:     [],
@@ -19,15 +20,16 @@ export default class LessonRecorder {
 
     start(isStart) {
         if (isStart) {
-
-        } else {
-
+            this.elapsedTimeSec += performance.now();
         }
-        this.isStart = isStart;
+    }
+
+    currentRecordingTime() {
+        performance.now() - this.elapsedTimeSec;
     }
 
     addAvatarPose(pose) {
-        const time = performance.now();
+        const time = this.currentRecordingTime();
 
         for (let part in pose) {
             if (part == 'score') continue;
@@ -95,16 +97,17 @@ export default class LessonRecorder {
     }
 
 
-    addAvatarPosition() {
+    addAvatarPosition(position) {
+        console.log(position);
         // {x: 0, y: 0}
     }
 
-    addSwitchingGraphic() {
-
+    addSwitchingGraphic(graphicID) {
+        console.log(graphicID);
     }
 
-    addSwitchingFacial() {
-
+    addSwitchingFace(faceName) {
+        console.log(faceName);
     }
 
     sendRecord() {

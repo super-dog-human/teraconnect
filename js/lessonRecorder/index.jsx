@@ -5,7 +5,7 @@ import { setupPoseDetector, detectPoseInRealTime, clearPoseCanvas } from './pose
 //import { loadDetector, setPreviewVideoSize, detectPoseInRealTime } from './voiceRecorder';
 import LessonRecorder from './lessonRecorder';
 import AvatarPreview from './avatarPreview';
-import LessonGraphic from './/lessonGraphic';
+import LessonGraphic from './lessonGraphic';
 
 export default class LessonRecorderScreen extends React.Component {
     constructor(props) {
@@ -15,6 +15,7 @@ export default class LessonRecorderScreen extends React.Component {
             detectedPose: {},
             graphicURL: '',
             facialName: 'Default',
+            moveDirection: 'stop',
             isLoading: true,
             isRecording: false,
             isPause: false,
@@ -24,9 +25,18 @@ export default class LessonRecorderScreen extends React.Component {
         // TODO loading resources.
         this.avatarURL = "http://localhost:1234/bdiuotgrbj8g00l9t3ng.vrm";
         this.graphicURLs = [
-            '',
-            '',
-            '',
+            {
+                id: 1,
+                url: 'https://s3-ap-northeast-1.amazonaws.com/ftext/mathII/p143.png',
+            },
+            {
+                id: 2,
+                url: 'https://s3-ap-northeast-1.amazonaws.com/ftext/mathII/p144-1.png',
+            },
+            {
+                id: 3,
+                url: 'https://s3-ap-northeast-1.amazonaws.com/ftext/mathI/numberline.png',
+            },
         ];
         this.graphicURLIndex = -1;
         this.avatarPreview;
@@ -62,8 +72,36 @@ export default class LessonRecorderScreen extends React.Component {
         this.setState({ isPoseDetecting: !this.state.isPoseDetecting });
     }
 
+    _switchFace(faceName) {
+        if (this.state.faceName == faceName) return;
+
+        this.setState({ faceName: faceName });
+        this.recorder.addSwitchingFace(faceName);
+    }
+
+    _switchGraphic(diff) {
+        this.graphicURLIndex += diff;
+        const graphic = this.graphicURLs[this.graphicURLIndex];
+        this.setState({ graphicURL: graphic.url });
+        this.recorder.addSwitchingGraphic(graphic.id);
+    }
+
+    _movePosition(direction) {
+        this.setState({ moveDirection: direction });
+    }
+
+    _stopMovingPosition() {
+        if (this.state.moveDirection == 'stop') return;
+
+        const position = '';
+        //currentPosition
+        this.recorder.addAvatarPosition(position);
+        this.setState({ moveDirection: 'stop' });
+    }
+
     async _poseDetectionFrame() {
         if (!this.state.isPoseDetecting) {
+            this.setState({ detectedPose: {} });
             clearPoseCanvas();
             return;
         }
@@ -84,7 +122,8 @@ export default class LessonRecorderScreen extends React.Component {
                     <AvatarPreview
                         avatarURL={this.avatarURL}
                         pose={this.state.detectedPose}
-                        facialName={this.state.facialName}
+                        faceName={this.state.faceName}
+                        moveDirection={this.state.moveDirection}
                         isPoseDetecting={this.state.isPoseDetecting}
                     />
 
@@ -98,24 +137,74 @@ export default class LessonRecorderScreen extends React.Component {
                     <div id="control-panel">
                         <div id="recording-status">REC</div>
                         <div id="recording-controller">
-                            <button>prev image</button>
-                            <button>next image</button>
-                            <button onClick={this._switchPoseDetection.bind(this)}>ポーズ検出</button>
-                            <button type="button" id="btn-start-record" className="btn-danger"
+                            <button type="button" className="btn" onClick={this._switchGraphic.bind(this, -1)}>prev image</button>
+                            <button type="button" className="btn" onClick={this._switchGraphic.bind(this, 1)}>next image</button>
+                            <button type="button" className="btn" onClick={this._switchPoseDetection.bind(this)}>ポーズ検出</button>
+
+                            <button type="button" id="btn-start-record" className="btn btn-danger"
                                 onClick={this._recordingStart.bind(this)}>
                                 <FontAwesomeIcon icon={['far', 'dot-circle']} />
                                 収録開始
                             </button>
-                            <button type="button" id="btn-stop-record" className="btn-secondary"
+                            <button type="button" id="btn-stop-record" className="btn btn-secondary"
                                 onClick={this._recordingStop.bind(this)}>
                                 <FontAwesomeIcon icon={['far', 'pause-circle']} />
                                 停止
                             </button>
-                            <button type="button" id="btn-resume-record" className="btn-primaryr"
+                            <button type="button" id="btn-resume-record" className="btn btn-primary"
                                 onClick={this._recordingResume.bind(this)}>
                                 <FontAwesomeIcon icon={['far', 'dot-circle']} />
                                 再開
                             </button>
+
+                            <div id="change-emotion">
+                                <button type="button" className="btn btn-dark" onClick={this._switchFace.bind(this, 'Default')}>
+                                    <FontAwesomeIcon icon={['far', 'meh-blank']} />
+                                </button>
+                                <button type="button" className="btn btn-dark" onClick={this._switchFace.bind(this, 'AllFun')}>
+                                    <FontAwesomeIcon icon={['fas', 'smile']} />
+                                </button>
+                                <button type="button" className="btn btn-dark" onClick={this._switchFace.bind(this, 'AllJoy')}>
+                                    <FontAwesomeIcon icon={['fas', 'laugh-beam']} />
+                                </button>
+                                <button type="button" className="btn btn-dark" onClick={this._switchFace.bind(this, 'AllSorrow')}>
+                                    <FontAwesomeIcon icon={['fas', 'frown-open']} />
+                                </button>
+                                <button type="button" className="btn btn-dark" onClick={this._switchFace.bind(this, 'AllAngry')}>
+                                    <FontAwesomeIcon icon={['fas', 'angry']} />
+                                </button>
+                                <button type="button" className="btn btn-dark" onClick={this._switchFace.bind(this, 'AllSurprised')}>
+                                    <FontAwesomeIcon icon={['fas', 'surprise']} />
+                                </button>
+                            </div>
+
+                            <div id="move-position">
+                                <button type="button" className="btn btn-dark"
+                                    onMouseDown={this._movePosition.bind(this, 'back')}
+                                    onMouseUp={this._stopMovingPosition.bind(this)}
+                                    onMouseOut={this._stopMovingPosition.bind(this)}>
+                                    <FontAwesomeIcon icon={['fas', 'arrow-up']} />
+                                </button>
+                                <button type="button" className="btn btn-dark"
+                                    onMouseDown={this._movePosition.bind(this, 'front')}
+                                    onMouseUp={this._stopMovingPosition.bind(this)}
+                                    onMouseOut={this._stopMovingPosition.bind(this)}>
+                                    <FontAwesomeIcon icon={['fas', 'arrow-down']} />
+                                </button>
+                                <button type="button" className="btn btn-dark"
+                                    onMouseDown={this._movePosition.bind(this, 'left')}
+                                    onMouseUp={this._stopMovingPosition.bind(this)}
+                                    onMouseOut={this._stopMovingPosition.bind(this)}>
+                                    <FontAwesomeIcon icon={['fas', 'arrow-left']} />
+                                </button>
+                                <button type="button" className="btn btn-dark"
+                                    onMouseDown={this._movePosition.bind(this, 'right')}
+                                    onMouseUp={this._stopMovingPosition.bind(this)}
+                                    onMouseOut={this._stopMovingPosition.bind(this)}>
+                                    <FontAwesomeIcon icon={['fas', 'arrow-right']} />
+                                </button>
+
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -154,9 +243,22 @@ export default class LessonRecorderScreen extends React.Component {
                     }
                     #btn-stop-record {
                         display: ${this.state.isRecording ? 'inline-block' : 'none'};
+                        opacity: 0.2;
+                    }
+                    #btn-stop-record:hover {
+                        opacity: 1;
                     }
                     #btn-resume-record {
                         display: ${this.state.isPause ? 'inline-block' : 'none'};
+                        opacity: 0.2;
+                    }
+                    #btn-resume-record:hover {
+                        opacity: 1;
+                    }
+                    #change-emotion button {
+                        width: 4vw;
+                        height: 4vw;
+                        font-size: 3vw;
                     }
                 `}</style>
             </div>

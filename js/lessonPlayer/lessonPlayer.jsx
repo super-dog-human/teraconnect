@@ -55,11 +55,7 @@ export default class LessonPlayer extends React.Component {
         const elapsedTime = this.clock.elapsedTime + this.pausedElapsedTime;
 
         if (elapsedTime >= this.props.loader.lesson.durationSec) {
-            this.play(false);
-            this.preElapsedTime = 0;
-            this.pausedElapsedTime = 0;
-            this.setState({ texts: [], voices: [], graphics: [] });
-            // TODO init pauses
+            this._endPlaying();
             return;
         }
 
@@ -80,6 +76,14 @@ export default class LessonPlayer extends React.Component {
         });
 
         this.preElapsedTime = elapsedTime;
+    }
+
+    _endPlaying() {
+        this.play(false);
+
+        this.preElapsedTime = 0;
+        this.pausedElapsedTime = 0;
+        this.setState({ texts: [], voices: [], graphics: [] });
     }
 
     avatarAction(action) {
