@@ -2,8 +2,11 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faDotCircle, faPauseCircle, faMehBlank } from '@fortawesome/free-regular-svg-icons';
-import { faPlayCircle, faSpinner, faArrowUp, faArrowDown, faArrowLeft, faArrowRight, faLaughBeam, faSmile, faFrownOpen, faAngry, faSurprise } from '@fortawesome/free-solid-svg-icons';
-library.add( faDotCircle, faPauseCircle, faMehBlank, faPlayCircle, faSpinner, faArrowUp, faArrowDown, faArrowLeft, faArrowRight, faLaughBeam, faSmile, faFrownOpen, faAngry, faSurprise);
+import { faPlayCircle, faSpinner, faImage, faArrowUp, faArrowDown,
+    faArrowLeft, faArrowRight, faLaughBeam, faSmile,
+    faFrownOpen, faAngry, faSurprise, faWalking } from '@fortawesome/free-solid-svg-icons';
+library.add( faDotCircle, faPauseCircle, faMehBlank, faPlayCircle, faSpinner, faImage,
+    faArrowUp, faArrowDown, faArrowLeft, faArrowRight, faLaughBeam, faSmile, faFrownOpen, faAngry, faSurprise, faWalking);
 
 import Header from './header'
 import Footer from './footer'

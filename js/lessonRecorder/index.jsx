@@ -2,7 +2,7 @@ import React from 'react';
 import Menu from '../menu';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { setupPoseDetector, detectPoseInRealTime, clearPoseCanvas } from './poseDetector';
-//import { loadDetector, setPreviewVideoSize, detectPoseInRealTime } from './voiceRecorder';
+//import VoiceRecorder from './voiceRecorder';
 import LessonRecorder from './lessonRecorder';
 import AvatarPreview from './avatarPreview';
 import LessonGraphic from './lessonGraphic';
@@ -14,7 +14,7 @@ export default class LessonRecorderScreen extends React.Component {
         this.state = {
             detectedPose: {},
             graphicURL: '',
-            facialName: 'Default',
+            faceName: 'Default',
             moveDirection: 'stop',
             isLoading: true,
             isRecording: false,
@@ -41,6 +41,7 @@ export default class LessonRecorderScreen extends React.Component {
         this.graphicURLIndex = -1;
         this.avatarPreview;
         this.recorder = new LessonRecorder();
+//        this.voiceRecorder = new VoiceRecorder();
         this.isLoading = true;
     }
 
@@ -53,6 +54,11 @@ export default class LessonRecorderScreen extends React.Component {
     componentDidUpdate(_, prevState) {
         if (!prevState.isPoseDetecting && this.state.isPoseDetecting) {
             this._poseDetectionFrame();
+        }
+
+        if (prevState.isRecording != this.state.isRecording) {
+            this.recorder.start(this.state.isRecording);
+            // this.voiceRecorder.start(this.state.isRecording);
         }
     }
 
@@ -81,7 +87,8 @@ export default class LessonRecorderScreen extends React.Component {
 
     _switchGraphic(diff) {
         this.graphicURLIndex += diff;
-        const graphic = this.graphicURLs[this.graphicURLIndex];
+        const graphic =  (this.graphicURLIndex > -1) ?
+            this.graphicURLs[this.graphicURLIndex] : { id: null, url: ''};
         this.setState({ graphicURL: graphic.url });
         this.recorder.addSwitchingGraphic(graphic.id);
     }
@@ -92,11 +99,11 @@ export default class LessonRecorderScreen extends React.Component {
 
     _stopMovingPosition() {
         if (this.state.moveDirection == 'stop') return;
-
-        const position = '';
-        //currentPosition
-        this.recorder.addAvatarPosition(position);
         this.setState({ moveDirection: 'stop' });
+    }
+
+    recordMovedPosition(position) {
+        this.recorder.addAvatarPosition(position);
     }
 
     async _poseDetectionFrame() {
@@ -124,6 +131,7 @@ export default class LessonRecorderScreen extends React.Component {
                         pose={this.state.detectedPose}
                         faceName={this.state.faceName}
                         moveDirection={this.state.moveDirection}
+                        movedPosition={(position) => { this.recordMovedPosition(position); }}
                         isPoseDetecting={this.state.isPoseDetecting}
                     />
 
@@ -137,9 +145,20 @@ export default class LessonRecorderScreen extends React.Component {
                     <div id="control-panel">
                         <div id="recording-status">REC</div>
                         <div id="recording-controller">
-                            <button type="button" className="btn" onClick={this._switchGraphic.bind(this, -1)}>prev image</button>
-                            <button type="button" className="btn" onClick={this._switchGraphic.bind(this, 1)}>next image</button>
-                            <button type="button" className="btn" onClick={this._switchPoseDetection.bind(this)}>ポーズ検出</button>
+                            <button type="button" id="prev-graphic-btn" className="btn"
+                                disabled={this.graphicURLIndex == -1}
+                                onClick={this._switchGraphic.bind(this, -1)}>
+                                <FontAwesomeIcon icon={['fas', 'image']} />
+                            </button>
+                            <button type="button" id="next-graphic-btn" className="btn"
+                                disabled={this.graphicURLIndex == this.graphicURLs.length - 1}
+                                onClick={this._switchGraphic.bind(this, 1)}>
+                                <FontAwesomeIcon icon={['fas', 'image']} />
+                            </button>
+                            <button type="button" className="btn" onClick={this._switchPoseDetection.bind(this)}>
+                                <FontAwesomeIcon icon={['fas', 'walking']} />
+                                ポーズ検出
+                            </button>
 
                             <button type="button" id="btn-start-record" className="btn btn-danger"
                                 onClick={this._recordingStart.bind(this)}>
@@ -233,6 +252,12 @@ export default class LessonRecorderScreen extends React.Component {
                     }
                     #recording-status {
                         display: ${this.state.isRecording ? 'block' : 'none'};
+                    }
+                    #prev-graphic-btn {
+
+                    }
+                    #next-graphic-btn {
+
                     }
                     #btn-start-record {
                         display: ${!this.state.isRecording && !this.state.isPause ? 'inline-block' : 'none'};

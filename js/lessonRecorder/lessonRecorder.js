@@ -5,7 +5,10 @@ import * as Const from '../common/constants';
 export default class LessonRecorder {
     constructor() {
         this.accuracyThresholdMin = 0.7;
+        this.recordingStartSec = 0;
         this.elapsedTimeSec = 0;
+        this.prevGraphicID;
+        this.timelines = [];
         this.avatarPoseHistory = {
             leftHands:      [],
             rightHands:     [],
@@ -20,12 +23,14 @@ export default class LessonRecorder {
 
     start(isStart) {
         if (isStart) {
-            this.elapsedTimeSec += performance.now();
+            this.recordingStartSec = performance.now();
+        } else {
+            this.elapsedTimeSec += performance.now() - this.recordingStartSec;
         }
     }
 
     currentRecordingTime() {
-        performance.now() - this.elapsedTimeSec;
+        return this.elapsedTimeSec + performance.now() - this.recordingStartSec;
     }
 
     addAvatarPose(pose) {
@@ -96,21 +101,67 @@ export default class LessonRecorder {
         }
     }
 
-
     addAvatarPosition(position) {
-        console.log(position);
-        // {x: 0, y: 0}
+        const positions = position.toArray().push(1);
+        const time = this.currentRecordingTime();
+        this.avatarPoseHistory.coreBodies.push({ pos: positions, time: time });
     }
 
     addSwitchingGraphic(graphicID) {
-        console.log(graphicID);
+        const time = this.currentRecordingTime();
+        const graphics = [];
+
+        if (this.prevGraphicID) {
+            const hideGraphic = this._defaultGraphicRecord();
+            hideGraphic.id = this.prevGraphicID;
+            hideGraphic.action = 'hide';
+            graphics.push(hideGraphic);
+        }
+
+        const showGraphic = this._defaultGraphicRecord();
+        showGraphic.id = graphicID;
+        showGraphic.action = 'show';
+        graphics.push(showGraphic);
+
+        this.timelines.push({
+            timeSec: time,
+            graphics: graphics,
+        });
+
+        this.prevGraphicID = graphicID;
     }
 
     addSwitchingFace(faceName) {
-        console.log(faceName);
+        const time = this.currentRecordingTime();
+        const spAction = this._defaultSpActionRecord();
+        spAction.faceExpression = faceName;
+
+        this.timelines.push({
+            timeSec: time,
+            spAction: spAction,
+        });
     }
 
     sendRecord() {
+        const time = this.currentRecordingTime();
+        console.log(this.timelines);
         console.log(this.avatarPoseHistory);
+    }
+
+    _defaultGraphicRecord() {
+        return {
+            "sizePct": 90,
+            "horizontalAlign": "center",
+            "verticalAlign": "middle",
+        };
+    }
+
+    _defaultSpActionRecord() {
+        return {
+            "spAction": {
+                "action": null,
+                "faceExpression": null,
+            }
+        };
     }
 }

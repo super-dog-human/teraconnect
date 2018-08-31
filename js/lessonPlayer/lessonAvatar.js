@@ -238,8 +238,6 @@ export default class LessonAvatar {
     }
 
     moveTo(direction) {
-        console.log(direction);
-
         if (direction == 'stop') {
             this.moveDirection = null;
             return;
