@@ -87,7 +87,7 @@ export default class LessonRecorderScreen extends React.Component {
 
     _switchGraphic(diff) {
         this.graphicURLIndex += diff;
-        const graphic =  (this.graphicURLIndex > -1) ?
+        const graphic = (this.graphicURLIndex > -1) ?
             this.graphicURLs[this.graphicURLIndex] : { id: null, url: ''};
         this.setState({ graphicURL: graphic.url });
         this.recorder.addSwitchingGraphic(graphic.id);
@@ -104,6 +104,10 @@ export default class LessonRecorderScreen extends React.Component {
 
     recordMovedPosition(position) {
         this.recorder.addAvatarPosition(position);
+    }
+
+    _postRecord() {
+        this.recorder.sendRecord();
     }
 
     async _poseDetectionFrame() {
@@ -170,7 +174,12 @@ export default class LessonRecorderScreen extends React.Component {
                                 <FontAwesomeIcon icon={['far', 'pause-circle']} />
                                 停止
                             </button>
-                            <button type="button" id="btn-resume-record" className="btn btn-primary"
+                            <button type="button" className="btn btn-primary btn-in-stop"
+                                onClick={this._postRecord.bind(this)}>
+                                <FontAwesomeIcon icon={['fas', 'cloud-upload-alt']} />
+                                保存
+                            </button>
+                            <button type="button" className="btn btn-primary btn-in-stop"
                                 onClick={this._recordingResume.bind(this)}>
                                 <FontAwesomeIcon icon={['far', 'dot-circle']} />
                                 再開
@@ -269,11 +278,11 @@ export default class LessonRecorderScreen extends React.Component {
                     #btn-stop-record:hover {
                         opacity: 1;
                     }
-                    #btn-resume-record {
+                    .btn-in-stop {
                         display: ${this.state.isPause ? 'inline-block' : 'none'};
                         opacity: 0.2;
                     }
-                    #btn-resume-record:hover {
+                    .btn-in-stop :hover {
                         opacity: 1;
                     }
                     #change-emotion button {

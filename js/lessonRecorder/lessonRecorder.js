@@ -30,7 +30,8 @@ export default class LessonRecorder {
     }
 
     currentRecordingTime() {
-        return this.elapsedTimeSec + performance.now() - this.recordingStartSec;
+        const recordingTimeMilliSec = this.elapsedTimeSec + performance.now() - this.recordingStartSec;
+        return recordingTimeMilliSec / 1000;
     }
 
     addAvatarPose(pose) {
@@ -118,10 +119,12 @@ export default class LessonRecorder {
             graphics.push(hideGraphic);
         }
 
-        const showGraphic = this._defaultGraphicRecord();
-        showGraphic.id = graphicID;
-        showGraphic.action = 'show';
-        graphics.push(showGraphic);
+        if (graphicID) {
+            const showGraphic = this._defaultGraphicRecord();
+            showGraphic.id = graphicID;
+            showGraphic.action = 'show';
+            graphics.push(showGraphic);
+        }
 
         this.timelines.push({
             timeSec: time,
