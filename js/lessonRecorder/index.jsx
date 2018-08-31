@@ -178,29 +178,25 @@ export default class LessonRecorderScreen extends React.Component {
                                 </button>
                             </div>
 
-                            <div id="move-position">
+                            <div id="move-position" onMouseOut={this._stopMovingPosition.bind(this)}>
                                 <button type="button" className="btn btn-dark"
-                                    onMouseDown={this._movePosition.bind(this, 'back')}
-                                    onMouseUp={this._stopMovingPosition.bind(this)}
-                                    onMouseOut={this._stopMovingPosition.bind(this)}>
+                                    onMouseDown={this._movePosition.bind(this, 'front')}
+                                    onMouseUp={this._stopMovingPosition.bind(this)}>
                                     <FontAwesomeIcon icon={['fas', 'arrow-up']} />
                                 </button>
                                 <button type="button" className="btn btn-dark"
-                                    onMouseDown={this._movePosition.bind(this, 'front')}
-                                    onMouseUp={this._stopMovingPosition.bind(this)}
-                                    onMouseOut={this._stopMovingPosition.bind(this)}>
+                                    onMouseDown={this._movePosition.bind(this, 'back')}
+                                    onMouseUp={this._stopMovingPosition.bind(this)}>
                                     <FontAwesomeIcon icon={['fas', 'arrow-down']} />
                                 </button>
                                 <button type="button" className="btn btn-dark"
                                     onMouseDown={this._movePosition.bind(this, 'left')}
-                                    onMouseUp={this._stopMovingPosition.bind(this)}
-                                    onMouseOut={this._stopMovingPosition.bind(this)}>
+                                    onMouseUp={this._stopMovingPosition.bind(this)}>
                                     <FontAwesomeIcon icon={['fas', 'arrow-left']} />
                                 </button>
                                 <button type="button" className="btn btn-dark"
                                     onMouseDown={this._movePosition.bind(this, 'right')}
-                                    onMouseUp={this._stopMovingPosition.bind(this)}
-                                    onMouseOut={this._stopMovingPosition.bind(this)}>
+                                    onMouseUp={this._stopMovingPosition.bind(this)}>
                                     <FontAwesomeIcon icon={['fas', 'arrow-right']} />
                                 </button>
 

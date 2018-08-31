@@ -194,26 +194,28 @@ export default class LessonAvatar {
         if (!this.moveDirection) return;
 
         const position = this.positionObject.position;
-        switch(this.moveDirection) {
-            case 'left':
-                position.x -= deltaTime;
-                break;
-            case 'right':
-                position.x += deltaTime;
-                break;
-            case 'front':
-                position.z -= deltaTime;
-                break;
-            case 'back':
-                position.z += deltaTime;
-                break;
+
+        if (this.moveDirection == 'left' || this.moveDirection == 'right') {
+            let newX = (this.moveDirection == 'left') ? -deltaTime : deltaTime;
+            newX += position.x;
+            if (newX >= -2.7 && newX <= 2.7) {
+                position.x = newX;
+            } else {
+                this.moveDirection = null;
+                return;
+            }
         }
 
-        console.log('x: ' + position.x);
-        console.log('z: ' + position.z);
-
-        if (position.x < -2 || position.x > 2 || position.z < 17 || position.z > 18.5) {
-            this.moveDirection = null;
+        if (this.moveDirection == 'front' || this.moveDirection == 'back') {
+            let newZ = (this.moveDirection == 'front') ? deltaTime : -deltaTime;
+            newZ *= 100;
+            newZ += position.z;
+            if (newZ >= 0 && newZ <= 140) {
+                position.z = newZ;
+            } else {
+                this.moveDirection = null;
+                return;
+            }
         }
     }
 
@@ -234,8 +236,8 @@ export default class LessonAvatar {
 
     createDom(avatarURL, container) {
         const domSize = this.domSize(container);
-        this.camera = new THREE.PerspectiveCamera(45, domSize.width / domSize.height, 1, 100);
-        this.camera.position.set(0, 1.2, 20);
+        this.camera = new THREE.PerspectiveCamera(1, domSize.width / domSize.height, 1, 200);
+        this.camera.position.set(0, 1.4, 150);
         this.camera.lookAt(new THREE.Vector3(0, 1.1, 0));
 
         this.scene = new THREE.Scene();
@@ -288,7 +290,7 @@ export default class LessonAvatar {
     initAvatarPosition() {
         this.movePositions = [0, 0, 0];
         this.positionObject.rotation.set(0, Math.PI, 0);
-        this.positionObject.position.set(0, 0, 18);
+        this.positionObject.position.set(0, 0, 85);
     }
 
     initBonePosition() {
