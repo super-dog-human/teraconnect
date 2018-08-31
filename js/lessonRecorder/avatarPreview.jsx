@@ -26,17 +26,15 @@ export default class AvatarPreview extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.isPoseDetecting && !nextProps.isPoseDetecting) {
-            this.avatar.initBonePosition();
-            return;
-        }
-
-        if (Object.keys(nextProps.pose).length > 0) {
-            this.avatar.moveBones(nextProps.pose);
-        }
-
         if (this.props.facialName != nextProps.facialName) {
             this.avatar.changeFacial(nextProps.facialName);
+        }
+
+        if (!nextProps.isPoseDetecting) {
+            this.avatar.initBonePosition();
+            return;
+        } else if (Object.keys(nextProps.pose).length > 0) {
+            this.avatar.moveBones(nextProps.pose);
         }
     }
 

@@ -36,14 +36,13 @@ export default class LessonRecorderScreen extends React.Component {
 
     async componentDidMount() {
         setupPoseDetector(() => {
-            this._poseDetectionFrame();
             this.setState({ isLoading: false });
         });
     }
 
-    componentWillUpdate(_, nextState) {
-        if (this.state.isPoseDetecting && !nextState.isPoseDetecting) {
-            clearPoseCanvas();
+    componentDidUpdate(_, prevState) {
+        if (!prevState.isPoseDetecting && this.state.isPoseDetecting) {
+            this._poseDetectionFrame();
         }
     }
 
@@ -60,13 +59,12 @@ export default class LessonRecorderScreen extends React.Component {
     }
 
     _switchPoseDetection() {
-        const isPoseDetecting = this.state.isPoseDetecting;
-        this.setState({ isPoseDetecting: !isPoseDetecting });
+        this.setState({ isPoseDetecting: !this.state.isPoseDetecting });
     }
 
     async _poseDetectionFrame() {
         if (!this.state.isPoseDetecting) {
-            requestAnimationFrame(() => this._poseDetectionFrame());
+            clearPoseCanvas();
             return;
         }
 

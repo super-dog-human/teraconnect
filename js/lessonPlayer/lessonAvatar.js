@@ -234,9 +234,14 @@ export default class LessonAvatar {
     }
 
     initBonePosition() {
-        this.bones.J_Bip_C_Neck.rotation.y            = 0;
         this.bones.J_Adj_L_UpperArm.parent.rotation.z = Const.RAD_70;
         this.bones.J_Adj_R_UpperArm.parent.rotation.z = -Const.RAD_70;
+
+        this.bones.J_Bip_L_LowerArm.rotation.set(0, 0, 0);
+        this.bones.J_Bip_R_LowerArm.rotation.set(0, 0, 0);
+        this.bones.J_Bip_L_Hand.rotation.set(0, 0, 0);
+        this.bones.J_Bip_R_Hand.rotation.set(0, 0, 0);
+        this.bones.J_Bip_C_Neck.rotation.y = 0;
     }
 
     updateSize(container) {

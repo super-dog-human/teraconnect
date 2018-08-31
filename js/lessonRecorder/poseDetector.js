@@ -70,6 +70,5 @@ async function _drawDetectedPoseAsync(pose) {
 }
 
 export function clearPoseCanvas() {
-    // FIXME this method has no effect for some reason...
     context.clearRect(0, 0, video.width, video.height);
 }
