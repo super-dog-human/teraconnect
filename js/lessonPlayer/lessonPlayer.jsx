@@ -89,9 +89,9 @@ export default class LessonPlayer extends React.Component {
     avatarAction(action) {
         if (!action) return;
 
-        const facialName = action.facialExpression;
-        if (facialName) {
-            this.props.avatar.changeFacial(facialName);
+        const faceName = action.faceExpression;
+        if (faceName) {
+            this.props.avatar.changeFace(faceName);
         }
     }
 
