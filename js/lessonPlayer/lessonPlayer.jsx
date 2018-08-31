@@ -1,6 +1,6 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Clock } from 'three';
-import FontAwesome from 'react-fontawesome'
 import LessonTexts from './lessonTexts';
 import LessonGraphics from './lessonGraphics';
 import LessonVoicePlayer from './lessonVoicePlayer';
@@ -25,79 +25,11 @@ export default class LessonPlayer extends React.Component {
             graphics:  [],
         }
 
-        this.panelClick = this.panelClick.bind(this);
-
         this.animate();
     }
 
-    render() {
-        return(
-            <div id="lesson-player" ref={(e) => { this.element = e; }}>
-                <div id="control-panel">
-                    <div id="loading-indicator">
-                        <div id="loading-indicator-icon">
-                            <FontAwesome name="spinner" spin />
-                        </div>
-                    </div>
-                    <button className="control-btn" onClick={this.panelClick}>
-                        <FontAwesome name="play-circle" />
-                    </button>
-                </div>
-
-                <LessonTexts texts={this.state.texts}/>
-                <LessonGraphics graphics={this.state.graphics} />
-
-                <style jsx>{`
-                    #lesson-player {
-                        position: relative;
-                        height: ${Const.RATIO_16_TO_9 * 100}vw;
-                        max-width: 100%;
-                        max-height: 100%;
-                    }
-                    #control-panel {
-                        position: absolute;
-                        top: 0;
-                        z-index: 100;
-                        width: 100%;
-                        height: 100%;
-                    }
-                    #loading-indicator {
-                        position: absolute;
-                        top: 0;
-                        display: ${this.props.isLoading ? 'table' : 'none'};
-                        width: 100%;
-                        height: 100%;
-                    }
-                    #loading-indicator-icon {
-                        display: table-cell;
-                        text-align: center;
-                        vertical-align: middle;
-                        font-size: 10vw;
-                        opacity: 0.5;
-                    }
-                    .control-btn {
-                        display: ${this.props.isLoading ? 'none' : 'block'};
-                        border: none;
-                        cursor: pointer;
-                        width: 100%;
-                        height: 100%;
-                        font-size: 10vw;
-                        opacity: 0;
-                    }
-                    .control-btn:hover {
-                        opacity: ${this.props.isLoading || this.state.isPlaying ? 0: 0.2};
-                    }
-                `}</style>
-            </div>
-        )
-    }
-
     panelClick() {
-        if (this.state.isPlaying){
-            this.play(false);
-        } else {
-            this.play(true);
-        }
+        this.play(!this.state.isPlaying);
     }
 
     play(isStart) {
@@ -220,5 +152,67 @@ export default class LessonPlayer extends React.Component {
                     break;
             }
         });
+    }
+
+    render() {
+        return(
+            <div id="lesson-player" ref={(e) => { this.element = e; }}>
+                <div id="control-panel">
+                    <div id="loading-indicator">
+                        <div id="loading-indicator-icon">
+                            <FontAwesomeIcon icon="spinner" spin />
+                        </div>
+                    </div>
+                    <button className="control-btn" onClick={this.panelClick.bind(this)}>
+                        <FontAwesomeIcon icon="play-circle" />
+                    </button>
+                </div>
+
+                <LessonTexts texts={this.state.texts}/>
+                <LessonGraphics graphics={this.state.graphics} />
+
+                <style jsx>{`
+                    #lesson-player {
+                        position: relative;
+                        height: ${Const.RATIO_16_TO_9 * 100}vw;
+                        max-width: 100%;
+                        max-height: 100%;
+                    }
+                    #control-panel {
+                        position: absolute;
+                        top: 0;
+                        z-index: 100;
+                        width: 100%;
+                        height: 100%;
+                    }
+                    #loading-indicator {
+                        position: absolute;
+                        top: 0;
+                        display: ${this.props.isLoading ? 'table' : 'none'};
+                        width: 100%;
+                        height: 100%;
+                    }
+                    #loading-indicator-icon {
+                        display: table-cell;
+                        text-align: center;
+                        vertical-align: middle;
+                        font-size: 10vw;
+                        opacity: 0.5;
+                    }
+                    .control-btn {
+                        display: ${this.props.isLoading ? 'none' : 'block'};
+                        border: none;
+                        cursor: pointer;
+                        width: 100%;
+                        height: 100%;
+                        font-size: 10vw;
+                        opacity: 0;
+                    }
+                    .control-btn:hover {
+                        opacity: ${this.props.isLoading || this.state.isPlaying ? 0: 0.2};
+                    }
+                `}</style>
+            </div>
+        )
     }
 }

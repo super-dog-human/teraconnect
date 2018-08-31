@@ -8,7 +8,6 @@ export default class AvatarPreview extends React.Component {
         super(props)
         this.avatar = new LessonAvatar();
         this.clock  = new Clock(true);
-        this.preFacialName = '';
     }
 
     async componentDidMount() {
@@ -27,8 +26,8 @@ export default class AvatarPreview extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (!nextProps.isRecording) {
-            this.avatar.setInitPose();
+        if (this.props.isPoseDetecting && !nextProps.isPoseDetecting) {
+            this.avatar.initBonePosition();
             return;
         }
 
@@ -36,9 +35,8 @@ export default class AvatarPreview extends React.Component {
             this.avatar.moveBones(nextProps.pose);
         }
 
-        if (nextProps.facialName != this.preFacialName) {
+        if (this.props.facialName != nextProps.facialName) {
             this.avatar.changeFacial(nextProps.facialName);
-            this.preFacialName = nextProps.facialName;
         }
     }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Input } from 'reactstrap';
-import FontAwesome from 'react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const API_URL = "https://api.teraconnect.org/voice_text/";
 
@@ -36,7 +36,7 @@ export default class TextForm extends React.Component {
                 } else if (t.isTexted) {
                   return <div className="line" key={i}><Input type="text" placeholder="（検出なし）" /></div>
                 } else {
-                  return <div className="line text-detecting" key={i}><FontAwesome name="spinner" spin /></div>
+                  return <div className="line text-detecting" key={i}><FontAwesomeIcon icon="spinner" spin /></div>
                 }
               })
             }

@@ -17,7 +17,18 @@ export default class LessonRecorder {
         };
     }
 
-    recordAvatarPose(pose, time) {
+    start(isStart) {
+        if (isStart) {
+
+        } else {
+
+        }
+        this.isStart = isStart;
+    }
+
+    addAvatarPose(pose) {
+        const time = performance.now();
+
         for (let part in pose) {
             if (part == 'score') continue;
             if (!pose[part]) continue;
@@ -83,15 +94,16 @@ export default class LessonRecorder {
         }
     }
 
-    switchGraphic() {
+
+    addAvatarPosition() {
+        // {x: 0, y: 0}
+    }
+
+    addSwitchingGraphic() {
 
     }
 
-    switchFacial() {
-
-    }
-
-    moveAvatar() {
+    addSwitchingFacial() {
 
     }
 

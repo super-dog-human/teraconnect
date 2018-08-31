@@ -1,5 +1,9 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faDotCircle, faPauseCircle } from '@fortawesome/free-regular-svg-icons';
+import { faPlayCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
+library.add(faSpinner, faPlayCircle, faDotCircle, faPauseCircle);
 
 import Header from './header'
 import Footer from './footer'

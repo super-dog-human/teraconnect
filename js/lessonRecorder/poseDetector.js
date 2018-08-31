@@ -45,7 +45,7 @@ export const setupPoseDetector = (async (callback) => {
 
 export async function detectPoseInRealTime() {
     const pose = await net.estimateSinglePose(video, imageScaleFactor, flipHorizontal, outputStride);
-    drawDetectedPoseAsync(pose, video.width, video.height);
+    _drawDetectedPoseAsync(pose);
 
     const keypoint = pose.keypoints.reduce((o, c) => {
         return Object.assign(o, { [c.part]: { "x": c.position.x, "y": c.position.y, "score": c.score } })
@@ -55,11 +55,11 @@ export async function detectPoseInRealTime() {
     return keypoint;
 }
 
-async function drawDetectedPoseAsync(pose, videoWidth, videoHeight) {
-    context.clearRect(0, 0, videoWidth, videoHeight);
+async function _drawDetectedPoseAsync(pose) {
+    context.clearRect(0, 0, video.width, video.height);
     context.save();
     context.scale(-1, 1);
-    context.translate(-videoWidth, 0);
+    context.translate(-video.width, 0);
     context.drawImage(video, 0, 0, video.width, video.height);
     context.restore();
 
@@ -67,4 +67,9 @@ async function drawDetectedPoseAsync(pose, videoWidth, videoHeight) {
         drawKeypoints(pose.keypoints, minPartConfidence, context);
         drawSkeleton(pose.keypoints, minPartConfidence, context);
     }
+}
+
+export function clearPoseCanvas() {
+    // FIXME this method has no effect for some reason...
+    context.clearRect(0, 0, video.width, video.height);
 }
