@@ -113,6 +113,7 @@ export default class LessonRecorderScreen extends React.Component {
 
     _recordingStop() {
         this.setState({ isRecording: false, isPause: true });
+        this.setState({ isSpeaking: false });
     }
 
     _recordingResume() {
