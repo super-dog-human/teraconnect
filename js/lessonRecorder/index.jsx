@@ -152,8 +152,7 @@ export default class LessonRecorderScreen extends React.Component {
 
                         <div id="indicator">
                             <div id="recording-status">
-                                <FontAwesomeIcon icon={['fas', 'video']} />
-                                REC
+                                <FontAwesomeIcon icon={['fas', 'video']} /> REC
                             </div>
 
                             <div id="record-elapsed-time">
@@ -162,10 +161,9 @@ export default class LessonRecorderScreen extends React.Component {
                             </div>
                         </div>
 
-                        <div>
-                            <button type="button" className="btn" onClick={this._switchPoseDetection.bind(this)}>
-                                <FontAwesomeIcon icon={['fas', 'walking']} />
-                                ポーズ検出
+                        <div id="pose-detector-btn">
+                            <button type="button" className="btn btn-dark" onClick={this._switchPoseDetection.bind(this)}>
+                                <FontAwesomeIcon icon={['fas', 'walking']} /> ポーズ検出
                             </button>
                         </div>
 
@@ -191,12 +189,12 @@ export default class LessonRecorderScreen extends React.Component {
                         </div>
 
                         <div>
-                            <button type="button" id="prev-graphic-btn" className="btn graphic-btn"
+                            <button type="button" id="prev-graphic-btn" className="btn btn-dark graphic-btn"
                                 disabled={this.graphicURLIndex == -1}
                                 onClick={this._switchGraphic.bind(this, -1)}>
                                 <FontAwesomeIcon icon={['fas', 'image']} />
                             </button>
-                            <button type="button" id="next-graphic-btn" className="btn graphic-btn"
+                            <button type="button" id="next-graphic-btn" className="btn btn-dark graphic-btn"
                                 disabled={this.graphicURLIndex == this.graphicURLs.length - 1}
                                 onClick={this._switchGraphic.bind(this, 1)}>
                                 <FontAwesomeIcon icon={['fas', 'image']} />
@@ -204,47 +202,49 @@ export default class LessonRecorderScreen extends React.Component {
                         </div>
 
                         <div id="rec-single-btns">
-                            <button type="button" id="btn-start-record" className="btn btn-danger btn-rec"
+                            <button type="button" id="btn-start-record" className="btn btn-danger rec-btn"
                                 onClick={this._recordingStart.bind(this)}>
-                                <FontAwesomeIcon icon={['far', 'dot-circle']} />収録開始
+                                <FontAwesomeIcon icon={['far', 'dot-circle']} /> 収録開始
                             </button>
-                            <button type="button" id="btn-stop-record" className="btn btn-secondary btn-with-hover btn-rec"
+                            <button type="button" id="btn-stop-record" className="btn btn-secondary btn-with-hover rec-btn"
                                 onClick={this._recordingStop.bind(this)}>
-                                <FontAwesomeIcon icon={['far', 'pause-circle']} />停止
+                                <FontAwesomeIcon icon={['far', 'pause-circle']} /> 停止
                             </button>
                         </div>
                         <div id="rec-pair-btns" className="btn-in-stop">
-                            <button type="button" className="btn btn-primary btn-with-hover btn-rec"
+                            <button type="button" className="btn btn-primary rec-btn"
                                 onClick={this._postRecord.bind(this)}>
-                                <FontAwesomeIcon icon={['fas', 'cloud-upload-alt']} />保存
+                                <FontAwesomeIcon icon={['fas', 'cloud-upload-alt']} /> 保存
                             </button>
-                            <button type="button" className="btn btn-primary btn-with-hover btn-rec"
+                            <button type="button" className="btn btn-primary rec-btn"
                                 onClick={this._recordingResume.bind(this)}>
-                                <FontAwesomeIcon icon={['far', 'dot-circle']} />再開
+                                <FontAwesomeIcon icon={['far', 'dot-circle']} /> 再開
                             </button>
                         </div>
 
                         <div id="position-controller" onMouseOut={this._stopMovingPosition.bind(this)}>
-                            <button type="button" className="btn btn-dark"
-                                onMouseDown={this._movePosition.bind(this, 'front')}
-                                onMouseUp={this._stopMovingPosition.bind(this)}>
-                                <FontAwesomeIcon icon={['fas', 'arrow-up']} />
-                            </button>
-                            <button type="button" className="btn btn-dark"
-                                onMouseDown={this._movePosition.bind(this, 'back')}
-                                onMouseUp={this._stopMovingPosition.bind(this)}>
-                                <FontAwesomeIcon icon={['fas', 'arrow-down']} />
-                            </button>
-                            <button type="button" className="btn btn-dark"
-                                onMouseDown={this._movePosition.bind(this, 'left')}
-                                onMouseUp={this._stopMovingPosition.bind(this)}>
-                                <FontAwesomeIcon icon={['fas', 'arrow-left']} />
-                            </button>
-                            <button type="button" className="btn btn-dark"
-                                onMouseDown={this._movePosition.bind(this, 'right')}
-                                onMouseUp={this._stopMovingPosition.bind(this)}>
-                                <FontAwesomeIcon icon={['fas', 'arrow-right']} />
-                            </button>
+                            <div id="position-controller-pad">
+                                <button type="button" className="btn btn-dark"
+                                    onMouseDown={this._movePosition.bind(this, 'back')}
+                                    onMouseUp={this._stopMovingPosition.bind(this)}>
+                                    <FontAwesomeIcon icon={['fas', 'arrow-up']} />
+                                </button>
+                                <button type="button" className="btn btn-dark"
+                                    onMouseDown={this._movePosition.bind(this, 'front')}
+                                    onMouseUp={this._stopMovingPosition.bind(this)}>
+                                    <FontAwesomeIcon icon={['fas', 'arrow-down']} />
+                                </button>
+                                <button type="button" className="btn btn-dark"
+                                    onMouseDown={this._movePosition.bind(this, 'left')}
+                                    onMouseUp={this._stopMovingPosition.bind(this)}>
+                                    <FontAwesomeIcon icon={['fas', 'arrow-left']} />
+                                </button>
+                                <button type="button" className="btn btn-dark"
+                                    onMouseDown={this._movePosition.bind(this, 'right')}
+                                    onMouseUp={this._stopMovingPosition.bind(this)}>
+                                    <FontAwesomeIcon icon={['fas', 'arrow-right']} />
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -286,11 +286,41 @@ export default class LessonRecorderScreen extends React.Component {
                     }
                     #indicator {
                         position: absolute;
-                        top: 2vh;
-                        right: 2vw;
+                        top: 1vh;
+                        left: 2vw;
                     }
                     #recording-status {
                         display: ${this.state.isRecording ? 'block' : 'none'};
+                        font-size: 3vw;
+                        font-weight: bold;
+                        color: #dc3545;
+                    }
+                    #pose-detector-btn {
+                        position: absolute;
+                        top: 1vh;
+                        right: 2vw;
+                    }
+                    #pose-detector-btn button {
+                        width: 12vw;
+                        height: 3vw;
+                        font-size: 1.5vw;
+                        font-weight: bold;
+                        color: ${this.state.isPoseDetecting ? '#dc3545' : 'white'};
+                    }
+                    #emotion-controller {
+                        position: absolute;
+                        top: 1vh;
+                        left: 0;
+                        right: 0;
+                        width: 24vw; // for 6 buttons.
+                        margin-left: auto;
+                        margin-right: auto;
+                        text-align: center;
+                    }
+                    #emotion-controller button {
+                        width: 4vw;
+                        height: 4vw;
+                        font-size: 2vw;
                     }
                     .graphic-btn {
                         position: absolute;
@@ -300,7 +330,8 @@ export default class LessonRecorderScreen extends React.Component {
                         bottom: 0;
                         margin-top: auto;
                         margin-bottom: auto;
-                        font-size: 3vw;
+                        font-size: 2.5vw;
+                        text-align: center;
                     }
                     #prev-graphic-btn {
                         left: 2vw;
@@ -308,10 +339,10 @@ export default class LessonRecorderScreen extends React.Component {
                     #next-graphic-btn {
                         right: 2vw;
                     }
-                    .btn-rec {
-                        width: 17vw;
-                        height: 7vw;
-                        font-size: 3vw;
+                    .rec-btn {
+                        width: 15vw;
+                        height: 5vw;
+                        font-size: 2vw;
                     }
                     #rec-single-btns button {
                         position: absolute;
@@ -349,13 +380,43 @@ export default class LessonRecorderScreen extends React.Component {
                     .btn-with-hover :hover {
                         opacity: 1;
                     }
-                    #emotion-controller {
+                    #position-controller {
                         position: absolute;
+                        right: 2vw;
+                        bottom: 5vh;
                     }
-                    #emotion-controller button {
-                        width: 4vh;
-                        height: 4vh;
-                        font-size: 3vh;
+                    #position-controller-pad {
+                        display: relative;
+                        width: 9vw;
+                        height: 9vw;
+                    }
+                    #position-controller button {
+                        position: absolute;
+                        width: 3vw;
+                        height: 3vw;
+                    }
+                    #position-controller button:nth-child(1){
+                        top: 0;
+                        left: 3vw;
+                        right: 3vw;
+                    }
+                    #position-controller button:nth-child(2){
+                        top: 6vw;
+                        left: 3vw;
+                        right: 3vw;
+                        bottom: 0;
+                    }
+                    #position-controller button:nth-child(3){
+                        top: 3vw;
+                        left: 0;
+                        right: 6vw;
+                        bottom: 3vw;
+                    }
+                    #position-controller button:nth-child(4){
+                        top: 3vw;
+                        left: 6vw;
+                        right: 0;
+                        bottom: 3vw;
                     }
                 `}</style>
             </div>
