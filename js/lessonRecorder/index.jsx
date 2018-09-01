@@ -147,7 +147,7 @@ export default class LessonRecorderScreen extends React.Component {
                     <div id="pose-keypoint">
                         <canvas id="pose-keypoint-canvas"></canvas>
                     </div>
-{ /*
+
                     <div id="control-panel">
 
                         <div id="indicator">
@@ -169,42 +169,6 @@ export default class LessonRecorderScreen extends React.Component {
                             </button>
                         </div>
 
-                        <div id="graphic-controller">
-                            <button type="button" id="prev-graphic-btn" className="btn"
-                                disabled={this.graphicURLIndex == -1}
-                                onClick={this._switchGraphic.bind(this, -1)}>
-                                <FontAwesomeIcon icon={['fas', 'image']} />
-                            </button>
-                            <button type="button" id="next-graphic-btn" className="btn"
-                                disabled={this.graphicURLIndex == this.graphicURLs.length - 1}
-                                onClick={this._switchGraphic.bind(this, 1)}>
-                                <FontAwesomeIcon icon={['fas', 'image']} />
-                            </button>
-                        </div>
-
-                        <div id="recording-controller">
-                            <button type="button" id="btn-start-record" className="btn btn-danger"
-                                onClick={this._recordingStart.bind(this)}>
-                                <FontAwesomeIcon icon={['far', 'dot-circle']} />
-                                収録開始
-                            </button>
-                            <button type="button" id="btn-stop-record" className="btn btn-secondary btn-with-hover"
-                                onClick={this._recordingStop.bind(this)}>
-                                <FontAwesomeIcon icon={['far', 'pause-circle']} />
-                                停止
-                            </button>
-                            <button type="button" className="btn btn-primary btn-in-stop btn-with-hover"
-                                onClick={this._postRecord.bind(this)}>
-                                <FontAwesomeIcon icon={['fas', 'cloud-upload-alt']} />
-                                保存
-                            </button>
-                            <button type="button" className="btn btn-primary btn-in-stop btn-with-hover"
-                                onClick={this._recordingResume.bind(this)}>
-                                <FontAwesomeIcon icon={['far', 'dot-circle']} />
-                                再開
-                            </button>
-                        </div>
-
                         <div id="emotion-controller">
                             <button type="button" className="btn btn-dark" onClick={this._switchFace.bind(this, 'Default')}>
                                 <FontAwesomeIcon icon={['far', 'meh-blank']} />
@@ -223,6 +187,40 @@ export default class LessonRecorderScreen extends React.Component {
                             </button>
                             <button type="button" className="btn btn-dark" onClick={this._switchFace.bind(this, 'AllSurprised')}>
                                 <FontAwesomeIcon icon={['fas', 'surprise']} />
+                            </button>
+                        </div>
+
+                        <div>
+                            <button type="button" id="prev-graphic-btn" className="btn graphic-btn"
+                                disabled={this.graphicURLIndex == -1}
+                                onClick={this._switchGraphic.bind(this, -1)}>
+                                <FontAwesomeIcon icon={['fas', 'image']} />
+                            </button>
+                            <button type="button" id="next-graphic-btn" className="btn graphic-btn"
+                                disabled={this.graphicURLIndex == this.graphicURLs.length - 1}
+                                onClick={this._switchGraphic.bind(this, 1)}>
+                                <FontAwesomeIcon icon={['fas', 'image']} />
+                            </button>
+                        </div>
+
+                        <div id="rec-single-btns">
+                            <button type="button" id="btn-start-record" className="btn btn-danger btn-rec"
+                                onClick={this._recordingStart.bind(this)}>
+                                <FontAwesomeIcon icon={['far', 'dot-circle']} />収録開始
+                            </button>
+                            <button type="button" id="btn-stop-record" className="btn btn-secondary btn-with-hover btn-rec"
+                                onClick={this._recordingStop.bind(this)}>
+                                <FontAwesomeIcon icon={['far', 'pause-circle']} />停止
+                            </button>
+                        </div>
+                        <div id="rec-pair-btns" className="btn-in-stop">
+                            <button type="button" className="btn btn-primary btn-with-hover btn-rec"
+                                onClick={this._postRecord.bind(this)}>
+                                <FontAwesomeIcon icon={['fas', 'cloud-upload-alt']} />保存
+                            </button>
+                            <button type="button" className="btn btn-primary btn-with-hover btn-rec"
+                                onClick={this._recordingResume.bind(this)}>
+                                <FontAwesomeIcon icon={['far', 'dot-circle']} />再開
                             </button>
                         </div>
 
@@ -249,7 +247,7 @@ export default class LessonRecorderScreen extends React.Component {
                             </button>
                         </div>
                     </div>
-*/ }
+
                 </div>
 
                 <style jsx>{`
@@ -260,7 +258,8 @@ export default class LessonRecorderScreen extends React.Component {
                     #lesson-recorder {
                         position: relative;
                         width: 100%;
-                        height: calc(100% - 50px); /* for menu */
+                        height: ${Const.RATIO_16_TO_9 * 100}vw;
+                        max-height: calc(100% - 50px); /* for menu */
                     }
                     #pose-video {
                         position: absolute;
@@ -275,35 +274,65 @@ export default class LessonRecorderScreen extends React.Component {
                         left: 0;
                     }
                     #control-panel {
-                        display: ${this.state.isLoading ? 'none' : 'table'};
+                        display: ${this.state.isLoading ? 'none' : 'block'};
                         position: absolute;
-                        top: 0;
-                        left:0;
-                        text-align: center;
-                        z-inde: 100;
+                        z-index: 100;
                         width: 100%;
                         height: 100%;
+                        top: 0;
+                        bottom: 0;
+                        left: 0;
+                        right: 0;
+                    }
+                    #indicator {
+                        position: absolute;
+                        top: 2vh;
+                        right: 2vw;
                     }
                     #recording-status {
                         display: ${this.state.isRecording ? 'block' : 'none'};
                     }
-                    #recording-controller {
-                        display: table-cell;
-                        width: 100%;
-                        height: 100%;
-                        text-align: center;
-                        vertical-align: bottom;
-                        padding-bottom: 10vh;
-                    }
-                    #recording-controller button {
-                        width: 20vw;
-                        height: 7vw;
+                    .graphic-btn {
+                        position: absolute;
+                        width: 5vw;
+                        height: 5vw;
+                        top: 0;
+                        bottom: 0;
+                        margin-top: auto;
+                        margin-bottom: auto;
+                        font-size: 3vw;
                     }
                     #prev-graphic-btn {
-
+                        left: 2vw;
                     }
                     #next-graphic-btn {
-
+                        right: 2vw;
+                    }
+                    .btn-rec {
+                        width: 17vw;
+                        height: 7vw;
+                        font-size: 3vw;
+                    }
+                    #rec-single-btns button {
+                        position: absolute;
+                        left: 0;
+                        right: 0;
+                        bottom: 5vh;
+                        margin-left: auto;
+                        margin-right: auto;
+                    }
+                    #rec-pair-btns {
+                        position: absolute;
+                        left: 0;
+                        right: 0;
+                        bottom: 5vh;
+                        margin-left: auto;
+                        margin-right: auto;
+                        text-align: center;
+                    }
+                    #rec-pair-btns button {
+                        margin-left: 1vw;
+                        margin-right: 1vw;
                     }
                     #btn-start-record {
                         display: ${!this.state.isRecording && !this.state.isPause ? 'inline-block' : 'none'};
@@ -314,14 +343,14 @@ export default class LessonRecorderScreen extends React.Component {
                     .btn-in-stop {
                         display: ${this.state.isPause ? 'inline-block' : 'none'};
                     }
-                    .btn-in-stop :hover {
-                        opacity: 1;
-                    }
                     .btn-with-hover {
                         opacity: 0.2;
                     }
                     .btn-with-hover :hover {
                         opacity: 1;
+                    }
+                    #emotion-controller {
+                        position: absolute;
                     }
                     #emotion-controller button {
                         width: 4vh;

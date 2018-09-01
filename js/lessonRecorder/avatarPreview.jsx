@@ -66,8 +66,7 @@ export default class AvatarPreview extends React.Component {
             <div id="avatar-preview" ref={(e) => { this.container = e; }}>
                 <style jsx>{`
                     #avatar-preview {
-                        margin-left: auto;
-                        margin-right: auto;
+                        text-align: center;
                     }
                 `}</style>
             </div>
