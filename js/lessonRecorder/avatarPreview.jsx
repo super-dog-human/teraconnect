@@ -54,6 +54,8 @@ export default class AvatarPreview extends React.Component {
         dom.setAttribute('id', 'avatar-canvas');
         ReactDOM.findDOMNode(this.container).append(dom);
         this.isLoadingCompleted = true;
+
+        this.props.loadingCompleted();
     }
 
     _animate() {

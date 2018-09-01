@@ -18,6 +18,8 @@ export default class LessonRecorderScreen extends React.Component {
             faceName: 'Default',
             moveDirection: 'stop',
             isLoading: true,
+            isDetectorLoading: true,
+            isAvatarLoading: true,
             isRecording: false,
             isPause: false,
             isPoseDetecting: false,
@@ -46,9 +48,9 @@ export default class LessonRecorderScreen extends React.Component {
         this.isLoading = true;
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         setupPoseDetector(() => {
-            this.setState({ isLoading: false });
+            this.setState({ isDetectorLoading: false });
         });
     }
 
@@ -59,6 +61,10 @@ export default class LessonRecorderScreen extends React.Component {
 
         if (prevState.isRecording != this.state.isRecording) {
             this.recorder.start(this.state.isRecording);
+        }
+
+        if (this.state.isLoading && !this.state.isDetectorLoading && !this.state.isAvatarLoading) {
+            this.setState({ isLoading: false });
         }
     }
 
@@ -106,6 +112,10 @@ export default class LessonRecorderScreen extends React.Component {
         this.recorder.addAvatarPosition(position);
     }
 
+    avatarLoadingCompleted() {
+        this.setState({ isAvatarLoading: false });
+    }
+
     _postRecord() {
         this.recorder.sendRecord();
     }
@@ -137,6 +147,7 @@ export default class LessonRecorderScreen extends React.Component {
                         faceName={this.state.faceName}
                         moveDirection={this.state.moveDirection}
                         movedPosition={(position) => { this.recordMovedPosition(position); }}
+                        loadingCompleted={() => { this.avatarLoadingCompleted(); }}
                         previewContainer={this.avatarPreview}
                         isPoseDetecting={this.state.isPoseDetecting}
                     />
