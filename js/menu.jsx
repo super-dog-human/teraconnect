@@ -20,6 +20,9 @@ export default ({selectedIndex}) => (
             </ul>
         </nav>
         <style jsx>{`
+            #menu {
+                height: 55px;
+            }
             .navbar {
                 height: 55px;
             }

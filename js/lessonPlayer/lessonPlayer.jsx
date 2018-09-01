@@ -178,9 +178,12 @@ export default class LessonPlayer extends React.Component {
                 <style jsx>{`
                     #lesson-player {
                         position: relative;
+                        width: ${Const.RATIO_9_TO_16 * 100}vh;
                         height: ${Const.RATIO_16_TO_9 * 100}vw;
                         max-width: 100%;
                         max-height: 100%;
+                        margin-left: auto;
+                        margin-right: auto;
                     }
                     #control-panel {
                         position: absolute;

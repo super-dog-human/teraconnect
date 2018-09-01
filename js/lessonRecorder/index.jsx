@@ -6,6 +6,7 @@ import { setupPoseDetector, detectPoseInRealTime, clearPoseCanvas } from './pose
 import LessonRecorder from './lessonRecorder';
 import AvatarPreview from './avatarPreview';
 import LessonGraphic from './lessonGraphic';
+import * as Const from '../common/constants';
 
 export default class LessonRecorderScreen extends React.Component {
     constructor(props) {
@@ -58,7 +59,6 @@ export default class LessonRecorderScreen extends React.Component {
 
         if (prevState.isRecording != this.state.isRecording) {
             this.recorder.start(this.state.isRecording);
-            // this.voiceRecorder.start(this.state.isRecording);
         }
     }
 
@@ -126,16 +126,18 @@ export default class LessonRecorderScreen extends React.Component {
 
     render() {
         return(
-            <div>
+            <div id="lesson-recorder-screen">
                 <Menu selectedIndex='2' />
 
                 <div id="lesson-recorder" ref={(e) => { this.avatarPreview = e; }}>
+
                     <AvatarPreview
                         avatarURL={this.avatarURL}
                         pose={this.state.detectedPose}
                         faceName={this.state.faceName}
                         moveDirection={this.state.moveDirection}
                         movedPosition={(position) => { this.recordMovedPosition(position); }}
+                        previewContainer={this.avatarPreview}
                         isPoseDetecting={this.state.isPoseDetecting}
                     />
 
@@ -145,10 +147,29 @@ export default class LessonRecorderScreen extends React.Component {
                     <div id="pose-keypoint">
                         <canvas id="pose-keypoint-canvas"></canvas>
                     </div>
-
+{ /*
                     <div id="control-panel">
-                        <div id="recording-status">REC</div>
-                        <div id="recording-controller">
+
+                        <div id="indicator">
+                            <div id="recording-status">
+                                <FontAwesomeIcon icon={['fas', 'video']} />
+                                REC
+                            </div>
+
+                            <div id="record-elapsed-time">
+                                {//this.recorder.currentRecordingTime()
+                                }
+                            </div>
+                        </div>
+
+                        <div>
+                            <button type="button" className="btn" onClick={this._switchPoseDetection.bind(this)}>
+                                <FontAwesomeIcon icon={['fas', 'walking']} />
+                                ポーズ検出
+                            </button>
+                        </div>
+
+                        <div id="graphic-controller">
                             <button type="button" id="prev-graphic-btn" className="btn"
                                 disabled={this.graphicURLIndex == -1}
                                 onClick={this._switchGraphic.bind(this, -1)}>
@@ -159,83 +180,87 @@ export default class LessonRecorderScreen extends React.Component {
                                 onClick={this._switchGraphic.bind(this, 1)}>
                                 <FontAwesomeIcon icon={['fas', 'image']} />
                             </button>
-                            <button type="button" className="btn" onClick={this._switchPoseDetection.bind(this)}>
-                                <FontAwesomeIcon icon={['fas', 'walking']} />
-                                ポーズ検出
-                            </button>
+                        </div>
 
+                        <div id="recording-controller">
                             <button type="button" id="btn-start-record" className="btn btn-danger"
                                 onClick={this._recordingStart.bind(this)}>
                                 <FontAwesomeIcon icon={['far', 'dot-circle']} />
                                 収録開始
                             </button>
-                            <button type="button" id="btn-stop-record" className="btn btn-secondary"
+                            <button type="button" id="btn-stop-record" className="btn btn-secondary btn-with-hover"
                                 onClick={this._recordingStop.bind(this)}>
                                 <FontAwesomeIcon icon={['far', 'pause-circle']} />
                                 停止
                             </button>
-                            <button type="button" className="btn btn-primary btn-in-stop"
+                            <button type="button" className="btn btn-primary btn-in-stop btn-with-hover"
                                 onClick={this._postRecord.bind(this)}>
                                 <FontAwesomeIcon icon={['fas', 'cloud-upload-alt']} />
                                 保存
                             </button>
-                            <button type="button" className="btn btn-primary btn-in-stop"
+                            <button type="button" className="btn btn-primary btn-in-stop btn-with-hover"
                                 onClick={this._recordingResume.bind(this)}>
                                 <FontAwesomeIcon icon={['far', 'dot-circle']} />
                                 再開
                             </button>
+                        </div>
 
-                            <div id="change-emotion">
-                                <button type="button" className="btn btn-dark" onClick={this._switchFace.bind(this, 'Default')}>
-                                    <FontAwesomeIcon icon={['far', 'meh-blank']} />
-                                </button>
-                                <button type="button" className="btn btn-dark" onClick={this._switchFace.bind(this, 'AllFun')}>
-                                    <FontAwesomeIcon icon={['fas', 'smile']} />
-                                </button>
-                                <button type="button" className="btn btn-dark" onClick={this._switchFace.bind(this, 'AllJoy')}>
-                                    <FontAwesomeIcon icon={['fas', 'laugh-beam']} />
-                                </button>
-                                <button type="button" className="btn btn-dark" onClick={this._switchFace.bind(this, 'AllSorrow')}>
-                                    <FontAwesomeIcon icon={['fas', 'frown-open']} />
-                                </button>
-                                <button type="button" className="btn btn-dark" onClick={this._switchFace.bind(this, 'AllAngry')}>
-                                    <FontAwesomeIcon icon={['fas', 'angry']} />
-                                </button>
-                                <button type="button" className="btn btn-dark" onClick={this._switchFace.bind(this, 'AllSurprised')}>
-                                    <FontAwesomeIcon icon={['fas', 'surprise']} />
-                                </button>
-                            </div>
+                        <div id="emotion-controller">
+                            <button type="button" className="btn btn-dark" onClick={this._switchFace.bind(this, 'Default')}>
+                                <FontAwesomeIcon icon={['far', 'meh-blank']} />
+                            </button>
+                            <button type="button" className="btn btn-dark" onClick={this._switchFace.bind(this, 'AllFun')}>
+                                <FontAwesomeIcon icon={['fas', 'smile']} />
+                            </button>
+                            <button type="button" className="btn btn-dark" onClick={this._switchFace.bind(this, 'AllJoy')}>
+                                <FontAwesomeIcon icon={['fas', 'laugh-beam']} />
+                            </button>
+                            <button type="button" className="btn btn-dark" onClick={this._switchFace.bind(this, 'AllSorrow')}>
+                                <FontAwesomeIcon icon={['fas', 'frown-open']} />
+                            </button>
+                            <button type="button" className="btn btn-dark" onClick={this._switchFace.bind(this, 'AllAngry')}>
+                                <FontAwesomeIcon icon={['fas', 'angry']} />
+                            </button>
+                            <button type="button" className="btn btn-dark" onClick={this._switchFace.bind(this, 'AllSurprised')}>
+                                <FontAwesomeIcon icon={['fas', 'surprise']} />
+                            </button>
+                        </div>
 
-                            <div id="move-position" onMouseOut={this._stopMovingPosition.bind(this)}>
-                                <button type="button" className="btn btn-dark"
-                                    onMouseDown={this._movePosition.bind(this, 'front')}
-                                    onMouseUp={this._stopMovingPosition.bind(this)}>
-                                    <FontAwesomeIcon icon={['fas', 'arrow-up']} />
-                                </button>
-                                <button type="button" className="btn btn-dark"
-                                    onMouseDown={this._movePosition.bind(this, 'back')}
-                                    onMouseUp={this._stopMovingPosition.bind(this)}>
-                                    <FontAwesomeIcon icon={['fas', 'arrow-down']} />
-                                </button>
-                                <button type="button" className="btn btn-dark"
-                                    onMouseDown={this._movePosition.bind(this, 'left')}
-                                    onMouseUp={this._stopMovingPosition.bind(this)}>
-                                    <FontAwesomeIcon icon={['fas', 'arrow-left']} />
-                                </button>
-                                <button type="button" className="btn btn-dark"
-                                    onMouseDown={this._movePosition.bind(this, 'right')}
-                                    onMouseUp={this._stopMovingPosition.bind(this)}>
-                                    <FontAwesomeIcon icon={['fas', 'arrow-right']} />
-                                </button>
-
-                            </div>
+                        <div id="position-controller" onMouseOut={this._stopMovingPosition.bind(this)}>
+                            <button type="button" className="btn btn-dark"
+                                onMouseDown={this._movePosition.bind(this, 'front')}
+                                onMouseUp={this._stopMovingPosition.bind(this)}>
+                                <FontAwesomeIcon icon={['fas', 'arrow-up']} />
+                            </button>
+                            <button type="button" className="btn btn-dark"
+                                onMouseDown={this._movePosition.bind(this, 'back')}
+                                onMouseUp={this._stopMovingPosition.bind(this)}>
+                                <FontAwesomeIcon icon={['fas', 'arrow-down']} />
+                            </button>
+                            <button type="button" className="btn btn-dark"
+                                onMouseDown={this._movePosition.bind(this, 'left')}
+                                onMouseUp={this._stopMovingPosition.bind(this)}>
+                                <FontAwesomeIcon icon={['fas', 'arrow-left']} />
+                            </button>
+                            <button type="button" className="btn btn-dark"
+                                onMouseDown={this._movePosition.bind(this, 'right')}
+                                onMouseUp={this._stopMovingPosition.bind(this)}>
+                                <FontAwesomeIcon icon={['fas', 'arrow-right']} />
+                            </button>
                         </div>
                     </div>
+*/ }
                 </div>
 
                 <style jsx>{`
+                    #lesson-recorder-screen {
+                        width: 100%;
+                        height: 100%;
+                    }
                     #lesson-recorder {
                         position: relative;
+                        width: 100%;
+                        height: calc(100% - 50px); /* for menu */
                     }
                     #pose-video {
                         position: absolute;
@@ -250,7 +275,7 @@ export default class LessonRecorderScreen extends React.Component {
                         left: 0;
                     }
                     #control-panel {
-                        display: ${this.state.isLoading ? 'none' : 'block'};
+                        display: ${this.state.isLoading ? 'none' : 'table'};
                         position: absolute;
                         top: 0;
                         left:0;
@@ -261,6 +286,18 @@ export default class LessonRecorderScreen extends React.Component {
                     }
                     #recording-status {
                         display: ${this.state.isRecording ? 'block' : 'none'};
+                    }
+                    #recording-controller {
+                        display: table-cell;
+                        width: 100%;
+                        height: 100%;
+                        text-align: center;
+                        vertical-align: bottom;
+                        padding-bottom: 10vh;
+                    }
+                    #recording-controller button {
+                        width: 20vw;
+                        height: 7vw;
                     }
                     #prev-graphic-btn {
 
@@ -273,22 +310,23 @@ export default class LessonRecorderScreen extends React.Component {
                     }
                     #btn-stop-record {
                         display: ${this.state.isRecording ? 'inline-block' : 'none'};
-                        opacity: 0.2;
-                    }
-                    #btn-stop-record:hover {
-                        opacity: 1;
                     }
                     .btn-in-stop {
                         display: ${this.state.isPause ? 'inline-block' : 'none'};
-                        opacity: 0.2;
                     }
                     .btn-in-stop :hover {
                         opacity: 1;
                     }
-                    #change-emotion button {
-                        width: 4vw;
-                        height: 4vw;
-                        font-size: 3vw;
+                    .btn-with-hover {
+                        opacity: 0.2;
+                    }
+                    .btn-with-hover :hover {
+                        opacity: 1;
+                    }
+                    #emotion-controller button {
+                        width: 4vh;
+                        height: 4vh;
+                        font-size: 3vh;
                     }
                 `}</style>
             </div>
