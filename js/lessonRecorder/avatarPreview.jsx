@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import LessonAvatar from '../lessonPlayer/lessonAvatar';
 import { Clock } from 'three';
-import * as Const from '../common/constants';
 
 export default class AvatarPreview extends React.Component {
     constructor(props) {

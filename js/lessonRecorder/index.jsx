@@ -2,8 +2,8 @@ import React from 'react';
 import Menu from '../menu';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { setupPoseDetector, detectPoseInRealTime, clearPoseCanvas } from './poseDetector';
-//import VoiceRecorder from './voiceRecorder';
 import LessonRecorder from './lessonRecorder';
+import VoiceRecorder from './voiceRecorder';
 import AvatarPreview from './avatarPreview';
 import LessonGraphic from './lessonGraphic';
 import * as Const from '../common/constants';
@@ -24,6 +24,7 @@ export default class LessonRecorderScreen extends React.Component {
             isPause: false,
             isPoseDetecting: false,
             isSpeaking: false,
+            isPosting: false,
         };
 
         // TODO loading resources.
@@ -44,9 +45,15 @@ export default class LessonRecorderScreen extends React.Component {
         ];
         this.graphicURLIndex = -1;
         this.avatarPreview;
+
         this.recorder = new LessonRecorder();
-//        this.voiceRecorder = new VoiceRecorder(this.detectedVoice());
-        this.isLoading = true;
+
+        const lessonID = props.match.params.id;
+        this.voiceRecorder = new VoiceRecorder(
+            lessonID,
+            ((voice) => { this.addVoice(voice); }),
+            ((isSpeaking) => { this.detectedVoice(isSpeaking); })
+        );
     }
 
     async componentDidMount() {
@@ -62,6 +69,7 @@ export default class LessonRecorderScreen extends React.Component {
 
         if (prevState.isRecording != this.state.isRecording) {
             this.recorder.start(this.state.isRecording);
+            this.voiceRecorder.start(this.state.isRecording);
         }
 
         if (this.state.isLoading && !this.state.isDetectorLoading && !this.state.isAvatarLoading) {
@@ -79,6 +87,10 @@ export default class LessonRecorderScreen extends React.Component {
 
     detectedVoice(isSpeaking) {
         this.setState({ isSpeaking: isSpeaking });
+    }
+
+    addVoice(voice) {
+        this.recorder.addVoice(voice);
     }
 
     async _poseDetectionFrame() {
@@ -302,7 +314,7 @@ export default class LessonRecorderScreen extends React.Component {
                         left: 0;
                         right: 0;
                         margin: auto;
-                        display: ${this.state.isLoading ? 'display' : 'none'};
+                        display: ${this.state.isLoading || this.state.isPosting ? 'display' : 'none'};
                         font-size: 10vw;
                         opacity: 0.5;
                     }

@@ -123,6 +123,10 @@ export default class LessonRecorder {
         this.poseKey.coreBodies.push({ pos: positions, time: time });
     }
 
+    addVoice(voice) {
+        console.log(voice);
+    }
+
     addSwitchingGraphic(graphicID) {
         if (!this.isRecording) {
             this.recordWhileNotRecording.graphicID = graphicID;

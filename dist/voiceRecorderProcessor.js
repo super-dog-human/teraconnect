@@ -3,6 +3,8 @@ class Recorder extends AudioWorkletProcessor {
         super();
 
         this.isRecording             = false;
+        this.lipSync;
+        this.isSpeaking              = false;
         this.silenceSecondThreshold  = 1.0;
         this.durationSecondThreshold = 2.0;
         this.silenceVolumeThreshold  = 0.05;
@@ -30,6 +32,8 @@ class Recorder extends AudioWorkletProcessor {
         if (this.isSilence(inputs)) {
             if (this.shouldSaveRecording()) {
                 this.saveRecord();
+                this.lipSync(false);
+                this.isSpeaking = false;
                 return true;
             }
 
@@ -42,6 +46,10 @@ class Recorder extends AudioWorkletProcessor {
         } else {
             this.silenceBeginSecond = 0;
             this.recordInput(inputs);
+            if (!this.isSpeaking) {
+                this.lipSync(true);
+                this.isSpeaking = true;
+            }
         }
 
         return true;
@@ -63,8 +71,16 @@ class Recorder extends AudioWorkletProcessor {
         return hasSilenceTime && hasEnoughSilenceTime && hasEnoughRecordingTime && hasRecordBuffer;
     }
 
+    lipSync(isSpeaking) {
+        this.port.postMessage({
+            shouldUpload: false,
+            isSpeaking:   isSpeaking,
+        });
+    }
+
     saveRecord() {
         this.port.postMessage({
+            shouldUpload: true,
             speechedAt:   this.voiceBeginSecond,
             durationSec:  this.durationSecond(),
             buffers:      this.buffers,
@@ -101,6 +117,6 @@ class Recorder extends AudioWorkletProcessor {
         this.voiceBeginSecond   = 0;
         this.silenceBeginSecond = 0;
     }
-  }
+}
 
 registerProcessor('recorder', Recorder);
