@@ -144,21 +144,23 @@ export default class LessonRecorderScreen extends React.Component {
                     <LessonGraphic url={this.state.graphicURL} />
 
                     <video id="pose-video" playsInline></video>
+
                     <div id="pose-keypoint">
                         <canvas id="pose-keypoint-canvas"></canvas>
                     </div>
 
+                    <div id="loading-indicator">
+                        <FontAwesomeIcon icon="spinner" spin />
+                    </div>
+
                     <div id="control-panel">
+                        <div id="recording-status">
+                            <FontAwesomeIcon icon={['fas', 'video']} /> REC
+                        </div>
 
-                        <div id="indicator">
-                            <div id="recording-status">
-                                <FontAwesomeIcon icon={['fas', 'video']} /> REC
-                            </div>
-
-                            <div id="record-elapsed-time">
-                                {//this.recorder.currentRecordingTime()
-                                }
-                            </div>
+                        <div id="record-elapsed-time">
+                            {//this.recorder.currentRecordingTime()
+                            }
                         </div>
 
                         <div id="pose-detector-btn">
@@ -247,7 +249,6 @@ export default class LessonRecorderScreen extends React.Component {
                             </div>
                         </div>
                     </div>
-
                 </div>
 
                 <style jsx>{`
@@ -273,6 +274,20 @@ export default class LessonRecorderScreen extends React.Component {
                         top: 0;
                         left: 0;
                     }
+                    #loading-indicator {
+                        position: absolute;
+                        z-index: 100;
+                        width: 10vw;
+                        height: 10vw;
+                        top: 0;
+                        bottom: 0;
+                        left: 0;
+                        right: 0;
+                        margin: auto;
+                        display: ${this.state.isLoading ? 'display' : 'none'};
+                        font-size: 10vw;
+                        opacity: 0.5;
+                    }
                     #control-panel {
                         display: ${this.state.isLoading ? 'none' : 'block'};
                         position: absolute;
@@ -284,12 +299,10 @@ export default class LessonRecorderScreen extends React.Component {
                         left: 0;
                         right: 0;
                     }
-                    #indicator {
+                    #recording-status {
                         position: absolute;
                         top: 1vh;
                         left: 2vw;
-                    }
-                    #recording-status {
                         display: ${this.state.isRecording ? 'block' : 'none'};
                         font-size: 3vw;
                         font-weight: bold;
