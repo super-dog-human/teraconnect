@@ -32,8 +32,6 @@ export default class LessonAvatar {
         const breathBones = [
             this.bones.J_Bip_C_Head,
             this.bones.J_Adj_C_UpperChest,
-            this.bones.J_Adj_L_UpperArm.parent,
-            this.bones.J_Adj_R_UpperArm.parent,
             this.bones.J_Adj_C_Spine,
         ];
 
@@ -56,22 +54,6 @@ export default class LessonAvatar {
                     { scl: [1, 1, 1],       rot: [0, 0, 0, 1],    time: 0, },
                     { scl: [1.02, 1, 1.02], rot: [0.05, 0, 0, 1], time: 3, },
                     { scl: [1, 1, 1],       rot: [0, 0, 0, 1],    time: 6, },
-                ],
-            },
-            {
-                // left shoulder
-                keys: [
-                    { scl: [1, 1, 1], rot: [0, 0, 0.7, 1],    time: 0, },
-                    { scl: [1, 1, 1], rot: [0, 0.05, 0.7, 1],  time: 4, },
-                    { scl: [1, 1, 1], rot: [0, 0, 0.7, 1],    time: 6, },
-                ],
-            },
-            {
-                // right shoulder
-                keys: [
-                    { scl: [1, 1, 1], rot: [0, 0, -0.7, 1],    time: 0, },
-                    { scl: [1, 1, 1], rot: [0, -0.05, -0.7, 1], time: 4, },
-                    { scl: [1, 1, 1], rot: [0, 0, -0.7, 1],    time: 6, },
                 ],
             },
             {
