@@ -39,8 +39,6 @@ export default class LessonRecorder {
     }
 
     addAvatarPose(pose) {
-        if (!this.isRecording) return;
-
         const time = this.currentRecordingTime();
 
         for (let part in pose) {
@@ -72,9 +70,11 @@ export default class LessonRecorder {
             const parmXRad  = (Math.abs(elbowZRad) > Const.RAD_90) ? -Const.RAD_90 : 0;
 
             if (side == 'left') {
-                self.poseKey.leftShoulders.push({ rot: [0, 0, -shoulderZRad, 1], time: time });
-                self.poseKey.leftElbows.push({ rot: [elbowXRad, -0.5, elbowZRad, 1], time: time });
-                self.poseKey.leftHands.push({ rot: [parmXRad, 0, 0, 1], time: time });
+                if (self.isRecording) {
+                    self.poseKey.leftShoulders.push({ rot: [0, 0, -shoulderZRad, 1], time: time });
+                    self.poseKey.leftElbows.push({ rot: [elbowXRad, -0.5, elbowZRad, 1], time: time });
+                    self.poseKey.leftHands.push({ rot: [parmXRad, 0, 0, 1], time: time });
+                }
                 avatarPose.leftArm = {
                     shoulderZ: -shoulderZRad,
                     elbowX:    elbowXRad,
@@ -82,9 +82,11 @@ export default class LessonRecorder {
                     parmX:     parmXRad,
                 };
             } else {
-                self.poseKey.rightShoulders.push({ rot: [0, 0, shoulderZRad, 1], time: time });
-                self.poseKey.rightElbows.push({ rot: [-elbowXRad, 0.5, elbowZRad, 1], time: time });
-                self.poseKey.rightHands.push({ rot: [parmXRad, 0, 0, 1], time: time });
+                if (self.isRecording) {
+                    self.poseKey.rightShoulders.push({ rot: [0, 0, shoulderZRad, 1], time: time });
+                    self.poseKey.rightElbows.push({ rot: [-elbowXRad, 0.5, elbowZRad, 1], time: time });
+                    self.poseKey.rightHands.push({ rot: [parmXRad, 0, 0, 1], time: time });
+                }
                 avatarPose.rightArm = {
                     shoulderZ: shoulderZRad,
                     elbowX:    -elbowXRad,
@@ -103,7 +105,9 @@ export default class LessonRecorder {
                 1  - (leftFaceLength / rightFaceLength) :
                 -1 + (rightFaceLength / leftFaceLength);
 
-            self.poseKey.necks.push({ rot: [0, faceAngleRatio, 0, 1], time: time });
+            if (self.isRecording) {
+                self.poseKey.necks.push({ rot: [0, faceAngleRatio, 0, 1], time: time });
+            }
             avatarPose.neck = { neckY: faceAngleRatio };
         }
     }
