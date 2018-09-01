@@ -23,6 +23,7 @@ export default class LessonRecorderScreen extends React.Component {
             isRecording: false,
             isPause: false,
             isPoseDetecting: false,
+            isSpeaking: false,
         };
 
         // TODO loading resources.
@@ -44,12 +45,12 @@ export default class LessonRecorderScreen extends React.Component {
         this.graphicURLIndex = -1;
         this.avatarPreview;
         this.recorder = new LessonRecorder();
-//        this.voiceRecorder = new VoiceRecorder();
+//        this.voiceRecorder = new VoiceRecorder(this.detectedVoice());
         this.isLoading = true;
     }
 
-    componentDidMount() {
-        setupPoseDetector(() => {
+    async componentDidMount() {
+        await setupPoseDetector(() => {
             this.setState({ isDetectorLoading: false });
         });
     }
@@ -66,6 +67,32 @@ export default class LessonRecorderScreen extends React.Component {
         if (this.state.isLoading && !this.state.isDetectorLoading && !this.state.isAvatarLoading) {
             this.setState({ isLoading: false });
         }
+    }
+
+    recordMovedPosition(position) {
+        this.recorder.addAvatarPosition(position);
+    }
+
+    avatarLoadingCompleted() {
+        this.setState({ isAvatarLoading: false });
+    }
+
+    detectedVoice(isSpeaking) {
+        this.setState({ isSpeaking: isSpeaking });
+    }
+
+    async _poseDetectionFrame() {
+        if (!this.state.isPoseDetecting) {
+            this.setState({ detectedPose: {} });
+            clearPoseCanvas();
+            return;
+        }
+
+        const pose = await detectPoseInRealTime();
+        const avatarPose = this.recorder.addAvatarPose(pose);
+        this.setState({ detectedPose: avatarPose });
+
+        requestAnimationFrame(() => this._poseDetectionFrame());
     }
 
     _recordingStart() {
@@ -108,30 +135,8 @@ export default class LessonRecorderScreen extends React.Component {
         this.setState({ moveDirection: 'stop' });
     }
 
-    recordMovedPosition(position) {
-        this.recorder.addAvatarPosition(position);
-    }
-
-    avatarLoadingCompleted() {
-        this.setState({ isAvatarLoading: false });
-    }
-
     _postRecord() {
         this.recorder.sendRecord();
-    }
-
-    async _poseDetectionFrame() {
-        if (!this.state.isPoseDetecting) {
-            this.setState({ detectedPose: {} });
-            clearPoseCanvas();
-            return;
-        }
-
-        const pose = await detectPoseInRealTime();
-        const avatarPose = this.recorder.addAvatarPose(pose);
-        this.setState({ detectedPose: avatarPose });
-
-        requestAnimationFrame(() => this._poseDetectionFrame());
     }
 
     render() {
@@ -149,6 +154,7 @@ export default class LessonRecorderScreen extends React.Component {
                         movedPosition={(position) => { this.recordMovedPosition(position); }}
                         loadingCompleted={() => { this.avatarLoadingCompleted(); }}
                         previewContainer={this.avatarPreview}
+                        isSpeaking={this.state.isSpeaking}
                         isPoseDetecting={this.state.isPoseDetecting}
                     />
 
@@ -170,7 +176,8 @@ export default class LessonRecorderScreen extends React.Component {
                         </div>
 
                         <div id="record-elapsed-time">
-                            {//this.recorder.currentRecordingTime()
+                            {
+                                //this.recorder.currentRecordingTime()
                             }
                         </div>
 

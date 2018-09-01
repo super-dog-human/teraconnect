@@ -35,9 +35,15 @@ export default class AvatarPreview extends React.Component {
             this._loadAvatar(nextProps.previewContainer);
         }
 
+        if (this.props.isSpeaking != nextProps.isSpeaking) {
+            this.avatar.playLipSync(nextProps.isSpeaking);
+        }
+
         if (!nextProps.isPoseDetecting) {
 //            this.avatar.initBonePosition(); // maybe unnecessary
-        } else if (Object.keys(nextProps.pose).length > 0) {
+        }
+
+        if (Object.keys(nextProps.pose).length > 0) {
             this.avatar.moveBones(nextProps.pose);
         }
     }

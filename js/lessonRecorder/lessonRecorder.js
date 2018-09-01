@@ -7,9 +7,11 @@ export default class LessonRecorder {
         this.accuracyThresholdMin = 0.7;
         this.recordingStartSec = 0;
         this.elapsedTimeSec = 0;
+        this.isRecording = false;
         this.prevGraphicID;
+        this.recordWhileNotRecording = {};
         this.timelines = [];
-        this.avatarPoseHistory = {
+        this.poseKey = {
             leftHands:      [],
             rightHands:     [],
             leftElbows:     [],
@@ -22,8 +24,10 @@ export default class LessonRecorder {
     }
 
     start(isStart) {
+        this.isRecording = isStart;
         if (isStart) {
             this.recordingStartSec = performance.now();
+            this._addLatestRecordIfNeeded();
         } else {
             this.elapsedTimeSec += performance.now() - this.recordingStartSec;
         }
@@ -35,6 +39,8 @@ export default class LessonRecorder {
     }
 
     addAvatarPose(pose) {
+        if (!this.isRecording) return;
+
         const time = this.currentRecordingTime();
 
         for (let part in pose) {
@@ -66,9 +72,9 @@ export default class LessonRecorder {
             const parmXRad  = (Math.abs(elbowZRad) > Const.RAD_90) ? -Const.RAD_90 : 0;
 
             if (side == 'left') {
-                self.avatarPoseHistory.leftShoulders.push({ rot: [0, 0, -shoulderZRad, 1], time: time });
-                self.avatarPoseHistory.leftElbows.push({ rot: [elbowXRad, -0.5, elbowZRad, 1], time: time });
-                self.avatarPoseHistory.leftHands.push({ rot: [parmXRad, 0, 0, 1], time: time });
+                self.poseKey.leftShoulders.push({ rot: [0, 0, -shoulderZRad, 1], time: time });
+                self.poseKey.leftElbows.push({ rot: [elbowXRad, -0.5, elbowZRad, 1], time: time });
+                self.poseKey.leftHands.push({ rot: [parmXRad, 0, 0, 1], time: time });
                 avatarPose.leftArm = {
                     shoulderZ: -shoulderZRad,
                     elbowX:    elbowXRad,
@@ -76,9 +82,9 @@ export default class LessonRecorder {
                     parmX:     parmXRad,
                 };
             } else {
-                self.avatarPoseHistory.rightShoulders.push({ rot: [0, 0, shoulderZRad, 1], time: time });
-                self.avatarPoseHistory.rightElbows.push({ rot: [-elbowXRad, 0.5, elbowZRad, 1], time: time });
-                self.avatarPoseHistory.rightHands.push({ rot: [parmXRad, 0, 0, 1], time: time });
+                self.poseKey.rightShoulders.push({ rot: [0, 0, shoulderZRad, 1], time: time });
+                self.poseKey.rightElbows.push({ rot: [-elbowXRad, 0.5, elbowZRad, 1], time: time });
+                self.poseKey.rightHands.push({ rot: [parmXRad, 0, 0, 1], time: time });
                 avatarPose.rightArm = {
                     shoulderZ: shoulderZRad,
                     elbowX:    -elbowXRad,
@@ -97,18 +103,28 @@ export default class LessonRecorder {
                 1  - (leftFaceLength / rightFaceLength) :
                 -1 + (rightFaceLength / leftFaceLength);
 
-            self.avatarPoseHistory.necks.push({ rot: [0, faceAngleRatio, 0, 1], time: time });
+            self.poseKey.necks.push({ rot: [0, faceAngleRatio, 0, 1], time: time });
             avatarPose.neck = { neckY: faceAngleRatio };
         }
     }
 
     addAvatarPosition(position) {
+        if (!this.isRecording) {
+            this.recordWhileNotRecording.position = position;
+            return;
+        }
+
         const positions = position.toArray().push(1);
         const time = this.currentRecordingTime();
-        this.avatarPoseHistory.coreBodies.push({ pos: positions, time: time });
+        this.poseKey.coreBodies.push({ pos: positions, time: time });
     }
 
     addSwitchingGraphic(graphicID) {
+        if (!this.isRecording) {
+            this.recordWhileNotRecording.graphicID = graphicID;
+            return;
+        }
+
         const time = this.currentRecordingTime();
         const graphics = [];
 
@@ -135,6 +151,11 @@ export default class LessonRecorder {
     }
 
     addSwitchingFace(faceName) {
+        if (!this.isRecording) {
+            this.recordWhileNotRecording.faceName = faceName;
+            return;
+        }
+
         const time = this.currentRecordingTime();
         const spAction = this._defaultSpActionRecord();
         spAction.faceExpression = faceName;
@@ -148,7 +169,7 @@ export default class LessonRecorder {
     sendRecord() {
         const time = this.currentRecordingTime();
         console.log(this.timelines);
-        console.log(this.avatarPoseHistory);
+        console.log(this.poseKey);
     }
 
     _defaultGraphicRecord() {
@@ -166,5 +187,22 @@ export default class LessonRecorder {
                 "faceExpression": null,
             }
         };
+    }
+
+    _addLatestRecordIfNeeded() {
+        if (this.recordWhileNotRecording == {}) return;
+
+        for (let type in this.recordWhileNotRecording) {
+            const record = this.recordWhileNotRecording[type];
+            if (type == 'position') {
+                this.addAvatarPosition(record);
+            } else if (type == 'graphicID') {
+                this.addSwitchingGraphic(record);
+            } else if (type == 'faceName') {
+                this.addSwitchingFace(record);
+            }
+        }
+
+        this.recordWhileNotRecording = {};
     }
 }
