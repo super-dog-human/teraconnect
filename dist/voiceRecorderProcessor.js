@@ -7,7 +7,7 @@ class Recorder extends AudioWorkletProcessor {
         this.isSpeaking              = false;
         this.silenceSecondThreshold  = 1.0;
         this.durationSecondThreshold = 2.0;
-        this.silenceVolumeThreshold  = 0.1;
+        this.silenceVolumeThreshold  = 0.05;
         this.quietHistoryDurationSec = 0.2;
         this.quietBuffers            = [];
         this.buffers                 = [];
