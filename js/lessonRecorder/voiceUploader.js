@@ -1,5 +1,6 @@
 const getSigningUrl = 'https://api.teraconnect.org/raw_voice_signing';
-const wavSampleRate = 16000;
+//const wavSampleRate = 16000;
+const wavSampleRate = 44100;
 const numChannels   = 1;
 
 onmessage = function(event) {
@@ -15,9 +16,8 @@ onmessage = function(event) {
             voice.fileID = fileID;
             const putURL = response.signed_url;
 
-            const audioLength      = voice.bufferLength;
             const recordSampleRate = voice.currentSampleRate;
-            const audioBuffer      = createWAVFile(voice.buffers, audioLength, recordSampleRate);
+            const audioBuffer      = createWAVFile(voice.buffers, recordSampleRate);
 
             const instance = axios.create({
                 transformRequest: [(data, header) => {
@@ -37,7 +37,7 @@ onmessage = function(event) {
         });
 }
 
-function createWAVFile(buffers, bufferLength, recordSampleRate) {
+function createWAVFile(buffers, recordSampleRate) {
     const mergedBuffers = mergeBuffers(buffers, recordSampleRate);
     const dataview      = encodeWAV(mergedBuffers);
     const audioBlob     = new Blob([dataview], { 'type': 'audio/wav' });
@@ -47,9 +47,11 @@ function createWAVFile(buffers, bufferLength, recordSampleRate) {
         const resampledResult = [];
         let   resampledLength = 0;
         buffers.forEach((buffer) => {
-            const resampledBuffer = downSampling(buffer, recordSampleRate);
-            resampledResult.push(resampledBuffer);
-            resampledLength += resampledBuffer.length;
+//            const resampledBuffer = downSampling(buffer, recordSampleRate);
+//            resampledResult.push(resampledBuffer);
+            resampledResult.push(buffer);
+//            resampledLength += resampledBuffer.length;
+            resampledLength += buffer.length;
         });
 
         const result = new Float32Array(resampledLength);
@@ -62,6 +64,7 @@ function createWAVFile(buffers, bufferLength, recordSampleRate) {
         return result;
     }
 
+/*
     function downSampling(buffer, recordSampleRate) {
         const compression = recordSampleRate / wavSampleRate;
         const resampledLength = parseInt(buffer.length / compression);
@@ -77,6 +80,7 @@ function createWAVFile(buffers, bufferLength, recordSampleRate) {
 
         return resampledBuffer;
     }
+*/
 
     function encodeWAV(buffers) {
         const buffer = new ArrayBuffer(44 + buffers.length * 2);
@@ -95,7 +99,6 @@ function createWAVFile(buffers, bufferLength, recordSampleRate) {
         view.setUint16(34, 16, true);
         writeString(view, 36, 'data');
         view.setUint32(40, buffers.length * 2, true);
-
         floatTo16BitPCM(view, 44, buffers);
 
         return view;

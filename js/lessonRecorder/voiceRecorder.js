@@ -20,7 +20,11 @@ export default class VoiceRecorder {
 
     async _initRecorder() {
         const stream = await navigator.mediaDevices.getUserMedia({
-            audio: true,
+            audio: {
+                echoCancellation: true,
+                autoGainControl:  true,
+                noiseSuppression: true,
+            },
             video: false
         });
         this.context = new AudioContext();

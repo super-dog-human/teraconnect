@@ -8,6 +8,8 @@ class Recorder extends AudioWorkletProcessor {
         this.silenceSecondThreshold  = 1.0;
         this.durationSecondThreshold = 2.0;
         this.silenceVolumeThreshold  = 0.05;
+        this.quietHistoryDurationSec = 0.2;
+        this.quietBuffers            = [];
         this.buffers                 = [];
         this.bufferLength            = 0;
         this.recordingStartSecond    = 0;
@@ -27,7 +29,7 @@ class Recorder extends AudioWorkletProcessor {
     process(allInputs) {
         if (!this.isRecording) return true;
 
-        let inputs = allInputs[0][0]; // recording monoral only
+        const inputs = allInputs[0][0]; // recording monoral only
 
         if (this.isSilence(inputs)) {
             if (this.shouldSaveRecording()) {
@@ -42,9 +44,12 @@ class Recorder extends AudioWorkletProcessor {
             }
             if (this.buffers.length > 0) {
                 this.recordInput(inputs);
+            } else {
+                this.heapQuietInput(inputs);
             }
         } else {
             this.silenceBeginSecond = 0;
+            this.recordQuietInput();
             this.recordInput(inputs);
             if (!this.isSpeaking) {
                 this.lipSync(true);
@@ -102,6 +107,14 @@ class Recorder extends AudioWorkletProcessor {
         return Math.sqrt(sum / inputs.length);
     }
 
+    recordQuietInput() {
+        this.quietBuffers.forEach((qBuffer) => {
+            this.buffers.push(qBuffer.inputs);
+            this.bufferLength += qBuffer.inputs.length;
+        });
+        this.quietBuffers = [];
+    }
+
     recordInput(inputs) {
         if (this.voiceBeginSecond == 0) {
             this.voiceBeginSecond = this.elapsedSecondFromStart();
@@ -110,6 +123,20 @@ class Recorder extends AudioWorkletProcessor {
         this.buffers.push(inputs);
         this.bufferLength += inputs.length;
     }
+
+    heapQuietInput(inputs) {
+        const time = currentTime;
+
+        this.quietBuffers = this.quietBuffers.filter((q) => {
+            return q.time >= time - this.quietHistoryDurationSec;
+        });
+
+        this.quietBuffers.push({
+            time:   time,
+            inputs: inputs,
+        });
+    }
+
 
     clearRecord() {
         this.buffers            = [];
