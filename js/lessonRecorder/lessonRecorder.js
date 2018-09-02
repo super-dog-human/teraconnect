@@ -124,7 +124,20 @@ export default class LessonRecorder {
     }
 
     addVoice(voice) {
-        console.log(voice);
+        const timeline = this.timelines.find((t) => { return t.timeSec == voice.timeSec });
+        if (timeline) {
+            timeline.voice.id = voice.fileID;
+        } else {
+            this.timelines.push({
+                timeSec: voice.timeSec,
+                text: {
+                    durationSec: voice.durationSec,
+                },
+                voice: {
+                    durationSec: voice.durationSec,
+                },
+            });
+        }
     }
 
     addSwitchingGraphic(graphicID) {
