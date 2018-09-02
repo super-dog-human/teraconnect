@@ -55,9 +55,9 @@ export default class VoiceRecorder {
 
         uploader.postMessage({
             lessonID:          this.lessonID,
-            time:              event.data.speechedAt,
-            buffers:           event.data.buffers,
-            bufferLength:      event.data.bufferLength,
+            time:              result.speechedAt,
+            buffers:           result.buffers,
+            bufferLength:      result.bufferLength,
             currentSampleRate: this.context.sampleRate,
         });
 

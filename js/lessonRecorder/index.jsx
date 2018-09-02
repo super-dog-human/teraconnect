@@ -438,6 +438,7 @@ export default class LessonRecorderScreen extends React.Component {
                         position: absolute;
                         width: 3vw;
                         height: 3vw;
+                        font-size: 1vw;
                     }
                     #position-controller button:nth-child(1){
                         top: 0;

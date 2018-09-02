@@ -44,7 +44,7 @@ export default class LessonLoader {
         const materialString = await unzip.file('material.json').async('string');
         this.material = JSON.parse(materialString);
 
-        for (const id in this.material.graphics) {
+        for (const id of Object.keys(this.material.graphics)) {
             const graphic = this.material.graphics[id];
             const graphicPath = 'graphics/' + id + '.' + graphic.fileType;
             const blob = await unzip.file(graphicPath).async('blob');
@@ -52,7 +52,7 @@ export default class LessonLoader {
             graphic.url = objectURL;
         }
 
-        for (const id in this.material.voices) {
+        for (const id of Object.keys(this.material.voices)) {
             const voice = this.material.voices[id];
             const voicePath = 'voices/' + id + '.ogg';
             const blob = await unzip.file(voicePath).async('blob');

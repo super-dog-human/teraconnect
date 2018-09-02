@@ -168,7 +168,7 @@ export default class LessonAvatar {
     }
 
     moveBones(pose) {
-        for (let part in pose) {
+        for (let part of Object.keys(pose)) {
             if (part == 'neck') {
                 this.bones.J_Bip_C_Neck.rotation.y = pose[part].neckY;
             } else if (part == 'body') {

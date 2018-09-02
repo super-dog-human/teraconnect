@@ -200,7 +200,7 @@ export default class LessonRecorder {
     _addLatestRecordIfNeeded() {
         if (this.recordWhileNotRecording == {}) return;
 
-        for (let type in this.recordWhileNotRecording) {
+        for (let type of Object.keys(this.recordWhileNotRecording)) {
             const record = this.recordWhileNotRecording[type];
             if (type == 'position') {
                 this.addAvatarPosition(record);
