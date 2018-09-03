@@ -3,7 +3,6 @@ class Recorder extends AudioWorkletProcessor {
         super();
 
         this.isRecording             = false;
-        this.lipSync;
         this.isSpeaking              = false;
         this.silenceSecondThreshold  = 1.0;
         this.durationSecondThreshold = 2.0;
@@ -32,10 +31,13 @@ class Recorder extends AudioWorkletProcessor {
         const inputs = allInputs[0][0]; // recording monoral only
 
         if (this.isSilence(inputs)) {
-            if (this.shouldSaveRecording()) {
-                this.saveRecord();
+            if (this.shouldStopLipSync()) {
                 this.lipSync(false);
                 this.isSpeaking = false;
+            }
+
+            if (this.shouldSaveRecording()) {
+                this.saveRecord();
                 return true;
             }
 
@@ -66,6 +68,11 @@ class Recorder extends AudioWorkletProcessor {
 
     durationSecond() {
         return this.elapsedSecondFromStart() - this.voiceBeginSecond;
+    }
+
+    shouldStopLipSync() {
+        if (!this.isSpeaking) return false;
+        return (this.elapsedSecondFromStart() - this.silenceBeginSecond) > this.silenceSecondThreshold;
     }
 
     shouldSaveRecording() {
