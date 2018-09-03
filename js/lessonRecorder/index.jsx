@@ -31,26 +31,25 @@ export default class LessonRecorderScreen extends React.Component {
         this.avatarURL = "http://localhost:1234/bdiuotgrbj8g00l9t3ng.vrm";
         this.graphicURLs = [
             {
-                id: 1,
+                id: "1",
                 url: 'https://s3-ap-northeast-1.amazonaws.com/ftext/mathII/p143.png',
             },
             {
-                id: 2,
+                id: "2",
                 url: 'https://s3-ap-northeast-1.amazonaws.com/ftext/mathII/p144-1.png',
             },
             {
-                id: 3,
+                id: "3",
                 url: 'https://s3-ap-northeast-1.amazonaws.com/ftext/mathI/numberline.png',
             },
         ];
         this.graphicURLIndex = -1;
         this.avatarPreview;
 
-        this.recorder = new LessonRecorder();
-
-        const lessonID = props.match.params.id;
+        this.lessonID = props.match.params.id;
+        this.recorder = new LessonRecorder(this.lessonID);
         this.voiceRecorder = new VoiceRecorder(
-            lessonID,
+            this.lessonID,
             ((voice) => { this.addVoice(voice); }),
             ((isSpeaking) => { this.detectedVoice(isSpeaking); })
         );
@@ -149,7 +148,28 @@ export default class LessonRecorderScreen extends React.Component {
     }
 
     _postRecord() {
-        this.recorder.sendRecord();
+        const buttons = document.getElementById('control-panel').getElementsByTagName('button');
+        for(let b of buttons) { b.disabled = true };
+        this.setState({ isPosting: true });
+
+        this._waitAndPostRecord(async () => {
+            const result = await this.recorder.uploadRecord();
+            this.setState({ isPosting: false });
+            if (result) {
+                this.props.history.push(`/${this.lessonID}`);
+            } else {
+                document.getElementById('save-record-btn').disabled = false;
+            }
+        });
+    }
+
+    _waitAndPostRecord(post) {
+        const interval = setInterval(() => {
+            if (this.recorder.hasAllVoicesUploaded()) {
+                clearInterval(interval);
+                post();
+            }
+        }, 1000);
     }
 
     render() {
@@ -183,7 +203,7 @@ export default class LessonRecorderScreen extends React.Component {
                         <FontAwesomeIcon icon="spinner" spin />
                     </div>
 
-                    <div id="control-panel">
+                    <div id="control-panel" disabled={this.state.isPosting}>
                         <div id="recording-status">
                             <FontAwesomeIcon icon={['fas', 'video']} /> REC
                         </div>
@@ -235,7 +255,7 @@ export default class LessonRecorderScreen extends React.Component {
                         </div>
 
                         <div id="rec-single-btns">
-                            <button type="button" id="btn-start-record" className="btn btn-danger rec-btn"
+                            <button type="button" id="start-record-btn" className="btn btn-danger rec-btn"
                                 onClick={this._recordingStart.bind(this)}>
                                 <FontAwesomeIcon icon={['far', 'dot-circle']} /> 収録開始
                             </button>
@@ -245,7 +265,7 @@ export default class LessonRecorderScreen extends React.Component {
                             </button>
                         </div>
                         <div id="rec-pair-btns" className="btn-in-stop">
-                            <button type="button" className="btn btn-primary rec-btn"
+                            <button type="button" id="save-record-btn" className="btn btn-primary rec-btn"
                                 onClick={this._postRecord.bind(this)}>
                                 <FontAwesomeIcon icon={['fas', 'cloud-upload-alt']} /> 保存
                             </button>
@@ -409,7 +429,7 @@ export default class LessonRecorderScreen extends React.Component {
                         margin-left: 1vw;
                         margin-right: 1vw;
                     }
-                    #btn-start-record {
+                    #start-record-btn {
                         display: ${!this.state.isRecording && !this.state.isPause ? 'inline-block' : 'none'};
                     }
                     #btn-stop-record {

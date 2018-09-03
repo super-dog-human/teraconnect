@@ -14,7 +14,7 @@ export default class VoiceRecorder {
         if (this.isReady) {
             this.recorder.port.postMessage({ isRecording: isRecording });
         } else {
-            setTimeout(this.start(isRecording), 100);
+            setTimeout(this.start(isRecording), 1000);
         }
     }
 
@@ -28,7 +28,7 @@ export default class VoiceRecorder {
             video: false
         });
         this.context = new AudioContext();
-        await this.context.audioWorklet.addModule('../../voiceRecorderProcessor.js')
+        await this.context.audioWorklet.addModule('../../voiceRecorderProcessor.js');
         const micInput = this.context.createMediaStreamSource(stream);
         this.recorder = new AudioWorkletNode(this.context, 'recorder');
         micInput.connect(this.recorder);

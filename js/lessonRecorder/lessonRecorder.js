@@ -1,9 +1,9 @@
 import axios from 'axios';
-import Utility from '../common/utility';
 import * as Const from '../common/constants';
 
 export default class LessonRecorder {
-    constructor() {
+    constructor(lessonID) {
+        this.lessonID = lessonID;
         this.accuracyThresholdMin = 0.7;
         this.recordingStartSec = 0;
         this.elapsedTimeSec = 0;
@@ -118,24 +118,26 @@ export default class LessonRecorder {
             return;
         }
 
-        const positions = position.toArray().push(1);
+        const positions = position.toArray();
+        positions.push(1);
         const time = this.currentRecordingTime();
         this.poseKey.coreBodies.push({ pos: positions, time: time });
     }
 
     addVoice(voice) {
         const timeline = this.timelines.find((t) => { return t.timeSec == voice.timeSec });
-        if (timeline) {
+
+        if (timeline && voice.fileID) {
+            // voice field is update twice because voice-id is fixed after voice uploading.
             timeline.voice.id = voice.fileID;
+        } else if (timeline) {
+            timeline.text  = { durationSec: voice.durationSec };
+            timeline.voice = { durationSec: voice.durationSec };
         } else {
             this.timelines.push({
                 timeSec: voice.timeSec,
-                text: {
-                    durationSec: voice.durationSec,
-                },
-                voice: {
-                    durationSec: voice.durationSec,
-                },
+                text:    { durationSec: voice.durationSec },
+                voice:   { durationSec: voice.durationSec },
             });
         }
     }
@@ -187,10 +189,31 @@ export default class LessonRecorder {
         });
     }
 
-    sendRecord() {
-        const time = this.currentRecordingTime();
-        console.log(this.timelines);
-        console.log(this.poseKey);
+    hasAllVoicesUploaded() {
+        const voices = this.timelines.filter((t) => { return t.voice; }).map((t) => t.voice);
+        const nowUploadingVoiceCount = voices.filter((v) => { return v.id == null; }).length;
+
+        return !(voices.length > 0 && nowUploadingVoiceCount > 0);
+    }
+
+    uploadRecord() {
+        const body = {
+            durationSec: this.elapsedTimeSec,
+            timelines: this.timelines,
+            poseKey: this.poseKey,
+        };
+
+        const lessonURL = Const.LESSON_MATERIAL_API_URL.replace('{lessonID}', this.lessonID);
+        return axios.post(lessonURL, body)
+            .then((_) => {
+                return true;
+            })
+            .catch((err) => {
+                console.log(err);
+                console.error(err.status);
+                console.error(err.response.status)
+                return false;
+            });
     }
 
     _defaultGraphicRecord() {
