@@ -196,24 +196,45 @@ export default class LessonRecorder {
         return !(voices.length > 0 && nowUploadingVoiceCount > 0);
     }
 
-    uploadRecord() {
-        const body = {
-            durationSec: this.elapsedTimeSec,
-            timelines: this.timelines,
-            poseKey: this.poseKey,
-        };
+    async uploadRecord() {
+        if (!await this._uploadGraphicIDs()) return false;
+        if (!await this._uploadLessonMaterial()) return false;
 
-        const lessonURL = Const.LESSON_MATERIAL_API_URL.replace('{lessonID}', this.lessonID);
-        return axios.post(lessonURL, body)
-            .then((_) => {
-                return true;
-            })
-            .catch((err) => {
-                console.log(err);
-                console.error(err.status);
-                console.error(err.response.status)
-                return false;
+        return true;
+    }
+
+    async _uploadGraphicIDs() {
+        const nestedGraphicIDs = this.timelines.filter((t) => { return t.graphics; })
+            .map((t) => { return t.graphics.map((g) => { return g.id }); });
+        if (nestedGraphicIDs.length ==0) return true;
+
+        const graphicIDs = Array.prototype.concat.apply([], nestedGraphicIDs)
+            .filter((x, i, self) => {
+                return self.indexOf(x) === i;
             });
+        const graphicBody = { graphicIDs: graphicIDs };
+        const graphicURL = Const.LESSON_GRAPHIC_API_URL.replace('{lessonID}', this.lessonID);
+        await axios.post(graphicURL, graphicBody).catch((err) => {
+            console.error(err);
+            return false;
+        });
+
+        return true;
+    }
+
+    async _uploadLessonMaterial() {
+        const materialBody = {
+            durationSec: this.elapsedTimeSec,
+            timelines:   this.timelines,
+            poseKey:     this.poseKey,
+        };
+        const materialURL = Const.LESSON_MATERIAL_API_URL.replace('{lessonID}', this.lessonID);
+        await axios.post(materialURL, materialBody).catch((err) => {
+            console.error(err);
+            return false;
+        });
+
+        return true;
     }
 
     _defaultGraphicRecord() {
