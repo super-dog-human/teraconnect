@@ -156,7 +156,7 @@ export default class LessonRecorderScreen extends React.Component {
             const result = await this.recorder.uploadRecord();
             this.setState({ isPosting: false });
             if (result) {
-                this.props.history.push(`/${this.lessonID}`);
+                this.props.history.push(`/lessons/${this.lessonID}/edit`);
             } else {
                 document.getElementById('save-record-btn').disabled = false;
             }

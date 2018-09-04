@@ -46,13 +46,13 @@ export default class VoiceRecorder {
 
     _uploadVoice(result) {
         const callback = this.callback;
-        const uploader = new Worker('voiceUploader.js');
         const voice = {
             timeSec:     result.speechedAt,
             durationSec: result.durationSec,
         };
         callback(voice);
 
+        const uploader = new Worker('voiceUploader.js');
         uploader.postMessage({
             lessonID:          this.lessonID,
             time:              result.speechedAt,
