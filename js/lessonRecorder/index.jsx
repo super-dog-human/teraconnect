@@ -150,7 +150,7 @@ export default class LessonRecorderScreen extends React.Component {
     _postRecord() {
         const buttons = document.getElementById('control-panel').getElementsByTagName('button');
         for(let b of buttons) { b.disabled = true };
-        this.setState({ isPosting: true });
+        this.setState({ isPosting: true, isPoseDetecting: false });
 
         this._waitAndPostRecord(async () => {
             const result = await this.recorder.uploadRecord();
