@@ -20,7 +20,7 @@ class Recorder extends AudioWorkletProcessor {
             if (this.isRecording) {
                 this.recordingStartSecond = currentTime;
             } else if (this.buffers.length > 0) {
-                this.saveRecord();
+                this._saveRecord();
             }
         };
     }
@@ -30,31 +30,31 @@ class Recorder extends AudioWorkletProcessor {
 
         const inputs = allInputs[0][0]; // recording monoral only
 
-        if (this.isSilence(inputs)) {
-            if (this.shouldStopLipSync()) {
-                this.lipSync(false);
+        if (this._isSilence(inputs)) {
+            if (this._shouldStopLipSync()) {
+                this._lipSync(false);
                 this.isSpeaking = false;
             }
 
-            if (this.shouldSaveRecording()) {
-                this.saveRecord();
+            if (this._shouldSaveRecording()) {
+                this._saveRecord();
                 return true;
             }
 
             if (this.silenceBeginSecond == 0) {
-                this.silenceBeginSecond = this.elapsedSecondFromStart();
+                this.silenceBeginSecond = this._elapsedSecondFromStart();
             }
             if (this.buffers.length > 0) {
-                this.recordInput(inputs);
+                this._recordInput(inputs);
             } else {
-                this.heapQuietInput(inputs);
+                this._heapQuietInput(inputs);
             }
         } else {
             this.silenceBeginSecond = 0;
-            this.recordQuietInput();
-            this.recordInput(inputs);
+            this._recordQuietInput();
+            this._recordInput(inputs);
             if (!this.isSpeaking) {
-                this.lipSync(true);
+                this._lipSync(true);
                 this.isSpeaking = true;
             }
         }
@@ -62,50 +62,50 @@ class Recorder extends AudioWorkletProcessor {
         return true;
     }
 
-    elapsedSecondFromStart() {
+    _elapsedSecondFromStart() {
         return currentTime - this.recordingStartSecond;
     }
 
-    durationSecond() {
-        return this.elapsedSecondFromStart() - this.voiceBeginSecond;
+    _durationSecond() {
+        return this._elapsedSecondFromStart() - this.voiceBeginSecond;
     }
 
-    shouldStopLipSync() {
+    _shouldStopLipSync() {
         if (!this.isSpeaking) return false;
-        return (this.elapsedSecondFromStart() - this.silenceBeginSecond) > this.silenceSecondThreshold;
+        return (this._elapsedSecondFromStart() - this.silenceBeginSecond) > this.silenceSecondThreshold;
     }
 
-    shouldSaveRecording() {
+    _shouldSaveRecording() {
         const hasSilenceTime         = this.silenceBeginSecond > 0;
-        const hasEnoughSilenceTime   = (this.elapsedSecondFromStart() - this.silenceBeginSecond) > this.silenceSecondThreshold;
-        const hasEnoughRecordingTime = this.durationSecond() > this.durationSecondThreshold;
+        const hasEnoughSilenceTime   = (this._elapsedSecondFromStart() - this.silenceBeginSecond) > this.silenceSecondThreshold;
+        const hasEnoughRecordingTime = this._durationSecond() > this.durationSecondThreshold;
         const hasRecordBuffer        = this.buffers.length > 0;
         return hasSilenceTime && hasEnoughSilenceTime && hasEnoughRecordingTime && hasRecordBuffer;
     }
 
-    lipSync(isSpeaking) {
+    _lipSync(isSpeaking) {
         this.port.postMessage({
             shouldUpload: false,
             isSpeaking:   isSpeaking,
         });
     }
 
-    saveRecord() {
+    _saveRecord() {
         this.port.postMessage({
             shouldUpload: true,
             speechedAt:   this.voiceBeginSecond,
-            durationSec:  this.durationSecond(),
+            durationSec:  this._durationSecond(),
             buffers:      this.buffers,
             bufferLength: this.bufferLength,
         });
-        this.clearRecord();
+        this._clearRecord();
     }
 
-    isSilence(inputs) {
-        return this.volumeLevel(inputs) < this.silenceVolumeThreshold;
+    _isSilence(inputs) {
+        return this._volumeLevel(inputs) < this.silenceVolumeThreshold;
     }
 
-    volumeLevel(inputs) {
+    _volumeLevel(inputs) {
         let sum = 0.0;
         inputs.forEach((input) => {
             sum += Math.pow(input, 2);
@@ -114,7 +114,7 @@ class Recorder extends AudioWorkletProcessor {
         return Math.sqrt(sum / inputs.length);
     }
 
-    recordQuietInput() {
+    _recordQuietInput() {
         this.quietBuffers.forEach((qBuffer) => {
             this.buffers.push(qBuffer.inputs);
             this.bufferLength += qBuffer.inputs.length;
@@ -122,16 +122,16 @@ class Recorder extends AudioWorkletProcessor {
         this.quietBuffers = [];
     }
 
-    recordInput(inputs) {
+    _recordInput(inputs) {
         if (this.voiceBeginSecond == 0) {
-            this.voiceBeginSecond = this.elapsedSecondFromStart();
+            this.voiceBeginSecond = this._elapsedSecondFromStart();
         }
 
         this.buffers.push(inputs);
         this.bufferLength += inputs.length;
     }
 
-    heapQuietInput(inputs) {
+    _heapQuietInput(inputs) {
         const time = currentTime;
 
         this.quietBuffers = this.quietBuffers.filter((q) => {
@@ -144,8 +144,7 @@ class Recorder extends AudioWorkletProcessor {
         });
     }
 
-
-    clearRecord() {
+    _clearRecord() {
         this.buffers            = [];
         this.bufferLength       = 0;
         this.voiceBeginSecond   = 0;
