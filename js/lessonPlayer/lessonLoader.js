@@ -9,6 +9,7 @@ export default class LessonLoader {
         this.lessonID      = lessonID;
         this.avatarFileURL = null;
         this.lesson        = {};
+        this.objectURLs    = [];
     }
 
     loadForPreview() {
@@ -43,6 +44,7 @@ export default class LessonLoader {
                 const blob = await unzip.file(voicePath).async('blob');
                 const objectURL = window.URL.createObjectURL(blob);
                 t.voice.url = objectURL;
+                this.objectURLs.push(objectURL);
             }
 
             if (!t.graphics) return;
@@ -53,21 +55,16 @@ export default class LessonLoader {
                 const blob = await unzip.file(graphicPath).async('blob');
                 const objectURL = window.URL.createObjectURL(blob);
                 g.url = objectURL;
+                this.objectURLs.push(objectURL);
             });
         });
     }
 
     clearBeforeUnload() {
         window.URL.revokeObjectURL(this.avatarFileURL);
-        /*
-        Object.values(this.material.graphics).forEach((graphic) => {
-            window.URL.revokeObjectURL(graphic.url);
+        this.objectURLs.forEach((url) => {
+            window.URL.revokeObjectURL(url);
         });
-
-        Object.values(this.material.voices).forEach((voice) => {
-            window.URL.revokeObjectURL(voice.url);
-        });
-        */
     }
 
 }
