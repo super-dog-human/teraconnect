@@ -237,7 +237,7 @@ export default class LessonRecorder {
 
     async _uploadLessonMaterial() {
         const materialBody = {
-            durationSec: this.elapsedTimeSec,
+            durationSec: this.elapsedTimeSec / 1000,
             timelines:   this.timelines,
             poseKey:     this.poseKey,
         };
