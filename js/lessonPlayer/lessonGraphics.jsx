@@ -16,12 +16,12 @@ const LessonGraphic = ({graphic}) => (
             .lesson-graphic-cell {
                 position: relative;
                 display: table-cell;
-                text-align: ${graphic.horizontalAlign};
-                vertical-align: ${graphic.verticalAlign};
+                text-align: ${graphic.horizontalAlign || 'center'};
+                vertical-align: ${graphic.verticalAlign || 'middle'};
             }
             #lesson-graphic-body {
-                width: ${graphic.sizePct}%;
-                max-height: ${graphic.sizePct}%;
+                width: ${graphic.sizePct || 100}%;
+                max-height: ${graphic.sizePct || 100}%;
                 object-fit: contain;
                 animation-duration: 0.1s;
                 animation-name: ${'fade-in'};

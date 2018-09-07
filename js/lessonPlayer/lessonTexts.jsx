@@ -14,13 +14,13 @@ const LessonText = ({text}) => (
             #lesson-text-body {
                 position: relative;
                 display: table-cell;
-                text-align: ${text.horizontalAlign};
-                vertical-align: ${text.verticalAlign};
+                text-align: ${text.horizontalAlign || 'center'};
+                vertical-align: ${text.verticalAlign || 'bottom'};
                 padding: 1vw;
                 white-space: pre-wrap;
                 font-weight: bold;
-                font-size: ${text.sizeVW}vw;
-                color: ${text.bodyColor};
+                font-size: ${text.sizeVW || 10}vw;
+                color: ${text.bodyColor || 'white'};
                 text-shadow:
                     ${text.borderColor} 0.5vw 0px,  ${text.borderColor} -0.5vw 0px,
                     ${text.borderColor} 0px -0.5vw, ${text.borderColor} 0px 0.5vw,

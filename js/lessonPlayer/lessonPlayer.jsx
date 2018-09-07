@@ -96,10 +96,9 @@ export default class LessonPlayer extends React.Component {
     }
 
     playTimelineVoice(voice, elapsedTime) {
-        if (!voice) return;
+        if (voice.id =='') return;
 
-        const url = this.props.loader.material.voices[voice.id].url;
-        this.voicePlayer.setAndPlay(url, voice.durationSec);
+        this.voicePlayer.setAndPlay(voice.url, voice.durationSec);
 
         voice.stopAtSec = voice.durationSec + elapsedTime;
         const newVoices = this.state.voices;
@@ -108,7 +107,7 @@ export default class LessonPlayer extends React.Component {
     }
 
     showTimelineText(text, elapsedTime) {
-        if (!text) return;
+        if (text.durationSec == 0) return;
 
         const newTexts = this.state.texts;
         text.hiddenAtSec = text.durationSec + elapsedTime;
@@ -130,13 +129,12 @@ export default class LessonPlayer extends React.Component {
     }
 
     showTimelineGraphic(graphics) {
-        if (graphics == null || graphics.length == 0) return;
+        if (graphics == null) return;
 
         graphics.forEach((graphic) => {
             let newGraphics = [];
             switch(graphic.action) {
                 case 'show':
-                    graphic.url = this.props.loader.material.graphics[graphic.id].url;
                     newGraphics = this.state.graphics;
                     newGraphics.push(graphic);
                     this.setState({ graphics: newGraphics });

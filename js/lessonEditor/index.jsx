@@ -58,7 +58,10 @@ export default class LessonEditor extends React.Component {
     }
 
     async _loadAndMergeGraphicToTimeline() {
-        if (this.allGraphicInitCount == 0) return;
+        if (this.allGraphicInitCount == 0) {
+            this.setState({ isGraphicLoaded: true });
+            return;
+        }
 
         const timelines = await this.loader.fetchAndMergeGraphicToTimeline(this.state.timelines).catch((err) => {
             console.error(err);
@@ -74,7 +77,10 @@ export default class LessonEditor extends React.Component {
     }
 
     async _loadAndMergeVoiceTextToTimeline() {
-        if (this.allVoiceInitCount == 0) return;
+        if (this.allVoiceInitCount == 0) {
+            this.setState({ isTextVoiceLoaded: true });
+            return;
+        }
 
         const voiceTexts = await this.loader.fetchVoiceTexts().catch((err) => {
             console.error(err);
@@ -117,7 +123,7 @@ export default class LessonEditor extends React.Component {
         if (this.state.isGraphicLoaded && this.state.isTextVoiceLoaded) {
             this.setState({ isLoading: false });
 
-            this._publish(); // FIXME its calling for demo
+            this._publish(); // FIXME its for demo
         }
     }
 

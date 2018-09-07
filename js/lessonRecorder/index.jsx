@@ -46,14 +46,17 @@ export default class LessonRecorderScreen extends React.Component {
             {
                 id: "bdpq07j7jj3000mn1a60",
                 url: 'https://s3-ap-northeast-1.amazonaws.com/ftext/mathII/p143.png',
+                fileType: "png",
             },
             {
                 id: "bdpq08r7jj3000mn1a6g",
                 url: 'https://s3-ap-northeast-1.amazonaws.com/ftext/mathII/p144-1.png',
+                fileType: "png",
             },
             {
                 id: "be7qiiqrlisg00l4kqvg",
                 url: 'http://www.gstatic.com/webp/gallery/1.jpg',
+                fileType: "jpg",
             },
         ];
     }
@@ -136,9 +139,9 @@ export default class LessonRecorderScreen extends React.Component {
     _switchGraphic(diff) {
         this.graphicURLIndex += diff;
         const graphic = (this.graphicURLIndex > -1) ?
-            this.graphicURLs[this.graphicURLIndex] : { id: null, url: ''};
+            this.graphicURLs[this.graphicURLIndex] : { id: null, url: '', fileType: ''};
         this.setState({ graphicURL: graphic.url });
-        this.recorder.addSwitchingGraphic(graphic.id);
+        this.recorder.addSwitchingGraphic(graphic);
     }
 
     _movePosition(direction) {

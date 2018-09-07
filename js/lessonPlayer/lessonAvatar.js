@@ -85,27 +85,41 @@ export default class LessonAvatar {
     }
 
     setRecordedAnimation() {
-        const poseBones = [
-            this.bones.J_Bip_L_Hand,
-            this.bones.J_Bip_R_Hand,
-            this.bones.J_Adj_L_UpperArm.parent,
-            this.bones.J_Adj_R_UpperArm.parent,
-            this.bones.J_Bip_L_LowerArm,
-            this.bones.J_Bip_R_LowerArm,
-            this.bones.J_Bip_C_Neck,
-            this.positionObject,
-        ];
+        const poseBones = [];
+        const poseKeys = [];
 
-        const poseKeys = [
-            { keys: this.poseKey.leftHands },
-            { keys: this.poseKey.rightHands },
-            { keys: this.poseKey.leftShoulders },
-            { keys: this.poseKey.rightShoulders },
-            { keys: this.poseKey.leftElbows },
-            { keys: this.poseKey.rightElbows },
-            { keys: this.poseKey.necks },
-            { keys: this.poseKey.coreBodies },
-        ];
+        Object.keys(this.poseKey).forEach((key) => {
+            if (this.poseKey[key].length == 0) return;
+
+            switch(key) {
+                case 'leftHands':
+                    poseBones.push(this.bones.J_Bip_L_Hand);
+                    break;
+                case 'rightHands':
+                    poseBones.push(this.bones.J_Bip_R_Hand);
+                    break;
+                case 'leftShoulders':
+                    poseBones.push(this.bones.J_Adj_L_UpperArm.parent);
+                    break;
+                case 'rightShoulders':
+                    poseBones.push(this.bones.J_Adj_R_UpperArm.parent);
+                    break;
+                case 'leftElbows':
+                    poseBones.push(this.bones.J_Bip_L_LowerArm);
+                    break;
+                case 'rightElbows':
+                    poseBones.push(this.bones.J_Bip_R_LowerArm);
+                    break;
+                case 'necks':
+                    poseBones.push(this.bones.J_Bip_C_Neck);
+                    break;
+                case 'coreBodies':
+                    poseBones.push(this.positionObject);
+                    break;
+            }
+
+            poseKeys.push({ keys: this.poseKey[key] });
+        });
 
         const poseClip = THREE.AnimationClip.parseAnimation({
             name: "pose",
@@ -181,7 +195,7 @@ export default class LessonAvatar {
                 this.bones.J_Bip_L_LowerArm.rotation.y        = -0.5;
                 this.bones.J_Bip_L_Hand.rotation.x            = pose[part].parmX;
             } else if (part == 'rightArm') {
-                this.bones.J_Adj_R_UpperArm.parent.rotation.z = -pose[part].shoulderZ;
+                this.bones.J_Adj_R_UpperArm.parent.rotation.z = pose[part].shoulderZ;
                 this.bones.J_Bip_R_LowerArm.rotation.x        = pose[part].elbowX;
                 this.bones.J_Bip_R_LowerArm.rotation.z        = pose[part].elbowZ;
                 this.bones.J_Bip_R_LowerArm.rotation.y        = 0.5;

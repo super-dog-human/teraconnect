@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Euler, Quaternion } from 'three';
 import * as Const from '../common/constants';
 
 export default class LessonRecorder {
@@ -69,11 +70,18 @@ export default class LessonRecorder {
 
             const parmXRad  = (Math.abs(elbowZRad) > Const.RAD_90) ? -Const.RAD_90 : 0;
 
+            const shoulderEuler = new Euler(0, 0, -shoulderZRad, 'XYZ');
+            const shoulderQuaternion = (new Quaternion).setFromEuler(shoulderEuler);
+            const parmEuler = new Euler(parmXRad, 0, 0, 'XYZ');
+            const parmQuaternion = (new Quaternion).setFromEuler(parmEuler);
             if (side == 'left') {
                 if (self.isRecording) {
-                    self.poseKey.leftShoulders.push({ rot: [0, 0, -shoulderZRad, 1], time: time });
-                    self.poseKey.leftElbows.push({ rot: [elbowXRad, -0.5, elbowZRad, 1], time: time });
-                    self.poseKey.leftHands.push({ rot: [parmXRad, 0, 0, 1], time: time });
+                    self.poseKey.leftShoulders.push({ rot: shoulderQuaternion.toArray(), time: time });
+                    self.poseKey.leftHands.push({ rot: parmQuaternion.toArray(), time: time });
+
+                    const leftElbowEuler = new Euler(elbowXRad, -0.5, elbowZRad, 'XYZ');
+                    const leftElbowQuaternion = (new Quaternion).setFromEuler(leftElbowEuler);
+                    self.poseKey.leftElbows.push({ rot: leftElbowQuaternion.toArray(), time: time });
                 }
                 avatarPose.leftArm = {
                     shoulderZ: -shoulderZRad,
@@ -83,12 +91,15 @@ export default class LessonRecorder {
                 };
             } else {
                 if (self.isRecording) {
-                    self.poseKey.rightShoulders.push({ rot: [0, 0, shoulderZRad, 1], time: time });
-                    self.poseKey.rightElbows.push({ rot: [-elbowXRad, 0.5, elbowZRad, 1], time: time });
-                    self.poseKey.rightHands.push({ rot: [parmXRad, 0, 0, 1], time: time });
+                    self.poseKey.rightShoulders.push({ rot: shoulderQuaternion.toArray(), time: time });
+                    self.poseKey.rightHands.push({ rot: parmQuaternion.toArray(), time: time });
+
+                    const rightElbowEuler = new Euler(-elbowXRad, 0.5, elbowZRad, 'XYZ');
+                    const rightElbowQuaternion = (new Quaternion).setFromEuler(rightElbowEuler);
+                    self.poseKey.rightElbows.push({ rot: rightElbowQuaternion.toArray(), time: time });
                 }
                 avatarPose.rightArm = {
-                    shoulderZ: shoulderZRad,
+                    shoulderZ: -shoulderZRad,
                     elbowX:    -elbowXRad,
                     elbowZ:    elbowZRad,
                     parmX:     parmXRad,
@@ -106,7 +117,9 @@ export default class LessonRecorder {
                 -1 + (rightFaceLength / leftFaceLength);
 
             if (self.isRecording) {
-                self.poseKey.necks.push({ rot: [0, faceAngleRatio, 0, 1], time: time });
+                const neckEuler = new Euler(0, faceAngleRatio, 0, 'XYZ');
+                const neckQuaternion = (new Quaternion).setFromEuler(neckEuler);
+                self.poseKey.necks.push({ rot: neckQuaternion.toArray(), time: time });
             }
             avatarPose.neck = { neckY: faceAngleRatio };
         }
@@ -118,10 +131,8 @@ export default class LessonRecorder {
             return;
         }
 
-        const positions = position.toArray();
-        positions.push(1);
         const time = this.currentRecordingTime();
-        this.poseKey.coreBodies.push({ pos: positions, time: time });
+        this.poseKey.coreBodies.push({ pos: position.toArray(), time: time });
     }
 
     addVoice(voice) {
@@ -142,9 +153,9 @@ export default class LessonRecorder {
         }
     }
 
-    addSwitchingGraphic(graphicID) {
+    addSwitchingGraphic(targetGraphic) {
         if (!this.isRecording) {
-            this.recordWhileNotRecording.graphicID = graphicID;
+            this.recordWhileNotRecording.graphicID = targetGraphic.id;
             return;
         }
 
@@ -152,19 +163,18 @@ export default class LessonRecorder {
         const graphics = [];
 
         if (this.prevGraphicID) {
-            const hideGraphic = {
+            graphics.push({
                 id:     this.prevGraphicID,
                 action: 'hide',
-            };
-            graphics.push(hideGraphic);
+            });
         }
 
-        if (graphicID) {
-            const showGraphic = {
-                id:     graphicID,
-                action: 'show',
-            };
-            graphics.push(showGraphic);
+        if (targetGraphic.id) {
+            graphics.push({
+                id:       targetGraphic.id,
+                fileType: targetGraphic.fileType,
+                action:  'show',
+            });
         }
 
         this.timelines.push({
@@ -172,7 +182,7 @@ export default class LessonRecorder {
             graphics: graphics,
         });
 
-        this.prevGraphicID = graphicID;
+        this.prevGraphicID = targetGraphic.id;
     }
 
     addSwitchingFace(faceName) {

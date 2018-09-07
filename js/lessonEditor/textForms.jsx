@@ -40,7 +40,6 @@ export default class TextForm extends React.Component {
                     #lesson-text-lines {
                         width: 100%;
                         height: 100%;
-                        background-color: #616163;
                         padding-top: 50px;
                         padding-bottom: 50px;
                     }
