@@ -61,7 +61,7 @@ export default class LessonRecorder {
             };
         });
 
-        const urls = await this._fetchSignedURL(urlHeaders);
+        const urls = await this.fetchSignedURLs(urlHeaders);
 
         return lessonGraphics.map((graphic, i) => {
             return {
@@ -84,7 +84,7 @@ export default class LessonRecorder {
         return result ? result.data.graphics : [];
     }
 
-    async _fetchSignedURL(objects) {
+    async fetchSignedURLs(objects) {
         const header = Utility.customGetHeader(objects);
         const zipParams = { headers: header };
         const zipResult = await axios.get(Const.SIGNED_URL_API_URL, zipParams).catch((err) => {

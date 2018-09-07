@@ -13,6 +13,7 @@ export default class LessonRecorderScreen extends React.Component {
         super(props)
 
         this.state = {
+            avatarURL: '',
             detectedPose: {},
             graphicURL: '',
             graphicURLs: [],
@@ -28,7 +29,7 @@ export default class LessonRecorderScreen extends React.Component {
             isPosting: false,
         };
 
-        this.avatarURL = '';
+        this.lesson = {};
         this.graphicURLIndex = -1;
         this.avatarPreview;
 
@@ -39,24 +40,25 @@ export default class LessonRecorderScreen extends React.Component {
             ((voice) => { this.addVoice(voice); }),
             ((isSpeaking) => { this.detectedVoice(isSpeaking); })
         );
-
-        this.avatarURL = "http://localhost:1234/bdiuotgrbj8g00l9t3ng.vrm";
     }
 
     async componentDidMount() {
-        if (await this._hasRecordingCompleted()) {
+        this.lesson = await this._fetchLesson();
+
+        if (await this.lesson.isPacked) {
             this.props.history.push(`/${this.lessonID}`);
             return;
         }
 
-        await this.fetchGraphicURLs();
+        await this._fetchAvatarURL();
+        await this._fetchGraphicURLs();
 
         await setupPoseDetector(() => {
             this.setState({ isDetectorLoading: false });
         });
     }
 
-    async _hasRecordingCompleted() {
+    async _fetchLesson() {
         const lesson = await this.recorder.fetchLesson().catch((err) => {
             console.error(err);
             return false;
@@ -67,10 +69,30 @@ export default class LessonRecorderScreen extends React.Component {
             return;
         }
 
-        return lesson.isPacked;
+        return lesson;
     }
 
-    async fetchGraphicURLs() {
+    async _fetchAvatarURL() {
+        const headers = [{
+            id:        this.lesson.avatar.id,
+            entity:    'Avatar',
+            extension: 'vrm',
+        }];
+
+        const avatarURLs = await this.recorder.fetchSignedURLs(headers).catch((err) => {
+            console.error(err);
+            return false;
+        });
+
+        if (!avatarURLs) {
+            // error modal
+            return;
+        }
+
+        this.setState({ avatarURL: avatarURLs[0] });
+    }
+
+    async _fetchGraphicURLs() {
         const graphics = await this.recorder.fetchLessonGraphics().catch((err) => {
             console.error(err);
             return false;
@@ -203,7 +225,7 @@ export default class LessonRecorderScreen extends React.Component {
                 <div id="lesson-recorder" ref={(e) => { this.avatarPreview = e; }}>
 
                     <AvatarPreview
-                        avatarURL={this.avatarURL}
+                        avatarURL={this.state.avatarURL}
                         pose={this.state.detectedPose}
                         faceName={this.state.faceName}
                         moveDirection={this.state.moveDirection}

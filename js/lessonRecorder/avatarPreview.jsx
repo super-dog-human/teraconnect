@@ -8,6 +8,7 @@ export default class AvatarPreview extends React.Component {
         super(props)
         this.avatar = new LessonAvatar();
         this.clock  = new Clock(true);
+        this.isLoading = false;
         this.isLoadingCompleted = false;
 
         window.addEventListener('resize', (() => {
@@ -30,7 +31,7 @@ export default class AvatarPreview extends React.Component {
             }
         }
 
-        if (this.props.previewContainer != nextProps.previewContainer) {
+        if (this.props.avatarURL != '' && nextProps.previewContainer) {
             this._loadAvatar(nextProps.previewContainer);
         }
 
@@ -39,7 +40,7 @@ export default class AvatarPreview extends React.Component {
         }
 
         if (this.props.isPoseDetecting && !nextProps.isPoseDetecting) {
-//            this.avatar.initBonePosition(); // maybe unnecessary
+            this.avatar.initBonePosition();
         }
 
         if (Object.keys(nextProps.pose).length > 0) {
@@ -48,7 +49,9 @@ export default class AvatarPreview extends React.Component {
     }
 
     async _loadAvatar(previewContainer) {
-        if (this.isLoadingCompleted) return;
+        if (this.isLoading || this.isLoadingCompleted) return;
+
+        this.isLoading = true;
 
         const dom = await this.avatar.createDom(this.props.avatarURL, previewContainer);
 
@@ -58,6 +61,8 @@ export default class AvatarPreview extends React.Component {
 
         dom.setAttribute('id', 'avatar-canvas');
         ReactDOM.findDOMNode(this.container).append(dom);
+
+        this.isLoading = false;
         this.isLoadingCompleted = true;
 
         this.props.loadingCompleted();
