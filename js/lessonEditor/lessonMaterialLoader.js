@@ -9,6 +9,15 @@ export default class LessonMaterialLoader {
         this.material      = {};
     }
 
+    async fetchLesson() {
+        const materialURL = Const.LESSON_API_URL.replace('{lessonID}', this.lessonID);
+        const result = await axios.get(materialURL).catch((err) => {
+            throw new Error(err);
+        });
+
+        return result.data;
+    }
+
     async fetchRawLessonMaterial() {
         const materialURL = Const.LESSON_MATERIAL_API_URL.replace('{lessonID}', this.lessonID);
         const result = await axios.get(materialURL).catch((err) => {

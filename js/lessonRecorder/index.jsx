@@ -62,9 +62,28 @@ export default class LessonRecorderScreen extends React.Component {
     }
 
     async componentDidMount() {
+        if (await this._hasRecordingCompleted()) {
+            this.props.history.push(`/${this.lessonID}`);
+            return;
+        }
+
         await setupPoseDetector(() => {
             this.setState({ isDetectorLoading: false });
         });
+    }
+
+    async _hasRecordingCompleted() {
+        const lesson = await this.recorder.fetchLesson().catch((err) => {
+            console.error(err);
+            return false;
+        });
+
+        if (!lesson) {
+            // error modal
+            return;
+        }
+
+        return lesson.isPacked;
     }
 
     componentDidUpdate(_, prevState) {

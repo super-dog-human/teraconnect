@@ -34,6 +34,15 @@ export default class LessonRecorder {
         }
     }
 
+    async fetchLesson() {
+        const materialURL = Const.LESSON_API_URL.replace('{lessonID}', this.lessonID);
+        const result = await axios.get(materialURL).catch((err) => {
+            throw new Error(err);
+        });
+
+        return result.data;
+    }
+
     currentRecordingTime() {
         const recordingTimeMilliSec = this.elapsedTimeSec + performance.now() - this.recordingStartSec;
         return recordingTimeMilliSec / 1000;

@@ -20,6 +20,7 @@ export default class LessonEditor extends React.Component {
             isUploading: false,
             isGraphicLoaded: false,
             isTextVoiceLoaded: false,
+            lesson: {},
             durationSec: 0,
             timelines: [],
             poseKey: {},
@@ -30,13 +31,20 @@ export default class LessonEditor extends React.Component {
     }
 
     async componentDidMount() {
+        await this._loadLesson();
         await this._loadRawLessonMaterial();
+
+        if (this.state.lesson.isPacked) {
+            this.setState({ isGraphicLoaded: true, isTextVoiceLoaded: true, isLoading: false });
+            return;
+        }
+
         await this._loadAndMergeGraphicToTimeline();
         await this._loadAndMergeVoiceTextToTimeline();
     }
 
-    async _loadRawLessonMaterial() {
-        const lesson = await this.loader.fetchRawLessonMaterial().catch((err) => {
+    async _loadLesson() {
+        const lesson = await this.loader.fetchLesson().catch((err) => {
             console.error(err);
             return false;
         });
@@ -46,9 +54,23 @@ export default class LessonEditor extends React.Component {
             return;
         }
 
-        this.setState({ durationSec: lesson.durationSec });
-        this.setState({ timelines: lesson.timelines });
-        this.setState({ poseKey: lesson.poseKey });
+        this.setState({ lesson: lesson });
+    }
+
+    async _loadRawLessonMaterial() {
+        const material = await this.loader.fetchRawLessonMaterial().catch((err) => {
+            console.error(err);
+            return false;
+        });
+
+        if (!material) {
+            // error modal
+            return;
+        }
+
+        this.setState({ durationSec: material.durationSec });
+        this.setState({ timelines: material.timelines });
+        this.setState({ poseKey: material.poseKey });
 
         this.allGraphicInitCount = this.state.timelines
             .filter((t) => { return t.graphics; }).length;
