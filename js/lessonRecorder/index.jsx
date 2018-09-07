@@ -27,22 +27,8 @@ export default class LessonRecorderScreen extends React.Component {
             isPosting: false,
         };
 
-        // TODO loading resources.
-        this.avatarURL = "http://localhost:1234/bdiuotgrbj8g00l9t3ng.vrm";
-        this.graphicURLs = [
-            {
-                id: "1",
-                url: 'https://s3-ap-northeast-1.amazonaws.com/ftext/mathII/p143.png',
-            },
-            {
-                id: "2",
-                url: 'https://s3-ap-northeast-1.amazonaws.com/ftext/mathII/p144-1.png',
-            },
-            {
-                id: "3",
-                url: 'https://s3-ap-northeast-1.amazonaws.com/ftext/mathI/numberline.png',
-            },
-        ];
+        this.avatarURL = '';
+        this.graphicURLs = [];
         this.graphicURLIndex = -1;
         this.avatarPreview;
 
@@ -53,6 +39,23 @@ export default class LessonRecorderScreen extends React.Component {
             ((voice) => { this.addVoice(voice); }),
             ((isSpeaking) => { this.detectedVoice(isSpeaking); })
         );
+
+        // TODO loading resources.
+        this.avatarURL = "http://localhost:1234/bdiuotgrbj8g00l9t3ng.vrm";
+        this.graphicURLs = [
+            {
+                id: "bdpq07j7jj3000mn1a60",
+                url: 'https://s3-ap-northeast-1.amazonaws.com/ftext/mathII/p143.png',
+            },
+            {
+                id: "bdpq08r7jj3000mn1a6g",
+                url: 'https://s3-ap-northeast-1.amazonaws.com/ftext/mathII/p144-1.png',
+            },
+            {
+                id: "be7qiiqrlisg00l4kqvg",
+                url: 'http://www.gstatic.com/webp/gallery/1.jpg',
+            },
+        ];
     }
 
     async componentDidMount() {

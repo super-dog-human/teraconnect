@@ -52,12 +52,12 @@ export default class LessonLoader {
             graphic.url = objectURL;
         }
 
-        for (const id of Object.keys(this.material.voices)) {
-            const voice = this.material.voices[id];
+        for (const id of this.material.voices.ids) {
             const voicePath = 'voices/' + id + '.ogg';
             const blob = await unzip.file(voicePath).async('blob');
             const objectURL = window.URL.createObjectURL(blob);
-            voice.url = objectURL;
+            const voice = { url: objectURL };
+            this.material.voices[id] = voice;
         }
 
         const lessonString = await unzip.file('lesson.json').async('string');

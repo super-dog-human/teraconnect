@@ -152,16 +152,18 @@ export default class LessonRecorder {
         const graphics = [];
 
         if (this.prevGraphicID) {
-            const hideGraphic = this._defaultGraphicRecord();
-            hideGraphic.id = this.prevGraphicID;
-            hideGraphic.action = 'hide';
+            const hideGraphic = {
+                id:     this.prevGraphicID,
+                action: 'hide',
+            };
             graphics.push(hideGraphic);
         }
 
         if (graphicID) {
-            const showGraphic = this._defaultGraphicRecord();
-            showGraphic.id = graphicID;
-            showGraphic.action = 'show';
+            const showGraphic = {
+                id:     graphicID,
+                action: 'show',
+            };
             graphics.push(showGraphic);
         }
 
@@ -180,8 +182,9 @@ export default class LessonRecorder {
         }
 
         const time = this.currentRecordingTime();
-        const spAction = this._defaultSpActionRecord();
-        spAction.faceExpression = faceName;
+        const spAction = {
+            faceExpression: faceName,
+        };
 
         this.timelines.push({
             timeSec: time,
@@ -235,23 +238,6 @@ export default class LessonRecorder {
         });
 
         return true;
-    }
-
-    _defaultGraphicRecord() {
-        return {
-            "sizePct": 90,
-            "horizontalAlign": "center",
-            "verticalAlign": "middle",
-        };
-    }
-
-    _defaultSpActionRecord() {
-        return {
-            "spAction": {
-                "action": null,
-                "faceExpression": null,
-            }
-        };
     }
 
     _addLatestRecordIfNeeded() {

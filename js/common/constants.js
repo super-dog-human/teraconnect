@@ -3,6 +3,7 @@ export const LESSON_API_URL            = API_URL + 'lessons/{lessonID}';
 export const LESSON_MATERIAL_API_URL   = API_URL + 'lessons/{lessonID}/materials';
 export const LESSON_VOICE_TEXT_API_URL = API_URL + 'lessons/{lessonID}/voice_texts';
 export const LESSON_GRAPHIC_API_URL    = API_URL + 'lessons/{lessonID}/graphics';
+export const LESSON_PACK_API_URL       = API_URL + 'lessons/{lessonID}/packs';
 export const SIGNED_URL_API_URL        = API_URL + 'signed_urls';
 export const RATIO_16_TO_9             = 0.5625;
 export const RATIO_9_TO_16             = 1.77777777778;
