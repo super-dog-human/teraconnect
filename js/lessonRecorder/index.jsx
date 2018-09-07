@@ -6,7 +6,7 @@ import LessonRecorder from './lessonRecorder';
 import VoiceRecorder from './voiceRecorder';
 import AvatarPreview from './avatarPreview';
 import LessonGraphic from './lessonGraphic';
-import JSZip from 'jszip';
+import LessonUtility from '../common/lessonUtility';
 import * as Const from '../common/constants';
 
 export default class LessonRecorderScreen extends React.Component {
@@ -75,7 +75,7 @@ export default class LessonRecorderScreen extends React.Component {
 
     async _fetchAvatarURL() {
         const avatarID = this.lesson.avatar.id;
-        const avatarObjectURL = await this.recorder.fetchAvatarObjectURL(avatarID).catch((err) => {
+        const avatarObjectURL = await LessonUtility.fetchAvatarObjectURL(avatarID).catch((err) => {
             console.error(err);
             return false;
         });
@@ -85,9 +85,7 @@ export default class LessonRecorderScreen extends React.Component {
             return;
         }
 
-        // TODO unzip avatar file and get object url.
         this.setState({ avatarURL: avatarObjectURL });
-//        this.setState({ avatarURL: 'http://localhost:1234/bdiuotgrbj8g00l9t3ng.vrm' }); // for debug.
     }
 
     async _fetchGraphicURLs() {

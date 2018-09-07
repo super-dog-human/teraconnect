@@ -1,7 +1,7 @@
 import 'babel-polyfill';
 import axios from 'axios';
 import JSZip from 'jszip';
-import Utility from '../common/utility';
+import LessonUtility from '../common/lessonUtility';
 import * as Const from '../common/constants';
 
 export default class LessonLoader {
@@ -16,7 +16,7 @@ export default class LessonLoader {
     }
 
     async loadForPlayAsync() {
-        const signedZipHeader = Utility.customGetHeader([{ 'id': this.lessonID, 'entity': 'Lesson', 'extension': 'zip' }]);
+        const signedZipHeader = LessonUtility.customGetHeader([{ 'id': this.lessonID, 'entity': 'Lesson', 'extension': 'zip' }]);
         const signedZipParams = { headers: signedZipHeader };
         const signedZipResult = await axios.get(Const.SIGNED_URL_API_URL, signedZipParams);
         const lessonMaterialURL = signedZipResult.data.signed_urls[0];
@@ -26,14 +26,9 @@ export default class LessonLoader {
 
         const lessonURL = Const.LESSON_API_URL.replace('{lessonID}', this.lessonID);
         const lessonResult = await axios.get(lessonURL);
+
         const avatarID = lessonResult.data.avatar.id;
-
-        const signedVRMHeader = Utility.customGetHeader([{ 'id': avatarID, 'entity': 'Avatar', 'extension': 'vrm' }]);
-        const signedVRMParams = { headers: signedVRMHeader };
-        const signedVRMResult = await axios.get(Const.SIGNED_URL_API_URL, signedVRMParams);
-    //        const avatarURL = signedVRMResult.data.signed_urls[0];
-        const avatarURL = 'http://localhost:1234/bdiuotgrbj8g00l9t3ng.vrm';
-
+        const avatarURL = await LessonUtility.fetchAvatarObjectURL(avatarID);
         this.avatarFileURL = avatarURL;
     }
 
@@ -63,6 +58,7 @@ export default class LessonLoader {
     }
 
     clearBeforeUnload() {
+        window.URL.revokeObjectURL(this.avatarFileURL);
         /*
         Object.values(this.material.graphics).forEach((graphic) => {
             window.URL.revokeObjectURL(graphic.url);

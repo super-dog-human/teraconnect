@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { Euler, Quaternion } from 'three';
-import JSZip from 'jszip';
-import Utility from '../common/utility';
+import LessonUtility from '../common/lessonUtility';
 import * as Const from '../common/constants';
 
 export default class LessonRecorder {
@@ -45,29 +44,6 @@ export default class LessonRecorder {
         return result.data;
     }
 
-    async fetchAvatarObjectURL(avatarID) {
-        const headers = [{
-            id:        avatarID,
-            entity:    'Avatar',
-            extension: 'zip',
-        }];
-
-        const signedURLs = await this.fetchSignedURLs(headers).catch((err) => {
-            throw new Error(err);
-        });
-
-        const zip = await axios.get(signedURLs[0], { responseType: 'blob' }).catch((err) => {
-            throw new Error(err);
-        });
-
-        const unzip = await JSZip.loadAsync(zip.data)
-        const filePath = avatarID + '.vrm'
-        const blob = await unzip.file(filePath).async('blob');
-        const objectURL = window.URL.createObjectURL(blob);
-
-        return objectURL;
-    }
-
     async fetchLessonGraphicURLs() {
         const lessonGraphics = await this._fetchLessonGraphics().catch((err) => {
             throw new Error(err);
@@ -85,7 +61,7 @@ export default class LessonRecorder {
             };
         });
 
-        const urls = await this.fetchSignedURLs(urlHeaders);
+        const urls = await LessonUtility.fetchSignedURLs(urlHeaders);
 
         return lessonGraphics.map((graphic, i) => {
             return {
@@ -106,15 +82,6 @@ export default class LessonRecorder {
         });
 
         return result ? result.data.graphics : [];
-    }
-
-    async fetchSignedURLs(objects) {
-        const header = Utility.customGetHeader(objects);
-        const zipParams = { headers: header };
-        const zipResult = await axios.get(Const.SIGNED_URL_API_URL, zipParams).catch((err) => {
-            throw new Error(err);
-        });
-        return zipResult.data.signed_urls;
     }
 
     currentRecordingTime() {
