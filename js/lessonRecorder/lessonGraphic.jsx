@@ -10,8 +10,8 @@ export default ({url}) => (
                 left: 0;
                 right: 0;
                 bottom: 0;
-                width: 90%;
-                height: 90%;
+                width: 100%;
+                height: 100%;
                 margin: auto;
                 z-index: -100;
             }
