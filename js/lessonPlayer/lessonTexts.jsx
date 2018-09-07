@@ -14,13 +14,13 @@ const LessonText = ({text}) => (
             #lesson-text-body {
                 position: relative;
                 display: table-cell;
-                text-align: ${text.horizontalAlign || 'center'};
-                vertical-align: ${text.verticalAlign || 'bottom'};
+                text-align: ${text.horizontalAlign};
+                vertical-align: ${text.verticalAlign};
                 padding: 1vw;
                 white-space: pre-wrap;
                 font-weight: bold;
-                font-size: ${text.sizeVW || 10}vw;
-                color: ${text.bodyColor || 'white'};
+                font-size: ${text.sizeVW}vw;
+                color: ${text.bodyColor};
                 text-shadow:
                     ${text.borderColor} 0.5vw 0px,  ${text.borderColor} -0.5vw 0px,
                     ${text.borderColor} 0px -0.5vw, ${text.borderColor} 0px 0.5vw,
@@ -38,6 +38,11 @@ const LessonText = ({text}) => (
 export default ({texts}) => (
     <div id="lesson-texts">{
         texts.map((text, i) => {
+            text.horizontalAlign = text.horizontalAlign || 'center';
+            text.verticalAlign   = text.verticalAlign || 'bottom';
+            text.sizeVW          = text.sizeVW || 5;
+            text.bodyColor       = text.bodyColor || 'white';
+            text.borderColor     = text.borderColor || '#ff6699';
             return <LessonText text={text} key={i} className="lesson-text"/>;
         })
         }
