@@ -62,7 +62,7 @@ export default class LessonMaterialLoader {
         const url = Const.LESSON_VOICE_TEXT_API_URL.replace('{lessonID}', this.lessonID);
         const result = await axios.get(url).catch((err) => {
             if (err.response.status == 404) {
-                return [];
+                return { data: [] };
             } else {
                 throw new Error(err);
             }
