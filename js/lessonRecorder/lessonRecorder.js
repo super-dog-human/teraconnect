@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Euler, Quaternion } from 'three';
+import Utility from '../common/utility';
 import * as Const from '../common/constants';
 
 export default class LessonRecorder {
@@ -41,6 +42,55 @@ export default class LessonRecorder {
         });
 
         return result.data;
+    }
+
+    async fetchLessonGraphics() {
+        const lessonGraphics = await this._fetchLessonGraphics().catch((err) => {
+            throw new Error(err);
+        });
+
+        if (lessonGraphics.length == 0) {
+            return [];
+        }
+
+        const urlHeaders = lessonGraphics.map((graphic) => {
+            return {
+                id:        graphic.id,
+                entity:    'Graphic',
+                extension: graphic.fileType,
+            };
+        });
+
+        const urls = await this._fetchSignedURL(urlHeaders);
+
+        return lessonGraphics.map((graphic, i) => {
+            return {
+                id:       graphic.id,
+                url:      urls[i],
+                fileType: graphic.fileType,
+            };
+        });
+    }
+
+    async _fetchLessonGraphics() {
+        const graphicURL = Const.LESSON_GRAPHIC_API_URL.replace('{lessonID}', this.lessonID);
+        const result = await axios.get(graphicURL).catch((err) => {
+            if (err.response.status == '404') {
+                return false;
+            }
+            throw new Error(err);
+        });
+
+        return result ? result.data.graphics : [];
+    }
+
+    async _fetchSignedURL(objects) {
+        const header = Utility.customGetHeader(objects);
+        const zipParams = { headers: header };
+        const zipResult = await axios.get(Const.SIGNED_URL_API_URL, zipParams).catch((err) => {
+            throw new Error(err);
+        });
+        return zipResult.data.signed_urls;
     }
 
     currentRecordingTime() {

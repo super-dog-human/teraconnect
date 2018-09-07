@@ -15,6 +15,7 @@ export default class LessonRecorderScreen extends React.Component {
         this.state = {
             detectedPose: {},
             graphicURL: '',
+            graphicURLs: [],
             faceName: 'Default',
             moveDirection: 'stop',
             isLoading: true,
@@ -28,7 +29,6 @@ export default class LessonRecorderScreen extends React.Component {
         };
 
         this.avatarURL = '';
-        this.graphicURLs = [];
         this.graphicURLIndex = -1;
         this.avatarPreview;
 
@@ -40,25 +40,7 @@ export default class LessonRecorderScreen extends React.Component {
             ((isSpeaking) => { this.detectedVoice(isSpeaking); })
         );
 
-        // TODO loading resources.
         this.avatarURL = "http://localhost:1234/bdiuotgrbj8g00l9t3ng.vrm";
-        this.graphicURLs = [
-            {
-                id: "bdpq07j7jj3000mn1a60",
-                url: 'https://s3-ap-northeast-1.amazonaws.com/ftext/mathII/p143.png',
-                fileType: "png",
-            },
-            {
-                id: "bdpq08r7jj3000mn1a6g",
-                url: 'https://s3-ap-northeast-1.amazonaws.com/ftext/mathII/p144-1.png',
-                fileType: "png",
-            },
-            {
-                id: "be7qiiqrlisg00l4kqvg",
-                url: 'http://www.gstatic.com/webp/gallery/1.jpg',
-                fileType: "jpg",
-            },
-        ];
     }
 
     async componentDidMount() {
@@ -66,6 +48,8 @@ export default class LessonRecorderScreen extends React.Component {
             this.props.history.push(`/${this.lessonID}`);
             return;
         }
+
+        await this.fetchGraphicURLs();
 
         await setupPoseDetector(() => {
             this.setState({ isDetectorLoading: false });
@@ -84,6 +68,20 @@ export default class LessonRecorderScreen extends React.Component {
         }
 
         return lesson.isPacked;
+    }
+
+    async fetchGraphicURLs() {
+        const graphics = await this.recorder.fetchLessonGraphics().catch((err) => {
+            console.error(err);
+            return false;
+        });
+
+        if (!graphics) {
+            // error modal
+            return;
+        }
+
+        this.setState({ graphicURLs: graphics});
     }
 
     componentDidUpdate(_, prevState) {
@@ -158,7 +156,7 @@ export default class LessonRecorderScreen extends React.Component {
     _switchGraphic(diff) {
         this.graphicURLIndex += diff;
         const graphic = (this.graphicURLIndex > -1) ?
-            this.graphicURLs[this.graphicURLIndex] : { id: null, url: '', fileType: ''};
+            this.state.graphicURLs[this.graphicURLIndex] : { id: null, url: '', fileType: ''};
         this.setState({ graphicURL: graphic.url });
         this.recorder.addSwitchingGraphic(graphic);
     }
@@ -273,7 +271,7 @@ export default class LessonRecorderScreen extends React.Component {
                                 <FontAwesomeIcon icon={['fas', 'image']} />
                             </button>
                             <button type="button" id="next-graphic-btn" className="btn btn-dark graphic-btn"
-                                disabled={this.graphicURLIndex == this.graphicURLs.length - 1}
+                                disabled={this.graphicURLIndex == this.state.graphicURLs.length - 1}
                                 onClick={this._switchGraphic.bind(this, 1)}>
                                 <FontAwesomeIcon icon={['fas', 'image']} />
                             </button>
