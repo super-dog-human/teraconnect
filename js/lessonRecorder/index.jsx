@@ -6,6 +6,7 @@ import LessonRecorder from './lessonRecorder';
 import VoiceRecorder from './voiceRecorder';
 import AvatarPreview from './avatarPreview';
 import LessonGraphic from './lessonGraphic';
+import JSZip from 'jszip';
 import * as Const from '../common/constants';
 
 export default class LessonRecorderScreen extends React.Component {
@@ -73,27 +74,24 @@ export default class LessonRecorderScreen extends React.Component {
     }
 
     async _fetchAvatarURL() {
-        const headers = [{
-            id:        this.lesson.avatar.id,
-            entity:    'Avatar',
-            extension: 'vrm',
-        }];
-
-        const avatarURLs = await this.recorder.fetchSignedURLs(headers).catch((err) => {
+        const avatarID = this.lesson.avatar.id;
+        const avatarObjectURL = await this.recorder.fetchAvatarObjectURL(avatarID).catch((err) => {
             console.error(err);
             return false;
         });
 
-        if (!avatarURLs) {
+        if (!avatarObjectURL) {
             // error modal
             return;
         }
 
-        this.setState({ avatarURL: avatarURLs[0] });
+        // TODO unzip avatar file and get object url.
+        this.setState({ avatarURL: avatarObjectURL });
+//        this.setState({ avatarURL: 'http://localhost:1234/bdiuotgrbj8g00l9t3ng.vrm' }); // for debug.
     }
 
     async _fetchGraphicURLs() {
-        const graphics = await this.recorder.fetchLessonGraphics().catch((err) => {
+        const graphics = await this.recorder.fetchLessonGraphicURLs().catch((err) => {
             console.error(err);
             return false;
         });
@@ -119,6 +117,10 @@ export default class LessonRecorderScreen extends React.Component {
         if (this.state.isLoading && !this.state.isDetectorLoading && !this.state.isAvatarLoading) {
             this.setState({ isLoading: false });
         }
+    }
+
+    componentWillUnmount() {
+        window.URL.revokeObjectURL(this.state.avatarURL);
     }
 
     recordMovedPosition(position) {

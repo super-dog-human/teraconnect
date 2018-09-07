@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Euler, Quaternion } from 'three';
+import JSZip from 'jszip';
 import Utility from '../common/utility';
 import * as Const from '../common/constants';
 
@@ -44,7 +45,30 @@ export default class LessonRecorder {
         return result.data;
     }
 
-    async fetchLessonGraphics() {
+    async fetchAvatarObjectURL(avatarID) {
+        const headers = [{
+            id:        avatarID,
+            entity:    'Avatar',
+            extension: 'zip',
+        }];
+
+        const signedURLs = await this.fetchSignedURLs(headers).catch((err) => {
+            throw new Error(err);
+        });
+
+        const zip = await axios.get(signedURLs[0], { responseType: 'blob' }).catch((err) => {
+            throw new Error(err);
+        });
+
+        const unzip = await JSZip.loadAsync(zip.data)
+        const filePath = avatarID + '.vrm'
+        const blob = await unzip.file(filePath).async('blob');
+        const objectURL = window.URL.createObjectURL(blob);
+
+        return objectURL;
+    }
+
+    async fetchLessonGraphicURLs() {
         const lessonGraphics = await this._fetchLessonGraphics().catch((err) => {
             throw new Error(err);
         });
