@@ -11,7 +11,7 @@ const Header = () => (
             <Link to='/'>ホーム</Link>
           </NavItem>
           <NavItem>
-            <Link to='/lessons/bdfstlck6ru000hd78eg'>授業収録</Link>
+            <Link to='/lessons/new'>授業収録</Link>
           </NavItem>
       </Nav>
     </Navbar>

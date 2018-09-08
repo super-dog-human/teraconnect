@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Utility from '../common/utility';
+import LessonUtility from '../common/lessonUtility';
 import * as Const from '../common/constants';
 
 export default class TextForm extends React.Component {

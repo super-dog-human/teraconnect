@@ -6,7 +6,7 @@ import LessonPlayer from './lessonPlayer';
 
 export default class LessonPlayerScreen extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.container;
         this.playerElement;
 

@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import axios from 'axios';
 import JSZip from 'jszip';
 import LessonUtility from '../common/lessonUtility';

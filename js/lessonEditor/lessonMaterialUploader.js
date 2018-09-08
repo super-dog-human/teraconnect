@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import axios from 'axios';
 import * as Const from '../common/constants';
 

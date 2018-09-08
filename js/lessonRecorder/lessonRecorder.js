@@ -204,7 +204,7 @@ export default class LessonRecorder {
     }
 
     addSwitchingGraphic(targetGraphic) {
-        if (!this.isRecording) {
+        if (!this.isRecording && targetGraphic.id) {
             this.recordWhileNotRecording.graphicID = targetGraphic.id;
             return;
         }

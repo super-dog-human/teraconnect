@@ -21,6 +21,7 @@ export default ({selectedIndex}) => (
         </nav>
         <style jsx>{`
             #menu {
+                width: 100%;
                 height: 55px;
             }
             .navbar {
@@ -51,7 +52,7 @@ export default ({selectedIndex}) => (
             .nav-item > :global(.nav-link) { text-decoration: none; color: red; }
             .nav-item > :global(.nav-link):link { color: #616163; }
             .nav-item > :global(.nav-link):visited { color: #616163; }
-            .nav-item > :global(.nav-link):hover { color: #616163; }
+            .nav-item > :global(.nav-link):hover { color: #616163; cursor: not-allowed; }
             .nav-item > :global(.nav-link):active { color: #616163; }
         `}</style>
     </div>

@@ -21,6 +21,7 @@
     "react-fontawesome": "^1.6.1",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
+    "react-tooltip": "^3.8.1",
     "reactstrap": "^6.3.1",
     "redux": "^4.0.0",
     "styled-jsx": "^3.0.0",
@@ -45,6 +46,7 @@
   },
   "scripts": {
     "parcel": "parcel index.html",
-    "build": "rm ../teraconn_server/app_engine/src/teraconnect-authoring/static/teraconnect/*; parcel build index.html --no-source-maps --out-dir ../teraconn_server/app_engine/src/teraconnect-authoring/static/teraconnect"
+    "build":          "rm ../teraconn_server/app_engine/src/teraconnect-authoring/static/teraconnect/*; parcel build index.html --no-source-maps --out-dir ../teraconn_server/app_engine/src/teraconnect-authoring/static/teraconnect",
+    "build_with_map": "rm ../teraconn_server/app_engine/src/teraconnect-authoring/static/teraconnect/*; parcel build index.html --out-dir ../teraconn_server/app_engine/src/teraconnect-authoring/static/teraconnect"
   }
 }
