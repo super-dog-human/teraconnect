@@ -13,13 +13,15 @@ export default class LessonRecorder {
         this.prevGraphicID;
         this.recordWhileNotRecording = {};
         this.timelines = [];
+        this.leftShoulderInitRotation  = [0, 0,  0.573576436351046, 0.8191520442889918];
+        this.rightShoulderInitRotation = [0, 0, -0.573576436351046, 0.8191520442889918];
         this.poseKey = {
             leftHands:      [],
             rightHands:     [],
             leftElbows:     [],
             rightElbows:    [],
-            leftShoulders:  [],
-            rightShoulders: [],
+            leftShoulders:  [{ rot: this.leftShoulderInitRotation, time: 0 }],
+            rightShoulders: [{ rot: this.rightShoulderInitRotation, time: 0 }],
             necks:          [],
             coreBodies:     [],
         };
@@ -107,7 +109,12 @@ export default class LessonRecorder {
         return avatarPose;
 
         function recordAvatarArmPose(self, elbow, shoulder, wrist, side) {
-            if (!elbow || !shoulder || !wrist) return;
+            if (!shoulder || !elbow || !wrist) return;
+
+            if (!self.isRecording) {
+                self.recordWhileNotRecording.pose = pose;
+                // not early return because to needs reflection to pose when not recording.
+            }
 
             const shoulderZRad = (side == 'left') ?
                 Math.atan2(elbow.x - shoulder.x, elbow.y - shoulder.y) - Const.RAD_90 :
@@ -124,6 +131,7 @@ export default class LessonRecorder {
             const shoulderQuaternion = (new Quaternion).setFromEuler(shoulderEuler);
             const parmEuler = new Euler(parmXRad, 0, 0, 'XYZ');
             const parmQuaternion = (new Quaternion).setFromEuler(parmEuler);
+
             if (side == 'left') {
                 if (self.isRecording) {
                     self.poseKey.leftShoulders.push({ rot: shoulderQuaternion.toArray(), time: time });
@@ -183,6 +191,17 @@ export default class LessonRecorder {
 
         const time = this.currentRecordingTime();
         this.poseKey.coreBodies.push({ pos: position.toArray(), time: time });
+    }
+
+    addAvatarInitArmPoseWhenRecordStopping() {
+        const time = this.elapsedTimeSec / 1000;
+
+        this.poseKey.leftHands.push({ rot: [0, 0,  0, 1], time: time });
+        this.poseKey.leftElbows.push({ rot: [0, 0,  0, 1], time: time });
+        this.poseKey.leftShoulders.push({ rot: this.leftShoulderInitRotation, time: time });
+        this.poseKey.rightHands.push({ rot: [0, 0,  0, 1], time: time });
+        this.poseKey.rightElbows.push({ rot: [0, 0,  0, 1], time: time });
+        this.poseKey.rightShoulders.push({ rot: this.rightShoulderInitRotation, time: time });
     }
 
     addVoice(voice) {
@@ -305,7 +324,9 @@ export default class LessonRecorder {
 
         for (let type of Object.keys(this.recordWhileNotRecording)) {
             const record = this.recordWhileNotRecording[type];
-            if (type == 'position') {
+            if (type == 'pose') {
+                this.addAvatarPose(record);
+            } else if (type == 'position') {
                 this.addAvatarPosition(record);
             } else if (type == 'graphicID') {
                 this.addSwitchingGraphic(record);
