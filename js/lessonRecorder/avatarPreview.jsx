@@ -43,7 +43,7 @@ export default class AvatarPreview extends React.Component {
             this.avatar.initBonePosition();
         }
 
-        if (Object.keys(nextProps.pose).length > 0) {
+        if (nextProps.pose && Object.keys(nextProps.pose).length > 0) {
             this.avatar.moveBones(nextProps.pose);
         }
     }
