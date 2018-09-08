@@ -95,7 +95,7 @@ export default class LessonCreator extends React.Component {
                             <input type="text" className="form-control" id="lesson-title" onChange={this._changeTitle.bind(this)} required />
                         </div>
 
-                        <div className="form-group" data-tip="授業の概略や視聴に必要な学力レベルなどを入力します">
+                        <div className="form-group" data-tip="授業の概略や、視聴に必要な前提知識などを入力します">
                             <label htmlFor="lesson-description">説明</label>
                             <textarea className="form-control" id="lesson-description" rows="3" value={this.state.description} onChange={this._changeDescription.bind(this)}></textarea>
                         </div>
@@ -104,18 +104,18 @@ export default class LessonCreator extends React.Component {
                             <label htmlFor="lesson-graphic">図表</label>
                             <div id="graphic-selecter">
                                 <div id="graphic-scroll-selector">
-                                    <div className="checkable-thumbnail selected-element float-left">
+                                    <label className="checkable-thumbnail selected-element float-left">
                                         <img src="https://storage.googleapis.com/teraconn_thumbnail/graphic/bdpq07j7jj3000mn1a60.png" />
-                                        <input type="checkbox" checked={true}/>
-                                    </div>
-                                    <div className="checkable-thumbnail selected-element float-left">
+                                        <input type="checkbox" defaultChecked={true}/>
+                                    </label>
+                                    <label className="checkable-thumbnail selected-element float-left">
                                         <img src="https://storage.googleapis.com/teraconn_thumbnail/graphic/bdpq08r7jj3000mn1a6g.png" />
-                                        <input type="checkbox" checked={true} />
-                                    </div>
-                                    <div className="checkable-thumbnail selected-element float-left">
+                                        <input type="checkbox" defaultChecked={true} />
+                                    </label>
+                                    <label className="checkable-thumbnail selected-element float-left">
                                         <img src="https://storage.googleapis.com/teraconn_thumbnail/graphic/be7qiiqrlisg00l4kqvg.jpg" />
-                                        <input type="checkbox" checked={true} />
-                                    </div>
+                                        <input type="checkbox" defaultChecked={true} />
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -126,11 +126,11 @@ export default class LessonCreator extends React.Component {
                                     <div className="form-inline">
                                         <label className="checkable-thumbnail selected-element">
                                             <img src="https://storage.googleapis.com/teraconn_thumbnail/avatar/bdiuotgrbj8g00l9t3ng.png" />
-                                            <input type="checkbox" checked={true} />
+                                            <input type="checkbox" defaultChecked={true} />
                                         </label>
                                         <label className="checkable-thumbnail">
                                             <img src="https://storage.googleapis.com/teraconn_thumbnail/avatar/be9mj02e0tg000iub7fg.png" />
-                                            <input type="checkbox" checked={false} />
+                                            <input type="checkbox" defaultChecked={false} />
                                         </label>
                                     </div>
                                 </div>
