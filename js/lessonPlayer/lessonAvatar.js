@@ -334,7 +334,9 @@ export default class LessonAvatar {
     }
 
     clearBeforeUnload() {
-        this.scene.remove(this.scene.children);
+        if (this.scene) {
+            this.scene.remove(this.scene.children);
+        }
     }
 }
 
