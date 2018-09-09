@@ -1,3 +1,5 @@
+import 'audioworklet-polyfill';
+
 export default class LessonVoicePlayer {
     constructor(avatar) {
         this.avatar = avatar; // for update avatar lip-sync exact.

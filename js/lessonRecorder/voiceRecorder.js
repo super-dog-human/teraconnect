@@ -1,3 +1,5 @@
+import 'audioworklet-polyfill';
+
 export default class VoiceRecorder {
     constructor(lessonID, callback, lipSyncCallback) {
         this.lessonID = lessonID;

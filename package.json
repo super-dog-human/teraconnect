@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@fortawesome/react-fontawesome": "^0.1.2",
+    "audioworklet-polyfill": "^1.1.1",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
@@ -48,8 +49,8 @@
     "build_path": "../teraconn_server/app_engine/src/teraconnect-authoring/static/teraconnect/"
   },
   "scripts": {
-    "parcel":         "parcel index.html",
-    "build":          "parcel build index.html -d dist --no-source-maps --out-dir $npm_package_constants_build_path ; cp ./dist/audioPlayProcessor.js $npm_package_constants_build_path; cp ./dist/voiceRecorderProcessor.js $npm_package_constants_build_path;",
+    "parcel": "parcel index.html",
+    "build": "parcel build index.html -d dist --no-source-maps --out-dir $npm_package_constants_build_path ; cp ./dist/audioPlayProcessor.js $npm_package_constants_build_path; cp ./dist/voiceRecorderProcessor.js $npm_package_constants_build_path;",
     "build_with_map": "parcel build index.html -d dist                  --out-dir $npm_package_constants_build_path ; cp ./dist/audioPlayProcessor.js $npm_package_constants_build_path; cp ./dist/voiceRecorderProcessor.js $npm_package_constants_build_path;"
   }
 }
