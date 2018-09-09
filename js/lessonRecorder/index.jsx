@@ -7,6 +7,7 @@ import VoiceRecorder from './voiceRecorder';
 import AvatarPreview from './avatarPreview';
 import LessonGraphic from './lessonGraphic';
 import LessonUtility from '../common/lessonUtility';
+import ReactTooltip from 'react-tooltip'
 import * as Const from '../common/constants';
 
 export default class LessonRecorderScreen extends React.Component {
@@ -264,7 +265,7 @@ export default class LessonRecorderScreen extends React.Component {
                             }
                         </div>
 
-                        <div id="pose-detector-btn">
+                        <div id="pose-detector-btn" data-tip="試験的な機能です">
                             <button type="button" className="btn btn-dark" onClick={this._switchPoseDetection.bind(this)}>
                                 <FontAwesomeIcon icon={['fas', 'walking']} /> ポーズ検出
                             </button>
@@ -350,6 +351,8 @@ export default class LessonRecorderScreen extends React.Component {
                             </div>
                         </div>
                     </div>
+
+                    <ReactTooltip />
                 </div>
 
                 <style jsx>{`

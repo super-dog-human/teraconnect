@@ -137,9 +137,9 @@ export default class LessonCreator extends React.Component {
                         </div>
 
                         <button type="submit" className="btn btn-primary btn-lg" disabled={this.state.isCreating}>作成</button>
-
-                        <ReactTooltip />
                     </form>
+
+                    <ReactTooltip />
                 </div>
                 <style jsx>{`
                     #lesson-creator-screen {
