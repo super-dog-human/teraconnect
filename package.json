@@ -44,9 +44,12 @@
       "styled-jsx/babel"
     ]
   },
+  "constants": {
+    "build_path": "../teraconn_server/app_engine/src/teraconnect-authoring/static/teraconnect/"
+  },
   "scripts": {
     "parcel":         "parcel index.html",
-    "build":          "rm ../teraconn_server/app_engine/src/teraconnect-authoring/static/teraconnect/*; parcel build index.html --no-source-maps --out-dir ../teraconn_server/app_engine/src/teraconnect-authoring/static/teraconnect",
-    "build_with_map": "rm ../teraconn_server/app_engine/src/teraconnect-authoring/static/teraconnect/*; parcel build index.html --out-dir ../teraconn_server/app_engine/src/teraconnect-authoring/static/teraconnect"
+    "build":          "parcel build index.html -d dist --no-source-maps --out-dir $npm_package_constants_build_path ; cp ./dist/audioPlayProcessor.js $npm_package_constants_build_path; cp ./dist/voiceRecorderProcessor.js $npm_package_constants_build_path;",
+    "build_with_map": "parcel build index.html -d dist                  --out-dir $npm_package_constants_build_path ; cp ./dist/audioPlayProcessor.js $npm_package_constants_build_path; cp ./dist/voiceRecorderProcessor.js $npm_package_constants_build_path;"
   }
 }
