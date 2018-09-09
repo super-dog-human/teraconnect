@@ -104,11 +104,12 @@ export default class LessonRecorderScreen extends React.Component {
 
     componentDidUpdate(_, prevState) {
         if (!prevState.isPoseDetecting && this.state.isPoseDetecting) {
+            this.recorder.addAvatarInitArmPose();
             this._poseDetectionFrame();
         }
 
         if (prevState.isPoseDetecting && !this.state.isPoseDetecting) {
-            this.recorder.addAvatarInitArmPoseWhenRecordStopping();
+            this.recorder.addAvatarInitArmPose();
         }
 
         if (prevState.isRecording != this.state.isRecording) {

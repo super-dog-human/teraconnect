@@ -23,7 +23,7 @@ export default class LessonRecorder {
             leftShoulders:  [{ rot: this.leftShoulderInitRotation, time: 0 }],
             rightShoulders: [{ rot: this.rightShoulderInitRotation, time: 0 }],
             necks:          [],
-            coreBodies:     [],
+            coreBodies:     [{ pos: [0, 0, 85], time: 0 }],
         };
     }
 
@@ -193,14 +193,15 @@ export default class LessonRecorder {
         this.poseKey.coreBodies.push({ pos: position.toArray(), time: time });
     }
 
-    addAvatarInitArmPoseWhenRecordStopping() {
-        const time = this.elapsedTimeSec / 1000;
+    addAvatarInitArmPose() {
+        if (!this.isRecording) return;
 
-        this.poseKey.leftHands.push({ rot: [0, 0,  0, 1], time: time });
-        this.poseKey.leftElbows.push({ rot: [0, 0,  0, 1], time: time });
+        const time = this.currentRecordingTime();
+        this.poseKey.leftHands.push({ rot: [0, 0, 0, 1], time: time });
+        this.poseKey.leftElbows.push({ rot: [0, 0, 0, 1], time: time });
         this.poseKey.leftShoulders.push({ rot: this.leftShoulderInitRotation, time: time });
-        this.poseKey.rightHands.push({ rot: [0, 0,  0, 1], time: time });
-        this.poseKey.rightElbows.push({ rot: [0, 0,  0, 1], time: time });
+        this.poseKey.rightHands.push({ rot: [0, 0, 0, 1], time: time });
+        this.poseKey.rightElbows.push({ rot: [0, 0, 0, 1], time: time });
         this.poseKey.rightShoulders.push({ rot: this.rightShoulderInitRotation, time: time });
     }
 
