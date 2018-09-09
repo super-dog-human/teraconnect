@@ -225,7 +225,7 @@ export default class LessonRecorder {
 
     addSwitchingGraphic(targetGraphic) {
         if (!this.isRecording && targetGraphic.id) {
-            this.recordWhileNotRecording.graphicID = targetGraphic.id;
+            this.recordWhileNotRecording.graphic = targetGraphic;
             return;
         }
 
@@ -329,7 +329,7 @@ export default class LessonRecorder {
                 this.addAvatarPose(record);
             } else if (type == 'position') {
                 this.addAvatarPosition(record);
-            } else if (type == 'graphicID') {
+            } else if (type == 'graphic') {
                 this.addSwitchingGraphic(record);
             } else if (type == 'faceName') {
                 this.addSwitchingFace(record);
