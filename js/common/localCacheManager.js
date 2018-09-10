@@ -3,10 +3,15 @@ import localforage from "localforage";
 export default class LocalCacheManager {
     constructor() {
         localforage.config({
-            driver:      localforage.WEBSQL,
+            driver: [
+                localforage.WEBSQL,
+                localforage.INDEXEDDB,
+                localforage.LOCALSTORAGE
+            ],
             storeName:   'teraconnect_zips', // Should be alphanumeric, with underscores.
             description: 'caches for avatar and lesson zip files.'
         });
+
         this.localforage = localforage;
 
         this.avatarVersion   = 'avatarVersion';
