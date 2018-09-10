@@ -4,9 +4,9 @@ export default class LocalCacheManager {
     constructor() {
         localforage.config({
             driver: [
-                localforage.WEBSQL,
                 localforage.INDEXEDDB,
-                localforage.LOCALSTORAGE
+                localforage.WEBSQL,
+                localforage.LOCALSTORAGE,
             ],
             storeName:   'teraconnect_zips', // Should be alphanumeric, with underscores.
             description: 'caches for avatar and lesson zip files.'
