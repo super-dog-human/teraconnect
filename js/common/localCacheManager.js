@@ -18,15 +18,14 @@ export default class LocalCacheManager {
     async isCachedAvatar(avatarID, version) {
         const avatarVersion = await this.localforage.getItem(this.avatarVersion);
         if (!avatarVersion) return false;
+        if (!avatarVersion[avatarID]) return false;
 
         if (avatarVersion[avatarID].version == version) {
             return true;
         }
 
-        if (avatarVersion[avatarID]) {
-            const cacheKey = this.avatarZipPrefix + avatarID;
-            this.localforage.removeItem(cacheKey);
-        }
+        const cacheKey = this.avatarZipPrefix + avatarID;
+        this.localforage.removeItem(cacheKey);
 
         return false;
     }
@@ -34,15 +33,14 @@ export default class LocalCacheManager {
     async isCachedLesson(lessonID, version) {
         const lessonVersion = await this.localforage.getItem(this.lessonVersion);
         if (!lessonVersion) return false;
+        if (!lessonVersion[lessonID]) return false;
 
         if (lessonVersion[lessonID].version == version) {
             return true;
         }
 
-        if (lessonVersion[lessonID]) {
-            const cacheKey = this.lessonZipPrefix + lessonID;
-            this.localforage.removeItem(cacheKey);
-        }
+        const cacheKey = this.lessonZipPrefix + lessonID;
+        this.localforage.removeItem(cacheKey);
 
         return false;
     }
