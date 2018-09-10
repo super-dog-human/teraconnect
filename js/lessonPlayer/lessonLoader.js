@@ -16,19 +16,15 @@ export default class LessonLoader {
     }
 
     async loadForPlayAsync() {
-        const signedZipHeader = LessonUtility.customGetHeader([{ 'id': this.lessonID, 'entity': 'Lesson', 'extension': 'zip' }]);
-        const signedZipParams = { headers: signedZipHeader };
-        const signedZipResult = await axios.get(Const.SIGNED_URL_API_URL, signedZipParams);
-        const lessonMaterialURL = signedZipResult.data.signed_urls[0];
-
-        const zipResult = await axios.get(lessonMaterialURL, { responseType: 'blob' });
-        this.loadLessonMaterialAsync(zipResult.data);
-
         const lessonURL = Const.LESSON_API_URL.replace('{lessonID}', this.lessonID);
-        const lessonResult = await axios.get(lessonURL);
+        const result = await axios.get(lessonURL);
+        const lesson = result.data;
 
-        const avatarID = lessonResult.data.avatar.id;
-        const avatarURL = await LessonUtility.fetchAvatarObjectURL(avatarID);
+        const zip = await LessonUtility.fetchLessonZipBlob(lesson);
+        await this.loadLessonMaterialAsync(zip);
+
+        const avatar = lesson.avatar;
+        const avatarURL = await LessonUtility.fetchAvatarObjectURL(avatar);
         this.avatarFileURL = avatarURL;
     }
 
