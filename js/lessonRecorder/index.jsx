@@ -75,8 +75,7 @@ export default class LessonRecorderScreen extends React.Component {
     }
 
     async _fetchAvatarURL() {
-        const avatarID = this.lesson.avatar.id;
-        const avatarObjectURL = await LessonUtility.fetchAvatarObjectURL(avatarID).catch((err) => {
+        const avatarObjectURL = await LessonUtility.fetchAvatarObjectURL(this.lesson.avatar).catch((err) => {
             console.error(err);
             return false;
         });

@@ -1,6 +1,4 @@
 const getSigningUrl = 'https://api.teraconnect.org/raw_voice_signing';
-//const wavSampleRate = 16000;
-const wavSampleRate = 44100;
 const numChannels   = 1;
 
 onmessage = function(event) {
@@ -39,7 +37,7 @@ onmessage = function(event) {
 
 function createWAVFile(buffers, recordSampleRate) {
     const mergedBuffers = mergeBuffers(buffers, recordSampleRate);
-    const dataview      = encodeWAV(mergedBuffers);
+    const dataview      = encodeWAV(mergedBuffers, recordSampleRate);
     const audioBlob     = new Blob([dataview], { 'type': 'audio/wav' });
     return audioBlob;
 
@@ -66,7 +64,7 @@ function createWAVFile(buffers, recordSampleRate) {
 
 /*
     function downSampling(buffer, recordSampleRate) {
-        const compression = recordSampleRate / wavSampleRate;
+        const compression = recordSampleRate / 16000;
         const resampledLength = parseInt(buffer.length / compression);
         const resampledBuffer = new Float32Array(resampledLength);
 
@@ -82,7 +80,7 @@ function createWAVFile(buffers, recordSampleRate) {
     }
 */
 
-    function encodeWAV(buffers) {
+    function encodeWAV(buffers, recordSampleRate) {
         const buffer = new ArrayBuffer(44 + buffers.length * 2);
         let view = new DataView(buffer);
 
@@ -93,8 +91,8 @@ function createWAVFile(buffers, recordSampleRate) {
         view.setUint32(16, 16, true);
         view.setUint16(20, 1, true);
         view.setUint16(22, numChannels, true);
-        view.setUint32(24, wavSampleRate, true);
-        view.setUint32(28, wavSampleRate * numChannels * 2, true);
+        view.setUint32(24, recordSampleRate, true);
+        view.setUint32(28, recordSampleRate * numChannels * 2, true);
         view.setUint16(32, numChannels * 2, true);
         view.setUint16(34, 16, true);
         writeString(view, 36, 'data');
