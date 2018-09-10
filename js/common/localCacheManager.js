@@ -8,7 +8,8 @@ export default class LocalCacheManager {
                 localforage.WEBSQL,
                 localforage.LOCALSTORAGE,
             ],
-            storeName:   'teraconnect_zips', // Should be alphanumeric, with underscores.
+            name:        'teraconnectCache',
+            storeName:   'teraconnectCacheStore', // Should be alphanumeric, with underscores.
             description: 'caches for avatar and lesson zip files.'
         });
 

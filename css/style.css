@@ -28,40 +28,18 @@
         opacity: 1;
     }
 }
-.app-color-light-green {
-    background-color: #8EA604;
+.app-color-powder-blue {
+    background-color: #04ACB4;
 }
 .app-color-dark-navy {
-    background-color: #084C61;
+    background-color: #247494;
 }
-.app-color-beige {
-    background-color: #E5DFCE;
+.app-color-soft-white {
+    background-color: #EEEEEE;
+}
+.app-color-light-gray {
+    background-color: #ACB5C4;
 }
 .app-color-dark-gray {
-    background-color: #616163;
+    background-color: #5C646C;
 }
-.app-color-yellow{
-    background-color: #EC9F05;
-}
-
-header {
-    height: 64px;
-}
-header > nav {
-    height: 100%;
-}
-
-header > nav > ul > li {
-    font-size: 18px;
-    min-width: 100px;
-}
-
-body {
-    background-color: #D8D8D8;
-}
-
-header a { text-decoration: none; }
-header a:link { color: #ffffff; }
-header a:visited { color: #ffffff; }
-header a:hover { text-decoration: none; color: #ffffff; }
-header a:active { color: #ffffff; }

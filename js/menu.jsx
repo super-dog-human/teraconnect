@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 export default ({selectedIndex}) => (
     <div id="menu">
-        <nav expand="md" className="app-color-beige navbar navbar-expand-md">
+        <nav expand="md" className="app-color-soft-white navbar navbar-expand-md">
             <ul className="mx-auto nav">
                 <li className="nav-item">
                     <Link className="nav-link" to='#'>レビュー</Link>

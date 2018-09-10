@@ -80,10 +80,10 @@ export default class LessonCreator extends React.Component {
 
     render() {
         return(
-            <div id="lesson-creator-screen">
+            <div id="lesson-creator-screen" className="app-color-light-gray">
                 <Menu selectedIndex='2' />
 
-                <div id="lesson-creator">
+                <div id="lesson-creator" className="app-color-light-gray">
 
                     <div id="loading-indicator">
                         <FontAwesomeIcon icon="spinner" spin />
@@ -145,12 +145,10 @@ export default class LessonCreator extends React.Component {
                     #lesson-creator-screen {
                         width: 100%;
                         height: 100%;
-                        background-color: #616163;
                     }
                     #lesson-creator {
                         padding-top: 50px;
                         padding-bottom: 100px;
-                        background-color: #616163;
                     }
                     #loading-indicator {
                         position: absolute;
