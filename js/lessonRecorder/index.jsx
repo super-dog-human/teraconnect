@@ -260,11 +260,11 @@ export default class LessonRecorderScreen extends React.Component {
 
                     <div id="control-panel" disabled={this.state.isPosting}>
                         <div id="recording-status">
-                            <div><FontAwesomeIcon icon={['fas', 'video']} /> REC</div>
                             <ElapsedTime recorder={this.recorder} isRecording={this.state.isRecording} stopRecording={() => {
                                 this.recordingStop();
                                 this.setState({ isReachedTimeLimit: true });
                             }} />
+                            <div id="recording-status-icon"><FontAwesomeIcon icon={['fas', 'video']} /> REC</div>
                         </div>
 
                         <div id="pose-detector-btn" data-tip="実験的な機能です">
@@ -410,10 +410,12 @@ export default class LessonRecorderScreen extends React.Component {
                         position: absolute;
                         top: 1vh;
                         left: 2vw;
-                        display: ${this.state.isRecording ? 'block' : 'none'};
                         font-size: 3vw;
                         font-weight: bold;
                         color: #dc3545;
+                    }
+                    #recording-status-icon {
+                        display: ${this.state.isRecording ? 'block' : 'none'};
                     }
                     #pose-detector-btn {
                         position: absolute;
