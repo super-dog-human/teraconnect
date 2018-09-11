@@ -7,7 +7,8 @@ import VoiceRecorder from './voiceRecorder';
 import AvatarPreview from './avatarPreview';
 import LessonGraphic from './lessonGraphic';
 import LessonUtility from '../common/lessonUtility';
-import ReactTooltip from 'react-tooltip'
+import ElapsedTime from './elapsedTime';
+import ReactTooltip from 'react-tooltip';
 import * as Const from '../common/constants';
 
 export default class LessonRecorderScreen extends React.Component {
@@ -29,6 +30,7 @@ export default class LessonRecorderScreen extends React.Component {
             isPoseDetecting: false,
             isSpeaking: false,
             isPosting: false,
+            isReachedTimeLimit: false,
         };
 
         this.lesson = {};
@@ -157,10 +159,14 @@ export default class LessonRecorderScreen extends React.Component {
     }
 
     _recordingStart() {
+        if (this.state.isReachedTimeLimit) {
+            return;
+        }
+
         this.setState({ isRecording: true });
     }
 
-    _recordingStop() {
+    recordingStop() {
         this.setState({ isRecording: false, isPause: true });
         this.setState({ isSpeaking: false });
     }
@@ -228,7 +234,6 @@ export default class LessonRecorderScreen extends React.Component {
                 <Menu selectedIndex='2' />
 
                 <div id="lesson-recorder" ref={(e) => { this.avatarPreview = e; }}>
-
                     <AvatarPreview
                         avatarURL={this.state.avatarURL}
                         pose={this.state.detectedPose}
@@ -255,16 +260,14 @@ export default class LessonRecorderScreen extends React.Component {
 
                     <div id="control-panel" disabled={this.state.isPosting}>
                         <div id="recording-status">
-                            <FontAwesomeIcon icon={['fas', 'video']} /> REC
+                            <div><FontAwesomeIcon icon={['fas', 'video']} /> REC</div>
+                            <ElapsedTime recorder={this.recorder} isRecording={this.state.isRecording} stopRecording={() => {
+                                this.recordingStop();
+                                this.setState({ isReachedTimeLimit: true });
+                            }} />
                         </div>
 
-                        <div id="record-elapsed-time">
-                            {
-                                //this.recorder.currentRecordingTime()
-                            }
-                        </div>
-
-                        <div id="pose-detector-btn" data-tip="試験的な機能です">
+                        <div id="pose-detector-btn" data-tip="実験的な機能です">
                             <button type="button" className="btn btn-dark" onClick={this._switchPoseDetection.bind(this)}>
                                 <FontAwesomeIcon icon={['fas', 'walking']} /> ポーズ検出
                             </button>
@@ -310,7 +313,7 @@ export default class LessonRecorderScreen extends React.Component {
                                 <FontAwesomeIcon icon={['far', 'dot-circle']} /> 収録開始
                             </button>
                             <button type="button" id="btn-stop-record" className="btn btn-secondary btn-with-hover rec-btn"
-                                onClick={this._recordingStop.bind(this)}>
+                                onClick={this.recordingStop.bind(this)}>
                                 <FontAwesomeIcon icon={['far', 'pause-circle']} /> 停止
                             </button>
                         </div>
@@ -320,7 +323,8 @@ export default class LessonRecorderScreen extends React.Component {
                                 <FontAwesomeIcon icon={['fas', 'cloud-upload-alt']} /> 保存
                             </button>
                             <button type="button" className="btn btn-primary rec-btn"
-                                onClick={this._recordingResume.bind(this)}>
+                                onClick={this._recordingResume.bind(this)}
+                                disabled={this.state.isReachedTimeLimit}>
                                 <FontAwesomeIcon icon={['far', 'dot-circle']} /> 再開
                             </button>
                         </div>
@@ -482,13 +486,13 @@ export default class LessonRecorderScreen extends React.Component {
                         margin-right: 1vw;
                     }
                     #start-record-btn {
-                        display: ${!this.state.isRecording && !this.state.isPause ? 'inline-block' : 'none'};
+                        display: ${!this.state.isRecording && !this.state.isPause && !this.state.isReachedTimeLimit ? 'inline-block' : 'none'};
                     }
                     #btn-stop-record {
                         display: ${this.state.isRecording ? 'inline-block' : 'none'};
                     }
                     .btn-in-stop {
-                        display: ${this.state.isPause ? 'inline-block' : 'none'};
+                        display: ${this.state.isPause || this.state.isReachedTimeLimit ? 'inline-block' : 'none'};
                     }
                     .btn-with-hover {
                         opacity: 0.2;

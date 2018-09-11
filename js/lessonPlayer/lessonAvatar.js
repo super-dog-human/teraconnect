@@ -316,6 +316,7 @@ export default class LessonAvatar {
     }
 
     updateSize(container) {
+        if (!container) return; // for resized before rendering completed.
         const size = this.domSize(container);
         this.renderer.setSize(size.width, size.height);
     }

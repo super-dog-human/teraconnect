@@ -87,8 +87,12 @@ export default class LessonRecorder {
     }
 
     currentRecordingTime() {
-        const recordingTimeMilliSec = this.elapsedTimeSec + performance.now() - this.recordingStartSec;
-        return recordingTimeMilliSec / 1000;
+        if (!this.isRecording) {
+            return this.elapsedTimeSec / 1000;
+        } else {
+            const recordingTimeMilliSec = performance.now() - this.recordingStartSec + this.elapsedTimeSec;
+            return recordingTimeMilliSec / 1000;
+        }
     }
 
     addAvatarPose(pose) {
@@ -307,7 +311,7 @@ export default class LessonRecorder {
 
     async _uploadLessonMaterial() {
         const materialBody = {
-            durationSec: this.elapsedTimeSec / 1000,
+            durationSec: this.currentRecordingTime(),
             timelines:   this.timelines,
             poseKey:     this.poseKey,
         };
