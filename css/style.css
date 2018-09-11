@@ -28,18 +28,33 @@
         opacity: 1;
     }
 }
-.app-color-powder-blue {
+.app-back-color-powder-blue {
     background-color: #04ACB4;
 }
-.app-color-dark-navy {
+.app-back-color-dark-navy {
     background-color: #247494;
 }
-.app-color-soft-white {
-    background-color: #EEEEEE;
+.app-back-color-soft-white {
+    background-color: #EBE9E9;
 }
-.app-color-light-gray {
-    background-color: #ACB5C4;
+.app-back-color-light-gray {
+    background-color: #818D92;
 }
-.app-color-dark-gray {
-    background-color: #5C646C;
+.app-back-color-dark-gray {
+    background-color: #595353;
+}
+.app-text-color-powder-blue {
+    color: #04ACB4;
+}
+.app-text-color-dark-navy {
+    color: #247494;
+}
+.app-text-color-soft-white {
+    color: #EBE9E9;
+}
+.app-text-color-light-gray {
+    color: #818D92;
+}
+.app-text-color-dark-gray {
+    color: #595353;
 }

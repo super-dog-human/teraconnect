@@ -1,26 +1,30 @@
 import React from 'react';
 
-const Footer = () => (
-    <footer className="app-color-dark-gray fixed-bottom">
-        <div><a href="https://goo.gl/forms/Rmp3dNKN7ZsDoF2k2">ZYGOPTERA</a></div>
+export default () => (
+    <footer className="fixed-bottom">
+        <div className="text-center app-back-color-dark-gray">
+            <a href="https://goo.gl/forms/Rmp3dNKN7ZsDoF2k2">ZYGOPTERA</a>
+        </div>
         <style jsx>{`
-        footer {
+        footer > div {
+            position: relative;
+            width: 100%;
             height: 50px;
         }
-        footer > div {
-            padding-top: 14px;
-            text-align: center;
+        footer > div > a {
+            position: absolute;
             color: #ffffff;
             font-size: 14px;
+            height: 20px;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
         }
-        footer a {
-            color: #ffffff;
-        }
-        footer a:hover {
+        footer > div > a:hover {
             text-decoration: none;
         }
         `}</style>
     </footer>
 )
-
-export default Footer

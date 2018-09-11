@@ -184,7 +184,7 @@ export default class LessonEditor extends React.Component {
 // <LessonPlayer isPreview={true} />
     render() {
         return(
-            <div id="lesson-editor-screen">
+            <div id="lesson-editor-screen" className="app-back-color-dark-gray">
                 <Menu selectedIndex='2' />
 
                 <div id="lesson-control-panel">
@@ -201,9 +201,6 @@ export default class LessonEditor extends React.Component {
                     </div>
                 </div>
                 <style jsx>{`
-                    #lesson-editor-screen {
-                        background-color: #616163;
-                    }
                     #lesson-control-panel {
                         height: 70px;
                         display: none; /* FIXME */

@@ -2,18 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 export default () => (
-    <header className="app-color-dark-navy fixed-top">
+    <header className="app-back-color-soft-white fixed-top">
         <nav className="navbar navbar-expand-md">
-            <div id="app-logo" className="pull-left">
-                TeraConnect
-            </div>
-
             <ul className="mx-auto nav">
                 <li className="nav-item">
-                    <Link className="nav-link" to='/'>ホーム</Link>
-                </li>
-                <li className="nav-item">
-                    <Link className="nav-link" to='/lessons/new'>授業収録</Link>
+                    <div className="navbar-brand" href='/'>
+                        <Link to='/'><img src="../../img/logo.png" /></Link>
+                    </div>
                 </li>
             </ul>
         </nav>
@@ -21,14 +16,18 @@ export default () => (
             header {
                 height: 64px;
             }
-            #app-logo {
-                color: white;
+            .navbar-brand {
+                color: #6c7474;
+                width: 200px;
+                height: 64px;
+                padding: 0;
             }
-            #app-logo img {
-                width: 50px;
+            .navbar-brand img {
+                width: 200px;
                 height: 64px;
             }
             header > nav {
+                padding: 0;
                 height: 100%;
             }
             header .nav-item {
