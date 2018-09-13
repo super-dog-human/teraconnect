@@ -1,13 +1,12 @@
-const getSigningUrl = 'https://api.teraconnect.org/raw_voice_signing';
 const numChannels   = 1;
 
 onmessage = function(event) {
-    const voice = event.data;
-    const lessonID = voice.lessonID;
     const axios = require('axios');
+    const Const = require('../common/constants');
 
-    const params = { params: { lesson_id: lessonID } };
-    axios.get(getSigningUrl, params)
+    const voice = event.data;
+    const params = { lesson_id: voice.lessonID };
+    axios.post(Const.RAW_VOICE_API_URL, params)
         .then((response) => { return response.data; })
         .then((response) => {
             const fileID = response.file_id;

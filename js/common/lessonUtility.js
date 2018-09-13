@@ -9,6 +9,39 @@ export default class LessonUtility {
         return { 'X-Get-Params': JSON.stringify(objects) };
     }
 
+    static async fetchLesson(lessonID) {
+        const materialURL = Const.LESSON_API_URL.replace('{lessonID}', lessonID);
+        const result = await axios.get(materialURL).catch((err) => {
+            throw new Error(err);
+        });
+
+        return result.data;
+    }
+
+    static async fetchLessonGraphicURLs(lessonGraphics) {
+        if (lessonGraphics.length == 0) {
+            return [];
+        }
+
+        const urlHeaders = lessonGraphics.map((graphic) => {
+            return {
+                id:        graphic.id,
+                entity:    'Graphic',
+                extension: graphic.fileType,
+            };
+        });
+
+        const urls = await LessonUtility.fetchSignedURLs(urlHeaders);
+
+        return lessonGraphics.map((graphic, i) => {
+            return {
+                id:       graphic.id,
+                url:      urls[i],
+                fileType: graphic.fileType,
+            };
+        });
+    }
+
     static async fetchLessonZipBlob(lesson) {
         const cacheManager = new LocalCacheManager();
         return await cacheManager.isCachedLesson(lesson.id, lesson.version) ?
@@ -71,7 +104,8 @@ export default class LessonUtility {
     static async fetchSignedURLs(objects) {
         const header = LessonUtility.customGetHeader(objects);
         const zipParams = { headers: header };
-        const zipResult = await axios.get(Const.SIGNED_URL_API_URL, zipParams);
-        return zipResult.data.signed_urls;
+        const zipResult = await axios.get(Const.STORAGE_OBJECT_API_URL, zipParams);
+
+        return zipResult.data.signed_urls.map((obj) => { return obj.signed_url });
     }
 }

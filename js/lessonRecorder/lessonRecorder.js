@@ -37,55 +37,6 @@ export default class LessonRecorder {
         }
     }
 
-    async fetchLesson() {
-        const materialURL = Const.LESSON_API_URL.replace('{lessonID}', this.lessonID);
-        const result = await axios.get(materialURL).catch((err) => {
-            throw new Error(err);
-        });
-
-        return result.data;
-    }
-
-    async fetchLessonGraphicURLs() {
-        const lessonGraphics = await this._fetchLessonGraphics().catch((err) => {
-            throw new Error(err);
-        });
-
-        if (lessonGraphics.length == 0) {
-            return [];
-        }
-
-        const urlHeaders = lessonGraphics.map((graphic) => {
-            return {
-                id:        graphic.id,
-                entity:    'Graphic',
-                extension: graphic.fileType,
-            };
-        });
-
-        const urls = await LessonUtility.fetchSignedURLs(urlHeaders);
-
-        return lessonGraphics.map((graphic, i) => {
-            return {
-                id:       graphic.id,
-                url:      urls[i],
-                fileType: graphic.fileType,
-            };
-        });
-    }
-
-    async _fetchLessonGraphics() {
-        const graphicURL = Const.LESSON_GRAPHIC_API_URL.replace('{lessonID}', this.lessonID);
-        const result = await axios.get(graphicURL).catch((err) => {
-            if (err.response.status == '404') {
-                return false;
-            }
-            throw new Error(err);
-        });
-
-        return result ? result.data.graphics : [];
-    }
-
     currentRecordingTime() {
         if (!this.isRecording) {
             return this.elapsedTimeSec / 1000;
@@ -284,13 +235,13 @@ export default class LessonRecorder {
     }
 
     async uploadRecord() {
-        if (!await this._uploadGraphicIDs()) return false;
+        if (!await this._uploadLessonGraphicIDs()) return false;
         if (!await this._uploadLessonMaterial()) return false;
 
         return true;
     }
 
-    async _uploadGraphicIDs() {
+    async _uploadLessonGraphicIDs() {
         const nestedGraphicIDs = this.timelines.filter((t) => { return t.graphics; })
             .map((t) => { return t.graphics.map((g) => { return g.id }); });
         if (nestedGraphicIDs.length ==0) return true;
@@ -299,12 +250,16 @@ export default class LessonRecorder {
             .filter((x, i, self) => {
                 return self.indexOf(x) === i;
             });
-        const graphicBody = { graphicIDs: graphicIDs };
-        const graphicURL = Const.LESSON_GRAPHIC_API_URL.replace('{lessonID}', this.lessonID);
-        await axios.post(graphicURL, graphicBody).catch((err) => {
+        const body = { graphicIDs: graphicIDs };
+        const url = Const.LESSON_API_URL.replace('{lessonID}', this.lessonID);
+        const result = await axios.patch(url, body).catch((err) => {
             console.error(err);
             return false;
         });
+
+        if (!result) {
+            return false;
+        }
 
         return true;
     }

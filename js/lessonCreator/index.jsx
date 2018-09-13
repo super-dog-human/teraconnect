@@ -39,16 +39,6 @@ export default class LessonCreator extends React.Component {
             return;
         }
 
-        const result = await this._createLessonGraphic(lesson.id).catch((err) => {
-            console.error(err);
-            return false;
-        });
-
-        if (!result) {
-            // error modal
-            return;
-        }
-
         this.props.history.push(`/lessons/${lesson.id}/record`);
     }
 
@@ -57,20 +47,9 @@ export default class LessonCreator extends React.Component {
             title:       this.state.title,
             description: this.state.description,
             avatarID:    'bdiuotgrbj8g00l9t3ng', // FIXME
-        };
-        const url = Const.LESSON_API_URL.replace('{lessonID}', ''); // API URL has no id when creating new.
-        const result = await axios.post(url, body).catch((err) => {
-            throw new Error(err);
-        });
-
-        return result.data;
-    }
-
-    async _createLessonGraphic(id) {
-        const body = {
             graphicIDs: ['bdpq07j7jj3000mn1a60', 'bdpq08r7jj3000mn1a6g', 'be7qiiqrlisg00l4kqvg'],   // FIXME
         };
-        const url = Const.LESSON_GRAPHIC_API_URL.replace('{lessonID}', id); // API URL has no id when creating new.
+        const url = Const.LESSON_API_URL.replace('{lessonID}', ''); // API URL has no id when creating new.
         const result = await axios.post(url, body).catch((err) => {
             throw new Error(err);
         });

@@ -55,7 +55,7 @@ export default class LessonRecorderScreen extends React.Component {
         }
 
         await this._fetchAvatarURL();
-        await this._fetchGraphicURLs();
+        await this._fetchGraphicURLs(this.lesson.graphics);
 
         await setupPoseDetector(() => {
             this.setState({ isDetectorLoading: false });
@@ -63,7 +63,7 @@ export default class LessonRecorderScreen extends React.Component {
     }
 
     async _fetchLesson() {
-        const lesson = await this.recorder.fetchLesson().catch((err) => {
+        const lesson = await LessonUtility.fetchLesson(this.lessonID).catch((err) => {
             console.error(err);
             return false;
         });
@@ -91,7 +91,7 @@ export default class LessonRecorderScreen extends React.Component {
     }
 
     async _fetchGraphicURLs() {
-        const graphics = await this.recorder.fetchLessonGraphicURLs().catch((err) => {
+        const graphics = await LessonUtility.fetchLessonGraphicURLs(this.lesson.graphics).catch((err) => {
             console.error(err);
             return false;
         });

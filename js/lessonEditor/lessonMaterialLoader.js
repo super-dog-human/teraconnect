@@ -27,23 +27,11 @@ export default class LessonMaterialLoader {
         return result.data;
     }
 
-    async fetchAndMergeGraphicToTimeline(timelines) {
-        const graphics      = await fetchLessonGraphics(this);
+    async fetchAndMergeGraphicToTimeline(graphics, timelines) {
         const graphicObject = graphicsToIDKeyObject(graphics);
 
         // graphics in timelins has no filetype so add that from API response.
         return mergeGraphicToLessonMaterial(timelines, graphicObject);
-
-        async function fetchLessonGraphics(self) {
-            const graphicURL = Const.LESSON_GRAPHIC_API_URL.replace('{lessonID}', self.lessonID);
-            const result = await axios.get(graphicURL).catch((err) => {
-                throw new Error(err);
-            });
-
-            if (!result) throw new Error(err);
-
-            return result.data.graphics;
-        }
 
         function graphicsToIDKeyObject(graphics) {
             const graphic = {};

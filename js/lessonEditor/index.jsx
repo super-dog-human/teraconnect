@@ -85,7 +85,7 @@ export default class LessonEditor extends React.Component {
             return;
         }
 
-        const timelines = await this.loader.fetchAndMergeGraphicToTimeline(this.state.timelines).catch((err) => {
+        const timelines = await this.loader.fetchAndMergeGraphicToTimeline(this.state.lesson.graphics, this.state.timelines).catch((err) => {
             console.error(err);
             return false;
         });
