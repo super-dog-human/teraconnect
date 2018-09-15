@@ -10,6 +10,7 @@ export default class AvatarManager extends React.Component {
         super(props);
 
         this.checker = new AvatarRightsChecker();
+        this.defaultThumbnailURL = 'https://storage.googleapis.com/teraconn_thumbnail/avatar/default.png';
 
         this.state = {
             selectedAvatarID: '',
@@ -33,8 +34,10 @@ export default class AvatarManager extends React.Component {
     }
 
     async _onDrop(acceptedFiles, rejectedFiles) {
+        const errMessage = '使用できないファイルです。下記の条件を確認してください。\n\n・VRM形式のファイルである\n・ライセンスがCC0またはCC_BYである\n・ファイルサイズが30MB以下である';
+
         if (rejectedFiles.length > 0) {
-            window.alert("使用できないファイルです。下記の条件を確認してください。\n\n・VRM形式のファイルである\n・ライセンスがCC0またはCC_BYである\n・ファイルサイズが30MB以下である");
+            window.alert(errMessage);
             // error modal
             return;
         }
@@ -43,15 +46,25 @@ export default class AvatarManager extends React.Component {
             return;
         }
 
-        const avatarFile = acceptedFiles[0];
-        const url = avatarFile.preview;
+        const url = acceptedFiles[0].preview;
         await this.checker.loadAvatar(url);
+
         if (!this.checker.isEnableAvatar()) {
+            window.alert(errMessage);
+            this.checker.clear();
             // error modal
             return;
         }
 
-        await LessonUtility.uploadAvatar(url);
+        this.checker.clear();
+        const id = await LessonUtility.uploadAvatar(url).catch((err) => {
+            console.error(err);
+            // error modal
+        });
+
+        const avatars = this.state.avatars;
+        avatars.push({ id: id});
+        this.setState({ avatars: avatars });
     }
 
     render() {
@@ -61,7 +74,7 @@ export default class AvatarManager extends React.Component {
                     this.state.avatars.map((avatar, i) => {
                         const isSelected = avatar.id == this.state.selectedAvatarID;
                         return <label key={i} className={isSelected ? "checkable-thumbnail selected-element" : "checkable-thumbnail nonselected-element"}>
-                            <img src={avatar.thumbnailURL} />
+                            <img src={ avatar.thumbnailURL ? avatar.thumbnailURL : this.defaultThumbnailURL } />
                             <input type="checkbox" value={avatar.id} checked={isSelected} onChange={this._changeAvatarSelection.bind(this)} />
                         </label>
                     })
@@ -91,10 +104,12 @@ export default class AvatarManager extends React.Component {
                         overflow-y: hidden;
                     }
                     #avatar-manager img {
-                        max-width: 110px;
-                        max-height: 100px;
+                        width: 100px;
+                        height: 100px;
                     }
-                    .checkable-thumbnail  {
+                    .checkable-thumbnail {
+                        width: 110px;
+                        height: 110px;
                         position: relative;
                         margin-right: 10px;
                         cursor: pointer;

@@ -10,7 +10,7 @@ export default class AvatarRightsChecker {
         const avatar = await new Promise((resolve) => {
             new THREE.GLTFLoader().load(url, (vrm) => { resolve(vrm); });
         });
-        console.log(avatar);
+
         this.avatar = avatar;
     }
 
@@ -23,12 +23,12 @@ export default class AvatarRightsChecker {
 
         return false;
     }
-
+/*
     thumbnailObjectURL() {
 
     }
-
+*/
     clear() {
-        this.avatar = nil;
+        this.avatar = {};
     }
 }

@@ -11,9 +11,7 @@ export default class LessonUtility {
 
     static async fetchLesson(lessonID) {
         const url = Const.LESSON_API_URL.replace('{lessonID}', lessonID);
-        const result = await axios.get(url).catch((err) => {
-            throw new Error(err);
-        });
+        const result = await axios.get(url);
 
         return result.data;
     }
@@ -116,14 +114,48 @@ export default class LessonUtility {
         const zipParams = { headers: header };
         const zipResult = await axios.get(Const.STORAGE_OBJECT_API_URL, zipParams);
 
-        return zipResult.data.signed_urls.map((obj) => { return obj.signed_url });
+        return zipResult.data.signedURLs.map((obj) => { return obj.signedURL });
     }
 
-    static async createBlankObjects(files) {
-
+    static async blobToZip(fileName, blob) {
+        const zip = new JSZip();
+        zip.file(fileName, blob);
+        return await zip.generateAsync({
+            type: 'blob',
+            compression: "DEFLATE",
+        });
     }
 
-    static async uploadAvatar(url) {
-        console.log(url);
+    static async createStorageObjects(files) {
+        const request = { fileRequests: files };
+        const result = await axios.post(Const.STORAGE_OBJECT_API_URL, request);
+        return result.data;
+    }
+
+    static async uploadAvatar(avatarURL) {
+        const fileType = 'application/zip';
+        const file = {
+            entity: 'avatar',
+            extension: 'zip',
+            contentType: fileType,
+        };
+        const result = await LessonUtility.createStorageObjects([file]);
+        const avatar = result.signedURLs[0];
+
+        const fileName = avatar.fileID + '.vrm';
+        const avatarFile = await axios.get(avatarURL, { responseType: 'blob' });
+        const zipBlob = await LessonUtility.blobToZip(fileName, avatarFile.data);
+
+        const instance = axios.create({
+            transformRequest: [(data, header) => {
+                header.put['Content-Type'] = fileType;
+                return data;
+            }],
+        });
+        await instance.put(avatar.signedURL, zipBlob);
+
+        window.URL.revokeObjectURL(avatarURL);
+
+        return avatar.fileID;
     }
 }
