@@ -64,14 +64,6 @@ THREE.GLTFLoader = ( function () {
 			}
 			var json = JSON.parse( content );
 
-			// clone targets for morphing (fix of file made by VRoid Studio).
-			const primitives = json.meshes[43].primitives;
-			const targets = primitives[0].targets;
-			primitives.forEach((primitive, i) => {
-				if (i == 0) return;
-				primitive.targets = targets;
-			});
-
 			if ( json.asset === undefined || json.asset.version[ 0 ] < 2 ) {
 				if ( onError ) onError( new Error( 'THREE.GLTFLoader: Unsupported asset. glTF versions >=2.0 are supported. Use LegacyGLTFLoader instead.' ) );
 				return;
