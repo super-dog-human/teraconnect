@@ -5,6 +5,7 @@ import TextForms from './textForms';
 import LessonPlayer from '../lessonPlayer';
 import LessonMaterialLoader from './lessonMaterialLoader';
 import LessonMaterialUploader from './lessonMaterialUploader';
+import LessonUtility from '../common/lessonUtility';
 
 export default class LessonEditor extends React.Component {
     constructor(props) {
@@ -44,7 +45,7 @@ export default class LessonEditor extends React.Component {
     }
 
     async _loadLesson() {
-        const lesson = await this.loader.fetchLesson().catch((err) => {
+        const lesson = await LessonUtility.fetchLesson(this.lessonID).catch((err) => {
             console.error(err);
             return false;
         });

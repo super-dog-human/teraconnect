@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import './GLTFLoader';
+import '../common/GLTFLoader';
 import * as Const from '../common/constants';
 
 export default class LessonAvatar {
@@ -266,15 +266,6 @@ export default class LessonAvatar {
 
             vrm.scene.traverse((object) => {
                 if (object.isBone) this.bones[object.name] = object;
-                if (!object.material) return;
-
-                if (Array.isArray(object.material)) {
-                    object.material.forEach((material) => {
-                        material.alphaTest = 0.5;
-                    });
-                } else {
-                    object.material.alphaTest = 0.5;
-                }
             });
 
             // set upper arm bones to top level.

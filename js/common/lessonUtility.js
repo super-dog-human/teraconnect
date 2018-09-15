@@ -10,11 +10,21 @@ export default class LessonUtility {
     }
 
     static async fetchLesson(lessonID) {
-        const materialURL = Const.LESSON_API_URL.replace('{lessonID}', lessonID);
-        const result = await axios.get(materialURL).catch((err) => {
+        const url = Const.LESSON_API_URL.replace('{lessonID}', lessonID);
+        const result = await axios.get(url).catch((err) => {
             throw new Error(err);
         });
 
+        return result.data;
+    }
+
+    static async fetchGraphics() {
+        const result = await axios.get(Const.GRAPHIC_API_URL);
+        return result.data;
+    }
+
+    static async fetchAvatars() {
+        const result = await axios.get(Const.AVATAR_API_URL);
         return result.data;
     }
 
@@ -107,5 +117,13 @@ export default class LessonUtility {
         const zipResult = await axios.get(Const.STORAGE_OBJECT_API_URL, zipParams);
 
         return zipResult.data.signed_urls.map((obj) => { return obj.signed_url });
+    }
+
+    static async createBlankObjects(files) {
+
+    }
+
+    static async uploadAvatar(url) {
+        console.log(url);
     }
 }

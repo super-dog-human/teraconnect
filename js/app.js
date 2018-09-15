@@ -4,10 +4,10 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faDotCircle, faPauseCircle, faMehBlank } from '@fortawesome/free-regular-svg-icons';
 import { faPlayCircle, faSpinner, faImage, faArrowUp, faArrowDown,
     faArrowLeft, faArrowRight, faLaughBeam, faSmile,
-    faFrownOpen, faAngry, faSurprise, faWalking, faCloudUploadAlt, faVideo } from '@fortawesome/free-solid-svg-icons';
+    faFrownOpen, faAngry, faSurprise, faWalking, faCloudUploadAlt, faVideo, faFileUpload, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
 library.add( faDotCircle, faPauseCircle, faMehBlank, faPlayCircle, faSpinner, faImage,
     faArrowUp, faArrowDown, faArrowLeft, faArrowRight, faLaughBeam, faSmile, faFrownOpen,
-    faAngry, faSurprise, faWalking, faCloudUploadAlt, faVideo);
+    faAngry, faSurprise, faWalking, faCloudUploadAlt, faVideo, faFileUpload, faFolderPlus);
 
 import Header from './header'
 import Footer from './footer'

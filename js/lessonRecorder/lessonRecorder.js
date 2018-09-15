@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { Euler, Quaternion } from 'three';
-import LessonUtility from '../common/lessonUtility';
 import * as Const from '../common/constants';
 
 export default class LessonRecorder {
