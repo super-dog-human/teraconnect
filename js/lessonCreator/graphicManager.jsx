@@ -36,10 +36,17 @@ export default class GraphicManager extends React.Component {
         this.props.changeGraphics(this.state.selectedGraphicIDs);
     }
 
-    _onDrop(acceptedFiles, rejectedFiles) {
-        if (rejectedFiles) {
+    async _onDrop(acceptedFiles) {
+        if (this.props.isCreating) return;
+        if (acceptedFiles.lenth == 0) return;
 
-        }
+        this.props.changeCreatingStatus(true);
+
+        const newGraphics = await LessonUtility.uploadGraphics(acceptedFiles);
+        const graphics = this.state.graphics.concat(newGraphics);
+        this.setState({ graphics: graphics });
+
+        this.props.changeCreatingStatus(false);
     }
 
     render() {
@@ -62,40 +69,46 @@ export default class GraphicManager extends React.Component {
                         </span>
                     </Dropzone>
                 </div>
+                <div id ="upload-loading-icon" className="app-text-color-soft-white">
+                    <FontAwesomeIcon icon="spinner" spin />
+                </div>
                 <style jsx>{`
+                    #graphic-manager {
+                        position: relative;
+                    }
+                    #graphic-scroll-selector {
+                        position: relative;
+                        width: 600px;
+                        height: 250px;
+                        padding: 15px;
+                        overflow-y: scroll;
+                        overflow: scroll;
+                    }
+                    .checkable-thumbnail  {
+                        position: relative;
+                        margin-right: 10px;
+                        cursor: pointer;
+                        width: 122px;
+                        height: 122px;
+                    }
+                    .checkable-thumbnail input {
+                        display: none;
+                    }
+                    .checkable-thumbnail img {
+                        position: absolute;
+                        margin: auto;
+                        width: 110px;
+                        height: 110px;
+                        object-fit: contain;
+                    }
                     .nonselected-element {
                         border: 6px solid rgba(255, 0, 0, 0);
                     }
                     .selected-element {
                         border: solid 6px #ec9f05;
                     }
-                    #graphic-manager {
-                        position: relative;
-                        width: 600px;
-                        height: 200px;
-                        padding: 15px;
-                        overflow-y: scroll;
-                        overflow: scroll;
-                    }
-                    #graphic-scroll-selector {
-                        width 100%;
-                    }
-                    #graphic-manager img {
-                        max-width: 110px;
-                        max-height: 100px;
-                    }
-                    .checkable-thumbnail  {
-                        position: relative;
-                        margin-right: 10px;
-                        cursor: pointer;
-                    }
-                    .checkable-thumbnail input {
-                        display: none;
-                        position: absolute;
-                        top: 0;
-                        right: 0;
-                    }
                     #upload-graphic {
+                        display: ${this.props.isCreating ? 'none' : 'block'};
                         position: absolute;
                         width: 200px;
                         height: 20px;
@@ -104,12 +117,24 @@ export default class GraphicManager extends React.Component {
                         cursor: pointer;
                         text-align: right;
                     }
+                    #upload-graphic:hover {
+                        opacity: 0.7;
+                    }
                     #upload-graphic-icon {
                         font-size: 25px;
                     }
                     #upload-graphic-text {
                         padding-left: 10px;
                         font-size: 15px;
+                    }
+                    #upload-loading-icon {
+                        display: ${this.props.isCreating ? 'block' : 'none'};
+                        position: absolute;
+                        width: 40px;
+                        height: 40px;
+                        font-size: 40px;
+                        top: 200px;
+                        right: 30px;
                     }
                 `}</style>
             </div>

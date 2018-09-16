@@ -11,13 +11,17 @@ export default class LessonCreator extends React.Component {
     constructor(props) {
         super(props);
 
+        this.lessonID = '';
+
         this.state = {
-            isFormCreatable: false,
-            isCreating:      false,
-            title:           '',
-            description:     '',
-            avatarID:        null,
-            graphicIDs:      [],
+            isFormCreatable:   false,
+            isGraphicCreating: false,
+            isAvatarCreating:  false,
+            isCreating:        false,
+            title:             '',
+            description:       '',
+            avatarID:          null,
+            graphicIDs:        [],
         };
     }
 
@@ -61,7 +65,17 @@ export default class LessonCreator extends React.Component {
             return;
         }
 
-        this.props.history.push(`/lessons/${lesson.id}/record`);
+        this.lessonID = lesson.id;
+        this._checkCreatingStatus();
+    }
+
+    _checkCreatingStatus() {
+        const interval = setInterval(() => {
+            if (!this.state.isGraphicCreating && !this.state.isAvatarCreating) {
+                this.setState({ isCreating: false });
+                clearInterval(interval);
+            }
+        }, 1000);
     }
 
     async _postLesson() {
@@ -79,36 +93,43 @@ export default class LessonCreator extends React.Component {
         return result.data;
     }
 
+    componentDidUpdate(_, prevState) {
+        if (prevState.isCreating && !this.state.isCreating) {
+            this.props.history.push(`/lessons/${this.lessonID}/record`);
+        }
+    }
+
     render() {
         return(
             <div id="lesson-creator-screen" className="">
                 <Menu selectedIndex='2' />
 
                 <div id="lesson-creator" className="app-back-color-soft-white">
-
                     <div id="loading-indicator">
                         <FontAwesomeIcon icon="spinner" spin />
                     </div>
-
                     <form id="lesson-form" onSubmit={this._create.bind(this)}>
-                        <div className="form-group" data-tip="授業のタイトルを入力します">
+                        <div className="form-group">
                             <label htmlFor="lesson-title" className="app-text-color-dark-gray font-weight-bold">タイトル<span className="text-danger">&nbsp;*</span></label>
                             <input type="text" className="form-control" id="lesson-title" onChange={this._changeTitle.bind(this)} required />
                         </div>
-
                         <div className="form-group">
                             <label htmlFor="lesson-description" className="app-text-color-dark-gray font-weight-bold">説明</label>
                             <textarea className="form-control" id="lesson-description" rows="3" value={this.state.description} onChange={this._changeDescription.bind(this)}></textarea>
                         </div>
-
-                        <div id="graphic-manager-screen">
+                        <div id="graphic-manager-screen" className="form-group" data-tip="選択した順で画像が使用できます">
                             <label htmlFor="lesson-graphic" className="app-text-color-dark-gray font-weight-bold">メディア</label>
-                            <GraphicManager changeGraphics={((ids) => { this._changeGraphics(ids); })} />
+                            <GraphicManager
+                                changeGraphics={((ids) => { this._changeGraphics(ids); })}
+                                changeCreatingStatus={(status) => { this.setState({ isGraphicCreating: status }); }}
+                                isCreating={this.state.isGraphicCreating}/>
                         </div>
-
-                        <div id="avatar-manager-screen">
+                        <div id="avatar-manager-screen" className="form-group">
                             <label htmlFor="lesson-avatar" className="app-text-color-dark-gray font-weight-bold">アバター<span className="text-danger">&nbsp;*</span></label>
-                            <AvatarManager changeAvatar={((id) => { this._changeAvatar(id); })} />
+                            <AvatarManager
+                                changeAvatar={((id) => { this._changeAvatar(id); })}
+                                changeCreatingStatus={((status) => { this.setState({ isAvatarCreating: status }); })}
+                                isCreating={this.state.isAvatarCreating} />
                         </div>
 
                         <button type="submit" className="btn btn-primary btn-lg" disabled={!this.state.isFormCreatable || this.state.isCreating}>作成</button>

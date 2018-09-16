@@ -132,6 +132,41 @@ export default class LessonUtility {
         return result.data;
     }
 
+    static async uploadGraphics(files) {
+        const creationFiles = files.map((file) => {
+            const extention = file.type.substr(6);
+
+            return {
+                entity: 'graphic',
+                extension: extention,
+                contentType: file.type,
+            }
+        });
+
+        const result = await LessonUtility.createStorageObjects(creationFiles);
+        const uploadedGraphics = [];
+
+        for (const [i, storage] of result.signedURLs.entries()) {
+            const objectURL = files[i].preview;
+            const graphicFile = await axios.get(objectURL, { responseType: 'blob' });
+
+            const instance = axios.create({
+                transformRequest: [(data, header) => {
+                    header.put['Content-Type'] = creationFiles[i].contentType;
+                    return data;
+                }],
+            });
+            await instance.put(storage.signedURL, graphicFile.data);
+
+            uploadedGraphics.push({
+                id:           storage.fileID,
+                thumbnailURL: objectURL,
+            });
+        }
+
+        return uploadedGraphics;
+    }
+
     static async uploadAvatar(avatarURL) {
         const fileType = 'application/zip';
         const file = {

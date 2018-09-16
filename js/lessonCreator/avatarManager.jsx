@@ -11,8 +11,10 @@ export default class AvatarManager extends React.Component {
 
         this.checker = new AvatarRightsChecker();
         this.defaultThumbnailURL = 'https://storage.googleapis.com/teraconn_thumbnail/avatar/default.png';
+        this.maxFileBytes = 31457280;
 
         this.state = {
+            hasAddedAvatar: false,
             selectedAvatarID: '',
             avatars: [],
         };
@@ -34,6 +36,8 @@ export default class AvatarManager extends React.Component {
     }
 
     async _onDrop(acceptedFiles, rejectedFiles) {
+        if (this.props.isCreating) return;
+
         const errMessage = '使用できないファイルです。下記の条件を確認してください。\n\n・VRM形式のファイルである\n・ライセンスがCC0またはCC_BYである\n・ファイルサイズが30MB以下である';
 
         if (rejectedFiles.length > 0) {
@@ -42,16 +46,21 @@ export default class AvatarManager extends React.Component {
             return;
         }
 
-        if (acceptedFiles.length == 0) {
-            return;
-        }
+        if (acceptedFiles.length == 0) return;
 
-        const url = acceptedFiles[0].preview;
+        this._createNewAvatar(acceptedFiles[0]);
+    }
+
+    async _createNewAvatar(file) {
+        this.props.changeCreatingStatus(true);
+
+        const url = file.preview;
         await this.checker.loadAvatar(url);
 
         if (!this.checker.isEnableAvatar()) {
             window.alert(errMessage);
             this.checker.clear();
+
             // error modal
             return;
         }
@@ -64,7 +73,9 @@ export default class AvatarManager extends React.Component {
 
         const avatars = this.state.avatars;
         avatars.push({ id: id});
-        this.setState({ avatars: avatars });
+
+        this.setState({ avatars: avatars, hasAddedAvatar: true });
+        this.props.changeCreatingStatus(false);
     }
 
     render() {
@@ -80,11 +91,16 @@ export default class AvatarManager extends React.Component {
                     })
                 }
                     <div id="upload-avatar" data-tip="VRM形式の3Dモデルが使用できます">
-                        <Dropzone onDrop={this._onDrop.bind(this)} accept=".vrm" maxSize={31457280} multiple={false}
+                        <Dropzone onDrop={this._onDrop.bind(this)} accept=".vrm" maxSize={this.maxFileBytes} multiple={false}
                             style={{ width: "100px", height: "100px", position: "absolute" }}>
                             <div id="upload-avatar-icon" className="app-text-color-soft-white"><FontAwesomeIcon icon="file-upload" /></div>
                             <div id="upload-avatar-text" className="app-text-color-soft-white">&nbsp;追加</div>
                         </Dropzone>
+                    </div>
+                    <div id="upload-loading-status">
+                        <div id ="upload-loading-icon" className="app-text-color-soft-white">
+                            <FontAwesomeIcon icon="spinner" spin />
+                        </div>
                     </div>
                 </div>
                 <ReactTooltip />
@@ -121,6 +137,8 @@ export default class AvatarManager extends React.Component {
                         right: 0;
                     }
                     #upload-avatar {
+                        display: ${this.props.isCreating || this.state.hasAddedAvatar ? 'none' : 'block'};
+                        position: relative;
                         width: 100px;
                         height: 100px;
                         border: 2px dashed white;
@@ -146,6 +164,23 @@ export default class AvatarManager extends React.Component {
                         text-align: center;
                         bottom: 20%;
                         font-size: 12px;
+                    }
+                    #upload-loading-status {
+                        display: ${this.props.isCreating ? 'block' : 'none'};
+                        position: relative;
+                        width: 100px;
+                        height: 100px;
+                    }
+                    #upload-loading-icon {
+                        position: absolute;
+                        width: 40px;
+                        height: 40px;
+                        font-size: 40px;
+                        top: 0;
+                        bottom: 0;
+                        left: 0;
+                        right: 0;
+                        margin: auto;
                     }
                 `}</style>
             </div>
