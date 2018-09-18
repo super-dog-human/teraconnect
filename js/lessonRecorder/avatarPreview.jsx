@@ -19,8 +19,7 @@ export default class AvatarPreview extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (this.props.faceName != nextProps.faceName) {
-            const ratio = (nextProps.faceName == 'AllJoy') ? 1 : 0.5;
-            this.avatar.changeFace(nextProps.faceName, ratio);
+            this.avatar.changeFace(nextProps.faceName);
         }
 
         if (this.props.moveDirection != nextProps.moveDirection) {
