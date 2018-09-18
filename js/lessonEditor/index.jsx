@@ -33,8 +33,8 @@ export default class LessonEditor extends React.Component {
         await this._loadRawLessonMaterial();
 
         if (this.state.lesson.isPacked) {
-            // should transition?
             this.setState({ isTextVoiceLoaded: true, isGraphicLoaded: true });
+            this.props.history.push(`/${this.lessonID}`); // FIXME
             return;
         }
 
@@ -138,6 +138,10 @@ export default class LessonEditor extends React.Component {
         }
     }
 
+    _changeTimelines(timelines) {
+        this.setState({ timelines: timelines });
+    }
+
     _changePublic(event) {
         this.setState({ isPublic: event.target.checked });
     }
@@ -147,6 +151,7 @@ export default class LessonEditor extends React.Component {
 
         const lesson = {
             id:          this.lessonID,
+            version:     this.state.lesson.version + 1,
             durationSec: this.state.durationSec,
             timelines:   this.state.timelines,
             poseKey:     this.state.poseKey,
@@ -170,25 +175,21 @@ export default class LessonEditor extends React.Component {
         return(
             <div id="lesson-editor-screen" className="app-back-color-dark-gray">
                 <Menu selectedIndex='2' />
-
                 <div id="lesson-control-panel">
                     <div id="publish-btn">
                         <button className="btn btn-primary btn-lg" onClick={this._publish.bind(this)}>完了</button>
-                        <div id="publish-checkbox" className="form-check" data-tip="トップページに作成した授業のリンクを表示します">
+                        <div id="publish-checkbox" className="form-check">
                             <input type="checkbox" id="is-publish-checkbox" onChange={this._changePublic.bind(this)} />
-                            <label htmlFor="is-publish-checkbox" className="app-text-color-soft-white">&nbsp;一般公開</label>
+                            <label htmlFor="is-publish-checkbox" className="app-text-color-soft-white" data-tip="トップページに作成した授業のリンクを表示します">&nbsp;一般公開</label>
                         </div>
                     </div>
                 </div>
-
                 <div id="lesson-editor" ref={(e) => { this.avatarPreview = e; }}>
-                    <VoiceText isLoading={this.state.isLoading} lessonID={this.lessonID} timelines={this.state.timelines} />
-
+                    <VoiceText isLoading={this.state.isLoading} lessonID={this.lessonID} timelines={this.state.timelines} changeTimelines={this._changeTimelines.bind(this)} />
                     <div id="loading-indicator">
                         <FontAwesomeIcon icon="spinner" spin />
                     </div>
                 </div>
-
                 <ReactTooltip />
                 <style jsx>{`
                     #lesson-editor-screen {

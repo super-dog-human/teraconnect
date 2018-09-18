@@ -213,6 +213,7 @@ export default class LessonUtility {
     static async publishLesson(lesson) {
         const lessonBody = {
             durationSec: lesson.durationSec,
+            version:     lesson.version,
             isPublic:    lesson.isPublic
         }
         await LessonUtility.updateLesson(lesson.id, lessonBody);

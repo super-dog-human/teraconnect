@@ -32,7 +32,23 @@ export default class VoiceText extends React.Component {
     }
 
     _changeText(event) {
-        console.log(event.target.value);
+        const targetIndex = event.target.getAttribute('custom-index');
+        const newText = event.target.value;
+
+        const timelines = this.props.timelines;
+        let textIndex = -1;
+        for (const [i, t] of timelines.entries()) {
+            if (t.voice.id == '') continue;
+
+            textIndex ++;
+            if (textIndex != targetIndex) continue;
+            if (textIndex == targetIndex) {
+                t.text.body = newText;
+                break;
+            }
+        }
+
+        this.props.changeTimelines(timelines);
     }
 
     _playVoice(event) {
@@ -45,6 +61,9 @@ export default class VoiceText extends React.Component {
             this.playingVoices[voiceIndex] = audioElement;
             const url = this.urls[voiceIndex]
             audioElement.src = url;
+            audioElement.addEventListener('ended', () => {
+                this.playingVoices[voiceIndex] = null;
+            }, true);
             audioElement.play();
         }
     }
@@ -60,16 +79,16 @@ export default class VoiceText extends React.Component {
                                 if (t.text.body != '') {
                                     return <div key={i} className="line">
                                         <button value={i} className="voice-play-btn app-text-color-dark-gray" onClick={this._playVoice.bind(this)}><FontAwesomeIcon icon="volume-up" /></button>
-                                        <input type="text" className="form-control voice-text" defaultValue={t.text.body} disabled={this.props.isLoading} onChange={this._changeText.bind(this)} />
+                                        <input type="text" custom-index={i} className="form-control voice-text" defaultValue={t.text.body} disabled={this.props.isLoading} onChange={this._changeText.bind(this)} />
                                     </div>
-                                } else if (isLoading) {
+                                } else if (this.props.isLoading) {
                                     return <div key={i} className="line text-detecting">
                                         <FontAwesomeIcon icon="spinner" spin />
                                     </div>
                                 } else {
                                     return <div key={i} className="line">
-                                        <button value={i} className="btn btn-secondary app-text-color-dark-gray" onClick={this._playVoice.bind(this)}><FontAwesomeIcon icon="volume-up" /></button>
-                                        <input type="text" className="form-control voice-text" placeholder="（検出なし）" disabled={this.props.isLoading} onChange={this._changeText.bind(this)} />
+                                        <button value={i} className="voice-play-btn app-text-color-dark-gray" onClick={this._playVoice.bind(this)}><FontAwesomeIcon icon="volume-up" /></button>
+                                        <input type="text" custom-index={i} className="form-control voice-text" placeholder="（検出なし）" disabled={this.props.isLoading} onChange={this._changeText.bind(this)} />
                                     </div>
                                 }
                             })

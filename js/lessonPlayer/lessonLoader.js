@@ -15,20 +15,32 @@ export default class LessonLoader {
 
     }
 
-    async loadForPlayAsync() {
+    async loadForPlay() {
         const lessonURL = Const.LESSON_API_URL.replace('{lessonID}', this.lessonID);
         const result = await axios.get(lessonURL);
         const lesson = result.data;
-
-        const zip = await LessonUtility.fetchLessonZipBlob(lesson);
-        await this.loadLessonMaterialAsync(zip);
+        const zip = await this._fetchLessonZipBlobWithRetry(lesson);
+        await this._loadLessonMaterial(zip);
 
         const avatar = lesson.avatar;
         const avatarURL = await LessonUtility.fetchAvatarObjectURL(avatar);
         this.avatarFileURL = avatarURL;
     }
 
-    async loadLessonMaterialAsync(zipBody) {
+    async _fetchLessonZipBlobWithRetry(lesson) {
+        const zip = await LessonUtility.fetchLessonZipBlob(lesson).catch(async (err) => {
+            if (err.response.status == 404) { // not exist zipped lesson in cloud storage yet
+                const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
+                await sleep(1000);
+                return this._fetchLessonZipBlobWithRetry(lesson);
+            }
+            throw err;
+        });
+
+        return zip;
+    }
+
+    async _loadLessonMaterial(zipBody) {
         const unzip = await JSZip.loadAsync(zipBody)
 
         const lessonString = await unzip.file('lesson.json').async('string');

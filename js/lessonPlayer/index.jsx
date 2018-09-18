@@ -22,7 +22,7 @@ export default class LessonPlayerScreen extends React.Component {
             this.loader.loadForPreview();
             // TODO
         } else {
-            await this.loader.loadForPlayAsync();
+            await this.loader.loadForPlay();
             const dom = await this.avatar.createDom(this.loader.avatarFileURL, this.container);
             dom.setAttribute('id', 'avatar-canvas');
             ReactDOM.findDOMNode(this.playerElement).append(dom);
