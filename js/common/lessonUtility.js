@@ -193,4 +193,36 @@ export default class LessonUtility {
 
         return avatar.fileID;
     }
+
+    static async updateLesson(lessonID, body) {
+        const url = Const.LESSON_API_URL.replace('{lessonID}', lessonID);
+        await axios.patch(url, body);
+    }
+
+    static async uploadMaterial(lessonID, body) {
+        const url = Const.LESSON_MATERIAL_API_URL.replace('{lessonID}', lessonID);
+        await axios.put(url, body);
+    }
+
+    static async packMaterial(lessonID) {
+        const body = { dummy: "dummyBody" };
+        const url = Const.LESSON_PACK_API_URL.replace('{lessonID}', lessonID);
+        await axios.put(url, body);
+    }
+
+    static async publishLesson(lesson) {
+        const lessonBody = {
+            durationSec: lesson.durationSec,
+            isPublic:    lesson.isPublic
+        }
+        await LessonUtility.updateLesson(lesson.id, lessonBody);
+
+        const materialBody = {
+            durationSec: lesson.durationSec,
+            timelines:   lesson.timelines,
+            poseKey:     lesson.poseKey,
+        }
+        await LessonUtility.uploadMaterial(lesson.id, materialBody);
+        await LessonUtility.packMaterial(lesson.id);
+    }
 }
