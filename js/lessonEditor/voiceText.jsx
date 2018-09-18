@@ -78,7 +78,7 @@ export default class VoiceText extends React.Component {
                             .map((t, i) => {
                                 if (t.text.body != '') {
                                     return <div key={i} className="line">
-                                        <button value={i} className="voice-play-btn app-text-color-dark-gray" onClick={this._playVoice.bind(this)}><FontAwesomeIcon icon="volume-up" /></button>
+                                        <button value={i} className="voice-play-btn app-text-color-dark-gray" onClick={this._playVoice.bind(this)} disabled={this.props.isLoading}><FontAwesomeIcon icon="volume-up" /></button>
                                         <input type="text" custom-index={i} className="form-control voice-text" defaultValue={t.text.body} disabled={this.props.isLoading} onChange={this._changeText.bind(this)} />
                                     </div>
                                 } else if (this.props.isLoading) {
@@ -87,7 +87,7 @@ export default class VoiceText extends React.Component {
                                     </div>
                                 } else {
                                     return <div key={i} className="line">
-                                        <button value={i} className="voice-play-btn app-text-color-dark-gray" onClick={this._playVoice.bind(this)}><FontAwesomeIcon icon="volume-up" /></button>
+                                        <button value={i} className="voice-play-btn app-text-color-dark-gray" onClick={this._playVoice.bind(this)} disabled={this.props.isLoading}><FontAwesomeIcon icon="volume-up" /></button>
                                         <input type="text" custom-index={i} className="form-control voice-text" placeholder="（検出なし）" disabled={this.props.isLoading} onChange={this._changeText.bind(this)} />
                                     </div>
                                 }

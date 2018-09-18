@@ -2,28 +2,23 @@ import React from 'react';
 
 const LessonGraphic = ({graphic}) => (
     <div className="lesson-graphic">
-        <div className="lesson-graphic-cell">
-            <img src={graphic.url} id="lesson-graphic-body" />
-        </div>
+        <img src={graphic.url} id="lesson-graphic-body" />
         <style jsx>{`
             .lesson-graphic {
                 position: absolute;
                 top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
                 width: 100%;
                 height :100%;
-                display: table;
-            }
-            .lesson-graphic-cell {
-                position: relative;
-                display: table-cell;
-                text-align: ${graphic.horizontalAlign || 'center'};
-                vertical-align: ${graphic.verticalAlign || 'middle'};
+                margin: auto;
             }
             #lesson-graphic-body {
                 width: ${graphic.sizePct || 100}%;
-                max-height: ${graphic.sizePct || 100}%;
+                height: ${graphic.sizePct || 100}%;
                 object-fit: contain;
-                animation-duration: 0.1s;
+                animation-duration: 0.3s;
                 animation-name: ${'fade-in'};
             }
         `}</style>
@@ -31,17 +26,17 @@ const LessonGraphic = ({graphic}) => (
 )
 
 export default ({graphics}) => (
-    <div id="lesson-graphics">{
-        graphics.map((graphic, i) => {
-            return <LessonGraphic graphic={graphic} key={i} className="lesson-graphic" />;
-        })
+    <div id="lesson-graphics">
+        {
+            graphics.map((graphic, i) => {
+                return <LessonGraphic graphic={graphic} key={i} className="lesson-graphic" />;
+            })
         }
         <style jsx>{`
             #lesson-graphics {
                 position: absolute;
-                top: 0;
                 width: 100%;
-                height :100%;
+                height: 100%;
                 z-index: -100;
             }
         `}</style>
