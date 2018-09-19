@@ -14,9 +14,7 @@ export default class LessonPlayer extends React.Component {
         this.preElapsedTime    = 0;
         this.pausedElapsedTime = 0;
         this.element;
-        new LessonVoicePlayer(props.avatar).then((player) => {
-            this.voicePlayer = player;
-        });
+        this.voicePlayer = new LessonVoicePlayer(props.avatar);
 
         this.state = {
             isPlaying: false,
