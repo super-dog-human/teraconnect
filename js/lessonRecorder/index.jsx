@@ -1,7 +1,7 @@
 import React from 'react';
 import Menu from '../menu';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { setupPoseDetector, detectPoseInRealTime, clearPoseCanvas } from './poseDetector';
+import { setupPoseDetector, detectPoseInRealTime, clearPoseCanvas, stopUserMedia } from './poseDetector';
 import LessonRecorder from './lessonRecorder';
 import VoiceRecorder from './voiceRecorder';
 import AvatarPreview from './avatarPreview';
@@ -27,7 +27,7 @@ export default class LessonRecorderScreen extends React.Component {
             isAvatarLoading: true,
             isRecording: false,
             isPause: false,
-            isPoseDetecting: false,
+            isPoseDetection: false,
             isSpeaking: false,
             isPosting: false,
             isReachedTimeLimit: false,
@@ -65,13 +65,12 @@ export default class LessonRecorderScreen extends React.Component {
     async _fetchLesson() {
         const lesson = await LessonUtility.fetchLesson(this.lessonID).catch((err) => {
             console.error(err);
+                        // error modal
+
             return false;
         });
 
-        if (!lesson) {
-            // error modal
-            return;
-        }
+        if (!lesson) return;
 
         return lesson;
     }
@@ -79,13 +78,11 @@ export default class LessonRecorderScreen extends React.Component {
     async _fetchAvatarURL() {
         const avatarObjectURL = await LessonUtility.fetchAvatarObjectURL(this.lesson.avatar).catch((err) => {
             console.error(err);
+            // error modal
             return false;
         });
 
-        if (!avatarObjectURL) {
-            // error modal
-            return;
-        }
+        if (!avatarObjectURL) return;
 
         this.setState({ avatarURL: avatarObjectURL });
     }
@@ -93,24 +90,22 @@ export default class LessonRecorderScreen extends React.Component {
     async _fetchGraphicURLs() {
         const graphics = await LessonUtility.fetchLessonGraphicURLs(this.lesson.graphics).catch((err) => {
             console.error(err);
+            // error modal
             return false;
         });
 
-        if (!graphics) {
-            // error modal
-            return;
-        }
+        if (!graphics) return;
 
         this.setState({ graphicURLs: graphics});
     }
 
     componentDidUpdate(_, prevState) {
-        if (!prevState.isPoseDetecting && this.state.isPoseDetecting) {
+        if (!prevState.isPoseDetection && this.state.isPoseDetection) {
             this.recorder.addAvatarInitArmPose();
             this._poseDetectionFrame();
         }
 
-        if (prevState.isPoseDetecting && !this.state.isPoseDetecting) {
+        if (prevState.isPoseDetection && !this.state.isPoseDetection) { // when turn off pose detection
             this.recorder.addAvatarInitArmPose();
         }
 
@@ -126,6 +121,7 @@ export default class LessonRecorderScreen extends React.Component {
 
     componentWillUnmount() {
         window.URL.revokeObjectURL(this.state.avatarURL);
+        stopUserMedia();
     }
 
     recordMovedPosition(position) {
@@ -145,7 +141,7 @@ export default class LessonRecorderScreen extends React.Component {
     }
 
     async _poseDetectionFrame() {
-        if (!this.state.isPoseDetecting) {
+        if (!this.state.isPoseDetection) {
             this.setState({ detectedPose: {} });
             clearPoseCanvas();
             return;
@@ -176,7 +172,7 @@ export default class LessonRecorderScreen extends React.Component {
     }
 
     _switchPoseDetection() {
-        this.setState({ isPoseDetecting: !this.state.isPoseDetecting });
+        this.setState({ isPoseDetection: !this.state.isPoseDetection });
     }
 
     _switchFace(faceName) {
@@ -206,7 +202,7 @@ export default class LessonRecorderScreen extends React.Component {
     _postRecord() {
         const buttons = document.getElementById('control-panel').getElementsByTagName('button');
         for(let b of buttons) { b.disabled = true };
-        this.setState({ isPosting: true, isPoseDetecting: false });
+        this.setState({ isPosting: true, isPoseDetection: false });
 
         this._waitAndPostRecord(async () => { // callback
             const result = await this.recorder.uploadRecord();
@@ -243,7 +239,7 @@ export default class LessonRecorderScreen extends React.Component {
                         loadingCompleted={() => { this.avatarLoadingCompleted(); }}
                         previewContainer={this.avatarPreview}
                         isSpeaking={this.state.isSpeaking}
-                        isPoseDetecting={this.state.isPoseDetecting}
+                        isPoseDetection={this.state.isPoseDetection}
                     />
 
                     <LessonGraphic url={this.state.graphicURL} />
@@ -376,7 +372,7 @@ export default class LessonRecorderScreen extends React.Component {
                         transform: scaleX(-1);
                     }
                     #pose-keypoint {
-                        display: ${this.state.isPoseDetecting ? 'block' : 'none'};
+                        display: ${this.state.isPoseDetection ? 'block' : 'none'};
                         position: absolute;
                         top: 0;
                         left: 0;
@@ -427,7 +423,7 @@ export default class LessonRecorderScreen extends React.Component {
                         height: 3vw;
                         font-size: 1.5vw;
                         font-weight: bold;
-                        color: ${this.state.isPoseDetecting ? '#dc3545' : 'white'};
+                        color: ${this.state.isPoseDetection ? '#dc3545' : 'white'};
                     }
                     #emotion-controller {
                         position: absolute;

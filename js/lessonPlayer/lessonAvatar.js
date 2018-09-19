@@ -202,6 +202,14 @@ export default class LessonAvatar {
                 this.bones.J_Bip_R_Hand.rotation.x            = pose[part].parmX;
             }
         }
+
+        if (!('leftArm' in pose)) {
+            this.initBonePosition('left');
+        }
+
+        if (!('rightArm' in pose)) {
+            this.initBonePosition('right');
+        }
     }
 
     movePosition(deltaTime) {
@@ -296,14 +304,22 @@ export default class LessonAvatar {
         this.positionObject.position.set(0, 0, 85);
     }
 
-    initBonePosition() {
-        this.bones.J_Adj_L_UpperArm.parent.rotation.z = Const.RAD_70;
-        this.bones.J_Adj_R_UpperArm.parent.rotation.z = -Const.RAD_70;
-        this.bones.J_Bip_L_LowerArm.rotation.set(0, 0, 0);
-        this.bones.J_Bip_R_LowerArm.rotation.set(0, 0, 0);
-        this.bones.J_Bip_L_Hand.rotation.set(0, 0, 0);
-        this.bones.J_Bip_R_Hand.rotation.set(0, 0, 0);
-        this.bones.J_Bip_C_Neck.rotation.set(0, 0, 0);
+    initBonePosition(side='all') {
+        if (side == 'left' || side == 'all') {
+            this.bones.J_Adj_L_UpperArm.parent.rotation.z = Const.RAD_70;
+            this.bones.J_Bip_L_LowerArm.rotation.set(0, 0, 0);
+            this.bones.J_Bip_L_Hand.rotation.set(0, 0, 0);
+        }
+
+        if (side == 'right' || side == 'all') {
+            this.bones.J_Adj_R_UpperArm.parent.rotation.z = -Const.RAD_70;
+            this.bones.J_Bip_R_LowerArm.rotation.set(0, 0, 0);
+            this.bones.J_Bip_R_Hand.rotation.set(0, 0, 0);
+        }
+
+        if (side == 'all') {
+            this.bones.J_Bip_C_Neck.rotation.set(0, 0, 0);
+        }
     }
 
     updateSize(container) {

@@ -2,6 +2,7 @@ import * as posenet from '@tensorflow-models/posenet';
 import { drawKeypoints, drawSkeleton } from './demo_util';
 
 let net;
+let stream;
 let video;
 let canvas;
 let context;
@@ -15,7 +16,7 @@ const outputStride = 16;
 export const setupPoseDetector = (async (callback) => {
     net = await posenet.load(modelVersion);
 
-    const stream = await navigator.mediaDevices.getUserMedia({
+    stream = await navigator.mediaDevices.getUserMedia({
         'audio': false,
         'video': {
             facingMode: 'user',
@@ -71,4 +72,10 @@ async function _drawDetectedPoseAsync(pose) {
 
 export function clearPoseCanvas() {
     context.clearRect(0, 0, video.width, video.height);
+}
+
+export function stopUserMedia() {
+    stream.getVideoTracks().forEach((track) => {
+        track.stop();
+    })
 }

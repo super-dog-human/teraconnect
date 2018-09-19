@@ -6,13 +6,15 @@ export default class LessonRecorder {
     constructor(lessonID) {
         this.lessonID = lessonID;
         this.accuracyThresholdMin = 0.7;
+        this.lastDetectedTimeThresholdSec = 0.5;
         this.recordingStartSec = 0;
         this.elapsedTimeSec = 0;
         this.isRecording = false;
         this.prevGraphicID;
         this.recordWhileNotRecording = {};
         this.timelines = [];
-        this.leftShoulderInitRotation  = [0, 0,  0.573576436351046, 0.8191520442889918];
+        this.handAndElbowInitRotation = [0, 0, 0, 1];
+        this.leftShoulderInitRotation = [0, 0,  0.573576436351046, 0.8191520442889918];
         this.rightShoulderInitRotation = [0, 0, -0.573576436351046, 0.8191520442889918];
         this.poseKey = {
             leftHands:      [],
@@ -56,20 +58,72 @@ export default class LessonRecorder {
         }
 
         const avatarPose = {};
-        recordAvatarArmPose(this, pose.leftElbow, pose.leftShoulder, pose.leftWrist, 'left');
-        recordAvatarArmPose(this, pose.rightElbow, pose.rightShoulder, pose.rightWrist, 'right');
+        recordAvatarArmPoseIfNeeded(this, pose.leftElbow, pose.leftShoulder, pose.leftWrist, 'left');
+        recordAvatarArmPoseIfNeeded(this, pose.rightElbow, pose.rightShoulder, pose.rightWrist, 'right');
         recordAvatarNeckPose(this, pose.nose, pose.leftEar, pose.rightEar);
 
         return avatarPose;
 
-        function recordAvatarArmPose(self, elbow, shoulder, wrist, side) {
-            if (!shoulder || !elbow || !wrist) return;
-
+        function recordAvatarArmPoseIfNeeded(self, elbow, shoulder, wrist, side) {
             if (!self.isRecording) {
                 self.recordWhileNotRecording.pose = pose;
-                // not early return because to needs reflection to pose when not recording.
+                // don't early return because to needs reflection to pose when not recording.
             }
 
+            if (!wrist) {
+                if (isLastPoseInitial(self, side)) return;
+                if (!hasEnoughTimeElapsedFromLastDetection(self, side)) return;
+                self.addAvatarInitArmPose(side); // add initial pose when failing pose detection.
+                return;
+            }
+
+            if (shoulder && elbow && wrist) {
+                if (isLastPoseInitial(self, side)) {
+                    self.addAvatarInitArmPose(side); // add initial pose just before moving arms.
+                }
+                recordAvatarArmPose(self, elbow, shoulder, wrist, side);
+                return;
+            }
+        }
+
+        function isLastPoseInitial(self, side) {
+            if (side == 'left' && self.poseKey.leftHands.length == 0) return true;
+            if (side == 'right' && self.poseKey.rightHands.length == 0) return true;
+
+            if (side == 'left') {
+                return self.poseKey.leftHands[self.poseKey.leftHands.length -1].rot.every((rot, i) => {
+                    return rot == self.handAndElbowInitRotation[i];
+                }) &&
+                self.poseKey.leftElbows[self.poseKey.leftElbows.length -1].rot.every((rot, i) => {
+                    return rot == self.handAndElbowInitRotation[i];
+                }) &&
+                self.poseKey.leftShoulders[self.poseKey.leftShoulders.length - 1].rot.every((rot, i) => {
+                    return rot == self.leftShoulderInitRotation[i];
+                })
+            }
+
+            if (side == 'right') {
+                return self.poseKey.rightHands[self.poseKey.rightHands.length -1].rot.every((rot, i) => {
+                    return rot == self.handAndElbowInitRotation[i];
+                }) &&
+                self.poseKey.rightElbows[self.poseKey.rightElbows.length -1].rot.every((rot, i) => {
+                    return rot == self.handAndElbowInitRotation[i];
+                }) &&
+                self.poseKey.rightShoulders[self.poseKey.rightShoulders.length - 1].rot.every((rot, i) => {
+                    return rot == self.rightShoulderInitRotation[i];
+                });
+            }
+        }
+
+        function hasEnoughTimeElapsedFromLastDetection(self, side) {
+            const lastDetectedTime = (side == 'left') ?
+                self.poseKey.leftHands[self.poseKey.leftHands.length -1].time :
+                self.poseKey.rightHands[self.poseKey.rightHands.length -1].time;
+
+            return (time - lastDetectedTime > self.lastDetectedTimeThresholdSec);
+        }
+
+        function recordAvatarArmPose(self, elbow, shoulder, wrist, side) {
             const shoulderZRad = (side == 'left') ?
                 Math.atan2(elbow.x - shoulder.x, elbow.y - shoulder.y) - Const.RAD_90 :
                 Math.atan2(shoulder.x - elbow.x, shoulder.y - elbow.y) - Const.RAD_90;
@@ -147,16 +201,21 @@ export default class LessonRecorder {
         this.poseKey.coreBodies.push({ pos: position.toArray(), time: time });
     }
 
-    addAvatarInitArmPose() {
+    addAvatarInitArmPose(side='both') {
         if (!this.isRecording) return;
 
         const time = this.currentRecordingTime();
-        this.poseKey.leftHands.push({ rot: [0, 0, 0, 1], time: time });
-        this.poseKey.leftElbows.push({ rot: [0, 0, 0, 1], time: time });
-        this.poseKey.leftShoulders.push({ rot: this.leftShoulderInitRotation, time: time });
-        this.poseKey.rightHands.push({ rot: [0, 0, 0, 1], time: time });
-        this.poseKey.rightElbows.push({ rot: [0, 0, 0, 1], time: time });
-        this.poseKey.rightShoulders.push({ rot: this.rightShoulderInitRotation, time: time });
+        if (side == 'left' || side == 'both') {
+            this.poseKey.leftHands.push({ rot: this.handAndElbowInitRotation, time: time });
+            this.poseKey.leftElbows.push({ rot: this.handAndElbowInitRotation, time: time });
+            this.poseKey.leftShoulders.push({ rot: this.leftShoulderInitRotation, time: time });
+        }
+
+        if (side == 'right' || side == 'both') {
+            this.poseKey.rightHands.push({ rot: this.handAndElbowInitRotation, time: time });
+            this.poseKey.rightElbows.push({ rot: this.handAndElbowInitRotation, time: time });
+            this.poseKey.rightShoulders.push({ rot: this.rightShoulderInitRotation, time: time });
+        }
     }
 
     addVoice(voice) {

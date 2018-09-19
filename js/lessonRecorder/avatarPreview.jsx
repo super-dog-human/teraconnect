@@ -38,7 +38,7 @@ export default class AvatarPreview extends React.Component {
             this.avatar.playLipSync(nextProps.isSpeaking);
         }
 
-        if (this.props.isPoseDetecting && !nextProps.isPoseDetecting) {
+        if (this.props.isPoseDetection && !nextProps.isPoseDetection) {
             this.avatar.initBonePosition();
         }
 
