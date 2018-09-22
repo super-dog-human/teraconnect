@@ -10,7 +10,7 @@ export default class LessonAvatar {
         this.scene;
         this.renderer;
         this.skin;
-        this.positionObject;
+        this.bones.Position;
         this.moveDirection;
         this.animationMixer;
         this.isSpeaking;
@@ -31,8 +31,7 @@ export default class LessonAvatar {
         // breathing animation
         const breathBones = [
             this.bones.J_Bip_C_Head,
-            this.bones.J_Adj_C_UpperChest,
-            this.bones.J_Adj_C_Spine,
+            this.bones.J_Bip_C_UpperChest.children[0],
         ];
 
         const breathKeys = [
@@ -55,14 +54,6 @@ export default class LessonAvatar {
                     { scl: [1.02, 1, 1.02], rot: [0.05, 0, 0, 1], time: 3, },
                     { scl: [1, 1, 1],       rot: [0, 0, 0, 1],    time: 6, },
                 ],
-            },
-            {
-                // this.animationMixer
-                keys: [
-                    { rot: [0, 0, 0, 1], time: 0, },
-                    { rot: [0, 1, 0, 1], time: 3, },
-                    { rot: [0, 0, 0, 1], time: 6, },
-                ]
             },
         ];
 
@@ -99,10 +90,10 @@ export default class LessonAvatar {
                     poseBones.push(this.bones.J_Bip_R_Hand);
                     break;
                 case 'leftShoulders':
-                    poseBones.push(this.bones.J_Adj_L_UpperArm.parent);
+                    poseBones.push(this.bones.J_Bip_L_UpperArm);
                     break;
                 case 'rightShoulders':
-                    poseBones.push(this.bones.J_Adj_R_UpperArm.parent);
+                    poseBones.push(this.bones.J_Bip_R_UpperArm);
                     break;
                 case 'leftElbows':
                     poseBones.push(this.bones.J_Bip_L_LowerArm);
@@ -114,7 +105,7 @@ export default class LessonAvatar {
                     poseBones.push(this.bones.J_Bip_C_Neck);
                     break;
                 case 'coreBodies':
-                    poseBones.push(this.positionObject);
+                    poseBones.push(this.bones.Position);
                     break;
             }
 
@@ -185,21 +176,18 @@ export default class LessonAvatar {
         for (let part of Object.keys(pose)) {
             if (part == 'neck') {
                 this.bones.J_Bip_C_Neck.rotation.y = pose[part].neckY;
-            } else if (part == 'body') {
-                this.bones.J_Bip_C_Neck.parent.parent.position.x = pose[part].x;
-                this.bones.J_Bip_C_Neck.parent.parent.position.y = pose[part].y;
             } else if (part == 'leftArm') {
-                this.bones.J_Adj_L_UpperArm.parent.rotation.z = pose[part].shoulderZ;
-                this.bones.J_Bip_L_LowerArm.rotation.x        = pose[part].elbowX;
-                this.bones.J_Bip_L_LowerArm.rotation.z        = pose[part].elbowZ;
-                this.bones.J_Bip_L_LowerArm.rotation.y        = -0.5;
-                this.bones.J_Bip_L_Hand.rotation.x            = pose[part].parmX;
+                this.bones.J_Bip_L_UpperArm.rotation.z = pose[part].shoulderZ;
+                this.bones.J_Bip_L_LowerArm.rotation.x = pose[part].elbowX;
+                this.bones.J_Bip_L_LowerArm.rotation.z = pose[part].elbowZ;
+                this.bones.J_Bip_L_LowerArm.rotation.y = -0.5;
+                this.bones.J_Bip_L_Hand.rotation.x     = pose[part].parmX;
             } else if (part == 'rightArm') {
-                this.bones.J_Adj_R_UpperArm.parent.rotation.z = pose[part].shoulderZ;
-                this.bones.J_Bip_R_LowerArm.rotation.x        = pose[part].elbowX;
-                this.bones.J_Bip_R_LowerArm.rotation.z        = pose[part].elbowZ;
-                this.bones.J_Bip_R_LowerArm.rotation.y        = 0.5;
-                this.bones.J_Bip_R_Hand.rotation.x            = pose[part].parmX;
+                this.bones.J_Bip_R_UpperArm.rotation.z = pose[part].shoulderZ;
+                this.bones.J_Bip_R_LowerArm.rotation.x = pose[part].elbowX;
+                this.bones.J_Bip_R_LowerArm.rotation.z = pose[part].elbowZ;
+                this.bones.J_Bip_R_LowerArm.rotation.y = 0.5;
+                this.bones.J_Bip_R_Hand.rotation.x     = pose[part].parmX;
             }
         }
 
@@ -215,7 +203,7 @@ export default class LessonAvatar {
     movePosition(deltaTime) {
         if (!this.moveDirection) return;
 
-        const position = this.positionObject.position;
+        const position = this.bones.Position.position;
 
         if (this.moveDirection == 'left' || this.moveDirection == 'right') {
             let newX = (this.moveDirection == 'left') ? -deltaTime : deltaTime;
@@ -251,7 +239,7 @@ export default class LessonAvatar {
     }
 
     currentPosition() {
-        return this.positionObject.position;
+        return this.bones.Position.position;
     }
 
     createDom(avatarURL, container) {
@@ -270,18 +258,13 @@ export default class LessonAvatar {
                 avatarURL, (vrm) => { resolve(vrm); }
             );
         }).then((vrm) =>{
-            this.skin = vrm.scene.children[1];
+            this.skin = vrm.scene.children[0]; // store face skin.
 
             vrm.scene.traverse((object) => {
-                if (object.isBone) this.bones[object.name] = object;
+                if (object.isBone) {
+                    this.bones[object.name] = object;
+                }
             });
-
-            // set upper arm bones to top level.
-            this.positionObject = this.bones.J_Adj_C_Chest.parent.parent.parent.parent; // wtf
-            this.skin.skeleton.bones.push(this.bones.J_Adj_L_UpperArm.parent, this.bones.J_Adj_R_UpperArm.parent, this.positionObject);
-            const defaultMatrix4 = new THREE.Matrix4();
-            defaultMatrix4.set(1, 0, 0, 0, 0, 1, -0, 0, -0, 0, 1, 0, 0, 0, 0, 1); // this is sloppy values.
-            this.skin.skeleton.boneInverses.push(defaultMatrix4, defaultMatrix4, defaultMatrix4);
 
             this.initAvatarPosition();
             this.initBonePosition();
@@ -300,19 +283,19 @@ export default class LessonAvatar {
 
     initAvatarPosition() {
         this.movePositions = [0, 0, 0];
-        this.positionObject.rotation.set(0, Math.PI, 0);
-        this.positionObject.position.set(0, 0, 85);
+        this.bones.Position.rotation.set(0, Math.PI, 0);
+        this.bones.Position.position.set(0, 0, 85);
     }
 
     initBonePosition(side='all') {
         if (side == 'left' || side == 'all') {
-            this.bones.J_Adj_L_UpperArm.parent.rotation.z = Const.RAD_70;
+            this.bones.J_Bip_L_UpperArm.rotation.z = Const.RAD_70;
             this.bones.J_Bip_L_LowerArm.rotation.set(0, 0, 0);
             this.bones.J_Bip_L_Hand.rotation.set(0, 0, 0);
         }
 
         if (side == 'right' || side == 'all') {
-            this.bones.J_Adj_R_UpperArm.parent.rotation.z = -Const.RAD_70;
+            this.bones.J_Bip_R_UpperArm.rotation.z = -Const.RAD_70;
             this.bones.J_Bip_R_LowerArm.rotation.set(0, 0, 0);
             this.bones.J_Bip_R_Hand.rotation.set(0, 0, 0);
         }
