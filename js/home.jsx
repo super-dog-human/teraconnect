@@ -84,6 +84,9 @@ export default class Home extends React.Component {
                 <div id="app-large-logo">
                     <img src="img/logo-large.png" alt="Teraconnect VTuberのアバター授業" />
                 </div>
+                <div id="license-notation">
+                    <span>designed by Freepik, Pixel Buddha from Flaticon</span>
+                </div>
                 <style jsx>{`
                     #home {
                         width: 100%;
@@ -140,7 +143,6 @@ export default class Home extends React.Component {
                         margin-left: 60vw;
                     }
                     #try-btn-notice {
-                        font-weight: 0;
                         font-size: 0.7vw;
                     }
                     #hero-two {
@@ -208,6 +210,12 @@ export default class Home extends React.Component {
                         margin-left: 8vw;
                         font-size: 2vw;
                         font-weight: 600;
+                    }
+                    #license-notation {
+                        text-align: right;
+                        margin-right: 20px;
+                        color: gray;
+                        font-size: 0.5vw;
                     }
                     #app-large-logo {
                         width: 100%;
