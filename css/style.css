@@ -29,34 +29,34 @@
     }
 }
 body {
-    font-family: "Noto Sans Japanese, Noto Sans JP, sans-serif;";
+    font-family: "Noto Sans Japanese", "Noto Sans JP", sans-serif;
 }
 .app-back-color-powder-blue {
-    background-color: #04ACB4;
+    background-color: #04acb4;
 }
 .app-back-color-dark-navy {
     background-color: #247494;
 }
 .app-back-color-soft-white {
-    background-color: #EBE9E9;
+    background-color: #eBe9e9;
 }
 .app-back-color-light-gray {
-    background-color: #818D92;
+    background-color: #818d92;
 }
 .app-back-color-dark-gray {
     background-color: #595353;
 }
 .app-text-color-powder-blue {
-    color: #04ACB4;
+    color: #04acb4;
 }
 .app-text-color-dark-navy {
     color: #247494;
 }
 .app-text-color-soft-white {
-    color: #EBE9E9;
+    color: #eBe9e9;
 }
 .app-text-color-light-gray {
-    color: #818D92;
+    color: #818d92;
 }
 .app-text-color-dark-gray {
     color: #595353;
