@@ -28,6 +28,9 @@
         opacity: 1;
     }
 }
+body {
+    font-family: "Noto Sans Japanese, Noto Sans JP, sans-serif;";
+}
 .app-back-color-powder-blue {
     background-color: #04ACB4;
 }

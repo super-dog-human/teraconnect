@@ -102,8 +102,6 @@ export default class LessonCreator extends React.Component {
     render() {
         return(
             <div id="lesson-creator-screen" className="">
-                <Menu selectedIndex='2' />
-
                 <div id="lesson-creator" className="app-back-color-soft-white">
                     <div id="loading-indicator">
                         <FontAwesomeIcon icon="spinner" spin />

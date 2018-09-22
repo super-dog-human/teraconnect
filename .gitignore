@@ -2,6 +2,6 @@
 .cache/
 *node_modules/
 *dist/*
-!*dist/audioPlayProcessor.js
+!*dist/img
 !*dist/voiceRecorderProcessor.js
 yarn-error.log

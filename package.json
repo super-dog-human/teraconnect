@@ -23,6 +23,7 @@
     "react-fontawesome": "^1.6.1",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
+    "react-slick": "^0.23.1",
     "react-tooltip": "^3.8.1",
     "redux": "^4.0.0",
     "styled-jsx": "^3.0.0",
@@ -51,7 +52,7 @@
   },
   "scripts": {
     "parcel": "parcel index.html",
-    "build": "parcel build index.html -d dist --no-source-maps --out-dir $npm_package_constants_build_path ; cp ./dist/audioPlayProcessor.js $npm_package_constants_build_path; cp ./dist/voiceRecorderProcessor.js $npm_package_constants_build_path;",
-    "build_with_map": "parcel build index.html -d dist                  --out-dir $npm_package_constants_build_path ; cp ./dist/audioPlayProcessor.js $npm_package_constants_build_path; cp ./dist/voiceRecorderProcessor.js $npm_package_constants_build_path;"
+    "build": "parcel build index.html -d dist --no-source-maps --out-dir $npm_package_constants_build_path ; cp -r ./dist/img $npm_package_constants_build_path; cp ./dist/voiceRecorderProcessor.js $npm_package_constants_build_path;",
+    "build_with_map": "parcel build index.html -d dist --out-dir $npm_package_constants_build_path ; cp -r ./dist/img $npm_package_constants_build_path; cp ./dist/voiceRecorderProcessor.js $npm_package_constants_build_path;"
   }
 }

@@ -5,11 +5,11 @@ import { faDotCircle, faPauseCircle, faMehBlank } from '@fortawesome/free-regula
 import { faPlayCircle, faSpinner, faImage, faArrowUp, faArrowDown,
     faArrowLeft, faArrowRight, faLaughBeam, faSmile,
     faFrownOpen, faAngry, faSurprise, faWalking, faCloudUploadAlt,
-    faVideo, faFileUpload, faFolderPlus, faVolumeUp } from '@fortawesome/free-solid-svg-icons';
+    faVideo, faFileUpload, faFolderPlus, faVolumeUp, faEdit } from '@fortawesome/free-solid-svg-icons';
 library.add( faDotCircle, faPauseCircle, faMehBlank, faPlayCircle, faSpinner, faImage,
     faArrowUp, faArrowDown, faArrowLeft, faArrowRight, faLaughBeam, faSmile, faFrownOpen,
     faAngry, faSurprise, faWalking, faCloudUploadAlt, faVideo, faFileUpload, faFolderPlus,
-    faVolumeUp);
+    faVolumeUp, faEdit);
 
 import Header from './header'
 import Footer from './footer'

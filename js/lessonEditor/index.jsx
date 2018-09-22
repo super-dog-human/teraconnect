@@ -174,10 +174,9 @@ export default class LessonEditor extends React.Component {
     render() {
         return(
             <div id="lesson-editor-screen" className="app-back-color-dark-gray">
-                <Menu selectedIndex='2' />
                 <div id="lesson-control-panel">
                     <div id="publish-btn">
-                        <button className="btn btn-primary btn-lg" onClick={this._publish.bind(this)}>完了</button>
+                        <button className="btn btn-primary btn-lg" onClick={this._publish.bind(this)} data-tip="作成した授業は、一定時間後に消去されます">完了</button>
                         <div id="publish-checkbox" className="form-check">
                             <input type="checkbox" id="is-publish-checkbox" onChange={this._changePublic.bind(this)} />
                             <label htmlFor="is-publish-checkbox" className="app-text-color-soft-white" data-tip="トップページに作成した授業のリンクを表示します">&nbsp;一般公開</label>
@@ -200,7 +199,7 @@ export default class LessonEditor extends React.Component {
                     #lesson-editor {
                         position: relative;
                         width: 100%;
-                        max-height: calc(100% - 55px); /* for menu and lesson-control-panel */
+                        max-height: 100%;
                     }
                     #loading-indicator {
                         position: absolute;
@@ -218,11 +217,11 @@ export default class LessonEditor extends React.Component {
                     }
                     #lesson-control-panel {
                         height: 80px;
+                        padding-top: 1.5vw;
+                        padding-right: 1vw;
                     }
                     #publish-btn {
                         text-align: right;
-                        margin-top: 1.5vw;
-                        margin-right: 1vw;
                     }
                     #publish-checkbox {
                         margin-top: 10px;

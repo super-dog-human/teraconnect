@@ -227,8 +227,6 @@ export default class LessonRecorderScreen extends React.Component {
     render() {
         return(
             <div id="lesson-recorder-screen">
-                <Menu selectedIndex='2' />
-
                 <div id="lesson-recorder" ref={(e) => { this.avatarPreview = e; }}>
                     <AvatarPreview
                         avatarURL={this.state.avatarURL}
@@ -363,7 +361,7 @@ export default class LessonRecorderScreen extends React.Component {
                         position: relative;
                         width: 100%;
                         height: ${Const.RATIO_16_TO_9 * 100}vw;
-                        max-height: calc(100% - 50px); /* for menu */
+                        max-height: 100%;
                     }
                     #pose-video {
                         position: absolute;
