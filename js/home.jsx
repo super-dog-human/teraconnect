@@ -19,20 +19,19 @@ export default class Home extends React.Component {
                 <div id="slick-hero">
                     <Slider {...settings}>
                         <div id="hero-one">
-                            <div id="app-large-title">新しい「わたし」で教壇へ。</div>
+                            <div id="app-large-title">「教えたい」を形に。</div>
                             <div id="app-caption" className="text-gray">
                                 好きなアバターで、自由に授業をつくろう。<br />
                                 画像を貼りつけたり、クイズを出したり。<br />
                                 いつでも更新できて、いつまでも誰かに届く、そんな授業を。<br />
                             </div>
                             <div id="app-small-title" className="text-gray">なりたい先生に、なろう。</div>
-                            <Link className="nav-link font-weight-light" to='/lessons/new'>
-                                <button id="try-btn" className="btn">
-                                    <FontAwesomeIcon icon="edit" />
-                                    &nbsp;授業をつくる<br />
-                                    <span id="try-btn-notice">機能の一部がお試しできます</span>
-                                </button>
-                            </Link>
+                                <Link className="" to='/lessons/new'>
+                                    <div id="try-btn" className="btn">
+                                        <div id="try-btn-label"><FontAwesomeIcon icon="edit" />&nbsp;授業をつくる</div>
+                                        <div id="try-btn-notice">機能の一部がお試しできます</div>
+                                    </div>
+                                </Link>
                         </div>
                         <div id="hero-two">
                             <div id="feature-title" className="text-gray">きっと、素敵な先生になれる。</div>
@@ -72,8 +71,7 @@ export default class Home extends React.Component {
                                 壁を越えられる人はごく僅かだ。<br />
                                 <br />
                                 いま、壁を越える道具と共に、新しい授業をつくろう。<br />
-                                生まれ持った何かだけじゃない、意思と継続を以って、<br />
-                                大切な何かを次代に渡そう。<br />
+                                意思と継続を以って、大切な何かを次代に渡そう。<br />
                             </h3>
                             <h2 className="text-gray">
                                 もう一人じゃない。
@@ -134,16 +132,21 @@ export default class Home extends React.Component {
                     }
                     #try-btn {
                         width: 15vw;
-                        height: 4vw;
+                        height: 5vw;
+                        padding: 0;
+                        margin-top: 2.5vw;
+                        margin-left: 60vw;
                         background-color: #EC9F05;
+                    }
+                    #try-btn-label {
+                        margin-top: 0.7vw;
                         color: white;
                         font-size: 1.5vw;
                         font-weight: 600;
-                        margin-top: 2.5vw;
-                        margin-left: 60vw;
                     }
                     #try-btn-notice {
                         font-size: 0.7vw;
+                        color: white;
                     }
                     #hero-two {
                         width: 100%;
@@ -170,7 +173,7 @@ export default class Home extends React.Component {
                     }
                     #feature-sentences li h2 {
                         font-size: 1.5vw;
-                        font-weight: 600;
+                        font-weight: 500;
                     }
                     #feature-sentences li h3 {
                         font-size: 1.1vw;
@@ -214,6 +217,7 @@ export default class Home extends React.Component {
                     #license-notation {
                         text-align: right;
                         margin-right: 20px;
+                        margin-bottom: 100px;
                         color: gray;
                         font-size: 0.5vw;
                     }
