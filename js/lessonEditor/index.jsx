@@ -176,7 +176,7 @@ export default class LessonEditor extends React.Component {
             <div id="lesson-editor-screen" className="app-back-color-dark-gray">
                 <div id="lesson-control-panel">
                     <div id="publish-btn">
-                        <button className="btn btn-primary btn-lg" onClick={this._publish.bind(this)} data-tip="作成した授業は、一定時間後に消去されます">完了</button>
+                        <button className="btn btn-primary btn-lg" onClick={this._publish.bind(this)} disabled={this.state.isLoading} data-tip="作成した授業は、一定時間後に消去されます">完了</button>
                         <div id="publish-checkbox" className="form-check">
                             <input type="checkbox" id="is-publish-checkbox" onChange={this._changePublic.bind(this)} />
                             <label htmlFor="is-publish-checkbox" className="app-text-color-soft-white" data-tip="トップページに作成した授業のリンクを表示します">&nbsp;一般公開</label>

@@ -301,7 +301,6 @@ export default class LessonAvatar {
     }
 
     initAvatarPosition() {
-        console.log('initAvatarPosition');
         this.movePositions = [0, 0, 0];
         this.bones.Position.rotation.set(0, Math.PI, 0);
         this.bones.Position.position.set(0, 0, 85);
