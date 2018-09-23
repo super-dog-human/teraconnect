@@ -10,7 +10,6 @@ export default class LessonAvatar {
         this.scene;
         this.renderer;
         this.skin;
-        this.bones.Position;
         this.moveDirection;
         this.animationMixer;
         this.isSpeaking = false;
@@ -141,8 +140,6 @@ export default class LessonAvatar {
     }
 
     play(isStart) {
-        console.log('this.isSpeaking: ' + this.isSpeaking);
-
         if (isStart) {
             this.animationMixer._actions.forEach((action) => {
                 const actionName = action.getClip().name;
@@ -163,7 +160,7 @@ export default class LessonAvatar {
             if (action.getClip().name != 'lipSync') return;
 
             if (isSpeaking) {
-                // 口をcloseしてから
+                this.changeFace('MouthA', 0);
                 action.paused = false;
                 action.play();
             } else {
@@ -304,6 +301,7 @@ export default class LessonAvatar {
     }
 
     initAvatarPosition() {
+        console.log('initAvatarPosition');
         this.movePositions = [0, 0, 0];
         this.bones.Position.rotation.set(0, Math.PI, 0);
         this.bones.Position.position.set(0, 0, 85);

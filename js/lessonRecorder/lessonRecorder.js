@@ -208,6 +208,8 @@ export default class LessonRecorder {
             this.poseKey.coreBodies.push({ pos: startedPosition, time: this.startMovingPositionTime });
         } else if (this.startMovingPositionTime > 0) {
             this.poseKey.coreBodies.push({ pos: this.coreBodyInitPosition, time: this.startMovingPositionTime });
+        } else {
+            this.poseKey.coreBodies.push({ pos: this.coreBodyInitPosition, time: 0 });
         }
 
         const time = this.currentRecordingTime();
