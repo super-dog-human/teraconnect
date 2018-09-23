@@ -90,7 +90,7 @@ export default class AvatarManager extends React.Component {
                         </label>
                     })
                 }
-                    <div id="upload-avatar" data-tip="VRM形式の3Dモデルが使用できます">
+                    <div id="upload-avatar" data-tip="VRoid Studio 0.2.12以降で作成したVRMファイルが使用できます">
                         <Dropzone onDrop={this._onDrop.bind(this)} accept=".vrm" maxSize={this.maxFileBytes} multiple={false}
                             style={{ width: "100px", height: "100px", position: "absolute" }}>
                             <div id="upload-avatar-icon" className="app-text-color-soft-white"><FontAwesomeIcon icon="file-upload" /></div>
