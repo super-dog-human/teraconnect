@@ -124,6 +124,10 @@ export default class LessonRecorderScreen extends React.Component {
         stopUserMedia();
     }
 
+    recordStartMovingPositionTime() {
+        this.recorder.addAvatarStartMovingPositionTime();
+    }
+
     recordMovedPosition(position) {
         this.recorder.addAvatarPosition(position);
     }
@@ -233,6 +237,7 @@ export default class LessonRecorderScreen extends React.Component {
                         pose={this.state.detectedPose}
                         faceName={this.state.faceName}
                         moveDirection={this.state.moveDirection}
+                        startMovingPositionTime={() => { this.recordStartMovingPositionTime(); } }
                         movedPosition={(position) => { this.recordMovedPosition(position); }}
                         loadingCompleted={() => { this.avatarLoadingCompleted(); }}
                         previewContainer={this.avatarPreview}

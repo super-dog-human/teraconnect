@@ -9,10 +9,12 @@ export default class LessonRecorder {
         this.lastDetectedTimeThresholdSec = 0.5;
         this.recordingStartSec = 0;
         this.elapsedTimeSec = 0;
+        this.startMovingPositionTime = 0;
         this.isRecording = false;
         this.prevGraphicID;
         this.recordWhileNotRecording = {};
         this.timelines = [];
+        this.coreBodyInitPosition =[0, 0, 85];
         this.handAndElbowInitRotation = [0, 0, 0, 1];
         this.leftShoulderInitRotation = [0, 0,  0.573576436351046, 0.8191520442889918];
         this.rightShoulderInitRotation = [0, 0, -0.573576436351046, 0.8191520442889918];
@@ -21,10 +23,10 @@ export default class LessonRecorder {
             rightHands:     [],
             leftElbows:     [],
             rightElbows:    [],
-            leftShoulders:  [{ rot: this.leftShoulderInitRotation, time: 0 }],
-            rightShoulders: [{ rot: this.rightShoulderInitRotation, time: 0 }],
+            leftShoulders:  [],
+            rightShoulders: [],
             necks:          [],
-            coreBodies:     [{ pos: [0, 0, 85], time: 0 }],
+            coreBodies:     [],
         };
     }
 
@@ -191,10 +193,21 @@ export default class LessonRecorder {
         }
     }
 
+    addAvatarStartMovingPositionTime() {
+        this.startMovingPositionTime = this.currentRecordingTime();
+    }
+
     addAvatarPosition(position) {
         if (!this.isRecording) {
             this.recordWhileNotRecording.position = position;
             return;
+        }
+
+        if (this.poseKey.coreBodies.length > 0) {
+            const startedPosition = this.poseKey.coreBodies[this.poseKey.coreBodies.length - 1].pos;
+            this.poseKey.coreBodies.push({ pos: startedPosition, time: this.startMovingPositionTime });
+        } else if (this.startMovingPositionTime > 0) {
+            this.poseKey.coreBodies.push({ pos: this.coreBodyInitPosition, time: this.startMovingPositionTime });
         }
 
         const time = this.currentRecordingTime();
@@ -323,11 +336,14 @@ export default class LessonRecorder {
     }
 
     async _uploadLessonMaterial() {
+        addInitPosesIfNeeded(this);
+
         const materialBody = {
             durationSec: this.currentRecordingTime(),
             timelines:   this.timelines,
             poseKey:     this.poseKey,
         };
+
         const materialURL = Const.LESSON_MATERIAL_API_URL.replace('{lessonID}', this.lessonID);
         await axios.post(materialURL, materialBody).catch((err) => {
             console.error(err);
@@ -335,6 +351,12 @@ export default class LessonRecorder {
         });
 
         return true;
+
+        function addInitPosesIfNeeded(self) {
+            if (self.poseKey.leftShoulders.length == 0)  self.poseKey.leftShoulders.push({ rot: self.leftShoulderInitRotation, time: 0 });
+            if (self.poseKey.rightShoulders.length == 0) self.poseKey.rightShoulders.push({ rot: self.rightShoulderInitRotation, time: 0 });
+            if (self.poseKey.coreBodies.length == 0) self.poseKey.coreBodies.push({ pos: self.coreBodyInitPosition, time: 0 });
+        }
     }
 
     _addLatestRecordIfNeeded() {

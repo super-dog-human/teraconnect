@@ -13,7 +13,7 @@ export default class LessonAvatar {
         this.bones.Position;
         this.moveDirection;
         this.animationMixer;
-        this.isSpeaking;
+        this.isSpeaking = false;
     }
 
     setDefaultAnimation() {
@@ -76,48 +76,56 @@ export default class LessonAvatar {
     }
 
     setRecordedAnimation() {
-        const poseBones = [];
-        const poseKeys = [];
-
         Object.keys(this.poseKey).forEach((key) => {
             if (this.poseKey[key].length == 0) return;
 
+            let bone;
+            let clipName = '';
+
             switch(key) {
                 case 'leftHands':
-                    poseBones.push(this.bones.J_Bip_L_Hand);
+                    bone     = this.bones.J_Bip_L_Hand;
+                    clipName = 'leftHands';
                     break;
                 case 'rightHands':
-                    poseBones.push(this.bones.J_Bip_R_Hand);
+                    bone     = this.bones.J_Bip_R_Hand;
+                    clipName = 'rightHands';
                     break;
                 case 'leftShoulders':
-                    poseBones.push(this.bones.J_Bip_L_UpperArm);
+                    bone     = this.bones.J_Bip_L_UpperArm;
+                    clipName = 'leftShoulders';
                     break;
                 case 'rightShoulders':
-                    poseBones.push(this.bones.J_Bip_R_UpperArm);
+                    bone     = this.bones.J_Bip_R_UpperArm;
+                    clipName = 'rightShoulders';
                     break;
                 case 'leftElbows':
-                    poseBones.push(this.bones.J_Bip_L_LowerArm);
+                    bone     = this.bones.J_Bip_L_LowerArm;
+                    clipName = 'leftElbows';
                     break;
                 case 'rightElbows':
-                    poseBones.push(this.bones.J_Bip_R_LowerArm);
+                    bone     = this.bones.J_Bip_R_LowerArm;
+                    clipName = 'rightElbows';
                     break;
                 case 'necks':
-                    poseBones.push(this.bones.J_Bip_C_Neck);
+                    bone     = this.bones.J_Bip_C_Neck;
+                    clipName = 'necks';
                     break;
                 case 'coreBodies':
-                    poseBones.push(this.bones.Position);
+                    bone     = this.bones.Position;
+                    clipName = 'coreBodies';
                     break;
             }
 
-            poseKeys.push({ keys: this.poseKey[key] });
+            const poseKeys = [{ keys: this.poseKey[key] }];
+            const poseClip = THREE.AnimationClip.parseAnimation({
+                name:      clipName,
+                hierarchy: poseKeys,
+            }, [bone]);
+
+            const action = this.animationMixer.clipAction(poseClip);
+            action.setLoop(THREE.LoopOnce);
         });
-
-        const poseClip = THREE.AnimationClip.parseAnimation({
-            name: "pose",
-            hierarchy: poseKeys,
-        }, poseBones);
-
-        this.animationMixer.clipAction(poseClip);
     }
 
     jumpAnimationAt(timeSec) {
@@ -133,9 +141,13 @@ export default class LessonAvatar {
     }
 
     play(isStart) {
+        console.log('this.isSpeaking: ' + this.isSpeaking);
+
         if (isStart) {
             this.animationMixer._actions.forEach((action) => {
-                if (action.getClip().name == 'lipSync' && !this.isSpeaking) return;
+                const actionName = action.getClip().name;
+                if (actionName == 'lipSync' && !this.isSpeaking) return;
+
                 action.paused = false;
                 action.play();
             });
@@ -151,6 +163,7 @@ export default class LessonAvatar {
             if (action.getClip().name != 'lipSync') return;
 
             if (isSpeaking) {
+                // 口をcloseしてから
                 action.paused = false;
                 action.play();
             } else {
@@ -160,6 +173,15 @@ export default class LessonAvatar {
         });
 
         this.isSpeaking = isSpeaking;
+    }
+
+    resetAnimation() {
+        this.isSpeaking = false;
+
+        this.animationMixer._actions.forEach((action) => {
+            if (action.getClip().name == 'lipSync') return;
+            action.reset();
+        });
     }
 
     changeFace(faceName, score=1) {

@@ -24,9 +24,11 @@ export default class AvatarPreview extends React.Component {
 
         if (this.props.moveDirection != nextProps.moveDirection) {
             this.avatar.moveTo(nextProps.moveDirection);
+            const position = this.avatar.currentPosition();
             if (nextProps.moveDirection == 'stop') {
-                const position = this.avatar.currentPosition();
                 this.props.movedPosition(position);
+            } else {
+                this.props.startMovingPositionTime();
             }
         }
 

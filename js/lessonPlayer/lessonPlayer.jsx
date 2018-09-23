@@ -78,6 +78,8 @@ export default class LessonPlayer extends React.Component {
 
     _endPlaying() {
         this.play(false);
+        this.props.avatar.resetAnimation();
+        this.voicePlayer.resetPlaying();
 
         this.preElapsedTime = 0;
         this.pausedElapsedTime = 0;
