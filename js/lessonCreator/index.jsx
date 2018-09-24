@@ -1,5 +1,4 @@
 import React from 'react';
-import Menu from '../menu';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import ReactTooltip from 'react-tooltip'

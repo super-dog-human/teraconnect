@@ -14,7 +14,7 @@ export default ({selectedIndex}) => (
                 <Link className="nav-link font-weight-light" to='/lessons/new'>授業を作る</Link>
             </span>
             <span className="link-text">
-                <span className="nav-link font-weight-light disabled-link" to='#'>使い方</span>
+                <Link className="nav-link font-weight-light" to='/how_to'>使い方</Link>
             </span>
         </div>
         <style jsx>{`

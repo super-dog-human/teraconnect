@@ -3,7 +3,7 @@ import React from 'react';
 export default () => (
     <footer className="fixed-bottom">
         <div className="text-center app-back-color-dark-gray">
-            <a href="https://goo.gl/forms/Rmp3dNKN7ZsDoF2k2">ZYGOPTERA</a>
+            <a href="https://goo.gl/forms/Rmp3dNKN7ZsDoF2k2">Teraconnect</a>
         </div>
         <style jsx>{`
         footer > div {

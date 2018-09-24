@@ -272,7 +272,7 @@ export default class LessonRecorderScreen extends React.Component {
                             </button>
                         </div>
 
-                        <div id="emotion-controller">
+                        <div id="emotion-controller" data-tip="表情の切り替え">
                             <button type="button" className="btn btn-dark" onClick={this._switchFace.bind(this, 'Default')}>
                                 <FontAwesomeIcon icon={['far', 'meh-blank']} />
                             </button>
@@ -296,12 +296,14 @@ export default class LessonRecorderScreen extends React.Component {
                         <div>
                             <button type="button" id="prev-graphic-btn" className="btn btn-dark graphic-btn"
                                 disabled={this.graphicURLIndex == -1}
-                                onClick={this._switchGraphic.bind(this, -1)}>
+                                onClick={this._switchGraphic.bind(this, -1)}
+                                data-tip="画像の切り替え">
                                 <FontAwesomeIcon icon={['fas', 'image']} />
                             </button>
                             <button type="button" id="next-graphic-btn" className="btn btn-dark graphic-btn"
                                 disabled={this.graphicURLIndex == this.state.graphicURLs.length - 1}
-                                onClick={this._switchGraphic.bind(this, 1)}>
+                                onClick={this._switchGraphic.bind(this, 1)}
+                                data-tip="画像の切り替え">
                                 <FontAwesomeIcon icon={['fas', 'image']} />
                             </button>
                         </div>
@@ -312,18 +314,21 @@ export default class LessonRecorderScreen extends React.Component {
                                 <FontAwesomeIcon icon={['far', 'dot-circle']} /> 収録開始
                             </button>
                             <button type="button" id="btn-stop-record" className="btn btn-secondary btn-with-hover rec-btn"
-                                onClick={this.recordingStop.bind(this)}>
+                                onClick={this.recordingStop.bind(this)}
+                                data-tip="録画を一時停止します">
                                 <FontAwesomeIcon icon={['far', 'pause-circle']} /> 停止
                             </button>
                         </div>
                         <div id="rec-pair-btns" className="btn-in-stop">
                             <button type="button" id="save-record-btn" className="btn btn-primary rec-btn"
-                                onClick={this._postRecord.bind(this)}>
+                                onClick={this._postRecord.bind(this)}
+                                data-tip="録画を完了し、編集画面へ移動します">
                                 <FontAwesomeIcon icon={['fas', 'cloud-upload-alt']} /> 保存
                             </button>
                             <button type="button" className="btn btn-primary rec-btn"
                                 onClick={this._recordingResume.bind(this)}
-                                disabled={this.state.isReachedTimeLimit}>
+                                disabled={this.state.isReachedTimeLimit}
+                                data-tip="録画を再開します">
                                 <FontAwesomeIcon icon={['far', 'dot-circle']} /> 再開
                             </button>
                         </div>
@@ -445,6 +450,7 @@ export default class LessonRecorderScreen extends React.Component {
                     }
                     .graphic-btn {
                         position: absolute;
+                        display: ${this.state.graphicURLs.length == 0 ? 'none' : 'block'};
                         width: 5vw;
                         height: 5vw;
                         top: 0;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faDotCircle, faPauseCircle, faMehBlank } from '@fortawesome/free-regular-svg-icons';
 import { faPlayCircle, faSpinner, faImage, faArrowUp, faArrowDown,
@@ -14,6 +14,7 @@ library.add( faDotCircle, faPauseCircle, faMehBlank, faPlayCircle, faSpinner, fa
 import Header from './header'
 import Footer from './footer'
 import Home from './home'
+import HowTo from './howTo'
 import Creator from './lessonCreator'
 import Editor from './lessonEditor'
 import Recorder from './lessonRecorder'
@@ -29,11 +30,14 @@ const App = () => (
 
 const Main = () => (
     <main>
-        <Route exact path='/'                   component={Home} />
-        <Route exact path='/lessons/new'        component={Creator} />
-        <Route exact path='/lessons/:id/edit'   component={Editor} />
-        <Route exact path='/lessons/:id/record' component={Recorder} />
-        <Route exact path='/:id'                component={PlayerScreen} />
+        <Switch>
+            <Route exact path='/'                   component={Home} />
+            <Route exact path='/how_to'             component={HowTo} />
+            <Route exact path='/lessons/new'        component={Creator} />
+            <Route exact path='/lessons/:id/edit'   component={Editor} />
+            <Route exact path='/lessons/:id/record' component={Recorder} />
+            <Route exact path='/:id'                component={PlayerScreen} />
+        </Switch>
         <style jsx>{`
             main {
                 padding-top: 64px;
