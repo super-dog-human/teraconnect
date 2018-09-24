@@ -1,6 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
+import { isMobile } from 'react-device-detect';
 import ReactTooltip from 'react-tooltip'
 import AvatarManager from './avatarManager';
 import GraphicManager from './graphicManager';
@@ -90,6 +91,13 @@ export default class LessonCreator extends React.Component {
         });
 
         return result.data;
+    }
+
+    componentDidMount() {
+        if (isMobile) {
+            alert('モバイル環境では授業を作成できないよ…\n正式版の公開までもう少し待っててね！');
+            location.href = '/';
+        }
     }
 
     componentDidUpdate(_, prevState) {

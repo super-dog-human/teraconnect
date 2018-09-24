@@ -8,10 +8,7 @@ export default ({selectedIndex}) => (
                 <Link to='/'><img src="../../img/logo-beta.png" /></Link>
             </span>
             <span className="link-text">
-                <span className="nav-link font-weight-light disabled-link" to='#'>授業を見る</span>
-            </span>
-            <span className="link-text">
-                <Link className="nav-link font-weight-light" to='/lessons/new'>授業を作る</Link>
+                <Link className="nav-link font-weight-light" to='/lessons/new'>お試し授業を作る</Link>
             </span>
             <span className="link-text">
                 <Link className="nav-link font-weight-light" to='/how_to'>使い方</Link>
