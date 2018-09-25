@@ -65,7 +65,7 @@ export default class LessonRecorderScreen extends React.Component {
     async _fetchLesson() {
         const lesson = await LessonUtility.fetchLesson(this.lessonID).catch((err) => {
             console.error(err);
-                        // error modal
+            // error modal
 
             return false;
         });

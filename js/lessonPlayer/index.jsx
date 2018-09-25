@@ -32,7 +32,7 @@ export default class LessonPlayerScreen extends React.Component {
             }));
 
             this.avatar.setDefaultAnimation();
-            this.avatar.loadRecordedAnimation(this.loader.lesson.poseKey);
+            this.avatar.loadRecordedAnimation(this.loader.lesson.poseKey, this.loader.lesson.timelines[0]);
             this.setState({ isLoading: false });
         }
     }

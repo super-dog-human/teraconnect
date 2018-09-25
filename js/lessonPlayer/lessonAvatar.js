@@ -5,6 +5,7 @@ import * as Const from '../common/constants';
 export default class LessonAvatar {
     constructor() {
         this.poseKey = {};
+        this.firstTimeline = {};
         this.bones = {};
         this.camera;
         this.scene;
@@ -21,9 +22,13 @@ export default class LessonAvatar {
         this.setLipSyncAnimation();
     }
 
-    loadRecordedAnimation(poseKey) {
+    loadRecordedAnimation(poseKey, firstTimeline) {
         this.poseKey = poseKey;
-        this.setRecordedAnimation();
+        this.firstTimeline = firstTimeline;
+        this._setRecordedAnimation();
+
+        this._setInitialAnimationFrame();
+        this._setInitialAction();
     }
 
     setBreathAnimation() {
@@ -74,7 +79,7 @@ export default class LessonAvatar {
         this.animationMixer.clipAction(animationClip).setDuration(0.4);
     }
 
-    setRecordedAnimation() {
+    _setRecordedAnimation() {
         Object.keys(this.poseKey).forEach((key) => {
             if (this.poseKey[key].length == 0) return;
 
@@ -125,6 +130,62 @@ export default class LessonAvatar {
             const action = this.animationMixer.clipAction(poseClip);
             action.setLoop(THREE.LoopOnce);
         });
+    }
+
+    _setInitialAnimationFrame() {
+        Object.keys(this.poseKey).forEach((key) => {
+            const initialAnimationFrame = this.poseKey[key][0];
+            if (!initialAnimationFrame) return;
+
+            let bone;
+
+            switch(key) {
+                case 'leftHands':
+                    bone = this.bones.J_Bip_L_Hand;
+                    break;
+                case 'rightHands':
+                    bone = this.bones.J_Bip_R_Hand;
+                    break;
+                case 'leftShoulders':
+                    bone = this.bones.J_Bip_L_UpperArm;
+                    break;
+                case 'rightShoulders':
+                    bone = this.bones.J_Bip_R_UpperArm;
+                    break;
+                case 'leftElbows':
+                    bone = this.bones.J_Bip_L_LowerArm;
+                    break;
+                case 'rightElbows':
+                    bone = this.bones.J_Bip_R_LowerArm;
+                    break;
+                case 'necks':
+                    bone = this.bones.J_Bip_C_Neck;
+                    break;
+                case 'coreBodies':
+                    bone = this.bones.Position;
+                    break;
+            }
+
+            if (initialAnimationFrame.rot) {
+                // TODO needs refactorings
+                const rotation = new THREE.Euler(initialAnimationFrame.rot[0], initialAnimationFrame.rot[1], initialAnimationFrame.rot[2], initialAnimationFrame.rot[3]);
+                bone.setRotationFromEuler(rotation);
+            }
+
+            if (initialAnimationFrame.pos) {
+                // TODO needs refactorings
+                bone.position.set(initialAnimationFrame.pos[0], initialAnimationFrame.pos[1], initialAnimationFrame.pos[2]);
+            }
+        });
+    }
+
+    _setInitialAction() {
+        if (!this.firstTimeline) return;
+
+        const faceName = this.firstTimeline.spAction.faceExpression;
+        if (faceName && faceName != '') {
+            this.changeFace(faceName);
+        }
     }
 
     jumpAnimationAt(timeSec) {
@@ -179,6 +240,9 @@ export default class LessonAvatar {
             if (action.getClip().name == 'lipSync') return;
             action.reset();
         });
+
+        this._setInitialAnimationFrame();
+        this._setInitialAction();
     }
 
     changeFace(faceName, score=1) {
@@ -211,11 +275,11 @@ export default class LessonAvatar {
         }
 
         if (!('leftArm' in pose)) {
-            this.initBonePosition('left');
+            this.setDefaultPose('left');
         }
 
         if (!('rightArm' in pose)) {
-            this.initBonePosition('right');
+            this.setDefaultPose('right');
         }
     }
 
@@ -285,8 +349,8 @@ export default class LessonAvatar {
                 }
             });
 
-            this.initAvatarPosition();
-            this.initBonePosition();
+            this.setDefaultPosition();
+            this.setDefaultPose();
 
             this.scene.add(vrm.scene);
 
@@ -300,13 +364,13 @@ export default class LessonAvatar {
         });
     }
 
-    initAvatarPosition() {
+    setDefaultPosition() {
         this.movePositions = [0, 0, 0];
         this.bones.Position.rotation.set(0, Math.PI, 0);
         this.bones.Position.position.set(0, 0, 85);
     }
 
-    initBonePosition(side='all') {
+    setDefaultPose(side='all') {
         if (side == 'left' || side == 'all') {
             this.bones.J_Bip_L_UpperArm.rotation.z = Const.RAD_70;
             this.bones.J_Bip_L_LowerArm.rotation.set(0, 0, 0);

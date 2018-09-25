@@ -208,8 +208,6 @@ export default class LessonRecorder {
             this.poseKey.coreBodies.push({ pos: startedPosition, time: this.startMovingPositionTime });
         } else if (this.startMovingPositionTime > 0) {
             this.poseKey.coreBodies.push({ pos: this.coreBodyInitPosition, time: this.startMovingPositionTime });
-        } else {
-            this.poseKey.coreBodies.push({ pos: this.coreBodyInitPosition, time: 0 });
         }
 
         const time = this.currentRecordingTime();
@@ -338,10 +336,11 @@ export default class LessonRecorder {
     }
 
     async _uploadLessonMaterial() {
-        addInitPosesIfNeeded(this);
+        const time = this.currentRecordingTime();
+        addPosesIfNeeded(this, time);
 
         const materialBody = {
-            durationSec: this.currentRecordingTime(),
+            durationSec: time,
             timelines:   this.timelines,
             poseKey:     this.poseKey,
         };
@@ -354,10 +353,29 @@ export default class LessonRecorder {
 
         return true;
 
-        function addInitPosesIfNeeded(self) {
-            if (self.poseKey.leftShoulders.length == 0)  self.poseKey.leftShoulders.push({ rot: self.leftShoulderInitRotation, time: 0 });
-            if (self.poseKey.rightShoulders.length == 0) self.poseKey.rightShoulders.push({ rot: self.rightShoulderInitRotation, time: 0 });
-            if (self.poseKey.coreBodies.length == 0) self.poseKey.coreBodies.push({ pos: self.coreBodyInitPosition, time: 0 });
+        function addPosesIfNeeded(self, time) {
+            Object.keys(self.poseKey).forEach((key) => {
+                if (self.poseKey[key].length > 0) {
+                    const lastPose = Object.assign({}, self.poseKey[key][self.poseKey[key].length - 1]);
+                    lastPose.time = time;
+                    self.poseKey[key].push(lastPose);
+                } else {
+                    if (self.poseKey == 'leftShoulders') {
+                        self.poseKey.leftShoulders.push({ rot: self.leftShoulderInitRotation, time: 0 });
+                        return;
+                    }
+
+                    if (self.poseKey == 'rightShoulders') {
+                        self.poseKey.rightShoulders.push({ rot: self.rightShoulderInitRotation, time: 0 });
+                        return;
+                    }
+
+                    if (self.poseKey == 'coreBodies.length') {
+                        self.poseKey.coreBodies.push({ pos: self.coreBodyInitPosition, time: 0 });
+                        return;
+                    }
+                }
+            });
         }
     }
 
