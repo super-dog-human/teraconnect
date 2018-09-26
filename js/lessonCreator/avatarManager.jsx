@@ -38,7 +38,7 @@ export default class AvatarManager extends React.Component {
     async _onDrop(acceptedFiles, rejectedFiles) {
         if (this.props.isCreating) return;
 
-        const errMessage = '使用できないファイルです。下記の条件を確認してください。\n\n・VRM形式のファイルである\n・ライセンスがCC0またはCC_BYである\n・ファイルサイズが30MB以下である';
+        const errMessage = '使用できないファイルです。下記の条件を確認してください。\n\n・VRM形式のファイルである\n・ライセンスがCC0である\n・ファイルサイズが30MB以下である';
 
         if (rejectedFiles.length > 0) {
             window.alert(errMessage);
@@ -90,7 +90,7 @@ export default class AvatarManager extends React.Component {
                         </label>
                     })
                 }
-                    <div id="upload-avatar" data-tip="VRoid Studio 0.2.12以降で作成したVRMファイルが使用できます">
+                    <div id="upload-avatar" data-tip="VRMファイルは、授業再生のため再配布されます。画面右上の「使い方」をご確認ください。">
                         <Dropzone onDrop={this._onDrop.bind(this)} accept=".vrm" maxSize={this.maxFileBytes} multiple={false}
                             style={{ width: "100px", height: "100px", position: "absolute" }}>
                             <div id="upload-avatar-icon" className="app-text-color-soft-white"><FontAwesomeIcon icon="file-upload" /></div>
