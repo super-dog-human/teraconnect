@@ -23,14 +23,14 @@ export default class LessonPlayer extends React.Component {
             graphics:  [],
         }
 
-        this.animate();
+        this._animate();
     }
 
-    panelClick() {
-        this.play(!this.state.isPlaying);
+    _panelClick() {
+        this._play(!this.state.isPlaying);
     }
 
-    play(isStart) {
+    _play(isStart) {
         if (isStart) {
             this.clock.start();
             if (this.pausedElapsedTime > 0) this.voicePlayer.play(true); // for resume audio
@@ -45,39 +45,44 @@ export default class LessonPlayer extends React.Component {
         this.props.avatar.play(isStart);
     }
 
-    animate() {
-        requestAnimationFrame(() => this.animate());
+    _animate() {
+        requestAnimationFrame(() => this._animate());
 
         if (!this.state.isPlaying) return;
 
-        const elapsedTime = this.clock.elapsedTime + this.pausedElapsedTime;
-
-        if (elapsedTime >= this.props.loader.lesson.durationSec) {
+        const elapsedTime = this._elapsedTime();
+        if (elapsedTime >= this.props.lesson.durationSec) {
             this._endPlaying();
             return;
         }
 
         this.props.avatar.animate(this.clock.getDelta());
-
-        const since = this.preElapsedTime;
-        const until = elapsedTime;
-
-        this.hideTimelineTextIfNeeded(elapsedTime);
-
-        this.props.loader.lesson.timelines.filter((t) => {
-            return t.timeSec > since && t.timeSec <= until;
-        }).forEach((timeline) => {
-            this.avatarAction(timeline.spAction);
-            this.playTimelineVoice(timeline.voice, elapsedTime);
-            this.showTimelineText(timeline.text, elapsedTime);
-            this.showTimelineGraphic(timeline.graphics);
-        });
-
+        this._reflectCurrentContents(elapsedTime);
         this.preElapsedTime = elapsedTime;
     }
 
+    _elapsedTime() {
+        return this.clock.elapsedTime + this.pausedElapsedTime;
+    }
+
+    _reflectCurrentContents(elapsedTime) {
+        const since = this.preElapsedTime;
+        const until = elapsedTime;
+
+        this._hideTimelineTextIfNeeded(elapsedTime);
+
+        this.props.lesson.timelines.filter((t) => {
+            return t.timeSec > since && t.timeSec <= until;
+        }).forEach((timeline) => {
+            this._avatarAction(timeline.spAction);
+            this._playTimelineVoice(timeline.voice, elapsedTime);
+            this._showTimelineText(timeline.text, elapsedTime);
+            this._showTimelineGraphic(timeline.graphics);
+        });
+    }
+
     _endPlaying() {
-        this.play(false);
+        this._play(false);
         this.props.avatar.resetAnimation();
         this.voicePlayer.resetPlaying();
 
@@ -86,7 +91,7 @@ export default class LessonPlayer extends React.Component {
         this.setState({ texts: [], voices: [], graphics: [] });
     }
 
-    avatarAction(action) {
+    _avatarAction(action) {
         if (!action) return;
 
         const faceName = action.faceExpression;
@@ -95,7 +100,7 @@ export default class LessonPlayer extends React.Component {
         }
     }
 
-    playTimelineVoice(voice, elapsedTime) {
+    _playTimelineVoice(voice, elapsedTime) {
         if (voice.id =='') return;
 
         this.voicePlayer.setAndPlay(voice.url, voice.durationSec);
@@ -106,7 +111,7 @@ export default class LessonPlayer extends React.Component {
         this.setState({ voices: newVoices });
     }
 
-    showTimelineText(text, elapsedTime) {
+    _showTimelineText(text, elapsedTime) {
         if (text.durationSec == 0) return;
 
         const newTexts = this.state.texts;
@@ -115,7 +120,7 @@ export default class LessonPlayer extends React.Component {
         this.setState({ texts: newTexts });
     }
 
-    hideTimelineTextIfNeeded(elapsedTime) {
+    _hideTimelineTextIfNeeded(elapsedTime) {
         const currentShowingTextLength = this.state.texts.length;
         if (currentShowingTextLength == 0) return;
 
@@ -128,7 +133,7 @@ export default class LessonPlayer extends React.Component {
         }
     }
 
-    showTimelineGraphic(graphics) {
+    _showTimelineGraphic(graphics) {
         if (graphics == null) return;
 
         graphics.forEach((graphic) => {
@@ -156,6 +161,25 @@ export default class LessonPlayer extends React.Component {
         });
     }
 
+    componentDidUpdate(prevProps) {
+        if (this.props.isLoading) return;
+
+        if (prevProps.isLoading && !this.props.isLoading) {
+            this.props.avatar.setDefaultAnimation();
+            this.props.avatar.loadRecordedAnimation(this.props.lesson.poseKey, this.props.lesson.timelines[0]);
+            return;
+        }
+
+        if (prevProps.lesson.timelines != this.props.lesson.timelines) { // FIXME array comparing
+            this._reflectCurrentContents(this._elapsedTime());
+        }
+
+        if (prevProps.lesson.poseKey      != this.props.poseKey ||
+            prevProps.lesson.timelines[0] != this.props.lesson.timelines[0]) {
+            this.props.avatar.loadRecordedAnimation(this.props.lesson.poseKey, this.props.lesson.timelines[0]);
+        }
+    }
+
     render() {
         return(
             <div id="lesson-player" ref={(e) => { this.element = e; }}>
@@ -165,7 +189,7 @@ export default class LessonPlayer extends React.Component {
                             <FontAwesomeIcon icon="spinner" spin />
                         </div>
                     </div>
-                    <button className="control-btn" onClick={this.panelClick.bind(this)}>
+                    <button className="control-btn" onClick={this._panelClick.bind(this)}>
                         <FontAwesomeIcon icon="play-circle" />
                     </button>
                 </div>

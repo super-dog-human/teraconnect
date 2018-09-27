@@ -26,6 +26,25 @@ export default class LessonUtility {
         return result.data;
     }
 
+    static async fetchRawLessonMaterial(lessonID) {
+        const materialURL = Const.LESSON_MATERIAL_API_URL.replace('{lessonID}', lessonID);
+        const result = await axios.get(materialURL);
+        return result.data;
+    }
+
+    static async fetchVoiceTexts(lessonID) {
+        const url = Const.LESSON_VOICE_TEXT_API_URL.replace('{lessonID}', lessonID);
+        const result = await axios.get(url).catch((err) => {
+            if (err.response.status == 404) {
+                return { data: [] };
+            } else {
+                throw new Error(err);
+            }
+        });
+
+        return result.data;
+    }
+
     static async fetchLessonGraphicURLs(lessonGraphics) {
         if (lessonGraphics.length == 0) {
             return [];

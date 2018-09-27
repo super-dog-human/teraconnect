@@ -1,21 +1,22 @@
-import axios from 'axios';
-import * as Const from '../common/constants';
+import LessonAvatar from '../lessonPlayer/lessonAvatar';
+import ReactDOM from 'react-dom';
 
 export default class LessonMaterialLoader {
     constructor(lessonID) {
         this.lessonID = lessonID;
-
-        this.lesson        = {};
-        this.material      = {};
     }
 
-    async fetchRawLessonMaterial() {
-        const materialURL = Const.LESSON_MATERIAL_API_URL.replace('{lessonID}', this.lessonID);
-        const result = await axios.get(materialURL).catch((err) => {
-            throw new Error(err);
-        });
+    async loadAvatar(avatarURL, container, playerElement) {
+        const avatar = new LessonAvatar(this.lessonID);
+        const dom = await avatar.createDom(avatarURL, container);
+        dom.setAttribute('id', 'avatar-canvas');
+        ReactDOM.findDOMNode(playerElement).append(dom);
 
-        return result.data;
+        window.addEventListener('resize', (() => {
+            avatar.updateSize(container);
+        }));
+
+        return avatar;
     }
 
     async fetchAndMergeGraphicToTimeline(graphics, timelines) {
@@ -46,19 +47,6 @@ export default class LessonMaterialLoader {
         }
     }
 
-    async fetchVoiceTexts() {
-        const url = Const.LESSON_VOICE_TEXT_API_URL.replace('{lessonID}', this.lessonID);
-        const result = await axios.get(url).catch((err) => {
-            if (err.response.status == 404) {
-                return { data: [] };
-            } else {
-                throw new Error(err);
-            }
-        });
-
-        return result.data;
-    }
-
     async fetchAndMergeVoiceTextToTimeline(timelines, voiceTexts) {
         const voiceTextById = {};
         voiceTexts.forEach((v) => {
@@ -74,6 +62,29 @@ export default class LessonMaterialLoader {
                 t.text.body = voiceText.text;
             }
         });
+
+        return timelines;
+    }
+
+    async fetchVoiceURLsToTimelines(timelines) {
+        const filePath = `voice/${this.props.lessonID}`;
+        const files = timelines.filter((t) => { return t.voice.id != ''; })
+            .map((t) => { return t.voice; })
+            .map((voice) => {
+                return {
+                id:        voice.id,
+                entity:    filePath,
+                extension: 'ogg',
+            }
+        });
+
+        const urls = await LessonUtility.fetchSignedURLs(files);
+        let voiceIndex = -1;
+        timelines.forEach((t) => {
+            if (t.voice.id == '') return;
+            voiceIndex ++;
+            t.voice.url = urls[voiceIndex];
+        })
 
         return timelines;
     }

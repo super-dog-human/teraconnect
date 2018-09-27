@@ -1,5 +1,4 @@
 import React from 'react';
-import Menu from '../menu';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { setupPoseDetector, detectPoseInRealTime, clearPoseCanvas, stopUserMedia } from './poseDetector';
 import LessonRecorder from './lessonRecorder';

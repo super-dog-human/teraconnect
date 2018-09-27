@@ -7,28 +7,15 @@ export default class VoiceText extends React.Component {
         super(props);
 
         this.urls = [];
-        this.playingVoices = [];
+        this.playingAudios = [];
     }
 
     async componentDidUpdate(prevProps) {
         if (prevProps.isLoading && !this.props.isLoading) {
-
-            const filePath = `voice/${this.props.lessonID}`;
-            const files = this._lessonVoice().map((voice) => {
-                return {
-                    id:        voice.id,
-                    entity:    filePath,
-                    extension: 'ogg',
-                }
-            });
-            this.urls = await LessonUtility.fetchSignedURLs(files);
+            this.urls = this.props.timelines
+                .filter((t) => { return t.voice.id != ''; })
+                .map((t) => { return t.voice.url; });
         }
-    }
-
-    _lessonVoice() {
-        return this.props.timelines
-            .filter((t) => { return t.voice.id != ''; })
-            .map((t) => { return t.voice; });
     }
 
     _changeText(event) {
@@ -53,16 +40,16 @@ export default class VoiceText extends React.Component {
 
     _playVoice(event) {
         const voiceIndex = event.currentTarget.value;
-        if (this.playingVoices[voiceIndex]) {
-            this.playingVoices[voiceIndex].pause();
-            this.playingVoices[voiceIndex] = null;
+        if (this.playingAudios[voiceIndex]) {
+            this.playingAudios[voiceIndex].pause();
+            this.playingAudios[voiceIndex] = null;
         } else {
             const audioElement = new Audio();
-            this.playingVoices[voiceIndex] = audioElement;
+            this.playingAudios[voiceIndex] = audioElement;
             const url = this.urls[voiceIndex]
             audioElement.src = url;
             audioElement.addEventListener('ended', () => {
-                this.playingVoices[voiceIndex] = null;
+                this.playingAudios[voiceIndex] = null;
             }, true);
             audioElement.play();
         }
@@ -73,8 +60,7 @@ export default class VoiceText extends React.Component {
             <div id="lesson-text" className="app-back-color-dark-gray">
                 <div id="lesson-text-lines">
                     {
-                        this.props.timelines
-                            .filter((t) => { return t.voice.id != ''; })
+                        this.props.timelines.filter((t) => { return t.voice.id != ''; })
                             .map((t, i) => {
                                 if (t.text.body != '') {
                                     return <div key={i} className="line">

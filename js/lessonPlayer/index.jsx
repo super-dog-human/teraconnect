@@ -10,37 +10,32 @@ export default class LessonPlayerScreen extends React.Component {
         this.container;
         this.playerElement;
 
-        this.avatar = new LessonAvatar();
         this.loader = new LessonLoader(props.match.params.id);
         this.state = {
+            avatar:    new LessonAvatar(),
+            lesson:    {},
             isLoading: true,
-        };
+        }
     }
 
     async componentDidMount() {
-        if (this.props.isPreview) {
-            this.loader.loadForPreview();
-            // TODO
-        } else {
-            await this.loader.loadForPlay();
-            const dom = await this.avatar.createDom(this.loader.avatarFileURL, this.container);
-            dom.setAttribute('id', 'avatar-canvas');
-            ReactDOM.findDOMNode(this.playerElement).append(dom);
+        await this.loader.loadForPlay();
 
-            window.addEventListener('resize', (() => {
-                this.avatar.updateSize(this.container);
-            }));
+        const dom = await this.state.avatar.createDom(this.loader.avatarFileURL, this.container);
+        dom.setAttribute('id', 'avatar-canvas');
+        ReactDOM.findDOMNode(this.playerElement).append(dom);
 
-            this.avatar.setDefaultAnimation();
-            this.avatar.loadRecordedAnimation(this.loader.lesson.poseKey, this.loader.lesson.timelines[0]);
-            this.setState({ isLoading: false });
-        }
+        window.addEventListener('resize', (() => {
+            this.state.avatar.updateSize(this.container);
+        }));
+
+        this.setState({ lesson: this.loader.lesson, isLoading: false });
     }
 
     render() {
         return (
             <div id="lesson-player" ref={(e) => { this.container = e; }}>
-                <LessonPlayer avatar={this.avatar} loader={this.loader} isLoading={this.state.isLoading} ref={(e) => { this.playerElement = e; }} />
+                <LessonPlayer avatar={this.state.avatar} lesson={this.state.lesson} isLoading={this.state.isLoading} ref={(e) => { this.playerElement = e; }} />
                 <style jsx>{`
                     #lesson-player {
                         text-align: center;
@@ -55,7 +50,3 @@ export default class LessonPlayerScreen extends React.Component {
         if (this.avatar) this.avatar.clearBeforeUnload();
     }
 }
-
-LessonPlayerScreen.defaultProps = {
-    isPreview: false
-};

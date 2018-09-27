@@ -20,8 +20,8 @@ export default () => (
                 </li>
                 <li>
                     <h4>Q. どうやって他の人に見てもらうの？</h4>
-                    ベータ版なので、一定期間（10日ぐらい）が経つと自動的に授業が消えちゃうよ。<br />
-                    消えるまでの間は、URLをお友達に教えると見てもらえるよ！
+                    作成した授業のURLをお友達に教えてあげてね！<br />
+                    一定期間（10日ぐらい）が経つと自動的に消えちゃうから気をつけよう！<br />
                 </li>
                 <li>
                     <h4>Q. 画面を録画してYoutubeとかにアップしてもいい？</h4>
@@ -55,11 +55,6 @@ export default () => (
                     ・頭から腕の先が映るぐらいまで、カメラから距離をとる<br />
                     ・服と背景が似たような色なら、別の服に着替えちゃう<br />
                 </li>
-                <li>
-                    <h4>Q. なんか暗くて何もない画面になったよ…</h4>
-                    <a href="https://authoring.teraconnect.org/img/not-speaking-edit-screen.png"><img src="https://authoring.teraconnect.org/img/not-speaking-edit-screen.png" /></a><br />
-                    収録中、何も喋らないとこうなるよ！分かりにくくてひっくりかえるね！直すように言っておくよ！
-                </li>
             </ul>
         </div>
         <style jsx>{`
@@ -70,7 +65,7 @@ export default () => (
                 padding-bottom: 100px;
             }
             #how-to-body {
-                width: 70vw;
+                width: 80vw;
                 margin-left: auto;
                 margin-right: auto;
                 padding-top: 30px;
@@ -93,10 +88,6 @@ export default () => (
             #how-to-body li a:visited { color: #04acb4; }
             #how-to-body li a:hover { text-decoration: none; color: #04acb4; }
             #how-to-body li a:active { color: #04acb4; }
-            #lesson-creator {
-                padding-top: 50px;
-                padding-bottom: 100px;
-            }
         `}</style>
     </div>
 )

@@ -11,10 +11,6 @@ export default class LessonLoader {
         this.objectURLs    = [];
     }
 
-    loadForPreview() {
-
-    }
-
     async loadForPlay() {
         const lessonURL = Const.LESSON_API_URL.replace('{lessonID}', this.lessonID);
         const result = await axios.get(lessonURL);
@@ -51,6 +47,7 @@ export default class LessonLoader {
                 const blob = await unzip.file(voicePath).async('blob');
                 const objectURL = window.URL.createObjectURL(blob);
                 t.voice.url = objectURL;
+
                 this.objectURLs.push(objectURL);
             }
 
@@ -62,6 +59,7 @@ export default class LessonLoader {
                 const blob = await unzip.file(graphicPath).async('blob');
                 const objectURL = window.URL.createObjectURL(blob);
                 g.url = objectURL;
+
                 this.objectURLs.push(objectURL);
             });
         });
