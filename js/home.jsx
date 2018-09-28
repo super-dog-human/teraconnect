@@ -1,9 +1,27 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Slider from "react-slick";
+import Cookies from 'js-cookie';
+import Slider from 'react-slick';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default class Home extends React.Component {
+    constructor(props) {
+        super(props);
+
+        const agreeToTerms = Cookies.get('agreeToTerms');
+        const initAgreeToTerms = agreeToTerms === 'true';
+        this.state = {
+            isAgreeToTerms: initAgreeToTerms,
+        }
+    }
+
+    _changeAgreeToTerms(event) {
+        const isAgree = event.target.checked;
+        Cookies.set('agreeToTerms', isAgree.toString(), { path: '/' });
+//        Cookies.set('agreeToTerms', isAgree.toString(), { path: '/', domain: 'authoring.teraconnect.org', secure: true });
+        this.setState({ isAgreeToTerms: isAgree });
+    }
+
     render() {
         const settings = {
             dots: true,
@@ -26,12 +44,16 @@ export default class Home extends React.Component {
                                 いつでも更新できて、いつまでも誰かに届く、そんな授業を。<br />
                             </div>
                             <div id="app-small-title" className="text-gray">なりたい先生に、なろう。</div>
-                                <Link className="" to='/lessons/new'>
-                                    <div id="try-btn" className="btn">
-                                        <div id="try-btn-label"><FontAwesomeIcon icon="edit" />&nbsp;授業をつくる</div>
-                                        <div id="try-btn-notice">機能の一部がお試しできます</div>
-                                    </div>
-                                </Link>
+                            <Link to='/lessons/new' id="trial-link">
+                                <button id="trial-btn" className="btn" disabled={!this.state.isAgreeToTerms}>
+                                    <div id="trial-btn-label"><FontAwesomeIcon icon="edit" />&nbsp;お試し授業をつくる</div>
+                                    <div id="trial-btn-notice">機能の一部がお試しできます</div>
+                                </button>
+                            </Link>
+                            <div id="terms-of-use">
+                                <input id="agree-terms-checkbox" type="checkbox" checked={this.state.isAgreeToTerms} onChange={this._changeAgreeToTerms.bind(this)} />&nbsp;
+                                <Link to="/terms_of_use">利用規約</Link>に同意する
+                            </div>
                         </div>
                         <div id="hero-two">
                             <div id="feature-title" className="text-gray">きっと、素敵な先生になれる。</div>
@@ -130,23 +152,35 @@ export default class Home extends React.Component {
                         margin-top: 2vw;
                         margin-left: 50vw;
                     }
-                    #try-btn {
-                        width: 15vw;
+                    :global(#trial-link) {
+                        pointer-events: ${this.state.isAgreeToTerms ? 'auto' : 'none'};
+                        cursor: ${this.state.isAgreeToTerms ? 'pointer' : 'cursor'};
+                    }
+                    #trial-btn {
+                        width: 17vw;
                         height: 5vw;
                         padding: 0;
                         margin-top: 2.5vw;
                         margin-left: 60vw;
                         background-color: #EC9F05;
                     }
-                    #try-btn-label {
-                        margin-top: 0.7vw;
+                    #trial-btn-label {
                         color: white;
                         font-size: 1.5vw;
                         font-weight: 600;
                     }
-                    #try-btn-notice {
+                    #trial-btn-notice {
                         font-size: 0.7vw;
                         color: white;
+                    }
+                    #terms-of-use {
+                        margin-top: 0.5vw;
+                        margin-left: 62.5vw;
+                        font-size: 1vw;
+                    }
+                    #agree-terms-checkbox {
+                        width: 1vw;
+                        height: 1vw;
                     }
                     #hero-two {
                         width: 100%;

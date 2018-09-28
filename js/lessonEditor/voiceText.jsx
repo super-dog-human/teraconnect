@@ -1,6 +1,5 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import LessonUtility from '../common/lessonUtility';
 
 export default class VoiceText extends React.Component {
     constructor(props) {
@@ -90,11 +89,10 @@ export default class VoiceText extends React.Component {
                     .line {
                         position: relative;
                         display: block;
-                        width: 500px;
+                        width: 55vw;
                         height: 40px;
                         margin-top: 20px;
-                        margin-left: auto;
-                        margin-right: auto;
+                        margin-left: 1vw;
                     }
                     .voice-play-btn {
                         position: absolute;
@@ -103,7 +101,6 @@ export default class VoiceText extends React.Component {
                         cursor: pointer;
                         top: 0;
                         left: 3px;
-                        right: 0;
                         bottom: 0;
                         margin: auto;
                         font-size: 18px;

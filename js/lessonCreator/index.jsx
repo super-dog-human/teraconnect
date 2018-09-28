@@ -1,6 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 import { isMobile } from 'react-device-detect';
 import ReactTooltip from 'react-tooltip'
 import AvatarManager from './avatarManager';
@@ -107,6 +108,12 @@ export default class LessonCreator extends React.Component {
     }
 
     render() {
+        const isAgreeToTerms = Cookies.get('agreeToTerms');
+        if (isAgreeToTerms !== 'true') {
+            location.href = '/';
+            return;
+        }
+
         return(
             <div id="lesson-creator-screen" className="">
                 <div id="lesson-creator" className="app-back-color-soft-white">

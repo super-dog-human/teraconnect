@@ -2,9 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import LessonLoader from './lessonLoader';
 import LessonAvatar from './lessonAvatar';
-import LessonPlayer from './lessonPlayer';
+import LessonController from './lessonController';
 
-export default class LessonPlayerScreen extends React.Component {
+export default class LessonPlayer extends React.Component {
     constructor(props) {
         super(props);
         this.container;
@@ -20,7 +20,6 @@ export default class LessonPlayerScreen extends React.Component {
 
     async componentDidMount() {
         await this.loader.loadForPlay();
-
         const dom = await this.state.avatar.createDom(this.loader.avatarFileURL, this.container);
         dom.setAttribute('id', 'avatar-canvas');
         ReactDOM.findDOMNode(this.playerElement).append(dom);
@@ -35,7 +34,7 @@ export default class LessonPlayerScreen extends React.Component {
     render() {
         return (
             <div id="lesson-player" ref={(e) => { this.container = e; }}>
-                <LessonPlayer avatar={this.state.avatar} lesson={this.state.lesson} isLoading={this.state.isLoading} ref={(e) => { this.playerElement = e; }} />
+                <LessonController avatar={this.state.avatar} lesson={this.state.lesson} isLoading={this.state.isLoading} ref={(e) => { this.playerElement = e; }} />
                 <style jsx>{`
                     #lesson-player {
                         text-align: center;

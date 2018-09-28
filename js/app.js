@@ -11,14 +11,15 @@ library.add( faDotCircle, faPauseCircle, faMehBlank, faPlayCircle, faSpinner, fa
     faAngry, faSurprise, faWalking, faCloudUploadAlt, faVideo, faFileUpload, faFolderPlus,
     faVolumeUp, faEdit);
 
-import Header from './header'
-import Footer from './footer'
-import Home from './home'
-import HowTo from './howTo'
-import Creator from './lessonCreator'
-import Editor from './lessonEditor'
-import Recorder from './lessonRecorder'
-import PlayerScreen from './lessonPlayer'
+import Header from './header';
+import Footer from './footer';
+import Home from './home';
+import HowTo from './howTo';
+import TermsOfUse from './termsOfUse';
+import Creator from './lessonCreator';
+import Editor from './lessonEditor';
+import Recorder from './lessonRecorder';
+import PlayerScreen from './lessonPlayer';
 
 const App = () => (
     <div>
@@ -33,6 +34,7 @@ const Main = () => (
         <Switch>
             <Route exact path='/'                   component={Home} />
             <Route exact path='/how_to'             component={HowTo} />
+            <Route exact path='/terms_of_use'       component={TermsOfUse} />
             <Route exact path='/lessons/new'        component={Creator} />
             <Route exact path='/lessons/:id/edit'   component={Editor} />
             <Route exact path='/lessons/:id/record' component={Recorder} />

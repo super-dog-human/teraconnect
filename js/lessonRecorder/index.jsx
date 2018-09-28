@@ -322,7 +322,7 @@ export default class LessonRecorderScreen extends React.Component {
                             <button type="button" id="save-record-btn" className="btn btn-primary rec-btn"
                                 onClick={this._postRecord.bind(this)}
                                 data-tip="録画を完了し、編集画面へ移動します">
-                                <FontAwesomeIcon icon={['fas', 'cloud-upload-alt']} /> 保存
+                                <FontAwesomeIcon icon={['fas', 'cloud-upload-alt']} /> 収録終了
                             </button>
                             <button type="button" className="btn btn-primary rec-btn"
                                 onClick={this._recordingResume.bind(this)}

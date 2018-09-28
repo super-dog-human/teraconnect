@@ -1,4 +1,5 @@
 import LessonAvatar from '../lessonPlayer/lessonAvatar';
+import LessonUtility from '../common/lessonUtility';
 import ReactDOM from 'react-dom';
 
 export default class LessonMaterialLoader {
@@ -66,8 +67,8 @@ export default class LessonMaterialLoader {
         return timelines;
     }
 
-    async fetchVoiceURLsToTimelines(timelines) {
-        const filePath = `voice/${this.props.lessonID}`;
+    async fetchVoiceURLsToTimelines(lessonID, timelines) {
+        const filePath = `voice/${lessonID}`;
         const files = timelines.filter((t) => { return t.voice.id != ''; })
             .map((t) => { return t.voice; })
             .map((voice) => {

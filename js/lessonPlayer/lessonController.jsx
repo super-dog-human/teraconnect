@@ -6,15 +6,14 @@ import LessonGraphics from './lessonGraphics';
 import LessonVoicePlayer from './lessonVoicePlayer';
 import * as Const from '../common/constants';
 
-export default class LessonPlayer extends React.Component {
+export default class LessonController extends React.Component {
     constructor(props) {
         super(props);
 
         this.clock             = new Clock(false);
         this.preElapsedTime    = 0;
         this.pausedElapsedTime = 0;
-        this.element;
-        this.voicePlayer = new LessonVoicePlayer(props.avatar);
+        this.voicePlayer = {};
 
         this.state = {
             isPlaying: false,
@@ -165,6 +164,7 @@ export default class LessonPlayer extends React.Component {
         if (this.props.isLoading) return;
 
         if (prevProps.isLoading && !this.props.isLoading) {
+            this.voicePlayer = new LessonVoicePlayer(this.props.avatar);
             this.props.avatar.setDefaultAnimation();
             this.props.avatar.loadRecordedAnimation(this.props.lesson.poseKey, this.props.lesson.timelines[0]);
             return;
@@ -182,7 +182,7 @@ export default class LessonPlayer extends React.Component {
 
     render() {
         return(
-            <div id="lesson-player" ref={(e) => { this.element = e; }}>
+            <div id="lesson-player">
                 <div id="control-panel">
                     <div id="loading-indicator">
                         <div id="loading-indicator-icon">
@@ -194,7 +194,7 @@ export default class LessonPlayer extends React.Component {
                     </button>
                 </div>
 
-                <LessonTexts texts={this.state.texts}/>
+                <LessonTexts texts={this.state.texts} />
                 <LessonGraphics graphics={this.state.graphics} />
 
                 <style jsx>{`
