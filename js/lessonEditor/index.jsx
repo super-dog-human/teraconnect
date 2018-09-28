@@ -205,13 +205,13 @@ export default class LessonEditor extends React.Component {
                         height: 100%;
                     }
                     #lesson-control-panel {
-                        padding-top: 1.5vw;
-                        padding-right: 1vw;
+                        padding-top: 20px;
+                        padding-right: 20px;
                     }
                     #lesson-control-panel button {
-                        width: 13vw;
-                        margin-bottom: 1vw;
-                        font-size: 1.2vw;
+                        width: 150px;
+                        margin-bottom: 20px;
+                        font-size: 17px;
                     }
                     #publish-checkbox {
                         display: none;
