@@ -13,7 +13,7 @@ export default ({url}) => (
                 width: 100%;
                 height: 100%;
                 margin: auto;
-                z-index: -100;
+                z-index: 0; // graphics
             }
             #lesson-graphic-body {
                 display: ${url != '' ? 'block' : 'none'};

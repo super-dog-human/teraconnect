@@ -67,7 +67,7 @@ export default class LessonTexts extends React.Component {
                 <style jsx>{`
                     #lesson-texts {
                         position: absolute;
-                        z-index: 100;
+                        z-index: 100; // text
                         top: 0;
                         width: 100%;
                         height :100%;

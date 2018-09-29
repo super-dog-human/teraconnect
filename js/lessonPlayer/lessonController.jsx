@@ -210,7 +210,7 @@ export default class LessonController extends React.Component {
                     #control-panel {
                         position: absolute;
                         top: 0;
-                        z-index: 1000;
+                        z-index: 1000; // control panel
                         width: 100%;
                         height: 100%;
                     }

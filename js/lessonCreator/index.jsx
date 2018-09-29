@@ -160,7 +160,7 @@ export default class LessonCreator extends React.Component {
                     }
                     #loading-indicator {
                         position: absolute;
-                        z-index: 100;
+                        z-index: 1100; // indicator
                         width: 10vw;
                         height: 10vw;
                         top: 0;

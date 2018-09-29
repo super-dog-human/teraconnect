@@ -231,7 +231,7 @@ export default class LessonEditor extends React.Component {
                     }
                     #text-loading-indicator {
                         position: absolute;
-                        z-index: 100;
+                        z-index: 1100; // indicator
                         width: 10vw;
                         height: 10vw;
                         top: 0;

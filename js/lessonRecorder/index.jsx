@@ -386,7 +386,7 @@ export default class LessonRecorderScreen extends React.Component {
                     }
                     #loading-indicator {
                         position: absolute;
-                        z-index: 100;
+                        z-index: 1100; // indicator
                         width: 10vw;
                         height: 10vw;
                         top: 0;
@@ -401,7 +401,7 @@ export default class LessonRecorderScreen extends React.Component {
                     #control-panel {
                         display: ${this.state.isLoading ? 'none' : 'block'};
                         position: absolute;
-                        z-index: 100;
+                        z-index: 1000; // control-panel
                         width: 100%;
                         height: 100%;
                         top: 0;
