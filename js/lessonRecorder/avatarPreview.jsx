@@ -61,6 +61,13 @@ export default class AvatarPreview extends React.Component {
         this._animate();
 
         dom.setAttribute('id', 'avatar-canvas');
+        dom.style.zIndex = 10;
+        dom.style.position = 'absolute';
+        dom.style.top = 0;
+        dom.style.bottom = 0;
+        dom.style.left = 0;
+        dom.style.right = 0;
+        dom.style.margin = 'auto';
         ReactDOM.findDOMNode(this.container).append(dom);
 
         this.isLoading = false;
