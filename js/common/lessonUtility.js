@@ -229,6 +229,12 @@ export default class LessonUtility {
         await axios.put(url, body);
     }
 
+    static async deleteLesson(lessonID) {
+        const url = Const.LESSON_API_URL.replace('{lessonID}', lessonID);
+        const body = { dummy: "dummyBody" };
+        await axios.delete(url, body);
+    }
+
     static async publishLesson(lesson) {
         const lessonBody = {
             durationSec: lesson.durationSec,

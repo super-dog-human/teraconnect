@@ -124,6 +124,18 @@ export default class LessonEditor extends React.Component {
         this.setState({ isPublic: event.target.checked });
     }
 
+    async _confirmPublish() {
+        const result = confirm('授業を公開しますか？\n\n・授業は約10日間公開され、その後自動で削除されます\n・再生画面のURLへアクセスすると、誰でも閲覧可能な状態になります');
+        if (result) {
+            this._publish();
+        }
+    }
+
+    async _confirmDestroy() {
+        const result = confirm('収録した授業を、公開せずに削除しますか？');
+        if (result) this._destroy();
+    }
+
     async _publish() {
         this.setState({ isUpdating: true });
 
@@ -138,20 +150,35 @@ export default class LessonEditor extends React.Component {
 
         const result = LessonUtility.publishLesson(lesson).catch((err) => {
             console.error(err);
-            // error modal;
             return false;
         });
 
-        if (!result) return;
-
         this.setState({ isUpdating: false });
-        this.props.history.push(`/${this.lessonID}`);
+
+        if (result) {
+            this.props.history.push(`/${this.lessonID}`);
+        } else {
+            alert('授業の公開に失敗しました。再度試しても失敗する場合は、運営者に連絡してください。');
+            return;
+        }
     }
 
     async _destroy() {
-        this.setState({ isUpdating: true });
+        this.setState({ isLoading: true });
 
-        this.setState({ isUpdating: false });
+        const result = await LessonUtility.deleteLesson(this.lessonID).catch((err) => {
+            console.error(err);
+            return false;
+        });
+
+        this.setState({ isLoading: false });
+
+        if (result) {
+            alert('授業を削除しました。');
+            location.href = '/';
+        } else {
+            alert('授業の削除に失敗しました。再度試しても失敗する場合は、運営者に連絡してください。');
+        }
     }
 
     render() {
@@ -161,12 +188,12 @@ export default class LessonEditor extends React.Component {
                     <div id="lesson-control-panel">
                         <div className="row">
                             <div className="col text-right">
-                                <button className="btn btn-primary btn-lg" onClick={this._publish.bind(this)} disabled={this.state.isLoading}>授業を公開する</button>
+                                <button className="btn btn-primary btn-lg" onClick={this._confirmPublish.bind(this)} disabled={this.state.isLoading}>授業を公開する</button>
                             </div>
                         </div>
                         <div className="row">
                             <div className="col text-right">
-                                <button className="btn btn-danger btn-lg" onClick={this._destroy.bind(this)} disabled={this.state.isLoading}>破棄する</button>
+                                <button className="btn btn-danger btn-lg" onClick={this._confirmDestroy.bind(this)} disabled={this.state.isLoading}>破棄する</button>
                                 {/*
                                 <div id="publish-checkbox" className="form-check">
                                     <input type="checkbox" id="is-publish-checkbox" onChange={this._changePublic.bind(this)} />
