@@ -22,6 +22,13 @@ export default class LessonPlayer extends React.Component {
         await this.loader.loadForPlay();
         const dom = await this.state.avatar.createDom(this.loader.avatarFileURL, this.container);
         dom.setAttribute('id', 'avatar-canvas');
+        dom.style.zIndex = 10;
+        dom.style.position = 'absolute';
+        dom.style.top = 0;
+        dom.style.bottom = 0;
+        dom.style.left = 0;
+        dom.style.right = 0;
+        dom.style.margin = 'auto';
         ReactDOM.findDOMNode(this.playerElement).append(dom);
 
         window.addEventListener('resize', (() => {

@@ -194,8 +194,8 @@ export default class LessonController extends React.Component {
                     </button>
                 </div>
 
-                <LessonTexts texts={this.state.texts} />
                 <LessonGraphics graphics={this.state.graphics} />
+                <LessonTexts texts={this.state.texts} />
 
                 <style jsx>{`
                     #lesson-player {
@@ -210,7 +210,7 @@ export default class LessonController extends React.Component {
                     #control-panel {
                         position: absolute;
                         top: 0;
-                        z-index: 100;
+                        z-index: 1000;
                         width: 100%;
                         height: 100%;
                     }

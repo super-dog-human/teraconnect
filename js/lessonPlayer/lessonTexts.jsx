@@ -5,15 +5,11 @@ const LessonText = ({text, textPadingSize, textShadowHarfSize, textShadowQuarter
         <div id="lesson-text-body">{text.body}</div>
         <style jsx>{`
             #lesson-text {
-                position: absolute;
-                top: 0;
+                display: table;
                 width: 100%;
                 height :100%;
-                display: table;
-                z-index: 10;
             }
             #lesson-text-body {
-                position: relative;
                 display: table-cell;
                 text-align: ${text.horizontalAlign};
                 vertical-align: ${text.verticalAlign};
@@ -68,6 +64,15 @@ export default class LessonTexts extends React.Component {
                         key={i} />;
                 })
             }
+                <style jsx>{`
+                    #lesson-texts {
+                        position: absolute;
+                        z-index: 100;
+                        top: 0;
+                        width: 100%;
+                        height :100%;
+                    }
+                `}</style>
             </div>
         )
     }

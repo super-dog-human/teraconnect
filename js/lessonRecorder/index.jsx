@@ -327,7 +327,7 @@ export default class LessonRecorderScreen extends React.Component {
                             <button type="button" className="btn btn-primary rec-btn"
                                 onClick={this._recordingResume.bind(this)}
                                 disabled={this.state.isReachedTimeLimit}
-                                data-tip="録画を再開します">
+                                data-tip="収録を再開します">
                                 <FontAwesomeIcon icon={['far', 'dot-circle']} /> 再開
                             </button>
                         </div>

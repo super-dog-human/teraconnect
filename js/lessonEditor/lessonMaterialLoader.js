@@ -11,6 +11,8 @@ export default class LessonMaterialLoader {
         const avatar = new LessonAvatar(this.lessonID);
         const dom = await avatar.createDom(avatarURL, container);
         dom.setAttribute('id', 'avatar-canvas');
+        dom.style.zIndex = 10;
+        dom.style.position = 'absolute';
         ReactDOM.findDOMNode(playerElement).append(dom);
 
         window.addEventListener('resize', (() => {
@@ -21,25 +23,47 @@ export default class LessonMaterialLoader {
     }
 
     async fetchAndMergeGraphicToTimeline(graphics, timelines) {
-        const graphicObject = graphicsToIDKeyObject(graphics);
+        const graphicsWithURL = await mergeURLToGraphics(graphics);
+        const graphicObject = graphicsToIDKeyObject(graphicsWithURL);
 
-        // graphics in timelins has no filetype so add that from API response.
+        // add graphic filetypes from API response because graphics in timelins has no filetype.
         return mergeGraphicToLessonMaterial(timelines, graphicObject);
+
+        async function mergeURLToGraphics(graphics) {
+            const files = graphics.map((graphic) => {
+                return {
+                    id:        graphic.id,
+                    entity:    'graphic',
+                    extension: graphic.fileType,
+                };
+            });
+
+            const urls = await LessonUtility.fetchSignedURLs(files);
+            graphics.forEach((g, i) => {
+                g.url = urls[i];
+            })
+
+            return graphics;
+        }
 
         function graphicsToIDKeyObject(graphics) {
             const graphic = {};
             graphics.forEach((g) => {
-                graphic[g.id] = { fileType: g.fileType };
+                graphic[g.id] = {
+                    url:      g.url,
+                    fileType: g.fileType,
+                };
             });
 
             return graphic;
         }
 
         function mergeGraphicToLessonMaterial(timelines, graphic) {
-            const timelineWithGraphics = timelines.filter((t) => { return t.graphic });
+            const timelineWithGraphics = timelines.filter((t) => { return t.graphics });
             timelineWithGraphics.forEach((timeline) => {
                 timeline.graphics.forEach((lessonGraphic) => {
                     const id = lessonGraphic.id;
+                    lessonGraphic.url      = graphic[id].url;
                     lessonGraphic.fileType = graphic[id].fileType;
                 });
             });

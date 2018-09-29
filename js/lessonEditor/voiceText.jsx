@@ -82,8 +82,7 @@ export default class VoiceText extends React.Component {
                 <style jsx>{`
                     #lesson-text-lines {
                         width: 100%;
-                        height: 100%;
-                        height: calc(100% - 55px - 85px);
+                        height: calc(100% - 50px - 146px); // header and header controller buttons heights.
                         overflow-y: scroll;
                     }
                     .line {
