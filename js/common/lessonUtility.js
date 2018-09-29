@@ -232,7 +232,8 @@ export default class LessonUtility {
     static async deleteLesson(lessonID) {
         const url = Const.LESSON_API_URL.replace('{lessonID}', lessonID);
         const body = { dummy: "dummyBody" };
-        await axios.delete(url, body);
+        const result = await axios.delete(url, body);
+        return result.data;
     }
 
     static async publishLesson(lesson) {

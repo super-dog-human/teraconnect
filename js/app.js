@@ -15,6 +15,7 @@ import Header from './header';
 import Footer from './footer';
 import Home from './home';
 import HowTo from './howTo';
+//import Maintenance from './maintenance';
 import TermsOfUse from './termsOfUse';
 import Creator from './lessonCreator';
 import Editor from './lessonEditor';

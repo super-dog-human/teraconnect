@@ -19,7 +19,13 @@ export default class LessonPlayer extends React.Component {
     }
 
     async componentDidMount() {
-        await this.loader.loadForPlay();
+        const result = await this.loader.loadForPlay();
+
+        if (!result) {
+            alert('授業がみつかりませんでした。URLが誤っているか、公開期間が終了しています。');
+            location.href = '/';
+        }
+
         const dom = await this.state.avatar.createDom(this.loader.avatarFileURL, this.container);
         dom.setAttribute('id', 'avatar-canvas');
         dom.style.zIndex = 10;

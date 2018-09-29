@@ -13,7 +13,13 @@ export default class LessonLoader {
 
     async loadForPlay() {
         const lessonURL = Const.LESSON_API_URL.replace('{lessonID}', this.lessonID);
-        const result = await axios.get(lessonURL);
+        const result = await axios.get(lessonURL).catch((err) => {
+            // TODO delete chaches.
+            return false;
+        });
+
+        if (!result) return false;
+
         const lesson = result.data;
         const zip = await this._fetchLessonZipBlobWithRetry(lesson);
         await this._loadLessonMaterial(zip);
@@ -21,6 +27,8 @@ export default class LessonLoader {
         const avatar = lesson.avatar;
         const avatarURL = await LessonUtility.fetchAvatarObjectURL(avatar);
         this.avatarFileURL = avatarURL;
+
+        return true;
     }
 
     async _fetchLessonZipBlobWithRetry(lesson) {

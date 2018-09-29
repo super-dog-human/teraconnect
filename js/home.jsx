@@ -17,8 +17,8 @@ export default class Home extends React.Component {
 
     _changeAgreeToTerms(event) {
         const isAgree = event.target.checked;
-        Cookies.set('agreeToTerms', isAgree.toString(), { path: '/' });
-//        Cookies.set('agreeToTerms', isAgree.toString(), { path: '/', domain: 'authoring.teraconnect.org', secure: true });
+//        Cookies.set('agreeToTerms', isAgree.toString(), { path: '/' });
+        Cookies.set('agreeToTerms', isAgree.toString(), { path: '/', secure: true });
         this.setState({ isAgreeToTerms: isAgree });
     }
 
