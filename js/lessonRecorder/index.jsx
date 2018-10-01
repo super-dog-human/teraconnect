@@ -257,7 +257,7 @@ export default class LessonRecorderScreen extends React.Component {
                     </div>
 
                     <div id="control-panel" disabled={this.state.isPosting}>
-                        <div id="recording-status">
+                        <div id="recording-status" className="text-danger">
                             <ElapsedTime recorder={this.recorder} isRecording={this.state.isRecording} stopRecording={() => {
                                 this.recordingStop();
                                 this.setState({ isReachedTimeLimit: true });
@@ -265,7 +265,7 @@ export default class LessonRecorderScreen extends React.Component {
                             <div id="recording-status-icon"><FontAwesomeIcon icon={['fas', 'video']} /> REC</div>
                         </div>
 
-                        <div id="pose-detector-btn" data-tip="実験的な機能です">
+                        <div id="pose-detector-btn" className={this.state.isPoseDetection ? 'text-danger' : ''} data-tip="実験的な機能です">
                             <button type="button" className="btn btn-dark" onClick={this._switchPoseDetection.bind(this)}>
                                 <FontAwesomeIcon icon={['fas', 'walking']} /> ポーズ検出
                             </button>
@@ -415,7 +415,6 @@ export default class LessonRecorderScreen extends React.Component {
                         left: 2vw;
                         font-size: 3vw;
                         font-weight: bold;
-                        color: #dc3545;
                     }
                     #recording-status-icon {
                         display: ${this.state.isRecording ? 'block' : 'none'};
@@ -430,7 +429,6 @@ export default class LessonRecorderScreen extends React.Component {
                         height: 3vw;
                         font-size: 1.5vw;
                         font-weight: bold;
-                        color: ${this.state.isPoseDetection ? '#dc3545' : 'white'};
                     }
                     #emotion-controller {
                         position: absolute;

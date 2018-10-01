@@ -89,11 +89,11 @@ export default () => (
                 height: 70px;
                 object-fit: contain;
             }
-            #how-to-body li a { text-decoration: none; color: #04acb4; }
-            #how-to-body li a:link { color: #04acb4; }
-            #how-to-body li a:visited { color: #04acb4; }
-            #how-to-body li a:hover { text-decoration: none; color: #04acb4; }
-            #how-to-body li a:active { color: #04acb4; }
+            #how-to-body li a { text-decoration: none; color: var(--powder-blue); }
+            #how-to-body li a:link { color: var(--powder-blue); }
+            #how-to-body li a:visited { color: var(--powder-blue); }
+            #how-to-body li a:hover { text-decoration: none; color: var(--powder-blue); }
+            #how-to-body li a:active { color: var(--powder-blue); }
         `}</style>
     </div>
 )

@@ -16,7 +16,6 @@ export default ({selectedIndex}) => (
                 height: 64px;
             }
             #app-logo {
-                color: #6c7474;
                 width: 200px;
                 height: 64px;
                 padding: 0;
@@ -27,7 +26,7 @@ export default ({selectedIndex}) => (
                 height: 64px;
             }
             .link-text {
-                color: #ebe9e9;
+                color: var(--soft-white);
                 font-size: 16px;
                 min-width: 100px;
                 margin-left: 10px;
@@ -38,21 +37,21 @@ export default ({selectedIndex}) => (
             .link-text::after {
                 display: block;
                 content: "";
-                background-color: #247494;
+                background-color: var(--dark-navy);
                 margin-top: -3px;
                 height: 3px;
             }
             .link-text:hover::after {
-                background-color: #ec9f05;
+                background-color: var(--attention-orange);
             }
             .link-text:nth-of-type(${selectedIndex})::after {
-                background-color: #ec9f05;
+                background-color: var(--attention-orange);
             }
             .link-text > :global(.nav-link) { text-decoration: none; padding: 0; }
-            .link-text > :global(.nav-link):link { color: #ebe9e9; }
-            .link-text > :global(.nav-link):visited { color: #ebe9e9; }
-            .link-text > :global(.nav-link):hover { text-decoration: none; color: #ebe9e9; }
-            .link-text > :global(.nav-link):active { color: #ebe9e9; }
+            .link-text > :global(.nav-link):link { color: var(--soft-white); }
+            .link-text > :global(.nav-link):visited { color: var(--soft-white); }
+            .link-text > :global(.nav-link):hover { text-decoration: none; color: var(--soft-white); }
+            .link-text > :global(.nav-link):active { color: var(--soft-white); }
             .disabled-link {
                 cursor: not-allowed;
             }

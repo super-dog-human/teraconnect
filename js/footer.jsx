@@ -13,7 +13,7 @@ export default () => (
         }
         footer > div > a {
             position: absolute;
-            color: #ffffff;
+            color: var(--soft-white);
             font-size: 14px;
             height: 20px;
             top: 0;

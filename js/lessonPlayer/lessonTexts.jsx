@@ -54,8 +54,8 @@ export default class LessonTexts extends React.Component {
                     text.horizontalAlign = text.horizontalAlign || 'center';
                     text.verticalAlign   = text.verticalAlign || 'bottom';
                     text.sizeVW          = (text.sizeVW || 5) * this.textSizeMultiplier;
-                    text.bodyColor       = text.bodyColor || 'white';
-                    text.borderColor     = text.borderColor || '#ff6699';
+                    text.bodyColor       = text.bodyColor || 'var(--text-body-color)';
+                    text.borderColor     = text.borderColor || 'var(--text-border-color)';
 
                     return <LessonText text={text}
                         textPadingSize={this.textSizeMultiplier} // just use multiplier because default padidng is 1.
@@ -65,6 +65,8 @@ export default class LessonTexts extends React.Component {
                 })
             }
                 <style jsx>{`
+                    --text-body-color: white;
+                    --text-border-color: #ff6699;
                     #lesson-texts {
                         position: absolute;
                         z-index: 100; // text

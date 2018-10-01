@@ -114,12 +114,14 @@ export default class Home extends React.Component {
                     <span>designed by Freepik, Pixel Buddha from Flaticon</span>
                 </div>
                 <style jsx>{`
+                    --default-gray: #767676;
+                    --heading-pink: #da7b7b;
                     #home {
                         width: 100%;
                         height: 100%;
                     }
                     .text-gray {
-                        color: #767676;
+                        color: var(--default-gray);
                     }
                     #slick-hero {
                         width: calc(100% - 30px);
@@ -140,7 +142,7 @@ export default class Home extends React.Component {
                     #app-large-title {
                         font-size: 3.5vw;
                         font-weight: 600;
-                        color: #DA7B7B;
+                        color: var(--heading-pink);
                         margin-top: 5vw;
                         margin-left: 45vw;
                     }
@@ -168,7 +170,7 @@ export default class Home extends React.Component {
                         padding: 0;
                         margin-top: 2.5vw;
                         margin-left: 60vw;
-                        background-color: #EC9F05;
+                        background-color: var(--attention-orange);
                     }
                     #trial-btn-label {
                         color: white;

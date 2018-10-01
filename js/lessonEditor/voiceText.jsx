@@ -113,7 +113,7 @@ export default class VoiceText extends React.Component {
                         border: 1px solid #D8D8D8;
                         border-radius: 5px;
                         font-size: 20px;
-                        color: #D8D8D8;
+                        color: var(--dark-gray);
                     }
                 `}</style>
             </div>

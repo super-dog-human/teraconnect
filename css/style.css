@@ -1,3 +1,4 @@
+
 @keyframes fade-in {
     0% {
         display: none;
@@ -31,33 +32,42 @@
 body {
     font-family: "Noto Sans Japanese", "Noto Sans JP", sans-serif;
 }
+:root {
+    --powder-blue:      #04acb4;
+    --dark-navy:        #247494;
+    --soft-white:       #eBe9e9;
+    --light-gray:       #818d92;
+    --dark-gray:        #595353;
+    --attention-orange: #ec9f05;
+}
+
 .app-back-color-powder-blue {
-    background-color: #04acb4;
+    background-color var(--powder-blue);
 }
 .app-back-color-dark-navy {
-    background-color: #247494;
+    background-color: var(--dark-navy);
 }
 .app-back-color-soft-white {
-    background-color: #eBe9e9;
+    background-color: var(--soft-white);
 }
 .app-back-color-light-gray {
-    background-color: #818d92;
+    background-color: var(--light-gray);
 }
 .app-back-color-dark-gray {
-    background-color: #595353;
+    background-color: var(--dark-gray);
 }
 .app-text-color-powder-blue {
-    color: #04acb4;
+    color: var(--powder-blue);
 }
 .app-text-color-dark-navy {
-    color: #247494;
+    color: var(--dark-navy);
 }
 .app-text-color-soft-white {
-    color: #eBe9e9;
+    color: var(--soft-white);
 }
 .app-text-color-light-gray {
-    color: #818d92;
+    color: var(--light-gray);
 }
 .app-text-color-dark-gray {
-    color: #595353;
+    color: var(--dark-gray);
 }
