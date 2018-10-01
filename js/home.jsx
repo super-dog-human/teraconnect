@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import Slider from 'react-slick';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as Const from './common/constants';
 
 export default class Home extends React.Component {
     constructor(props) {
@@ -17,7 +18,13 @@ export default class Home extends React.Component {
 
     _changeAgreeToTerms(event) {
         const isAgree = event.target.checked;
-        Cookies.set('agreeToTerms', isAgree.toString(), { path: '/', secure: true });
+        let option = {};
+        if (Const.isProduction()) {
+            option = { path: '/', secure: true }
+        } else {
+            option = { path: '/' }
+        }
+        Cookies.set('agreeToTerms', isAgree.toString(), option);
         this.setState({ isAgreeToTerms: isAgree });
     }
 

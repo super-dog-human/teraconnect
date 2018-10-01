@@ -1,4 +1,10 @@
-export const API_URL                   = 'https://api.teraconnect.org/';
+export const PRODUCTION_API_URL  = 'https://api.teraconnect.org/';
+export const DEVELOPMENT_API_URL = 'http://localhost:8080/';
+
+export function isProduction() {
+    return document.location.href.startsWith('https://authoring.teraconnect.org/');
+}
+export const API_URL                   = isProduction() ? PRODUCTION_API_URL : DEVELOPMENT_API_URL;
 export const LESSON_API_URL            = API_URL + 'lessons/{lessonID}';
 export const LESSON_MATERIAL_API_URL   = API_URL + 'lessons/{lessonID}/materials';
 export const LESSON_VOICE_TEXT_API_URL = API_URL + 'lessons/{lessonID}/voice_texts';
