@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default ({selectedIndex}) => (
+export default ({selectedIndex = 0}) => ( // FIXME selectedIndex value
     <header className="app-back-color-dark-navy fixed-top">
         <div className="d-flex justify-content-right">
             <span id="app-logo" className="mr-auto">

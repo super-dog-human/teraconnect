@@ -1,8 +1,8 @@
+import * as Const from '../common/constants';
 const numChannels   = 1;
 
 onmessage = function(event) {
     const axios = require('axios');
-    const Const = require('../common/constants');
 
     const voice = event.data;
     const params = { lesson_id: voice.lessonID };

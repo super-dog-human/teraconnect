@@ -71,3 +71,7 @@ body {
 .app-text-color-dark-gray {
     color: var(--dark-gray);
 }
+.tooltip {
+    opacity: 1 !important;
+    z-index: 1000;
+}

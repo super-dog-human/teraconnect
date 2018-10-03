@@ -296,20 +296,21 @@ export default class LessonRecorderScreen extends React.Component {
                             <button type="button" id="prev-graphic-btn" className="btn btn-dark graphic-btn"
                                 disabled={this.graphicURLIndex == -1}
                                 onClick={this._switchGraphic.bind(this, -1)}
-                                data-tip="画像の切り替え">
+                                data-tip="前の画像を表示">
                                 <FontAwesomeIcon icon={['fas', 'image']} />
                             </button>
                             <button type="button" id="next-graphic-btn" className="btn btn-dark graphic-btn"
                                 disabled={this.graphicURLIndex == this.state.graphicURLs.length - 1}
                                 onClick={this._switchGraphic.bind(this, 1)}
-                                data-tip="画像の切り替え">
+                                data-tip="次の画像を表示">
                                 <FontAwesomeIcon icon={['fas', 'image']} />
                             </button>
                         </div>
 
                         <div id="rec-single-btns">
                             <button type="button" id="start-record-btn" className="btn btn-danger rec-btn"
-                                onClick={this._recordingStart.bind(this)}>
+                                onClick={this._recordingStart.bind(this)}
+                                data-tip="収録を開始します">
                                 <FontAwesomeIcon icon={['far', 'dot-circle']} /> 収録開始
                             </button>
                             <button type="button" id="btn-stop-record" className="btn btn-secondary btn-with-hover rec-btn"
@@ -321,10 +322,10 @@ export default class LessonRecorderScreen extends React.Component {
                         <div id="rec-pair-btns" className="btn-in-stop">
                             <button type="button" id="save-record-btn" className="btn btn-primary rec-btn"
                                 onClick={this._postRecord.bind(this)}
-                                data-tip="録画を完了し、編集画面へ移動します">
+                                data-tip="収録を終了し、編集画面へ移動します">
                                 <FontAwesomeIcon icon={['fas', 'cloud-upload-alt']} /> 収録終了
                             </button>
-                            <button type="button" className="btn btn-primary rec-btn"
+                            <button type="button" className="btn btn-danger rec-btn"
                                 onClick={this._recordingResume.bind(this)}
                                 disabled={this.state.isReachedTimeLimit}
                                 data-tip="収録を再開します">
@@ -336,29 +337,32 @@ export default class LessonRecorderScreen extends React.Component {
                             <div id="position-controller-pad">
                                 <button type="button" className="btn btn-dark"
                                     onMouseDown={this._movePosition.bind(this, 'back')}
-                                    onMouseUp={this._stopMovingPosition.bind(this)}>
+                                    onMouseUp={this._stopMovingPosition.bind(this)}
+                                    data-tip="奥へ移動">
                                     <FontAwesomeIcon icon={['fas', 'arrow-up']} />
                                 </button>
                                 <button type="button" className="btn btn-dark"
                                     onMouseDown={this._movePosition.bind(this, 'front')}
-                                    onMouseUp={this._stopMovingPosition.bind(this)}>
+                                    onMouseUp={this._stopMovingPosition.bind(this)}
+                                    data-tip="手前へ移動">
                                     <FontAwesomeIcon icon={['fas', 'arrow-down']} />
                                 </button>
                                 <button type="button" className="btn btn-dark"
                                     onMouseDown={this._movePosition.bind(this, 'left')}
-                                    onMouseUp={this._stopMovingPosition.bind(this)}>
+                                    onMouseUp={this._stopMovingPosition.bind(this)}
+                                    data-tip="左へ移動">
                                     <FontAwesomeIcon icon={['fas', 'arrow-left']} />
                                 </button>
                                 <button type="button" className="btn btn-dark"
                                     onMouseDown={this._movePosition.bind(this, 'right')}
-                                    onMouseUp={this._stopMovingPosition.bind(this)}>
+                                    onMouseUp={this._stopMovingPosition.bind(this)}
+                                    data-tip="右へ移動">
                                     <FontAwesomeIcon icon={['fas', 'arrow-right']} />
                                 </button>
                             </div>
                         </div>
                     </div>
-
-                    <ReactTooltip />
+                    <ReactTooltip className="tooltip" place="top" type="warning" offset={{top: 70}} />
                 </div>
 
                 <style jsx>{`

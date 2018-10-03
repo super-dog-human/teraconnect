@@ -11,6 +11,7 @@ export default class AvatarManager extends React.Component {
 
         this.checker = new AvatarRightsChecker();
         this.defaultThumbnailURL = 'https://storage.googleapis.com/teraconn_thumbnail/avatar/default.png';
+        this.errMessage = '使用できないファイルです。下記の条件を確認してください。\n\n・VRoid Studioで作成したVRMファイルである\n・ライセンスがCC0である\n・ファイルサイズが30MB以下である';
         this.maxFileBytes = 31457280;
 
         this.state = {
@@ -38,11 +39,10 @@ export default class AvatarManager extends React.Component {
     async _onDrop(acceptedFiles, rejectedFiles) {
         if (this.props.isCreating) return;
 
-        const errMessage = '使用できないファイルです。下記の条件を確認してください。\n\n・VRM形式のファイルである\n・ライセンスがCC0である\n・ファイルサイズが30MB以下である';
-
         if (rejectedFiles.length > 0) {
-            window.alert(errMessage);
+            window.alert(this.errMessage);
             // error modal
+            
             return;
         }
 
@@ -58,14 +58,13 @@ export default class AvatarManager extends React.Component {
         await this.checker.loadAvatar(url);
 
         if (!this.checker.isEnableAvatar()) {
-            window.alert(errMessage);
-            this.checker.clear();
-
+            window.alert(this.errMessage);            
             // error modal
+
+            this.props.changeCreatingStatus(false);
             return;
         }
 
-        this.checker.clear();
         const id = await LessonUtility.uploadAvatar(url).catch((err) => {
             console.error(err);
             // error modal
@@ -90,20 +89,19 @@ export default class AvatarManager extends React.Component {
                         </label>
                     })
                 }
-                    <div id="upload-avatar" data-tip="VRMファイルは、授業再生のため再配布されます。画面右上の「使い方」をご確認ください。">
+                    <div id="upload-avatar" className={this.props.isCreating || this.state.hasAddedAvatar ? 'd-none' : 'd-block'} data-tip="VRMファイルは、授業再生のため再配布されます。画面右上の「使い方」をご確認ください。">
                         <Dropzone onDrop={this._onDrop.bind(this)} accept=".vrm" maxSize={this.maxFileBytes} multiple={false}
                             style={{ width: "100px", height: "100px", position: "absolute" }}>
                             <div id="upload-avatar-icon" className="app-text-color-soft-white"><FontAwesomeIcon icon="file-upload" /></div>
                             <div id="upload-avatar-text" className="app-text-color-soft-white">&nbsp;追加</div>
                         </Dropzone>
                     </div>
-                    <div id="upload-loading-status">
+                    <div id="upload-loading-status" className={this.props.isCreating ? 'd-block' : 'd-none'}>
                         <div id ="upload-loading-icon" className="app-text-color-soft-white">
                             <FontAwesomeIcon icon="spinner" spin />
                         </div>
                     </div>
                 </div>
-                <ReactTooltip />
                 <style jsx>{`
                     .selected-element {
                         border: solid 6px #ec9f05;
@@ -116,8 +114,9 @@ export default class AvatarManager extends React.Component {
                         padding: 15px;
                         width: 600px;
                         height: 140px;
-                        overflow-x: scroll;
-                        overflow-y: hidden;
+                    }
+                    #avatar-manager::-webkit-scrollbar {
+                        display:none;
                     }
                     #avatar-manager img {
                         width: 100px;
@@ -137,7 +136,6 @@ export default class AvatarManager extends React.Component {
                         right: 0;
                     }
                     #upload-avatar {
-                        display: ${this.props.isCreating || this.state.hasAddedAvatar ? 'none' : 'block'};
                         position: relative;
                         width: 100px;
                         height: 100px;
@@ -166,7 +164,6 @@ export default class AvatarManager extends React.Component {
                         font-size: 12px;
                     }
                     #upload-loading-status {
-                        display: ${this.props.isCreating ? 'block' : 'none'};
                         position: relative;
                         width: 100px;
                         height: 100px;

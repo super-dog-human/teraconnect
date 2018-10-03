@@ -11,7 +11,7 @@ export default () => (
                     <h4>Q. うまく動かないよ〜〜！</h4>
                     今のところスマートフォンだと動かないよ…ごめんね。<br />
                     <b>PC版のChromeまたはFirefoxの最新版</b>で動作するはずだよ！<br />
-                    PCの性能は、だいたい<a href="https://www.cpubenchmark.net/mid_range_cpus.html" targrt="_blank">ベンチマークのスコア</a>が4,000以上のCPUと、8GB以上のメモリが推奨だよ。<br /><br />
+                    だいたい<a href="https://www.cpubenchmark.net/mid_range_cpus.html" targrt="_blank">ベンチマークのスコア</a>が4,000以上のCPUと、8GB以上のメモリが必要みたい。<br /><br />
                     それでもダメだったら…<a href="https://goo.gl/forms/Rmp3dNKN7ZsDoF2k2" target="_blank">教えてね！</a>
                 </li>
                 <li>
@@ -50,7 +50,7 @@ export default () => (
                     どうしても早く消したい！とかがあったら教えて欲しいな。<br />
                 </li>
                 <li>
-                    <h4>Q. 授業は最大何分まで記録できるの？</h4>
+                    <h4>Q. 授業は何分まで記録できるの？</h4>
                     最大で10分までだよ！<br />
                     ぶっとおしで撮らなくても、収録中に一時停止と再開ができるよ！<br />
                 </li>

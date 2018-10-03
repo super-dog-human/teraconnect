@@ -61,7 +61,7 @@ export default class GraphicManager extends React.Component {
                         </label>
                     })
                 }</div>
-                <div id="upload-graphic">
+                <div id="upload-graphic" className={this.props.isCreating ? 'd-none' : 'd-block'}>
                     <Dropzone onDrop={this._onDrop.bind(this)} accept="image/*" style={{}}>
                         <span className="app-text-color-soft-white">
                             <span id="upload-graphic-icon"><FontAwesomeIcon icon="folder-plus" /></span>
@@ -69,7 +69,7 @@ export default class GraphicManager extends React.Component {
                         </span>
                     </Dropzone>
                 </div>
-                <div id ="upload-loading-icon" className="app-text-color-soft-white">
+                <div id ="upload-loading-icon" className={this.props.isCreating ? 'app-text-color-soft-white d-block' : 'app-text-color-soft-white d-none'}>
                     <FontAwesomeIcon icon="spinner" spin />
                 </div>
                 <style jsx>{`
@@ -84,6 +84,10 @@ export default class GraphicManager extends React.Component {
                         overflow-y: scroll;
                         overflow: scroll;
                     }
+                    #graphic-scroll-selector::-webkit-scrollbar:horizontal {
+                        display:none;
+                    }
+
                     .checkable-thumbnail  {
                         position: relative;
                         margin-right: 10px;
@@ -108,7 +112,6 @@ export default class GraphicManager extends React.Component {
                         border: solid 6px #ec9f05;
                     }
                     #upload-graphic {
-                        display: ${this.props.isCreating ? 'none' : 'block'};
                         position: absolute;
                         width: 200px;
                         height: 20px;
@@ -128,7 +131,6 @@ export default class GraphicManager extends React.Component {
                         font-size: 15px;
                     }
                     #upload-loading-icon {
-                        display: ${this.props.isCreating ? 'block' : 'none'};
                         position: absolute;
                         width: 40px;
                         height: 40px;

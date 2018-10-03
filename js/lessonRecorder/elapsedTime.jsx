@@ -46,7 +46,7 @@ export default class ElapsedTime extends React.Component {
 
     render() {
         return(
-            <div id="elapsed-time" className="bg-danger">
+            <div id="elapsed-time">
                 {this.state.elapsedTimeString}
                 <style jsx>{`
                     #elapsed-time {

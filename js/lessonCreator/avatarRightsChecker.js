@@ -19,6 +19,7 @@ export default class AvatarRightsChecker {
 //        if (meta.commercialUssageName == 'Disallow') return false;
         if (meta.licenseName == 'CC0') return true;
 //        if (meta.licenseName == 'CC_BY') return true;
+        this.avatar = {};
 
         return false;
     }
@@ -27,7 +28,4 @@ export default class AvatarRightsChecker {
 
     }
 */
-    clear() {
-        this.avatar = {};
-    }
 }

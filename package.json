@@ -1,7 +1,7 @@
 {
-  "name": "TeraConnect",
-  "version": "1.0.0",
-  "description": "the authoring tool for recorded lesson.",
+  "name": "Teraconnect",
+  "version": "0.0.1",
+  "description": "the lesson authoring tool.",
   "main": "index.html",
   "repository": "https://github.com/SuperDogHuman/teraconn.git",
   "author": "SuperDog <super.dog.less.than.human@gmail.com>",
@@ -11,43 +11,51 @@
     "@fortawesome/free-brands-svg-icons": "^5.3.1",
     "@fortawesome/free-regular-svg-icons": "^5.3.1",
     "@fortawesome/free-solid-svg-icons": "^5.3.1",
-    "@tensorflow-models/posenet": "^0.2.2",
-    "@tensorflow/tfjs": "^0.12.5",
+    "@tensorflow-models/posenet": "^0.2.3",
+    "@tensorflow/tfjs": "^0.13.1",
     "axios": "^0.18.0",
     "imports-loader": "^0.8.0",
     "js-cookie": "^2.2.0",
     "jszip": "^3.1.5",
     "localforage": "^1.7.2",
     "prop-types": "^15.6.2",
-    "react": "^16.0.0",
+    "react": "^0.14.0 || ^15.0.0 || ^16",
     "react-device-detect": "^1.6.1",
-    "react-dom": "^16.0.0",
+    "react-dom": "^0.14.0 || ^15.0.0 || ^16",
     "react-dropzone": "^5.1.0",
     "react-fontawesome": "^1.6.1",
-    "react-redux": "^5.0.7",
+    "react-redux": "^5.0.0",
     "react-router-dom": "^4.3.1",
     "react-slick": "^0.23.1",
     "react-tooltip": "^3.8.1",
     "redux": "^4.0.0",
-    "styled-jsx": "^3.0.0",
+    "styled-jsx": "^3.1.0",
     "three": "^0.95.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/plugin-transform-runtime": "^7.1.0",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-react": "^7.0.0",
     "@fortawesome/react-fontawesome": "^0.1.2",
-    "audioworklet-polyfill": "^1.1.1",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react": "^6.24.1",
-    "parcel-bundler": "^1.9.0"
+    "audioworklet-polyfill": "^1.1.2",
+    "parcel-bundler": "^1.10.1"
   },
   "babel": {
     "presets": [
-      "env",
-      "react"
+      ["@babel/preset-env", {
+        "targets": {
+          "browsers": ["last 2 versions"]
+        }
+      }],
+      "@babel/preset-react"
     ],
     "plugins": [
-      "styled-jsx/babel"
+       ["styled-jsx/babel", {
+         "optimizeForSpeed": true,
+         "sourceMaps": true
+       }]
     ]
   },
   "constants": {

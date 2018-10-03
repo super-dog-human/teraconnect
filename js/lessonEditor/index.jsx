@@ -224,7 +224,7 @@ export default class LessonEditor extends React.Component {
                         </div>
                     </div>
                 </div>
-                <ReactTooltip />
+                <ReactTooltip className="tooltip" place="top" type="warning" />
                 <style jsx>{`
                     #lesson-editor {
                         opacity: ${this.state.isLoading ? '0.8' : '1'};
