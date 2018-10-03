@@ -84,10 +84,9 @@ export default class GraphicManager extends React.Component {
                         overflow-y: scroll;
                         overflow: scroll;
                     }
-                    #graphic-scroll-selector::-webkit-scrollbar:horizontal {
+                    #graphic-scroll-selector::-webkit-scrollbar {
                         display:none;
                     }
-
                     .checkable-thumbnail  {
                         position: relative;
                         margin-right: 10px;

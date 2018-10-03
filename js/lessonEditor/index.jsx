@@ -188,12 +188,12 @@ export default class LessonEditor extends React.Component {
                     <div id="lesson-control-panel">
                         <div className="row">
                             <div className="col text-right">
-                                <button className="btn btn-primary btn-lg" onClick={this._confirmPublish.bind(this)} disabled={this.state.isLoading}>授業を公開する</button>
+                                <button className="btn btn-primary btn-lg" onClick={this._confirmPublish.bind(this)} disabled={this.state.isLoading} data-tip="授業を公開状態にします">授業を公開する</button>
                             </div>
                         </div>
                         <div className="row">
                             <div className="col text-right">
-                                <button className="btn btn-danger btn-lg" onClick={this._confirmDestroy.bind(this)} disabled={this.state.isLoading}>破棄する</button>
+                                <button className="btn btn-danger btn-lg" onClick={this._confirmDestroy.bind(this)} disabled={this.state.isLoading} data-tip="授業をすぐに破棄します">破棄する</button>
                                 {/*
                                 <div id="publish-checkbox" className="form-check">
                                     <input type="checkbox" id="is-publish-checkbox" onChange={this._changePublic.bind(this)} />
@@ -224,7 +224,7 @@ export default class LessonEditor extends React.Component {
                         </div>
                     </div>
                 </div>
-                <ReactTooltip className="tooltip" place="top" type="warning" />
+                <ReactTooltip className="tooltip" place="bottom" type="warning" />
                 <style jsx>{`
                     #lesson-editor {
                         opacity: ${this.state.isLoading ? '0.8' : '1'};

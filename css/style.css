@@ -42,7 +42,7 @@ body {
 }
 
 .app-back-color-powder-blue {
-    background-color var(--powder-blue);
+    background-color: var(--powder-blue);
 }
 .app-back-color-dark-navy {
     background-color: var(--dark-navy);

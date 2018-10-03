@@ -11,7 +11,7 @@ export default () => (
                     <h4>Q. うまく動かないよ〜〜！</h4>
                     今のところスマートフォンだと動かないよ…ごめんね。<br />
                     <b>PC版のChromeまたはFirefoxの最新版</b>で動作するはずだよ！<br />
-                    だいたい<a href="https://www.cpubenchmark.net/mid_range_cpus.html" targrt="_blank">ベンチマークのスコア</a>が4,000以上のCPUと、8GB以上のメモリが必要みたい。<br /><br />
+                    だいたい<a href="https://www.cpubenchmark.net/mid_range_cpus.html" target="_blank">ベンチマークのスコア</a>が4,000以上のCPUと、8GB以上のメモリが必要みたい。<br />
                     それでもダメだったら…<a href="https://goo.gl/forms/Rmp3dNKN7ZsDoF2k2" target="_blank">教えてね！</a>
                 </li>
                 <li>

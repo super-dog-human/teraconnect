@@ -265,8 +265,8 @@ export default class LessonRecorderScreen extends React.Component {
                             <div id="recording-status-icon"><FontAwesomeIcon icon={['fas', 'video']} /> REC</div>
                         </div>
 
-                        <div id="pose-detector-btn" className={this.state.isPoseDetection ? 'text-danger' : ''} data-tip="実験的な機能です">
-                            <button type="button" className="btn btn-dark" onClick={this._switchPoseDetection.bind(this)}>
+                        <div id="pose-detector-btn" data-tip="実験的な機能です">
+                            <button type="button" className={this.state.isPoseDetection ? 'btn btn-dark text-danger' : 'btn btn-dark'} onClick={this._switchPoseDetection.bind(this)}>
                                 <FontAwesomeIcon icon={['fas', 'walking']} /> ポーズ検出
                             </button>
                         </div>
