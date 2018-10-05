@@ -1,4 +1,3 @@
-import * as Const from '../common/constants';
 const numChannels   = 1;
 
 onmessage = function(event) {
@@ -6,7 +5,7 @@ onmessage = function(event) {
 
     const voice = event.data;
     const params = { lesson_id: voice.lessonID };
-    axios.post(Const.RAW_VOICE_API_URL, params)
+    axios.post(voice.url, params)
         .then((response) => { return response.data; })
         .then((response) => {
             const fileID = response.file_id;

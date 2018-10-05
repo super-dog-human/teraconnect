@@ -1,4 +1,5 @@
 import 'audioworklet-polyfill';
+import * as Const from '../common/constants';
 
 export default class VoiceRecorder {
     constructor(lessonID, callback, lipSyncCallback) {
@@ -59,6 +60,7 @@ export default class VoiceRecorder {
 
         const uploader = new Worker('voiceUploader.js');
         uploader.postMessage({
+            url:               Const.RAW_VOICE_API_URL,
             lessonID:          this.lessonID,
             time:              result.speechedAt,
             buffers:           result.buffers,

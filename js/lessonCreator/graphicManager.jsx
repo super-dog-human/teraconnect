@@ -82,7 +82,6 @@ export default class GraphicManager extends React.Component {
                         height: 250px;
                         padding: 15px;
                         overflow-y: scroll;
-                        overflow: scroll;
                     }
                     #graphic-scroll-selector::-webkit-scrollbar {
                         display:none;

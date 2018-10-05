@@ -30,7 +30,7 @@
     "react-tooltip": "^3.8.1",
     "redux": "^4.0.0",
     "styled-jsx": "^3.1.0",
-    "three": "^0.95.0"
+    "three": "^0.97.0"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
@@ -44,22 +44,30 @@
   },
   "babel": {
     "presets": [
-      ["@babel/preset-env", {
-        "targets": {
-          "browsers": ["last 2 versions"]
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "browsers": [
+              "last 2 versions"
+            ]
+          }
         }
-      }],
+      ],
       "@babel/preset-react"
     ],
     "plugins": [
-       ["styled-jsx/babel", {
-         "optimizeForSpeed": true,
-         "sourceMaps": true
-       }]
+      [
+        "styled-jsx/babel",
+        {
+          "optimizeForSpeed": true,
+          "sourceMaps": true
+        }
+      ]
     ]
   },
   "constants": {
-    "build_path": "../teraconn_server/app_engine/src/teraconnect-authoring/static/teraconnect/"
+    "build_path": "../teraconn_server/app_engine/authoring/static/teraconnect/"
   },
   "scripts": {
     "parcel": "parcel index.html",

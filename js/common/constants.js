@@ -1,9 +1,8 @@
 export const PRODUCTION_API_URL  = 'https://api.teraconnect.org/';
-export const DEVELOPMENT_API_URL = 'http://localhost:8080/';
+export const DEVELOPMENT_API_URL = 'https://teraconnect-api-development-dot-teraconnect-209509.appspot.com/';
 
 export function isProduction() {
-//    return document.location.href.startsWith('https://authoring.teraconnect.org/');
-    return true;
+    return document.location.href.startsWith('https://authoring.teraconnect.org/');
 }
 export const API_URL                   = isProduction() ? PRODUCTION_API_URL : DEVELOPMENT_API_URL;
 export const LESSON_API_URL            = API_URL + 'lessons/{lessonID}';

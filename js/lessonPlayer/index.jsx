@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import LessonLoader from './lessonLoader';
 import LessonAvatar from './lessonAvatar';
 import LessonController from './lessonController';
+import TweetButton from './tweetButton';
 
 export default class LessonPlayer extends React.Component {
     constructor(props) {
@@ -12,9 +13,10 @@ export default class LessonPlayer extends React.Component {
 
         this.loader = new LessonLoader(props.match.params.id);
         this.state = {
-            avatar:    new LessonAvatar(),
-            lesson:    {},
-            isLoading: true,
+            avatar:       new LessonAvatar(),
+            lesson:       {},
+            packedlesson: {},
+            isLoading:    true,
         }
     }
 
@@ -41,13 +43,14 @@ export default class LessonPlayer extends React.Component {
             this.state.avatar.updateSize(this.container);
         }));
 
-        this.setState({ lesson: this.loader.lesson, isLoading: false });
+        this.setState({ lesson: this.loader.lesson, packedLesson: this.loader.packedLesson, isLoading: false });
     }
 
     render() {
         return (
             <div id="lesson-player" ref={(e) => { this.container = e; }}>
-                <LessonController avatar={this.state.avatar} lesson={this.state.lesson} isLoading={this.state.isLoading} ref={(e) => { this.playerElement = e; }} />
+                <LessonController avatar={this.state.avatar} lesson={this.state.packedLesson} isLoading={this.state.isLoading} ref={(e) => { this.playerElement = e; }} />
+                <TweetButton lesson={this.state.lesson} isLoading={this.state.isLoading} />
                 <style jsx>{`
                     #lesson-player {
                         text-align: center;

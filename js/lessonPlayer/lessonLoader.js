@@ -1,42 +1,39 @@
-import axios from 'axios';
 import JSZip from 'jszip';
 import LessonUtility from '../common/lessonUtility';
-import * as Const from '../common/constants';
 
 export default class LessonLoader {
     constructor(lessonID) {
         this.lessonID      = lessonID;
         this.avatarFileURL = null;
         this.lesson        = {};
+        this.packedLesson  = {};
         this.objectURLs    = [];
     }
 
     async loadForPlay() {
-        const lessonURL = Const.LESSON_API_URL.replace('{lessonID}', this.lessonID);
-        const result = await axios.get(lessonURL).catch((err) => {
+        this.lesson = await LessonUtility.fetchLesson(this.lessonID).catch((err) => {
             // TODO delete chaches.
+            console.error(err);
             return false;
         });
+        if (!this.lesson) return false;
 
-        if (!result) return false;
-
-        const lesson = result.data;
-        const zip = await this._fetchLessonZipBlobWithRetry(lesson);
+        const zip = await this._fetchLessonZipBlobWithRetry();
         await this._loadLessonMaterial(zip);
 
-        const avatar = lesson.avatar;
+        const avatar = this.lesson.avatar;
         const avatarURL = await LessonUtility.fetchAvatarObjectURL(avatar);
         this.avatarFileURL = avatarURL;
 
         return true;
     }
 
-    async _fetchLessonZipBlobWithRetry(lesson) {
-        const zip = await LessonUtility.fetchLessonZipBlob(lesson).catch(async (err) => {
+    async _fetchLessonZipBlobWithRetry() {
+        const zip = await LessonUtility.fetchLessonZipBlob(this.lesson).catch(async (err) => {
             if (err.response.status == 404) { // not exist zipped lesson in cloud storage yet
                 const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
                 await sleep(1000);
-                return this._fetchLessonZipBlobWithRetry(lesson);
+                return this._fetchLessonZipBlobWithRetry(this.lesson);
             }
             throw err;
         });
@@ -48,8 +45,8 @@ export default class LessonLoader {
         const unzip = await JSZip.loadAsync(zipBody)
 
         const lessonString = await unzip.file('lesson.json').async('string');
-        this.lesson = JSON.parse(lessonString);
-        this.lesson.timelines.forEach(async (t) => {
+        this.packedLesson = JSON.parse(lessonString);
+        this.packedLesson.timelines.forEach(async (t) => {
             if (t.voice.id != '') {
                 const voicePath = 'voices/' + t.voice.id + '.ogg';
                 const blob = await unzip.file(voicePath).async('blob');

@@ -25,8 +25,9 @@ export default class LessonController extends React.Component {
         this._animate();
     }
 
-    _panelClick() {
+    _panelClick(event) {
         this._play(!this.state.isPlaying);
+        event.target.blur();
     }
 
     _play(isStart) {
@@ -236,6 +237,9 @@ export default class LessonController extends React.Component {
                         height: 100%;
                         font-size: 10vw;
                         opacity: 0;
+                    }
+                    .control-btn:focus {
+                        outline: 0;
                     }
                     .control-btn:hover {
                         opacity: ${this.props.isLoading || this.state.isPlaying ? 0: 0.2};

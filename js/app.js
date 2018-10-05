@@ -3,6 +3,7 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faDotCircle, faPauseCircle, faMehBlank } from '@fortawesome/free-regular-svg-icons';
+import { faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { faPlayCircle, faSpinner, faImage, faArrowUp, faArrowDown,
     faArrowLeft, faArrowRight, faLaughBeam, faSmile,
     faFrownOpen, faAngry, faSurprise, faWalking, faCloudUploadAlt,
@@ -10,7 +11,7 @@ import { faPlayCircle, faSpinner, faImage, faArrowUp, faArrowDown,
 library.add( faDotCircle, faPauseCircle, faMehBlank, faPlayCircle, faSpinner, faImage,
     faArrowUp, faArrowDown, faArrowLeft, faArrowRight, faLaughBeam, faSmile, faFrownOpen,
     faAngry, faSurprise, faWalking, faCloudUploadAlt, faVideo, faFileUpload, faFolderPlus,
-    faVolumeUp, faEdit);
+    faVolumeUp, faEdit, faTwitter);
 
 import Header from './header';
 import Footer from './footer';

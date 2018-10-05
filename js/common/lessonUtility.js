@@ -224,8 +224,8 @@ export default class LessonUtility {
     }
 
     static async packMaterial(lessonID) {
-        const body = { dummy: "dummyBody" };
         const url = Const.LESSON_PACK_API_URL.replace('{lessonID}', lessonID);
+        const body = { dummy: "dummyBody" };
         await axios.put(url, body);
     }
 
