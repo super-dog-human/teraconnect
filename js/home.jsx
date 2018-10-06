@@ -126,6 +126,7 @@ export default class Home extends React.Component {
                     #slick-hero {
                         width: calc(100% - 30px);
                         height: 40vw;
+                        max-height: 512px;
                     }
                     #hero-one {
                         width: 100%;
@@ -134,10 +135,6 @@ export default class Home extends React.Component {
                         background-repeat: no-repeat;
                         background-position: 20% 0%;
                         background-size: contain;
-                    }
-                    #avatar-img {
-                        left: 30vw;
-                        max-height: 100%;
                     }
                     #app-large-title {
                         font-size: 3.5vw;
@@ -196,7 +193,7 @@ export default class Home extends React.Component {
                         background-image: url("img/screenshot.jpg");
                         background-repeat: no-repeat;
                         background-position: 0% 50%;
-                        background-size: 50% auto, contain;
+                        background-size: contain;
                     }
                     #feature-title {
                         font-size: 2.2vw;
@@ -242,7 +239,7 @@ export default class Home extends React.Component {
                         background-image: url("img/adult-black-and-white-children.jpg");
                         background-repeat: no-repeat;
                         background-position: 100% 50%;
-                        background-size: 50% auto, contain;
+                        background-size: contain;
                     }
                     #hero-three h3 {
                         margin-top: 5vw;
@@ -265,7 +262,7 @@ export default class Home extends React.Component {
                     }
                     #app-large-logo {
                         width: 100%;
-                        margin-top: 100px;
+                        margin-top: 200px;
                         text-align: center;
                     }
                     #app-large-logo img {
@@ -273,6 +270,88 @@ export default class Home extends React.Component {
                         max-width: 250px;
                         margin: auto;
                     }
+                    @media (min-width: 1280px) {
+                        #hero-one {
+                            background-position: 25% 0%;
+                        }
+                        #app-large-title {
+                            font-size: 3em;
+                            margin-top: 50px;
+                        }
+                        #app-caption {
+                            font-size: 1.3em;
+                            line-height: 2.7em;
+                            margin-top: 20px;
+                        }
+                        #app-small-title {
+                            font-size: 2em;
+                            line-height: 2em;
+                            margin-top: 10px;
+                        }
+                        #trial-btn {
+                            width: 220px;
+                            height: 65px;
+                            margin-top: 20px;
+                            margin-left: 55vw;
+                        }
+                        #trial-btn-label {
+                            font-size: 1.2em;
+                        }
+                        #trial-btn-notice {
+                            font-size: 0.8em;
+                        }
+                        #terms-of-use {
+                            margin-top: 10px;
+                            margin-left: 57vw;
+                            font-size: 0.9em;
+                        }
+                        #agree-terms-checkbox {
+                            width: 15px;
+                            height: 15px;
+                        }
+                        #hero-two {
+                            background-position: 0% 50%;
+                        }
+                        #feature-title {
+                            font-size: 2em;
+                            line-height: 4em;
+                            margin-top: 10px;
+                            margin-bottom: 10px;
+                            margin-left: 55vw;
+                        }
+                        .feature {
+                            padding-left: 100px;
+                        }
+                        #feature-sentences li {
+                            margin-bottom: 40px;
+                        }
+                        #feature-sentences li h2 {
+                            font-size: 1.3em;
+                        }
+                        #feature-sentences li h3 {
+                            font-size: 1em;
+                            line-height: 1.6em;
+                        }
+                        #feature-sentences li:nth-child(1) {
+                            background-size: 70px auto, contain;
+                        }
+                        #feature-sentences li:nth-child(2) {
+                            background-size: 60px auto, contain;
+                        }
+                        #feature-sentences li:nth-child(3) {
+                            background-size: 80px auto, contain;
+                        }
+                        #hero-three h3 {
+                            margin-top: 50px;
+                            font-size: 1em;
+                            line-height: 1.7em;
+                        }
+                        #hero-three h2 {
+                            margin-top: 50px;
+                            font-size: 2em;
+                        }
+                    }
+
                 `}</style>
             </div>
         );

@@ -22,10 +22,7 @@ export default class TweetButton extends React.Component {
                     #share-twitter {
                         position: relative;
                         display: ${this.props.isLoading ? 'none' : 'block'};
-                        width: 100%;
-                        height: 100%;
                     }
-
                     #share-twitter-btn {
                         position: absolute;
                         z-index: 1000;
