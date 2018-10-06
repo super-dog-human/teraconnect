@@ -4,7 +4,7 @@ class Recorder extends AudioWorkletProcessor {
 
         this.isRecording             = false;
         this.isSpeaking              = false;
-        this.silenceSecondThreshold  = 0.8;
+        this.silenceSecondThreshold  = 0.6;
         this.durationSecondThreshold = 2.0;
         this.silenceVolumeThreshold  = 0.05;
         this.quietHistoryDurationSec = 0.2;
@@ -12,6 +12,7 @@ class Recorder extends AudioWorkletProcessor {
         this.buffers                 = [];
         this.bufferLength            = 0;
         this.recordingStartSecond    = 0;
+        this.recordingStopSecond     = 0;
         this.silenceBeginSecond      = 0;
         this.voiceBeginSecond        = 0;
 
@@ -21,6 +22,9 @@ class Recorder extends AudioWorkletProcessor {
                 this.recordingStartSecond = currentTime;
             } else if (this.buffers.length > 0) {
                 this._saveRecord();
+                this.recordingStopSecond += this._elapsedSecondFromStart();
+            } else {
+                this.recordingStopSecond += this._elapsedSecondFromStart();
             }
         };
     }
@@ -63,7 +67,7 @@ class Recorder extends AudioWorkletProcessor {
     }
 
     _elapsedSecondFromStart() {
-        return currentTime - this.recordingStartSecond;
+        return this.recordingStopSecond + currentTime - this.recordingStartSecond;
     }
 
     _durationSecond() {
