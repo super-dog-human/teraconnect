@@ -11,6 +11,7 @@
     "@fortawesome/free-brands-svg-icons": "^5.3.1",
     "@fortawesome/free-regular-svg-icons": "^5.3.1",
     "@fortawesome/free-solid-svg-icons": "^5.3.1",
+    "@material-ui/core": "^3.2.2",
     "@tensorflow-models/posenet": "^0.2.3",
     "@tensorflow/tfjs": "^0.13.1",
     "auth0-lock": "^11.10.0",
@@ -30,6 +31,7 @@
     "react-slick": "^0.23.1",
     "react-tooltip": "^3.8.1",
     "redux": "^4.0.0",
+    "redux-actions": "^2.6.1",
     "styled-jsx": "^3.1.0",
     "three": "^0.97.0"
   },
@@ -41,7 +43,10 @@
     "@babel/preset-react": "^7.0.0",
     "@fortawesome/react-fontawesome": "^0.1.2",
     "audioworklet-polyfill": "^1.1.2",
-    "parcel-bundler": "^1.10.1"
+    "eslint": "^5.8.0",
+    "eslint-plugin-react": "^7.11.1",
+    "parcel-bundler": "^1.10.1",
+    "prettier-eslint-cli": "^4.7.1"
   },
   "babel": {
     "presets": [
