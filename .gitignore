@@ -4,4 +4,5 @@
 *dist/*
 !*dist/img
 !*dist/voiceRecorderProcessor.js
+!*dist/BRFv4_JS_TK101018_v4.1.0_trial.wasm
 yarn-error.log
