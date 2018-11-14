@@ -1,103 +1,159 @@
-import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ReactTooltip from 'react-tooltip'
-import Dropzone from 'react-dropzone';
-import AvatarRightsChecker from './avatarRightsChecker';
-import LessonUtility from '../common/lessonUtility';
+import React from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Dropzone from 'react-dropzone'
+import AvatarRightsChecker from './avatarRightsChecker'
+import { fetchAvatars, uploadAvatar } from '../common/networkManager'
 
 export default class AvatarManager extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
 
-        this.checker = new AvatarRightsChecker();
-        this.defaultThumbnailURL = 'https://storage.googleapis.com/teraconn_thumbnail/avatar/default.png';
-        this.errMessage = '使用できないファイルです。下記の条件を確認してください。\n\n・VRoid Studioで作成したVRMファイルである\n・ライセンスがCC0である\n・ファイルサイズが30MB以下である';
-        this.maxFileBytes = 31457280;
+        this.checker = new AvatarRightsChecker()
+        this.defaultThumbnailURL =
+            'https://storage.googleapis.com/teraconn_thumbnail/avatar/default.png'
+        this.errMessage =
+            '使用できないファイルです。下記の条件を確認してください。\n\n・VRoid Studioで作成したVRMファイルである\n・ライセンスがCC0である\n・ファイルサイズが30MB以下である'
+        this.maxFileBytes = 31457280
 
         this.state = {
             hasAddedAvatar: false,
             selectedAvatarID: '',
-            avatars: [],
-        };
+            avatars: []
+        }
     }
 
     async componentWillMount() {
-        const avatars = await LessonUtility.fetchAvatars().catch((err) => {
-            console.error(err);
+        const avatars = await fetchAvatars().catch(err => {
+            console.error(err)
             // modal
-        });
+        })
 
-        this.setState({ avatars: avatars });
+        this.setState({ avatars: avatars })
     }
 
-    _changeAvatarSelection(event) {
-        const id = event.target.value; // can't unchecked after checked once.
-        this.setState({ selectedAvatarID: id });
-        this.props.changeAvatar(id);
+    changeAvatarSelection(event) {
+        const id = event.target.value // can't unchecked after checked once.
+        this.setState({ selectedAvatarID: id })
+        this.props.changeAvatar(id)
     }
 
-    async _onDrop(acceptedFiles, rejectedFiles) {
-        if (this.props.isCreating) return;
+    async onDrop(acceptedFiles, rejectedFiles) {
+        if (this.props.isCreating) return
 
         if (rejectedFiles.length > 0) {
-            window.alert(this.errMessage);
+            window.alert(this.errMessage)
             // error modal
-            
-            return;
+
+            return
         }
 
-        if (acceptedFiles.length == 0) return;
+        if (acceptedFiles.length == 0) return
 
-        this._createNewAvatar(acceptedFiles[0]);
+        this.createNewAvatar(acceptedFiles[0])
     }
 
-    async _createNewAvatar(file) {
-        this.props.changeCreatingStatus(true);
+    async createNewAvatar(file) {
+        this.props.changeCreatingStatus(true)
 
-        const url = file.preview;
-        await this.checker.loadAvatar(url);
+        const url = file.preview
+        await this.checker.loadAvatar(url)
 
         if (!this.checker.isEnableAvatar()) {
-            window.alert(this.errMessage);            
+            window.alert(this.errMessage)
             // error modal
 
-            this.props.changeCreatingStatus(false);
-            return;
+            this.props.changeCreatingStatus(false)
+            return
         }
 
-        const id = await LessonUtility.uploadAvatar(url).catch((err) => {
-            console.error(err);
+        const id = await uploadAvatar(url).catch(err => {
+            console.error(err)
             // error modal
-        });
+        })
 
-        const avatars = this.state.avatars;
-        avatars.push({ id: id});
+        const avatars = this.state.avatars
+        avatars.push({ id: id })
 
-        this.setState({ avatars: avatars, hasAddedAvatar: true });
-        this.props.changeCreatingStatus(false);
+        this.setState({ avatars: avatars, hasAddedAvatar: true })
+        this.props.changeCreatingStatus(false)
     }
 
     render() {
-        return(
+        return (
             <div id="avatar-manager" className="app-back-color-dark-gray">
-                <div className="form-inline">{
-                    this.state.avatars.map((avatar, i) => {
-                        const isSelected = avatar.id == this.state.selectedAvatarID;
-                        return <label key={i} className={isSelected ? "checkable-thumbnail selected-element" : "checkable-thumbnail nonselected-element"}>
-                            <img src={ avatar.thumbnailURL ? avatar.thumbnailURL : this.defaultThumbnailURL } />
-                            <input type="checkbox" value={avatar.id} checked={isSelected} onChange={this._changeAvatarSelection.bind(this)} />
-                        </label>
-                    })
-                }
-                    <div id="upload-avatar" className={this.props.isCreating || this.state.hasAddedAvatar ? 'd-none' : 'd-block'} data-tip="VRMファイルは、授業再生のため再配布されます。画面右上の「使い方」をご確認ください。">
-                        <Dropzone onDrop={this._onDrop.bind(this)} accept=".vrm" maxSize={this.maxFileBytes} multiple={false}
-                            style={{ width: "100px", height: "100px", position: "absolute" }}>
-                            <div id="upload-avatar-icon" className="app-text-color-soft-white"><FontAwesomeIcon icon="file-upload" /></div>
-                            <div id="upload-avatar-text" className="app-text-color-soft-white">&nbsp;追加</div>
+                <div className="form-inline">
+                    {this.state.avatars.map((avatar, i) => {
+                        const isSelected =
+                            avatar.id == this.state.selectedAvatarID
+                        return (
+                            <label
+                                key={i}
+                                className={
+                                    isSelected
+                                        ? 'checkable-thumbnail selected-element'
+                                        : 'checkable-thumbnail nonselected-element'
+                                }
+                            >
+                                <img
+                                    src={
+                                        avatar.thumbnailURL
+                                            ? avatar.thumbnailURL
+                                            : this.defaultThumbnailURL
+                                    }
+                                />
+                                <input
+                                    type="checkbox"
+                                    value={avatar.id}
+                                    checked={isSelected}
+                                    onChange={this.changeAvatarSelection.bind(
+                                        this
+                                    )}
+                                />
+                            </label>
+                        )
+                    })}
+                    <div
+                        id="upload-avatar"
+                        className={
+                            this.props.isCreating || this.state.hasAddedAvatar
+                                ? 'd-none'
+                                : 'd-block'
+                        }
+                        data-tip="VRMファイルは、授業再生のため再配布されます。画面右上の「使い方」をご確認ください。"
+                    >
+                        <Dropzone
+                            onDrop={this.onDrop.bind(this)}
+                            accept=".vrm"
+                            maxSize={this.maxFileBytes}
+                            multiple={false}
+                            style={{
+                                width: '100px',
+                                height: '100px',
+                                position: 'absolute'
+                            }}
+                        >
+                            <div
+                                id="upload-avatar-icon"
+                                className="app-text-color-soft-white"
+                            >
+                                <FontAwesomeIcon icon="file-upload" />
+                            </div>
+                            <div
+                                id="upload-avatar-text"
+                                className="app-text-color-soft-white"
+                            >
+                                &nbsp;追加
+                            </div>
                         </Dropzone>
                     </div>
-                    <div id="upload-loading-status" className={this.props.isCreating ? 'd-block' : 'd-none'}>
-                        <div id ="upload-loading-icon" className="app-text-color-soft-white">
+                    <div
+                        id="upload-loading-status"
+                        className={this.props.isCreating ? 'd-block' : 'd-none'}
+                    >
+                        <div
+                            id="upload-loading-icon"
+                            className="app-text-color-soft-white"
+                        >
                             <FontAwesomeIcon icon="spinner" spin />
                         </div>
                     </div>
@@ -116,7 +172,7 @@ export default class AvatarManager extends React.Component {
                         height: 140px;
                     }
                     #avatar-manager::-webkit-scrollbar {
-                        display:none;
+                        display: none;
                     }
                     #avatar-manager img {
                         width: 100px;
