@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import './GLTFLoader'
 import * as Const from './constants'
 
-const cameraPositions = [0, 1.3, 150]
+const cameraPositions = [0, 1.4, 150]
 const cameraLookAts = [0, 1.1, 0]
 const lightColor = 0xbbbbff
 const coreBodyInitPosition = [0, 0, 100]
@@ -196,6 +196,14 @@ export default class LessonAvatar {
             action.paused = false
             action.play()
         })
+    }
+
+    pause() {
+        this.animationMixer.timeScale = 0
+    }
+
+    resume() {
+        this.animationMixer.timeScale = 1
     }
 
     stop() {

@@ -47,7 +47,6 @@ export default class LessonController extends React.Component {
             this.updateCurrentContents(this.elapsedTime())
         }
 
-        // reload animation when updated first frame by lesson editor
         if (
             prevProps.lesson.poseKey != this.props.poseKey ||
             prevProps.lesson.faceKey != this.props.faceKey
@@ -76,21 +75,31 @@ export default class LessonController extends React.Component {
     }
 
     async play() {
+        this.clock.start()
+
         await this.setState({ isPlaying: true })
 
-        this.clock.start()
-        if (this.pausedElapsedTime > 0) this.voicePlayer.play() // for resume audio
-        this.props.avatar.play()
+        if (this.pausedElapsedTime > 0) {
+            this.voicePlayer.play() // for resume audio
+            this.props.avatar.resume()
+        } else {
+            this.props.avatar.play()
+        }
         this.animate()
     }
 
-    async stop() {
+    async stop(isEnd = false) {
+        this.clock.stop()
+
         await this.setState({ isPlaying: false })
 
-        this.clock.stop()
         this.pausedElapsedTime += this.clock.elapsedTime
         this.voicePlayer.stop()
-        this.props.avatar.stop()
+        if (isEnd) {
+            this.props.avatar.stop()
+        } else {
+            this.props.avatar.pause()
+        }
     }
 
     animate() {
@@ -132,7 +141,7 @@ export default class LessonController extends React.Component {
     }
 
     async endPlaying() {
-        await this.stop()
+        await this.stop(true)
         resetAnimation(this.props.avatar)
         this.voicePlayer.reset()
 
