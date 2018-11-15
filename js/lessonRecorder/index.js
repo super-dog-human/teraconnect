@@ -287,10 +287,7 @@ export default class LessonRecorder extends React.Component {
                             </div>
                         </div>
 
-                        <div
-                            id="emotion-controller"
-                            data-tip="表情の切り替え"
-                        >
+                        <div id="emotion-controller" data-tip="表情の切り替え">
                             <button
                                 type="button"
                                 className="btn btn-dark"
@@ -417,11 +414,11 @@ export default class LessonRecorder extends React.Component {
                             </button>
                         </div>
 
-                        <div
-                            id="position-controller"
-                            onMouseOut={this.stopMovingPosition.bind(this)}
-                        >
-                            <div id="position-controller-pad">
+                        <div id="position-controller">
+                            <div
+                                id="position-controller-pad"
+                                onMouseOut={this.stopMovingPosition.bind(this)}
+                            >
                                 <button
                                     type="button"
                                     className="btn btn-dark"
@@ -434,9 +431,11 @@ export default class LessonRecorder extends React.Component {
                                     )}
                                     data-tip="奥へ移動"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={['fas', 'arrow-up']}
-                                    />
+                                    <span>
+                                        <FontAwesomeIcon
+                                            icon={['fas', 'arrow-up']}
+                                        />
+                                    </span>
                                 </button>
                                 <button
                                     type="button"
@@ -450,9 +449,11 @@ export default class LessonRecorder extends React.Component {
                                     )}
                                     data-tip="手前へ移動"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={['fas', 'arrow-down']}
-                                    />
+                                    <span>
+                                        <FontAwesomeIcon
+                                            icon={['fas', 'arrow-down']}
+                                        />
+                                    </span>
                                 </button>
                                 <button
                                     type="button"
@@ -466,9 +467,11 @@ export default class LessonRecorder extends React.Component {
                                     )}
                                     data-tip="左へ移動"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={['fas', 'arrow-left']}
-                                    />
+                                    <span>
+                                        <FontAwesomeIcon
+                                            icon={['fas', 'arrow-left']}
+                                        />
+                                    </span>
                                 </button>
                                 <button
                                     type="button"
@@ -482,9 +485,11 @@ export default class LessonRecorder extends React.Component {
                                     )}
                                     data-tip="右へ移動"
                                 >
-                                    <FontAwesomeIcon
-                                        icon={['fas', 'arrow-right']}
-                                    />
+                                    <span>
+                                        <FontAwesomeIcon
+                                            icon={['fas', 'arrow-right']}
+                                        />
+                                    </span>
                                 </button>
                             </div>
                         </div>
@@ -656,6 +661,9 @@ export default class LessonRecorder extends React.Component {
                         display: relative;
                         width: 9vw;
                         height: 9vw;
+                    }
+                    #position-controller-pad button span {
+                        pointer-events: none;
                     }
                     #position-controller button {
                         position: absolute;
