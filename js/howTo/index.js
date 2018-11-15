@@ -34,11 +34,19 @@ export default () => (
                     <br />
                     <br />
                     <h5>CPU</h5>
+                    <a
+                        href="https://www.cpubenchmark.net/mid_range_cpus.html"
+                        target="_blank"
+                    >
+                        PassMarkのベンチマーク
+                    </a>
+                    の結果が4,000以上のCPUが目安です。
+                    <br />
                     Googleのベンチマーク「
                     <a href="http://chromium.github.io/octane/" target="_blank">
                         Octane
                     </a>
-                    」のスコアが30,000以上のものが目安です。
+                    」で、スコアが30,000以上になれば大丈夫です。
                     <br />
                     <br />
                     <h5>メモリ</h5>
