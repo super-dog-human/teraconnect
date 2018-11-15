@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import Slider from 'react-slick'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import * as Const from '../common/constants'
 import { isProduction } from '../common/utility'
 
 export default class Home extends React.Component {
@@ -30,7 +29,7 @@ export default class Home extends React.Component {
     }
 
     render() {
-        const settings = {
+        const sliderSetting = {
             dots: true,
             infinite: true,
             speed: 500,
@@ -42,7 +41,7 @@ export default class Home extends React.Component {
         return (
             <div id="home">
                 <div id="slick-hero">
-                    <Slider {...settings}>
+                    <Slider {...sliderSetting}>
                         <div id="hero-one">
                             <div id="app-large-title">「教えたい」を形に。</div>
                             <div id="app-caption" className="text-gray">
@@ -221,7 +220,7 @@ export default class Home extends React.Component {
                         font-weight: 700;
                     }
                     #trial-btn-notice {
-                        font-size: 0.5vw;
+                        font-size: 0.8vw;
                         font-weight: 500;
                         color: white;
                     }
@@ -345,7 +344,7 @@ export default class Home extends React.Component {
                             font-size: 1.2em;
                         }
                         #trial-btn-notice {
-                            font-size: 0.2em;
+                            font-size: 0.8em;
                         }
                         #terms-of-use {
                             margin-top: 10px;
