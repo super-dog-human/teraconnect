@@ -2,16 +2,19 @@
   font-family: "Noto Sans Japanese";
   src: url("../font/NotoSansJP-Regular.woff2") format("woff2");
   font-weight: normal;
+  font-display: swap;
 }
 @font-face {
   font-family: "Noto Sans Japanese";
   src: url("../font/NotoSansJP-Medium.woff2") format("woff2");
   font-weight: 500;
+  font-display: swap;
 }
 @font-face {
   font-family: "Noto Sans Japanese";
   src: url("../font/NotoSansJP-Bold.woff2") format("woff2");
   font-weight: 700;
+  font-display: swap;
 }
 @keyframes fade-in {
   0% {
