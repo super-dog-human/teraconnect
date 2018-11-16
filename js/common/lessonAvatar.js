@@ -16,6 +16,7 @@ export default class LessonAvatar {
         this.scene
         this.renderer
         this.faceSkin
+        this.bodySkin
         this.moveDirection
         this.animationMixer
     }
@@ -56,6 +57,7 @@ export default class LessonAvatar {
         })
 
         this.faceSkin = vrm.scene.children[0]
+        this.bodySkin = vrm.scene.children[1]
 
         vrm.scene.traverse(object => {
             if (object.isBone) {
@@ -103,7 +105,7 @@ export default class LessonAvatar {
     }
 
     setDefaultAnimation() {
-        this.animationMixer = new THREE.AnimationMixer(this.faceSkin)
+        this.animationMixer = new THREE.AnimationMixer(this.bodySkin)
         this._setBreathAnimation()
     }
 
