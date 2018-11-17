@@ -1,7 +1,7 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Dropzone from 'react-dropzone'
-import AvatarRightsChecker from './avatarRightsChecker'
+import AvatarRightsChecker from './utils/avatarRightsChecker'
 import { fetchAvatars, uploadAvatar } from '../common/networkManager'
 
 export default class AvatarManager extends React.Component {
