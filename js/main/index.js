@@ -1,46 +1,76 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
 
-import { IndicatorContext, UserContext } from '../context'
+import { IndicatorContext, ModalContext, UserContext } from '../context'
 //import Maintenance from './maintenance';
 import Home from '../home'
 import HowTo from '../howTo'
+import License from '../license'
 import TermsOfUse from '../termsOfUse'
 import Login from '../login'
 import Creator from '../lessonCreator'
 import Editor from '../lessonEditor'
 import Recorder from '../lessonRecorder'
-import PlayerScreen from '../lessonPlayer'
+import Player from '../lessonPlayer'
 
-const RoutingComponent = () => (
-    // props
+const RoutedComponent = contextProps => (
     <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/how_to" component={HowTo} />
-        <Route exact path="/terms_of_use" component={TermsOfUse} />
-        <Route exact path="/login" component={Login} />
-        <Route exact path="/lessons/new" component={Creator} />
-        <Route exact path="/lessons/:id/edit" component={Editor} />
-        <Route exact path="/lessons/:id/record" component={Recorder} />
-        <Route exact path="/:id" component={PlayerScreen} />
+        <Route exact path="/license" component={License} />
+        <Route
+            exact
+            path="/terms_of_use"
+            render={props => <TermsOfUse {...props} {...contextProps} />}
+        />
+        <Route
+            exact
+            path="/login"
+            render={props => <Login {...props} {...contextProps} />}
+        />
+        <Route
+            exact
+            path="/lessons/new"
+            render={props => <Creator {...props} {...contextProps} />}
+        />
+        <Route
+            exact
+            path="/lessons/:id/edit"
+            render={props => <Editor {...props} {...contextProps} />}
+        />
+        <Route
+            exact
+            path="/lessons/:id/record"
+            render={props => <Recorder {...props} {...contextProps} />}
+        />
+        <Route
+            exact
+            path="/:id"
+            render={props => <Player {...props} {...contextProps} />}
+        />
     </Switch>
 )
 
 const Main = () => (
     <main>
         <IndicatorContext.Consumer>
-            {({ isLoading, indicatorMessage, updateIndicator }) => (
-                <UserContext.Consumer>
-                    {(currentUser, updateUser) => (
-                        <RoutingComponent
-                            isLoading={isLoading}
-                            indicatorMessage={indicatorMessage}
-                            updateIndicator={updateIndicator}
-                            currentUser={currentUser}
-                            updateUser={updateUser}
-                        />
+            {({ updateIndicator }) => (
+                <ModalContext.Consumer>
+                    {({ updateModal }) => (
+                        <UserContext.Consumer>
+                            {({ currentUser, updateUser }) => (
+                                <RoutedComponent
+                                    {...{
+                                        updateIndicator,
+                                        updateModal,
+                                        currentUser,
+                                        updateUser
+                                    }}
+                                />
+                            )}
+                        </UserContext.Consumer>
                     )}
-                </UserContext.Consumer>
+                </ModalContext.Consumer>
             )}
         </IndicatorContext.Consumer>
         <style jsx>{`

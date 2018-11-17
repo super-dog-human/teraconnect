@@ -2,8 +2,8 @@ import React from 'react'
 import { filterObject } from './common/utility'
 
 export const IndicatorContext = React.createContext()
-export const UserContext = React.createContext()
 export const ModalContext = React.createContext()
+export const UserContext = React.createContext()
 
 export default class Context extends React.Component {
     constructor() {
@@ -20,6 +20,8 @@ export default class Context extends React.Component {
             modalOKCallback: () => {},
             modalCancelCallback: () => {}
         }
+
+        // TODO get user by localstorage token
     }
 
     updateIndicator(indicatorState) {
@@ -44,7 +46,6 @@ export default class Context extends React.Component {
         ]
         const filteredState = filterObject(modalState, needsStateKeys)
         const newState = Object.assign({}, this.state, filteredState)
-        console.log(newState)
         this.setState(newState)
     }
 
@@ -54,28 +55,28 @@ export default class Context extends React.Component {
                 value={{
                     isLoading: this.state.isLoading,
                     indicatorMessage: this.state.indicatorMessage,
-                    updateIndicator: this.updateIndicator
+                    updateIndicator: this.updateIndicator.bind(this)
                 }}
             >
-                <UserContext.Provider
+                <ModalContext.Provider
                     value={{
-                        currentUser: this.state.currentUser,
-                        updateUser: this.updateUser
+                        isModalOpen: this.state.isModalOpen,
+                        modalMessage: this.state.modalMessage,
+                        modalCloseCallback: this.state.modalCloseCallback,
+                        modalOKCallback: this.state.modalOKCallback,
+                        modalCancelCallback: this.state.modalCancelCallback,
+                        updateModal: this.updateModal.bind(this)
                     }}
                 >
-                    <ModalContext.Provider
+                    <UserContext.Provider
                         value={{
-                            isModalOpen: this.state.isModalOpen,
-                            modalMessage: this.state.modalMessage,
-                            modalCloseCallback: this.state.modalCloseCallback,
-                            modalOKCallback: this.state.modalOKCallback,
-                            modalCancelCallback: this.state.modalCancelCallback,
-                            updateModal: this.updateModal
+                            currentUser: this.state.currentUser,
+                            updateUser: this.updateUser.bind(this)
                         }}
                     >
                         {this.props.children}
-                    </ModalContext.Provider>
-                </UserContext.Provider>
+                    </UserContext.Provider>
+                </ModalContext.Provider>
             </IndicatorContext.Provider>
         )
     }

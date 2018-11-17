@@ -39,6 +39,8 @@ export default class LessonRecorder extends React.Component {
             isReachedTimeLimit: false
         }
 
+        this.props.updateIndicator({ isLoading: true })
+
         this.lesson = {}
         this.graphicURLIndex = -1
         this.avatar = new LessonAvatar()
@@ -115,6 +117,7 @@ export default class LessonRecorder extends React.Component {
             !this.state.isAvatarLoading
         ) {
             this.setState({ isLoading: false })
+            this.props.updateIndicator({ isLoading: false })
         }
     }
 
@@ -188,6 +191,7 @@ export default class LessonRecorder extends React.Component {
     postRecord() {
         disableAllButtons()
         this.setState({ isPosting: true })
+        this.props.updateIndicator({ isLoading: true })
         this.waitAndPostRecord()
     }
 
@@ -205,6 +209,7 @@ export default class LessonRecorder extends React.Component {
                 })
 
                 this.setState({ isPosting: false })
+                this.props.updateIndicator({ isLoading: false })
                 this.props.history.push(`/lessons/${this.lessonID}/edit`)
             }
         }, 1000)
@@ -265,10 +270,6 @@ export default class LessonRecorder extends React.Component {
                             this.userVideoPreview = e
                         }}
                     />
-
-                    <div id="loading-indicator">
-                        <FontAwesomeIcon icon="spinner" spin />
-                    </div>
 
                     <div id="control-panel" disabled={this.state.isPosting}>
                         <div id="recording-status" className="text-danger">
@@ -518,22 +519,6 @@ export default class LessonRecorder extends React.Component {
                     }
                     #video-preview {
                         display: none;
-                    }
-                    #loading-indicator {
-                        position: absolute;
-                        z-index: 300; // indicator
-                        width: 10vw;
-                        height: 10vw;
-                        top: 0;
-                        bottom: 0;
-                        left: 0;
-                        right: 0;
-                        margin: auto;
-                        display: ${this.state.isLoading || this.state.isPosting
-                ? 'display'
-                : 'none'};
-                        font-size: 10vw;
-                        opacity: 0.5;
                     }
                     #control-panel {
                         display: ${this.state.isLoading ? 'none' : 'block'};

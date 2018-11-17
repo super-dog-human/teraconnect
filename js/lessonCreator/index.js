@@ -1,5 +1,4 @@
 import React from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import { isMobile } from 'react-device-detect'
@@ -36,7 +35,12 @@ export default class LessonCreator extends React.Component {
     }
 
     componentDidUpdate(_, prevState) {
+        if (!prevState.isCreating && this.state.isCreating) {
+            this.props.updateIndicator({ isLoading: true })
+        }
+
         if (prevState.isCreating && !this.state.isCreating) {
+            this.props.updateIndicator({ isLoading: false })
             this.props.history.push(`/lessons/${this.lessonID}/record`)
         }
     }
@@ -119,9 +123,6 @@ export default class LessonCreator extends React.Component {
         return (
             <div id="lesson-creator-screen" className="">
                 <div id="lesson-creator" className="app-back-color-soft-white">
-                    <div id="loading-indicator">
-                        <FontAwesomeIcon icon="spinner" spin />
-                    </div>
                     <form id="lesson-form" onSubmit={this.create.bind(this)}>
                         <div className="form-group">
                             <label
@@ -220,20 +221,6 @@ export default class LessonCreator extends React.Component {
                     #lesson-creator {
                         padding-top: 50px;
                         padding-bottom: 100px;
-                    }
-                    #loading-indicator {
-                        position: absolute;
-                        z-index: 300; // indicator
-                        width: 10vw;
-                        height: 10vw;
-                        top: 0;
-                        bottom: 0;
-                        left: 0;
-                        right: 0;
-                        margin: auto;
-                        display: ${this.state.isCreating ? 'display' : 'none'};
-                        font-size: 10vw;
-                        opacity: 0.5;
                     }
                     #lesson-form {
                         width: 80%;
