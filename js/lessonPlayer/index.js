@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import LessonLoader from './utils/lessonLoader'
 import LessonAvatar from '../common/lessonAvatar'
-import LessonController from '../lessonController'
+import LessonController from '../shared/components/lessonController'
 import TweetButton from './tweetButton'
 
 export default class LessonPlayer extends React.Component {

@@ -2,7 +2,7 @@ import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import ReactTooltip from 'react-tooltip'
 import VoiceText from './voiceText'
-import LessonController from '../lessonController'
+import LessonController from '../shared/components/lessonController'
 import LessonMaterialLoader from './lessonMaterialLoader'
 import {
     fetchLesson,

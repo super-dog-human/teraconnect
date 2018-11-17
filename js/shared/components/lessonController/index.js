@@ -9,7 +9,7 @@ import {
     loadAnimation,
     resetAnimation
 } from './utils/lessonControllerUtility'
-import * as Const from '../common/constants'
+import * as Const from '../../../common/constants'
 
 export default class LessonController extends React.Component {
     constructor(props) {
