@@ -2,6 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import { isMobile } from 'react-device-detect'
+import Indicator from '../shared/components/indicator'
 import ReactTooltip from 'react-tooltip'
 import AvatarManager from './avatarManager'
 import GraphicManager from './graphicManager'
@@ -35,12 +36,7 @@ export default class LessonCreator extends React.Component {
     }
 
     componentDidUpdate(_, prevState) {
-        if (!prevState.isCreating && this.state.isCreating) {
-            this.props.updateIndicator({ isLoading: true })
-        }
-
         if (prevState.isCreating && !this.state.isCreating) {
-            this.props.updateIndicator({ isLoading: false })
             this.props.history.push(`/lessons/${this.lessonID}/record`)
         }
     }
@@ -121,98 +117,115 @@ export default class LessonCreator extends React.Component {
         }
 
         return (
-            <div id="lesson-creator-screen" className="">
-                <div id="lesson-creator" className="app-back-color-soft-white">
-                    <form id="lesson-form" onSubmit={this.create.bind(this)}>
-                        <div className="form-group">
-                            <label
-                                htmlFor="lesson-title"
-                                className="app-text-color-dark-gray font-weight-bold"
-                            >
-                                タイトル
-                                <span className="text-danger">&nbsp;*</span>
-                            </label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                id="lesson-title"
-                                onChange={this.changeTitle.bind(this)}
-                                required
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label
-                                htmlFor="lesson-description"
-                                className="app-text-color-dark-gray font-weight-bold"
-                            >
-                                説明
-                            </label>
-                            <textarea
-                                className="form-control"
-                                id="lesson-description"
-                                rows="3"
-                                value={this.state.description}
-                                onChange={this.changeDescription.bind(this)}
-                            />
-                        </div>
-                        <div
-                            id="graphic-manager-screen"
-                            className="form-group"
-                            data-tip="選択した順で画像が使用できます"
+            <div>
+                <Indicator isLoading={this.state.isCreating} />
+                <div id="lesson-creator-screen">
+                    <div
+                        id="lesson-creator"
+                        className="app-back-color-soft-white"
+                    >
+                        <form
+                            id="lesson-form"
+                            onSubmit={this.create.bind(this)}
                         >
-                            <label
-                                htmlFor="lesson-graphic"
-                                className="app-text-color-dark-gray font-weight-bold"
+                            <div className="form-group">
+                                <label
+                                    htmlFor="lesson-title"
+                                    className="app-text-color-dark-gray font-weight-bold"
+                                >
+                                    タイトル
+                                    <span className="text-danger">&nbsp;*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="lesson-title"
+                                    onChange={this.changeTitle.bind(this)}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label
+                                    htmlFor="lesson-description"
+                                    className="app-text-color-dark-gray font-weight-bold"
+                                >
+                                    説明
+                                </label>
+                                <textarea
+                                    className="form-control"
+                                    id="lesson-description"
+                                    rows="3"
+                                    value={this.state.description}
+                                    onChange={this.changeDescription.bind(this)}
+                                />
+                            </div>
+                            <div
+                                id="graphic-manager-screen"
+                                className="form-group"
+                                data-tip="選択した順で画像が使用できます"
                             >
-                                メディア
-                            </label>
-                            <GraphicManager
-                                changeGraphics={ids => {
-                                    this.changeGraphics(ids)
-                                }}
-                                changeCreatingStatus={status => {
-                                    this.setState({ isGraphicCreating: status })
-                                }}
-                                isCreating={this.state.isGraphicCreating}
-                            />
-                        </div>
-                        <div id="avatar-manager-screen" className="form-group">
-                            <label
-                                htmlFor="lesson-avatar"
-                                className="app-text-color-dark-gray font-weight-bold"
+                                <label
+                                    htmlFor="lesson-graphic"
+                                    className="app-text-color-dark-gray font-weight-bold"
+                                >
+                                    メディア
+                                </label>
+                                <GraphicManager
+                                    changeGraphics={ids => {
+                                        this.changeGraphics(ids)
+                                    }}
+                                    changeCreatingStatus={status => {
+                                        this.setState({
+                                            isGraphicCreating: status
+                                        })
+                                    }}
+                                    isCreating={this.state.isGraphicCreating}
+                                />
+                            </div>
+                            <div
+                                id="avatar-manager-screen"
+                                className="form-group"
                             >
-                                アバター
-                                <span className="text-danger">&nbsp;*</span>
-                            </label>
-                            <AvatarManager
-                                changeAvatar={id => {
-                                    this.changeAvatar(id)
-                                }}
-                                changeCreatingStatus={status => {
-                                    this.setState({ isAvatarCreating: status })
-                                }}
-                                isCreating={this.state.isAvatarCreating}
-                            />
-                        </div>
+                                <label
+                                    htmlFor="lesson-avatar"
+                                    className="app-text-color-dark-gray font-weight-bold"
+                                >
+                                    アバター
+                                    <span className="text-danger">&nbsp;*</span>
+                                </label>
+                                <AvatarManager
+                                    changeAvatar={id => {
+                                        this.changeAvatar(id)
+                                    }}
+                                    changeCreatingStatus={status => {
+                                        this.setState({
+                                            isAvatarCreating: status
+                                        })
+                                    }}
+                                    isCreating={this.state.isAvatarCreating}
+                                />
+                            </div>
 
-                        <button
-                            type="submit"
-                            className="btn btn-primary btn-lg"
-                            disabled={
-                                !this.state.isFormCreatable ||
-                                this.state.isCreating
-                            }
-                        >
-                            作成
-                        </button>
-                    </form>
+                            <button
+                                type="submit"
+                                className="btn btn-primary btn-lg"
+                                disabled={
+                                    !this.state.isFormCreatable ||
+                                    this.state.isCreating
+                                }
+                            >
+                                作成
+                            </button>
+                        </form>
 
-                    <ReactTooltip
-                        className="tooltip"
-                        place="top"
-                        type="warning"
-                    />
+                        <ReactTooltip
+                            className="tooltip"
+                            place="top"
+                            type="warning"
+                        />
+                    </div>
                 </div>
+
                 <style jsx>{`
                     #lesson-creator-screen {
                         width: 100%;

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
 
-import { IndicatorContext, ModalContext, UserContext } from '../context'
+import { UserContext } from '../context'
 //import Maintenance from './maintenance';
 import Home from '../home'
 import HowTo from '../howTo'
@@ -53,26 +53,11 @@ const RoutedComponent = contextProps => (
 
 const Main = () => (
     <main>
-        <IndicatorContext.Consumer>
-            {({ updateIndicator }) => (
-                <ModalContext.Consumer>
-                    {({ updateModal }) => (
-                        <UserContext.Consumer>
-                            {({ currentUser, updateUser }) => (
-                                <RoutedComponent
-                                    {...{
-                                        updateIndicator,
-                                        updateModal,
-                                        currentUser,
-                                        updateUser
-                                    }}
-                                />
-                            )}
-                        </UserContext.Consumer>
-                    )}
-                </ModalContext.Consumer>
+        <UserContext.Consumer>
+            {({ currentUser, updateUser }) => (
+                <RoutedComponent {...{ currentUser, updateUser }} />
             )}
-        </IndicatorContext.Consumer>
+        </UserContext.Consumer>
         <style jsx>{`
             main {
                 padding-top: 64px;

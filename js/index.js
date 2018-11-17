@@ -57,8 +57,6 @@ library.add(
 )
 import Context from './context'
 import ErrorBoundary from './errorBoundary'
-import ModalWindow from './modalWindow'
-import Indicator from './indicator'
 import Header from './header'
 import Main from './main'
 import Footer from './footer'
@@ -67,8 +65,6 @@ render(
     <BrowserRouter>
         <Context>
             <ErrorBoundary>
-                <ModalWindow />
-                <Indicator />
                 <Header />
                 <Main />
                 <Footer />

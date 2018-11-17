@@ -1,6 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+/*
+    import { UserContext } from '../context'
+    static contextType = UserContext
+    this.context.currentUser
+*/
+
 export default (
     { selectedIndex = 0 } // FIXME selectedIndex value
 ) => (

@@ -1,26 +1,17 @@
 import React from 'react'
-import { IndicatorContext } from '../context'
 import styled from '@emotion/styled'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-export default class Indicator extends React.Component {
-    static contextType = IndicatorContext
-
-    render() {
-        return (
-            <LoadingIndicator isLoading={this.context.isLoading}>
-                <IndicatorBody>
-                    <IndicatorIcon>
-                        <FontAwesomeIcon icon="spinner" spin />
-                    </IndicatorIcon>
-                    <IndicatorMessage>
-                        {this.context.indicatorMessage}
-                    </IndicatorMessage>
-                </IndicatorBody>
-            </LoadingIndicator>
-        )
-    }
-}
+export default ({ isLoading, message = '' }) => (
+    <LoadingIndicator isLoading={isLoading}>
+        <IndicatorBody>
+            <IndicatorIcon>
+                <FontAwesomeIcon icon="spinner" spin />
+            </IndicatorIcon>
+            <IndicatorMessage>{message}</IndicatorMessage>
+        </IndicatorBody>
+    </LoadingIndicator>
+)
 
 const LoadingIndicator = styled('div')(props => ({
     display: props.isLoading ? 'flex' : 'none',

@@ -1,5 +1,6 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Indicator from '../shared/components/indicator'
 import FaceDetector from './utils/faceDetector'
 import MainRecorder from './utils/mainRecorder'
 import VoiceRecorder from './utils/voiceRecorder'
@@ -28,7 +29,7 @@ export default class LessonRecorder extends React.Component {
             faceWeight: {},
             pose: {},
             moveDirection: 'stop',
-            isLoading: true, // FIXME
+            isLoading: true,
             isDetectorLoading: true,
             isLostFaceTracking: true,
             isEyesBlink: false,
@@ -39,7 +40,7 @@ export default class LessonRecorder extends React.Component {
             isReachedTimeLimit: false
         }
 
-        this.props.updateIndicator({ isLoading: true })
+//        this.props.updateIndicator({ isLoading: true })
 
         this.lesson = {}
         this.graphicURLIndex = -1
@@ -117,7 +118,7 @@ export default class LessonRecorder extends React.Component {
             !this.state.isAvatarLoading
         ) {
             this.setState({ isLoading: false })
-            this.props.updateIndicator({ isLoading: false })
+//            this.props.updateIndicator({ isLoading: false })
         }
     }
 
@@ -191,7 +192,7 @@ export default class LessonRecorder extends React.Component {
     postRecord() {
         disableAllButtons()
         this.setState({ isPosting: true })
-        this.props.updateIndicator({ isLoading: true })
+//        this.props.updateIndicator({ isLoading: true })
         this.waitAndPostRecord()
     }
 
@@ -209,7 +210,7 @@ export default class LessonRecorder extends React.Component {
                 })
 
                 this.setState({ isPosting: false })
-                this.props.updateIndicator({ isLoading: false })
+//                this.props.updateIndicator({ isLoading: false })
                 this.props.history.push(`/lessons/${this.lessonID}/edit`)
             }
         }, 1000)
@@ -236,6 +237,7 @@ export default class LessonRecorder extends React.Component {
             </LessonRecorder>
             */
             <div id="lesson-recorder-screen">
+                <Indicator isLoading={this.state.isLoading} />
                 <div
                     id="lesson-recorder"
                     ref={e => {
