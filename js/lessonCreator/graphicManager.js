@@ -3,6 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Dropzone from 'react-dropzone'
 import { fetchGraphics, uploadGraphics } from '../common/networkManager'
 
+const failedDownloadingGraphics = '画像の読み込みに失敗しました'
+const failedUploadingGraphics = '画像のアップロードに失敗しました'
+
 export default class GraphicManager extends React.Component {
     constructor(props) {
         super(props)
@@ -13,12 +16,16 @@ export default class GraphicManager extends React.Component {
         }
     }
 
-    async componentWillMount() {
-        const graphics = await fetchGraphics().catch(err => {
-            console.error(err)
-            // modal
-        })
-        this.setState({ graphics: graphics })
+    componentWillMount() {
+        fetchGraphics()
+            .then(graphics => {
+                this.setState({ graphics: graphics })
+            })
+            .catch(err => {
+                this.props.onError(failedDownloadingGraphics, err, () => {
+                    location.reload()
+                })
+            })
     }
 
     async changeGraphicSelection(event) {
@@ -44,11 +51,16 @@ export default class GraphicManager extends React.Component {
 
         this.props.onStatusChange(true)
 
-        const newGraphics = await uploadGraphics(acceptedFiles)
-        const graphics = this.state.graphics.concat(newGraphics)
-        this.setState({ graphics: graphics })
+        await uploadGraphics(acceptedFiles)
+            .then(newGraphics => {
+                const graphics = this.state.graphics.concat(newGraphics)
+                this.setState({ graphics: graphics })
 
-        this.props.onStatusChange(false)
+                this.props.onStatusChange(false)
+            })
+            .catch(err => {
+                this.props.onError(failedUploadingGraphics, err)
+            })
     }
 
     render() {

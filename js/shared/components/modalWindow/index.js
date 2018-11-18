@@ -15,7 +15,7 @@ export default props => (
 
 const Modal = ({ isOpen, onClose, needsConfirm, children }) => {
     const modalStyle = css`
-        display: block;
+        display: ${isOpen ? 'block' : 'none'};
         background-color: rgba(255, 255, 255, 0.4);
         color: var(--dark-gray);
     `

@@ -24,18 +24,25 @@ export default class LessonCreator extends React.Component {
             title: '',
             description: '',
             avatarID: null,
-            graphicIDs: []
+            graphicIDs: [],
+            isModalOpen: false,
+            isErrorModal: false,
+            modalTitle: '',
+            modalMessage: '',
+            modalCloseCallback: () => {}
         }
     }
 
     componentDidMount() {
-        if (isMobile) {
-            alert(
-                'モバイル環境では授業を作成できないよ…\n正式版の公開までもう少し待っててね！'
-            )
-            // TODO modal
-            this.props.history.replace('/')
-        }
+        if (!isMobile) return
+
+        this.openErrorModal(
+            '非対応の環境です',
+            'モバイル環境では授業を作成できません。',
+            () => {
+                this.props.history.replace('/')
+            }
+        )
     }
 
     componentDidUpdate() {
@@ -88,8 +95,9 @@ export default class LessonCreator extends React.Component {
                 this.checkCreatingStatus()
             })
             .catch(err => {
-                console.error(err)
-                // TODO modal
+                this.openErrorModal('授業の作成に失敗しました。', err, () => {
+                    this.setState({ isCreating: false })
+                })
             })
     }
 
@@ -102,6 +110,29 @@ export default class LessonCreator extends React.Component {
         }, 1000)
     }
 
+    openErrorModal(title, message, callback = () => {}) {
+        this.setState({
+            isModalOpen: true,
+            isErrorModal: true,
+            modalTitle: title,
+            modalMessage: message,
+            modalCloseCallback: () => {
+                this.closeModal()
+                callback()
+            }
+        })
+    }
+
+    closeModal() {
+        this.setState({
+            isModalOpen: false,
+            isErrorModal: '',
+            modalTitle: '',
+            modalMessage: '',
+            modalCloseCallback: () => {}
+        })
+    }
+
     render() {
         const isAgreeToTerms = Cookies.get('agreeToTerms')
         if (isAgreeToTerms !== 'true') {
@@ -112,7 +143,13 @@ export default class LessonCreator extends React.Component {
         return (
             <>
                 <Indicator isLoading={this.state.isCreating} />
-                <ModalWindow />
+                <ModalWindow
+                    isOpen={this.state.isModalOpen}
+                    isError={this.state.isErrorModal}
+                    title={this.state.modalTitle}
+                    message={this.state.modalMessage}
+                    onClose={this.state.modalCloseCallback.bind(this)}
+                />
                 <LessonCreatorScreen className="app-back-color-soft-white">
                     <LessonForm onSubmit={this.handleFormSubmit.bind(this)}>
                         <LessonTitle
@@ -131,6 +168,7 @@ export default class LessonCreator extends React.Component {
                                     isGraphicCreating: status
                                 })
                             }}
+                            onError={this.openErrorModal.bind(this)}
                             isCreating={this.state.isGraphicCreating}
                         />
                         <LessonAvatar
@@ -141,6 +179,7 @@ export default class LessonCreator extends React.Component {
                                 })
                             }}
                             isCreating={this.state.isAvatarCreating}
+                            onError={this.openErrorModal.bind(this)}
                         />
                         <SubmitButton
                             disabled={
@@ -149,7 +188,6 @@ export default class LessonCreator extends React.Component {
                             }
                         />
                     </LessonForm>
-
                     <ReactTooltip
                         className="tooltip"
                         place="top"
@@ -224,7 +262,12 @@ const LessonDescription = ({ value, onChange }) => (
     </div>
 )
 
-const LessonGraphic = ({ onGraphicsChange, onStatusChange, isCreating }) => (
+const LessonGraphic = ({
+    onGraphicsChange,
+    onStatusChange,
+    isCreating,
+    onError
+}) => (
     <div className="form-group" data-tip="選択した順で画像が使用できます">
         <FormLabel body="メディア" />
         <GraphicManager
@@ -235,11 +278,17 @@ const LessonGraphic = ({ onGraphicsChange, onStatusChange, isCreating }) => (
                 onStatusChange(status)
             }}
             isCreating={isCreating}
+            onError={onError}
         />
     </div>
 )
 
-const LessonAvatar = ({ onAvatarChange, onStatusChange, isCreating }) => (
+const LessonAvatar = ({
+    onAvatarChange,
+    onStatusChange,
+    isCreating,
+    onError
+}) => (
     <div className="form-group">
         <FormLabel body="アバター" isRequired={true} />
         <AvatarManager
@@ -250,6 +299,7 @@ const LessonAvatar = ({ onAvatarChange, onStatusChange, isCreating }) => (
                 onStatusChange(status)
             }}
             isCreating={isCreating}
+            onError={onError}
         />
     </div>
 )

@@ -4,17 +4,20 @@ import Dropzone from 'react-dropzone'
 import AvatarRightsChecker from './utils/avatarRightsChecker'
 import { fetchAvatars, uploadAvatar } from '../common/networkManager'
 
+const defaultThumbnailURL =
+    'https://storage.googleapis.com/teraconn_thumbnail/avatar/default.png'
+const userAvatarFileErrorTitle = '使用できないファイルです'
+const failedDownloadingAvatarFile = 'アバターの読み込みに失敗しました'
+const failedUploadingAvatarFile = 'アバターのアップロードに失敗しました'
+const userAvatarFileErrorMessage =
+    '下記の条件を確認してください。\n\n・VRoid Studioで作成したVRMファイルである\n・ライセンスがCC0である\n・ファイルサイズが30MB以下である'
+const maxFileBytes = 31457280
+
 export default class AvatarManager extends React.Component {
     constructor(props) {
         super(props)
 
         this.checker = new AvatarRightsChecker()
-        this.defaultThumbnailURL =
-            'https://storage.googleapis.com/teraconn_thumbnail/avatar/default.png'
-        this.errMessage =
-            '使用できないファイルです。下記の条件を確認してください。\n\n・VRoid Studioで作成したVRMファイルである\n・ライセンスがCC0である\n・ファイルサイズが30MB以下である'
-        this.maxFileBytes = 31457280
-
         this.state = {
             hasAddedAvatar: false,
             selectedAvatarID: '',
@@ -22,13 +25,16 @@ export default class AvatarManager extends React.Component {
         }
     }
 
-    async componentWillMount() {
-        const avatars = await fetchAvatars().catch(err => {
-            console.error(err)
-            // modal
-        })
-
-        this.setState({ avatars: avatars })
+    componentWillMount() {
+        fetchAvatars()
+            .then(avatars => {
+                this.setState({ avatars: avatars })
+            })
+            .catch(err => {
+                this.props.onError(failedDownloadingAvatarFile, err, () => {
+                    location.reload()
+                })
+            })
     }
 
     changeAvatarSelection(event) {
@@ -41,9 +47,10 @@ export default class AvatarManager extends React.Component {
         if (this.props.isCreating) return
 
         if (rejectedFiles.length > 0) {
-            window.alert(this.errMessage)
-            // error modal
-
+            this.props.onError(
+                userAvatarFileErrorTitle,
+                userAvatarFileErrorMessage
+            )
             return
         }
 
@@ -59,23 +66,26 @@ export default class AvatarManager extends React.Component {
         await this.checker.loadAvatar(url)
 
         if (!this.checker.isEnableAvatar()) {
-            window.alert(this.errMessage)
-            // error modal
+            this.props.onError(
+                userAvatarFileErrorTitle,
+                userAvatarFileErrorMessage
+            )
 
             this.props.onStatusChange(false)
             return
         }
 
-        const id = await uploadAvatar(url).catch(err => {
-            console.error(err)
-            // error modal
-        })
+        uploadAvatar(url)
+            .then(id => {
+                const avatars = this.state.avatars
+                avatars.push({ id: id })
 
-        const avatars = this.state.avatars
-        avatars.push({ id: id })
-
-        this.setState({ avatars: avatars, hasAddedAvatar: true })
-        this.props.onStatusChange(false)
+                this.setState({ avatars: avatars, hasAddedAvatar: true })
+                this.props.onStatusChange(false)
+            })
+            .catch(err => {
+                this.props.onError(failedUploadingAvatarFile, err)
+            })
     }
 
     render() {
@@ -98,7 +108,7 @@ export default class AvatarManager extends React.Component {
                                     src={
                                         avatar.thumbnailURL
                                             ? avatar.thumbnailURL
-                                            : this.defaultThumbnailURL
+                                            : defaultThumbnailURL
                                     }
                                 />
                                 <input
@@ -124,7 +134,7 @@ export default class AvatarManager extends React.Component {
                         <Dropzone
                             onDrop={this.onDrop.bind(this)}
                             accept=".vrm"
-                            maxSize={this.maxFileBytes}
+                            maxSize={maxFileBytes}
                             multiple={false}
                             style={{
                                 width: '100px',
