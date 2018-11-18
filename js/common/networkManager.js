@@ -10,6 +10,12 @@ export async function fetchLesson(lessonID) {
     return result.data
 }
 
+export async function postLesson(body) {
+    const url = Const.LESSON_API_URL.replace('{lessonID}', '') // API URL has no id when creating new.
+    const result = await axios.post(url, body)
+    return result.data
+}
+
 export async function fetchGraphics() {
     const result = await axios.get(Const.GRAPHIC_API_URL)
     return result.data

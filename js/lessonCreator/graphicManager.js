@@ -35,20 +35,20 @@ export default class GraphicManager extends React.Component {
 
         await this.setState({ selectedGraphicIDs: graphicIDs })
 
-        this.props.changeGraphics(this.state.selectedGraphicIDs)
+        this.props.onGraphicsChange(this.state.selectedGraphicIDs)
     }
 
     async onDrop(acceptedFiles) {
         if (this.props.isCreating) return
         if (acceptedFiles.lenth == 0) return
 
-        this.props.changeCreatingStatus(true)
+        this.props.onStatusChange(true)
 
         const newGraphics = await uploadGraphics(acceptedFiles)
         const graphics = this.state.graphics.concat(newGraphics)
         this.setState({ graphics: graphics })
 
-        this.props.changeCreatingStatus(false)
+        this.props.onStatusChange(false)
     }
 
     render() {

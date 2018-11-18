@@ -34,7 +34,7 @@ export default class AvatarManager extends React.Component {
     changeAvatarSelection(event) {
         const id = event.target.value // can't unchecked after checked once.
         this.setState({ selectedAvatarID: id })
-        this.props.changeAvatar(id)
+        this.props.onAvatarChange(id)
     }
 
     async onDrop(acceptedFiles, rejectedFiles) {
@@ -53,7 +53,7 @@ export default class AvatarManager extends React.Component {
     }
 
     async createNewAvatar(file) {
-        this.props.changeCreatingStatus(true)
+        this.props.onStatusChange(true)
 
         const url = file.preview
         await this.checker.loadAvatar(url)
@@ -62,7 +62,7 @@ export default class AvatarManager extends React.Component {
             window.alert(this.errMessage)
             // error modal
 
-            this.props.changeCreatingStatus(false)
+            this.props.onStatusChange(false)
             return
         }
 
@@ -75,7 +75,7 @@ export default class AvatarManager extends React.Component {
         avatars.push({ id: id })
 
         this.setState({ avatars: avatars, hasAddedAvatar: true })
-        this.props.changeCreatingStatus(false)
+        this.props.onStatusChange(false)
     }
 
     render() {
