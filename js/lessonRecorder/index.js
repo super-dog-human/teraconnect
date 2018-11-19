@@ -6,17 +6,17 @@ import MainRecorder from './utils/mainRecorder'
 import VoiceRecorder from './utils/voiceRecorder'
 import { uploadRecord } from './utils/recordUploader'
 import AvatarPreview from './avatarPreview'
-import LessonAvatar from '../common/lessonAvatar'
+import LessonAvatar from '../shared/utils/lessonAvatar'
 import LessonGraphic from './lessonGraphic'
-import { fetchLesson, fetchAvatarObjectURL } from '../common/networkManager'
+import { fetchLesson, fetchAvatarObjectURL } from '../shared/utils/networkManager'
 import {
     fetchLessonGraphicURLs,
     clearLessonObject
 } from './utils/lessonRecorderUtil'
 import ElapsedTime from './elapsedTime'
 import ReactTooltip from 'react-tooltip'
-import { disableAllButtons } from '../common/utility'
-import * as Const from '../common/constants'
+import { disableAllButtons } from '../shared/utils/utility'
+import * as Const from '../shared/utils/constants'
 
 export default class LessonRecorder extends React.Component {
     constructor(props) {
@@ -193,13 +193,14 @@ export default class LessonRecorder extends React.Component {
                 clearInterval(interval)
 
                 const record = this.recorder.recordForUpload()
-                uploadRecord(this.lessonID, record).then(() => {
-                    this.setState({ isPosting: false })
-                    this.props.history.push(`/lessons/${this.lessonID}/edit`)
-                }).catch(err => {
-                    this.saveRecordButton.disabled = false
-                    // modal
-                })
+                uploadRecord(this.lessonID, record)
+                    .then(() => {
+                        this.setState({ isPosting: false })
+                        this.props.history.push(`/lessons/${this.lessonID}/edit`)
+                    }).catch(err => {
+                        this.saveRecordButton.disabled = false
+                        // modal
+                    })
             }
         }, 1000)
     }

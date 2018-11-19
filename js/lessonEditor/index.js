@@ -18,8 +18,8 @@ import {
     updateLesson,
     uploadMaterial,
     packMaterial
-} from '../common/networkManager'
-import * as Const from '../common/constants'
+} from '../shared/utils/networkManager'
+import * as Const from '../shared/utils/constants'
 
 const publishingLessonErrorTitle = '授業の公開に失敗しました'
 const deletionDoneTitle = '授業を削除しました'

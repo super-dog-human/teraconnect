@@ -1,4 +1,4 @@
-import { arrayAverage } from '../../common/utility'
+import { arrayAverage } from '../../shared/utils/utility'
 
 let eyebrowDistanceHistories = []
 let standardEyebrowDistance = 0.25

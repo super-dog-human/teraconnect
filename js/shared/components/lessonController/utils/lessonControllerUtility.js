@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { stringToUpperCamel } from '../../../../common/utility'
+import { stringToUpperCamel } from '../../../../shared/utils/utility'
 
 export function loadDefaultAnimation(avatar) {
     avatar.setDefaultAnimation()

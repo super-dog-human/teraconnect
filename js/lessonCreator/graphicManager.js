@@ -1,7 +1,7 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Dropzone from 'react-dropzone'
-import { fetchGraphics, uploadGraphics } from '../common/networkManager'
+import { fetchGraphics, uploadGraphics } from '../shared/utils/networkManager'
 
 const failedDownloadingGraphics = '画像の読み込みに失敗しました'
 const failedUploadingGraphics = '画像のアップロードに失敗しました'

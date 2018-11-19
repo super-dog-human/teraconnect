@@ -3,7 +3,7 @@ import {
     fetchLesson,
     fetchAvatarObjectURL,
     fetchLessonZipBlob
-} from '../../common/networkManager'
+} from '../../shared/utils/networkManager'
 
 export default class LessonLoader {
     constructor() {

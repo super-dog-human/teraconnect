@@ -1,5 +1,5 @@
 import 'audioworklet-polyfill'
-import * as Const from '../../common/constants'
+import * as Const from '../../shared/utils/constants'
 
 export default class VoiceRecorder {
     constructor(lessonID, callback) {

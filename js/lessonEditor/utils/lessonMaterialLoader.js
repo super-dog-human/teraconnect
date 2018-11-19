@@ -1,5 +1,5 @@
-import LessonAvatar from '../../common/lessonAvatar'
-import { fetchSignedURLs } from '../../common/networkManager'
+import LessonAvatar from '../../shared/utils/lessonAvatar'
+import { fetchSignedURLs } from '../../shared/utils/networkManager'
 import ReactDOM from 'react-dom'
 
 export async function loadAvatarElement(

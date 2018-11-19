@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { arrayToUniq } from '../../common/utility'
-import * as Const from '../../common/constants'
+import { arrayToUniq } from '../../shared/utils/utility'
+import * as Const from '../../shared/utils/constants'
 
 const leftShoulderInitRotation = [0, 0, 0.573576436351046, 0.8191520442889918]
 const rightShoulderInitRotation = [0, 0, -0.573576436351046, 0.8191520442889918]

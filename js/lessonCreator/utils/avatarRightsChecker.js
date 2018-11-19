@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import '../../common/GLTFLoader'
+import '../../shared/utils/GLTFLoader'
 
 export default class AvatarRightsChecker {
     constructor() {

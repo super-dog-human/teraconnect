@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactGA from 'react-ga'
-import { isProduction } from '../common/utility'
-import { GA_TRACKING_ID } from '../common/constants'
+import { isProduction } from '../shared/utils/utility'
+import { GA_TRACKING_ID } from '../shared/utils/constants'
 
 export default class ErrorBoundary extends React.Component {
     constructor() {

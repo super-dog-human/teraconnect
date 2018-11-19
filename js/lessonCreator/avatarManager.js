@@ -2,7 +2,7 @@ import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Dropzone from 'react-dropzone'
 import AvatarRightsChecker from './utils/avatarRightsChecker'
-import { fetchAvatars, uploadAvatar } from '../common/networkManager'
+import { fetchAvatars, uploadAvatar } from '../shared/utils/networkManager'
 
 const defaultThumbnailURL =
     'https://storage.googleapis.com/teraconn_thumbnail/avatar/default.png'

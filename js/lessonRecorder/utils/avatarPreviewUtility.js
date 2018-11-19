@@ -1,4 +1,4 @@
-import { stringToUpperCamel } from '../../common/utility'
+import { stringToUpperCamel } from '../../shared/utils/utility'
 
 export function moveAvatarTo(avatar, direction) {
     if (direction === 'stop') {

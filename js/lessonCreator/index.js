@@ -7,7 +7,7 @@ import AvatarManager from './avatarManager'
 import GraphicManager from './graphicManager'
 import Cookies from 'js-cookie'
 import { isMobile } from 'react-device-detect'
-import { postLesson } from '../common/networkManager'
+import { postLesson } from '../shared/utils/networkManager'
 
 const mobileWarningTitle = '非対応の環境です'
 const mobileWarningMessage = 'モバイル環境では授業を作成できません。'

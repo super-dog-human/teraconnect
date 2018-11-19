@@ -1,5 +1,5 @@
 import React from 'react'
-import { stringToMinutesFormat } from '../common/utility'
+import { stringToMinutesFormat } from '../shared/utils/utility'
 
 export default class ElapsedTime extends React.Component {
     constructor(props) {

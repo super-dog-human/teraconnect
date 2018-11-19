@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { fetchSignedURLs } from '../../common/networkManager'
+import { fetchSignedURLs } from '../../shared/utils/networkManager'
 
 export async function fetchLessonGraphicURLs(lessonGraphics) {
     if (lessonGraphics.length == 0) {
