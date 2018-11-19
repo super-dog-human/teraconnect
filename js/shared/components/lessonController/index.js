@@ -23,7 +23,6 @@ export default class LessonController extends React.Component {
         this.state = {
             isPlaying: false,
             texts: [],
-            voices: [],
             graphics: []
         }
 
@@ -49,8 +48,8 @@ export default class LessonController extends React.Component {
         }
 
         if (
-            prevProps.lesson.poseKey != this.props.poseKey ||
-            prevProps.lesson.faceKey != this.props.faceKey
+            prevProps.lesson.poseKey != this.props.lesson.poseKey ||
+            prevProps.lesson.faceKey != this.props.lesson.faceKey
         ) {
             loadAnimation(
                 this.props.avatar,
@@ -148,7 +147,7 @@ export default class LessonController extends React.Component {
 
         this.preElapsedTime = 0
         this.pausedElapsedTime = 0
-        this.setState({ texts: [], voices: [], graphics: [] })
+        this.setState({ texts: [], graphics: [] })
     }
 
     avatarAction(action) {
@@ -159,11 +158,7 @@ export default class LessonController extends React.Component {
         if (voice.id == '') return
 
         this.voicePlayer.setAndPlay(voice.url, voice.durationSec)
-
         voice.stopAtSec = voice.durationSec + elapsedTime
-        const newVoices = this.state.voices
-        newVoices.push(voice)
-        this.setState({ voices: newVoices })
     }
 
     showTimelineText(text, elapsedTime) {
