@@ -9,6 +9,10 @@ import Cookies from 'js-cookie'
 import { isMobile } from 'react-device-detect'
 import { postLesson } from '../common/networkManager'
 
+const mobileWarningTitle = '非対応の環境です'
+const mobileWarningMessage = 'モバイル環境では授業を作成できません。'
+const creatingLessonErrorTitle = '授業の作成に失敗しました'
+
 export default class LessonCreator extends React.Component {
     constructor(props) {
         super(props)
@@ -36,13 +40,9 @@ export default class LessonCreator extends React.Component {
     componentDidMount() {
         if (!isMobile) return
 
-        this.openErrorModal(
-            '非対応の環境です',
-            'モバイル環境では授業を作成できません。',
-            () => {
-                this.props.history.replace('/')
-            }
-        )
+        this.openErrorModal(mobileWarningTitle, mobileWarningMessage, () => {
+            this.props.history.replace('/')
+        })
     }
 
     componentDidUpdate() {
@@ -95,7 +95,7 @@ export default class LessonCreator extends React.Component {
                 this.checkCreatingStatus()
             })
             .catch(err => {
-                this.openErrorModal('授業の作成に失敗しました。', err, () => {
+                this.openErrorModal(creatingLessonErrorTitle, err, () => {
                     this.setState({ isCreating: false })
                 })
             })

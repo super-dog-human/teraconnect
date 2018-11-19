@@ -23,14 +23,12 @@ const Modal = ({ isOpen, onClose, needsConfirm, children }) => {
 
     return (
         <div
-            className={`${modalStyle} ${
-                isOpen ? 'modal fade show' : 'modal fade'
-            }`}
+            className={`${modalStyle} ${isOpen ? 'show' : ''} modal fade`}
             tabIndex="-1"
             role="dialog"
             onClick={() => {
                 if (needsConfirm) return
-                onClose()
+                onClose() // for backgound clicking
             }}
         >
             <div className="modal-dialog" role="document">
@@ -94,10 +92,8 @@ const ModalFooter = props => {
         if (props.needsConfirm) {
             return (
                 <ModalConfirmButton
-                    onClickCancel={() => props.onClickCancel()}
-                    onClickOK={() => {
-                        props.onClickOK()
-                    }}
+                    onClickCancel={props.onClickCancel}
+                    onClickOK={props.onClickOK}
                 />
             )
         } else {
@@ -109,7 +105,7 @@ const ModalFooter = props => {
         <>
             <ModalButton
                 type="secondary"
-                clickFunction={onClickCancel}
+                callback={onClickCancel}
                 text="キャンセル"
             />
             <ModalButton type="primary" callback={onClickOK} text="OK" />

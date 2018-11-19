@@ -1,5 +1,4 @@
 import React from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import ReactTooltip from 'react-tooltip'
 import VoiceText from './voiceText'
 import LessonController from '../shared/components/lessonController'
@@ -17,10 +16,25 @@ import {
 } from '../common/networkManager'
 import * as Const from '../common/constants'
 
-const loadingLessonError = '授業の読み込みに失敗しました'
-const publishingLessonError = '授業の公開に失敗しました'
+const loadingLessonErrorTitle = '授業の読み込みに失敗しました'
+const publishingLessonErrorTitle = '授業の公開に失敗しました'
 const deletionDoneTitle = '授業を削除しました'
 const deletionErrorTitle = '授業の削除に失敗しました'
+const confirmPublishingTitle = '授業を公開しますか？'
+const confirmPublishingMessage =
+    '・授業は約10日間公開され、その後自動で削除されます\n・URLへアクセスすると、誰でも閲覧可能な状態になります'
+const confirmDestroyingTitle = '授業を破棄しますか？'
+const confirmDestroyingMessage = '収録した授業を公開せずに削除します。'
+
+const initModalOption = {
+    isError: '',
+    title: '',
+    message: '',
+    onClose: () => {},
+    onClickOK: () => {},
+    onClickCancel: () => {},
+    needsConfirm: false
+}
 
 export default class LessonEditor extends React.Component {
     constructor(props) {
@@ -30,7 +44,6 @@ export default class LessonEditor extends React.Component {
 
         this.state = {
             isLoading: true,
-            isUpdating: false,
             isGraphicLoaded: false,
             isTextVoiceLoaded: false,
             avatar: null,
@@ -41,10 +54,7 @@ export default class LessonEditor extends React.Component {
             poseKey: {},
             faceKey: {},
             isModalOpen: false,
-            isErrorModal: false,
-            modalTitle: '',
-            modalMessage: '',
-            modalCloseCallback: () => {}
+            modalOption: initModalOption
         }
 
         this.loader = new LessonMaterialLoader(this.lessonID)
@@ -52,7 +62,7 @@ export default class LessonEditor extends React.Component {
 
     async componentDidMount() {
         this.loadMaterials().catch(err => {
-            this.openModal(loadingLessonError, err)
+            this.openModal({ title: loadingLessonErrorTitle, message: err })
         })
     }
 
@@ -176,22 +186,40 @@ export default class LessonEditor extends React.Component {
         this.setState({ isPublic: event.target.checked })
     }
 
-    async confirmPublish() {
-        const result = confirm(
-            '授業を公開しますか？\n\n・授業は約10日間公開され、その後自動で削除されます\n・再生画面のURLへアクセスすると、誰でも閲覧可能な状態になります'
-        )
-        if (result) {
-            this.publish()
-        }
+    confirmPublish() {
+        this.openModal({
+            title: confirmPublishingTitle,
+            message: confirmPublishingMessage,
+            onClickOK: () => {
+                this.closeModal()
+                this.publish()
+            },
+            onClickCancel: () => {
+                this.closeModal()
+            },
+            isError: false,
+            needsConfirm: true
+        })
     }
 
-    async confirmDestroy() {
-        const result = confirm('収録した授業を、公開せずに削除しますか？')
-        if (result) this.destroy()
+    confirmDestroy() {
+        this.openModal({
+            title: confirmDestroyingTitle,
+            message: confirmDestroyingMessage,
+            onClickOK: () => {
+                this.closeModal()
+                this.destroy()
+            },
+            onClickCancel: () => {
+                this.closeModal()
+            },
+            isError: false,
+            needsConfirm: true
+        })
     }
 
     publish() {
-        this.setState({ isUpdating: true })
+        this.setState({ isLoading: true })
 
         const lesson = {
             id: this.lessonID,
@@ -205,12 +233,14 @@ export default class LessonEditor extends React.Component {
 
         this.publishLesson(lesson)
             .then(() => {
-                this.setState({ isUpdating: false })
                 this.props.history.push(`/${this.lessonID}`)
             })
             .catch(err => {
-                this.setState({ isUpdating: false })
-                this.openModal(publishingLessonError, err)
+                this.setState({ isLoading: false })
+                this.openModal({
+                    title: publishingLessonErrorTitle,
+                    message: err
+                })
             })
     }
 
@@ -238,42 +268,27 @@ export default class LessonEditor extends React.Component {
         deleteLesson(this.lessonID)
             .then(() => {
                 this.setState({ isLoading: false })
-                this.openModal(
-                    deletionDoneTitle,
-                    '',
-                    () => {
+                this.openModal({
+                    title: deletionDoneTitle,
+                    onClose: () => {
+                        this.closeModal()
                         this.props.history.push('/')
                     },
-                    false // not error modal
-                )
+                    isError: false
+                })
             })
             .catch(err => {
                 this.setState({ isLoading: false })
-                this.openModal(deletionErrorTitle, err)
+                this.openModal({ title: deletionErrorTitle, message: err })
             })
     }
 
-    openModal(title, message, callback = () => {}, isError = true) {
-        this.setState({
-            isModalOpen: true,
-            isErrorModal: isError,
-            modalTitle: title,
-            modalMessage: message,
-            modalCloseCallback: () => {
-                this.closeModal()
-                callback()
-            }
-        })
+    openModal(option) {
+        this.setState({ isModalOpen: true, modalOption: option })
     }
 
     closeModal() {
-        this.setState({
-            isModalOpen: false,
-            isErrorModal: '',
-            modalTitle: '',
-            modalMessage: '',
-            modalCloseCallback: () => {}
-        })
+        this.setState({ isModalOpen: false, modalOption: initModalOption })
     }
 
     render() {
@@ -281,10 +296,7 @@ export default class LessonEditor extends React.Component {
             <div>
                 <ModalWindow
                     isOpen={this.state.isModalOpen}
-                    isError={this.state.isErrorModal}
-                    title={this.state.modalTitle}
-                    message={this.state.modalMessage}
-                    onClose={this.state.modalCloseCallback.bind(this)}
+                    {...this.state.modalOption}
                 />
                 <div id="lesson-editor" className="app-back-color-dark-gray">
                     <div className="container-fluid">
@@ -348,7 +360,6 @@ export default class LessonEditor extends React.Component {
                                             faceKey: this.state.faceKey
                                         }}
                                         isLoading={this.state.isLoading}
-                                        isPreview={true}
                                         ref={e => {
                                             this.playerElement = e
                                         }}

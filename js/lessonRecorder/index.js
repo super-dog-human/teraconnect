@@ -40,8 +40,6 @@ export default class LessonRecorder extends React.Component {
             isReachedTimeLimit: false
         }
 
-//        this.props.updateIndicator({ isLoading: true })
-
         this.lesson = {}
         this.graphicURLIndex = -1
         this.avatar = new LessonAvatar()
@@ -79,7 +77,7 @@ export default class LessonRecorder extends React.Component {
             }
         )
         this.voiceRecorder = new VoiceRecorder(this.lessonID, voice => {
-            this.addVoice(voice)
+            this.recorder.recordVoice(voice)
         })
     }
 
@@ -118,7 +116,6 @@ export default class LessonRecorder extends React.Component {
             !this.state.isAvatarLoading
         ) {
             this.setState({ isLoading: false })
-//            this.props.updateIndicator({ isLoading: false })
         }
     }
 
@@ -131,14 +128,6 @@ export default class LessonRecorder extends React.Component {
         this.voiceRecorder.turnOff()
     }
 
-    avatarLoadingCompleted() {
-        this.setState({ isAvatarLoading: false })
-    }
-
-    addVoice(voice) {
-        this.recorder.recordVoice(voice)
-    }
-
     async faceDetectionInFrame() {
         if (this.state.isDetectorLoading) return
 
@@ -146,6 +135,7 @@ export default class LessonRecorder extends React.Component {
         requestAnimationFrame(() => this.faceDetectionInFrame())
     }
 
+    /* メソッド名変更 */
     recordingStart() {
         if (this.state.isReachedTimeLimit) {
             return
@@ -189,10 +179,11 @@ export default class LessonRecorder extends React.Component {
         this.recorder.recordAvatarPosition(position)
     }
 
-    postRecord() {
+    /* メソッド名変更おわり */
+
+    async postRecord() {
         disableAllButtons()
-        this.setState({ isPosting: true })
-//        this.props.updateIndicator({ isLoading: true })
+        await this.setState({ isPosting: true })
         this.waitAndPostRecord()
     }
 
@@ -200,18 +191,15 @@ export default class LessonRecorder extends React.Component {
         const interval = setInterval(async () => {
             if (this.recorder.hasAllVoicesUploaded()) {
                 clearInterval(interval)
+
                 const record = this.recorder.recordForUpload()
-                await uploadRecord(this.lessonID, record).catch(err => {
+                uploadRecord(this.lessonID, record).then(() => {
+                    this.setState({ isPosting: false })
+                    this.props.history.push(`/lessons/${this.lessonID}/edit`)
+                }).catch(err => {
                     this.saveRecordButton.disabled = false
-
-                    err.message = ''
-                    err.retry = this.postRecord()
-                    throw err
+                    // modal
                 })
-
-                this.setState({ isPosting: false })
-//                this.props.updateIndicator({ isLoading: false })
-                this.props.history.push(`/lessons/${this.lessonID}/edit`)
             }
         }, 1000)
     }
@@ -237,7 +225,9 @@ export default class LessonRecorder extends React.Component {
             </LessonRecorder>
             */
             <div id="lesson-recorder-screen">
-                <Indicator isLoading={this.state.isLoading} />
+                <Indicator
+                    isLoading={this.state.isLoading || this.state.isPosting}
+                />
                 <div
                     id="lesson-recorder"
                     ref={e => {
@@ -252,7 +242,7 @@ export default class LessonRecorder extends React.Component {
                         pose={this.state.pose}
                         moveDirection={this.state.moveDirection}
                         loadingCompleted={() => {
-                            this.avatarLoadingCompleted()
+                            this.setState({ isAvatarLoading: false })
                         }}
                         previewContainer={this.avatarPreview}
                     />
