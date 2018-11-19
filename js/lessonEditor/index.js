@@ -4,6 +4,7 @@ import ReactTooltip from 'react-tooltip'
 import VoiceText from './voiceText'
 import LessonController from '../shared/components/lessonController'
 import LessonMaterialLoader from './lessonMaterialLoader'
+import ModalWindow from '../shared/components/modalWindow'
 import {
     fetchLesson,
     fetchRawLessonMaterial,
@@ -15,6 +16,11 @@ import {
     packMaterial
 } from '../common/networkManager'
 import * as Const from '../common/constants'
+
+const loadingLessonError = '授業の読み込みに失敗しました'
+const publishingLessonError = '授業の公開に失敗しました'
+const deletionDoneTitle = '授業を削除しました'
+const deletionErrorTitle = '授業の削除に失敗しました'
 
 export default class LessonEditor extends React.Component {
     constructor(props) {
@@ -33,7 +39,12 @@ export default class LessonEditor extends React.Component {
             isPublic: false,
             timelines: [],
             poseKey: {},
-            faceKey: {}
+            faceKey: {},
+            isModalOpen: false,
+            isErrorModal: false,
+            modalTitle: '',
+            modalMessage: '',
+            modalCloseCallback: () => {}
         }
 
         this.loader = new LessonMaterialLoader(this.lessonID)
@@ -41,8 +52,7 @@ export default class LessonEditor extends React.Component {
 
     async componentDidMount() {
         this.loadMaterials().catch(err => {
-            console.error(err)
-            // error modal
+            this.openModal(loadingLessonError, err)
         })
     }
 
@@ -64,7 +74,7 @@ export default class LessonEditor extends React.Component {
         if (this.state.lesson.isPacked) {
             // lesson has been published.
             this.setState({ isTextVoiceLoaded: true, isGraphicLoaded: true })
-            this.props.history.push(`/${this.lessonID}`) // FIXME
+            this.props.history.push(`/${this.lessonID}`) // FIXME, should editable twice the lesson
             return
         }
 
@@ -180,7 +190,7 @@ export default class LessonEditor extends React.Component {
         if (result) this.destroy()
     }
 
-    async publish() {
+    publish() {
         this.setState({ isUpdating: true })
 
         const lesson = {
@@ -193,17 +203,15 @@ export default class LessonEditor extends React.Component {
             isPublic: this.state.isPublic
         }
 
-        await this.publishLesson(lesson).catch(err => {
-            this.setState({ isUpdating: false })
-            console.error(err)
-            alert(
-                '授業の公開に失敗しました。再度試しても失敗する場合は、運営者に連絡してください。'
-            )
-            return
-        })
-
-        this.setState({ isUpdating: false })
-        this.props.history.push(`/${this.lessonID}`)
+        this.publishLesson(lesson)
+            .then(() => {
+                this.setState({ isUpdating: false })
+                this.props.history.push(`/${this.lessonID}`)
+            })
+            .catch(err => {
+                this.setState({ isUpdating: false })
+                this.openModal(publishingLessonError, err)
+            })
     }
 
     async publishLesson(lesson) {
@@ -225,115 +233,138 @@ export default class LessonEditor extends React.Component {
     }
 
     async destroy() {
-        this.setState({ isLoading: true })
+        await this.setState({ isLoading: true })
 
-        const result = await deleteLesson(this.lessonID).catch(err => {
-            console.error(err)
-            return false
+        deleteLesson(this.lessonID)
+            .then(() => {
+                this.setState({ isLoading: false })
+                this.openModal(
+                    deletionDoneTitle,
+                    '',
+                    () => {
+                        this.props.history.push('/')
+                    },
+                    false // not error modal
+                )
+            })
+            .catch(err => {
+                this.setState({ isLoading: false })
+                this.openModal(deletionErrorTitle, err)
+            })
+    }
+
+    openModal(title, message, callback = () => {}, isError = true) {
+        this.setState({
+            isModalOpen: true,
+            isErrorModal: isError,
+            modalTitle: title,
+            modalMessage: message,
+            modalCloseCallback: () => {
+                this.closeModal()
+                callback()
+            }
         })
+    }
 
-        this.setState({ isLoading: false })
-
-        if (result) {
-            alert('授業を削除しました。')
-            location.href = '/'
-        } else {
-            alert(
-                '授業の削除に失敗しました。再度試しても失敗する場合は、運営者に連絡してください。'
-            )
-        }
+    closeModal() {
+        this.setState({
+            isModalOpen: false,
+            isErrorModal: '',
+            modalTitle: '',
+            modalMessage: '',
+            modalCloseCallback: () => {}
+        })
     }
 
     render() {
         return (
-            <div id="lesson-editor" className="app-back-color-dark-gray">
-                <div className="container-fluid">
-                    <div id="lesson-control-panel">
-                        <div className="row">
-                            <div className="col text-right">
-                                <button
-                                    className="btn btn-primary btn-lg"
-                                    onClick={this.confirmPublish.bind(this)}
-                                    disabled={this.state.isLoading}
-                                    data-tip="授業を公開状態にします"
-                                >
-                                    授業を公開する
-                                </button>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col text-right">
-                                <button
-                                    className="btn btn-danger btn-lg"
-                                    onClick={this.confirmDestroy.bind(this)}
-                                    disabled={this.state.isLoading}
-                                    data-tip="授業をすぐに破棄します"
-                                >
-                                    破棄する
-                                </button>
-                                {/*
-                                <div id="publish-checkbox" className="form-check">
-                                    <input type="checkbox" id="is-publish-checkbox" onChange={this._changePublic.bind(this)} />
-                                    <label htmlFor="is-publish-checkbox" className="app-text-color-soft-white" data-tip="トップページに作成した授業のリンクを表示します">&nbsp;一般公開</label>
+            <div>
+                <ModalWindow
+                    isOpen={this.state.isModalOpen}
+                    isError={this.state.isErrorModal}
+                    title={this.state.modalTitle}
+                    message={this.state.modalMessage}
+                    onClose={this.state.modalCloseCallback.bind(this)}
+                />
+                <div id="lesson-editor" className="app-back-color-dark-gray">
+                    <div className="container-fluid">
+                        <div id="lesson-control-panel">
+                            <div className="row">
+                                <div className="col text-right">
+                                    <button
+                                        className="btn btn-primary btn-lg"
+                                        onClick={this.confirmPublish.bind(this)}
+                                        disabled={this.state.isLoading}
+                                        data-tip="授業を公開状態にします"
+                                    >
+                                        授業を公開する
+                                    </button>
                                 </div>
-                                */}
+                            </div>
+                            <div className="row">
+                                <div className="col text-right">
+                                    <button
+                                        className="btn btn-danger btn-lg"
+                                        onClick={this.confirmDestroy.bind(this)}
+                                        disabled={this.state.isLoading}
+                                        data-tip="授業をすぐに破棄します"
+                                    >
+                                        破棄する
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div id="editor-body" className="row">
-                        <div id="text-editor" className="col-lg-7">
-                            <h5 className="app-text-color-soft-white">
-                                テキスト編集
-                            </h5>
-                            <VoiceText
-                                isLoading={this.state.isLoading}
-                                lessonID={this.lessonID}
-                                timelines={this.state.timelines}
-                                changeTimelines={this.changeTimelines.bind(
-                                    this
-                                )}
-                            />
-                            <div id="text-loading-indicator">
-                                <FontAwesomeIcon icon="spinner" spin />
-                            </div>
-                        </div>
-                        <div className="col-lg-5">
-                            <h5 className="app-text-color-soft-white mb-4">
-                                プレビュー
-                            </h5>
-                            <div
-                                id="lesson-preview"
-                                className="app-back-color-soft-white m-2"
-                                ref={e => {
-                                    this.playerContainer = e
-                                }}
-                            >
-                                <LessonController
-                                    avatar={this.state.avatar}
-                                    lesson={{
-                                        durationSec: this.state.durationSec,
-                                        timelines: this.state.timelines,
-                                        poseKey: this.state.poseKey,
-                                        faceKey: this.state.faceKey
-                                    }}
+                        <div id="editor-body" className="row">
+                            <div id="text-editor" className="col-lg-7">
+                                <h5 className="app-text-color-soft-white">
+                                    テキスト編集
+                                </h5>
+                                <VoiceText
                                     isLoading={this.state.isLoading}
-                                    isPreview={true}
-                                    ref={e => {
-                                        this.playerElement = e
-                                    }}
+                                    lessonID={this.lessonID}
+                                    timelines={this.state.timelines}
+                                    changeTimelines={this.changeTimelines.bind(
+                                        this
+                                    )}
                                 />
                             </div>
+                            <div className="col-lg-5">
+                                <h5 className="app-text-color-soft-white mb-4">
+                                    プレビュー
+                                </h5>
+                                <div
+                                    id="lesson-preview"
+                                    className="app-back-color-soft-white m-2"
+                                    ref={e => {
+                                        this.playerContainer = e
+                                    }}
+                                >
+                                    <LessonController
+                                        avatar={this.state.avatar}
+                                        lesson={{
+                                            durationSec: this.state.durationSec,
+                                            timelines: this.state.timelines,
+                                            poseKey: this.state.poseKey,
+                                            faceKey: this.state.faceKey
+                                        }}
+                                        isLoading={this.state.isLoading}
+                                        isPreview={true}
+                                        ref={e => {
+                                            this.playerElement = e
+                                        }}
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <ReactTooltip
+                        className="tooltip"
+                        place="bottom"
+                        type="warning"
+                    />
                 </div>
-                <ReactTooltip
-                    className="tooltip"
-                    place="bottom"
-                    type="warning"
-                />
                 <style jsx>{`
                     #lesson-editor {
-                        opacity: ${this.state.isLoading ? '0.8' : '1'};
                         width: 100%;
                         height: 100%;
                     }
@@ -361,22 +392,6 @@ export default class LessonEditor extends React.Component {
                     #text-editor {
                         position: relative;
                         max-height: 100%;
-                    }
-                    #text-loading-indicator {
-                        position: absolute;
-                        z-index: 300; // indicator
-                        width: 10vw;
-                        height: 10vw;
-                        top: 0;
-                        bottom: 0;
-                        left: 0;
-                        right: 0;
-                        margin: auto;
-                        display: ${this.state.isLoading || this.state.isUpdating
-                ? 'display'
-                : 'none'};
-                        font-size: 10vw;
-                        opacity: 0.5;
                     }
                     #lesson-preview {
                         width: 38vw;
