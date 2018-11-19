@@ -2,7 +2,12 @@ import React from 'react'
 import ReactTooltip from 'react-tooltip'
 import VoiceText from './voiceText'
 import LessonController from '../shared/components/lessonController'
-import LessonMaterialLoader from './lessonMaterialLoader'
+import {
+    loadAvatarElement,
+    fetchAndMergeGraphicToTimeline,
+    mergeVoiceTextToTimeline,
+    fetchVoiceURLsToTimelines
+} from './utils/lessonMaterialLoader'
 import ModalWindow from '../shared/components/modalWindow'
 import {
     fetchLesson,
@@ -16,7 +21,6 @@ import {
 } from '../common/networkManager'
 import * as Const from '../common/constants'
 
-const loadingLessonErrorTitle = '授業の読み込みに失敗しました'
 const publishingLessonErrorTitle = '授業の公開に失敗しました'
 const deletionDoneTitle = '授業を削除しました'
 const deletionErrorTitle = '授業の削除に失敗しました'
@@ -56,21 +60,17 @@ export default class LessonEditor extends React.Component {
             isModalOpen: false,
             modalOption: initModalOption
         }
-
-        this.loader = new LessonMaterialLoader(this.lessonID)
     }
 
     async componentDidMount() {
-        this.loadMaterials().catch(err => {
-            this.openModal({ title: loadingLessonErrorTitle, message: err })
-        })
+        this.loadMaterials()
     }
 
     async componentDidUpdate() {
         if (!this.state.isLoading) return
 
         if (this.state.isGraphicLoaded && this.state.isTextVoiceLoaded) {
-            const timelines = await this.loader.fetchVoiceURLsToTimelines(
+            const timelines = await fetchVoiceURLsToTimelines(
                 this.lessonID,
                 this.state.timelines
             )
@@ -114,7 +114,8 @@ export default class LessonEditor extends React.Component {
         const avatarObjectURL = await fetchAvatarObjectURL(
             this.state.lesson.avatar
         )
-        const avatar = await this.loader.loadAvatar(
+        const avatar = await loadAvatarElement(
+            this.lessonID,
             avatarObjectURL,
             this.playerContainer,
             this.playerElement
@@ -132,7 +133,7 @@ export default class LessonEditor extends React.Component {
             return
         }
 
-        const timelines = await this.loader.fetchAndMergeGraphicToTimeline(
+        const timelines = await fetchAndMergeGraphicToTimeline(
             this.state.lesson.graphics,
             this.state.timelines
         )
@@ -157,7 +158,7 @@ export default class LessonEditor extends React.Component {
             return
         }
 
-        const timelines = await this.loader.fetchAndMergeVoiceTextToTimeline(
+        const timelines = mergeVoiceTextToTimeline(
             this.state.timelines,
             voiceTexts
         )
