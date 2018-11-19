@@ -105,7 +105,7 @@ export default class LessonAvatar {
     }
 
     setDefaultAnimation() {
-        this.animationMixer = new THREE.AnimationMixer(this.bodySkin)
+        this.animationMixer = new THREE.AnimationMixer(this.faceSkin)
         this._setBreathAnimation()
     }
 
