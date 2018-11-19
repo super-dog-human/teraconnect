@@ -13,7 +13,7 @@ export default ({ isLoading, message = '' }) => (
     </LoadingIndicator>
 )
 
-const LoadingIndicator = styled('div')(props => ({
+const LoadingIndicator = styled.div(props => ({
     display: props.isLoading ? 'flex' : 'none',
     position: 'fixed',
     zIndex: 300, // indicator
@@ -26,16 +26,16 @@ const LoadingIndicator = styled('div')(props => ({
     backgroundColor: 'rgba(255, 255, 255, 0.4)'
 }))
 
-const IndicatorBody = styled('div')(() => ({
+const IndicatorBody = styled.div(() => ({
     display: 'block',
     textAlign: 'center'
 }))
 
-const IndicatorIcon = styled('div')(() => ({
+const IndicatorIcon = styled.div(() => ({
     fontSize: '2vw'
 }))
 
-const IndicatorMessage = styled('div')(() => ({
+const IndicatorMessage = styled.div(() => ({
     fontSize: '0.9vw',
     marginTop: '1vh'
 }))
