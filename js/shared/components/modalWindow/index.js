@@ -3,12 +3,13 @@ import { css } from 'emotion'
 
 export default props => (
     <Modal
+        className={props.isOpen ? 'modal fade show' : 'modal fade'}
         isOpen={props.isOpen}
         onClose={props.onClose}
         needsConfirm={props.needsConfirm}
     >
         <ModalHeader {...props} />
-        <ModalBody message={props.message} onClick={e => e.stopPropagation()} />
+        <ModalBody onClick={e => e.stopPropagation()} message={props.message} />
         <ModalFooter {...props} />
     </Modal>
 )
@@ -78,7 +79,15 @@ const ModalHeader = props => {
     )
 }
 
-const ModalBody = props => <div className="modal-body">{props.message}</div>
+const modalBodyStyle = css`
+    font-size: 0.9rem;
+    white-space: pre-wrap;
+    padding: 20px;
+`
+
+const ModalBody = ({ message }) => (
+    <div className={modalBodyStyle}>{message}</div>
+)
 
 const ModalFooter = props => {
     const ModalFooterButton = props => {
