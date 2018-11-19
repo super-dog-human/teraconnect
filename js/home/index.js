@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import Slider from 'react-slick'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { isProduction } from '../common/utility'
+import { isProduction } from '../shared/utils/utility'
 
 export default class Home extends React.Component {
     constructor(props) {
@@ -141,7 +141,7 @@ export default class Home extends React.Component {
                                 <br />
                                 いま、壁を越える道具と共に、新しい授業をつくろう。
                                 <br />
-                                意思と継続を以って、大切な何かを次代に渡そう。
+                                意思と継続をもって、大切な何かを次代に渡そう。
                                 <br />
                             </h3>
                             <h2 className="text-gray">もう一人じゃない。</h2>
@@ -152,7 +152,9 @@ export default class Home extends React.Component {
                     <img src="/img/logo-large.png" alt="Teraconnect" />
                 </div>
                 <div id="license-notation">
-                    <span>designed by Freepik, Pixel Buddha from Flaticon</span>
+                    <span>
+                        <Link to="/license">ライセンスに基づく表記</Link>
+                    </span>
                 </div>
                 <style jsx>{`
                     --default-gray: #767676;
@@ -304,7 +306,7 @@ export default class Home extends React.Component {
                         margin-right: 20px;
                         margin-bottom: 100px;
                         color: gray;
-                        font-size: 0.5vw;
+                        font-size: 0.7vw;
                     }
                     #app-large-logo {
                         width: 100%;
