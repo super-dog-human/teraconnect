@@ -3,7 +3,18 @@ import ReactDOM from 'react-dom'
 import LessonLoader from './utils/lessonLoader'
 import LessonAvatar from '../common/lessonAvatar'
 import LessonController from '../shared/components/lessonController'
+import ModalWindow from '../shared/components/modalWindow'
 import TweetButton from './tweetButton'
+
+const initModalOption = {
+    isError: '',
+    title: '',
+    message: '',
+    onClose: () => {},
+    onClickOK: () => {},
+    onClickCancel: () => {},
+    needsConfirm: false
+}
 
 export default class LessonPlayer extends React.Component {
     constructor(props) {
@@ -16,7 +27,9 @@ export default class LessonPlayer extends React.Component {
             avatar: new LessonAvatar(),
             lesson: {},
             packedlesson: {},
-            isLoading: true
+            isLoading: true,
+            isModalOpen: false,
+            modalOption: initModalOption
         }
     }
 
@@ -26,19 +39,14 @@ export default class LessonPlayer extends React.Component {
             lesson,
             packedLesson,
             avatarFileURL
-        } = await this.lessonLoader.loadLesson(lessonID).catch(err => {
-            console.error(err)
-            /*
-            openModal(
-                true,
-                'エラー',
-                '授業がみつかりませんでした。URLが誤っているか、公開期間が終了しています。',
-                true,
-                () => {
-                    return <Redirect replace="/" />
+        } = await this.lessonLoader.loadLesson(lessonID).catch(_ => {
+            this.openModal({
+                title: '読み込みに失敗しました',
+                message: 'URLが間違っているか、公開期間が終了しています。',
+                onClose: () => {
+                    this.props.history.push('/')
                 }
-            )
-            */
+            })
         })
 
         const dom = await this.state.avatar.render(
@@ -71,6 +79,14 @@ export default class LessonPlayer extends React.Component {
         if (this.state.avatar) this.state.avatar.clearBeforeUnload()
     }
 
+    openModal(option) {
+        this.setState({ isModalOpen: true, modalOption: option })
+    }
+
+    closeModal() {
+        this.setState({ isModalOpen: false, modalOption: initModalOption })
+    }
+
     render() {
         return (
             <div
@@ -79,6 +95,11 @@ export default class LessonPlayer extends React.Component {
                     this.container = e
                 }}
             >
+                <ModalWindow
+                    isOpen={this.state.isModalOpen}
+                    {...this.state.modalOption}
+                />
+
                 <LessonController
                     avatar={this.state.avatar}
                     lesson={this.state.packedLesson}
