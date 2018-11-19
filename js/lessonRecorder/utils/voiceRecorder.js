@@ -38,7 +38,10 @@ export default class VoiceRecorder {
             },
             video: false
         })
-        this._context = new AudioContext()
+        this._context =
+            typeof webkitAudioContext != 'undefined'
+                ? new webkitAudioContext()
+                : new AudioContext()
         await this._context.audioWorklet.addModule('/voiceRecorderProcessor.js')
         const micInput = this._context.createMediaStreamSource(this._stream)
         this._recorder = new AudioWorkletNode(this._context, 'recorder')
