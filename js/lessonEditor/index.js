@@ -27,7 +27,7 @@ const deletionErrorTitle = '授業の削除に失敗しました'
 const confirmPublishingTitle = '授業を公開しますか？'
 const confirmPublishingMessage =
     '・授業は約10日間公開され、その後自動で削除されます\n・URLへアクセスすると、誰でも閲覧可能な状態になります'
-const confirmDestroyingTitle = '授業を破棄しますか？'
+const confirmDestroyingTitle = '授業を削除しますか？'
 const confirmDestroyingMessage = '収録した授業を公開せずに削除します。'
 
 const initModalOption = {
@@ -320,9 +320,9 @@ export default class LessonEditor extends React.Component {
                                         className="btn btn-danger btn-lg"
                                         onClick={this.confirmDestroy.bind(this)}
                                         disabled={this.state.isLoading}
-                                        data-tip="授業をすぐに破棄します"
+                                        data-tip="授業をすぐに削除します"
                                     >
-                                        破棄する
+                                        削除する
                                     </button>
                                 </div>
                             </div>
