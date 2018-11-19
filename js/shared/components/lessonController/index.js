@@ -1,6 +1,7 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Clock } from 'three'
+import Indicator from '../indicator'
 import LessonTexts from './lessonTexts'
 import LessonGraphics from './lessonGraphics'
 import LessonVoicePlayer from './utils/lessonVoicePlayer'
@@ -218,12 +219,8 @@ export default class LessonController extends React.Component {
     render() {
         return (
             <div id="lesson-player">
+                <Indicator isLoading={this.props.isLoading} />
                 <div id="control-panel">
-                    <div id="loading-indicator">
-                        <div id="loading-indicator-icon">
-                            <FontAwesomeIcon icon="spinner" spin />
-                        </div>
-                    </div>
                     <button
                         className="control-btn"
                         onClick={this.panelClick.bind(this)}
@@ -234,7 +231,6 @@ export default class LessonController extends React.Component {
 
                 <LessonGraphics graphics={this.state.graphics} />
                 <LessonTexts texts={this.state.texts} />
-
                 <style jsx>{`
                     #lesson-player {
                         position: relative;
@@ -251,20 +247,6 @@ export default class LessonController extends React.Component {
                         z-index: 200; // control panel
                         width: 100%;
                         height: 100%;
-                    }
-                    #loading-indicator {
-                        position: absolute;
-                        top: 0;
-                        display: ${this.props.isLoading ? 'table' : 'none'};
-                        width: 100%;
-                        height: 100%;
-                    }
-                    #loading-indicator-icon {
-                        display: table-cell;
-                        text-align: center;
-                        vertical-align: middle;
-                        font-size: 10vw;
-                        opacity: 0.5;
                     }
                     .control-btn {
                         display: ${this.props.isLoading ? 'none' : 'block'};
