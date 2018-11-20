@@ -9,6 +9,7 @@ export default class VoiceRecorder {
         this._recorder
         this._stream
         this._context
+        this._micInput
 
         this._initRecorder()
     }
@@ -27,6 +28,9 @@ export default class VoiceRecorder {
         this._stream.getAudioTracks().forEach(track => {
             track.stop()
         })
+
+        this._micInput.disconnect()
+        this._micInput = null
     }
 
     async _initRecorder() {
@@ -40,12 +44,12 @@ export default class VoiceRecorder {
         })
         this._context =
             typeof webkitAudioContext != 'undefined'
-                ? new webkitAudioContext()
+                ? new webkitAudioContext() // for safari
                 : new AudioContext()
         await this._context.audioWorklet.addModule('/voiceRecorderProcessor.js')
-        const micInput = this._context.createMediaStreamSource(this._stream)
+        this._micInput = this._context.createMediaStreamSource(this._stream)
         this._recorder = new AudioWorkletNode(this._context, 'recorder')
-        micInput.connect(this._recorder)
+        this._micInput.connect(this._recorder)
         this._recorder.connect(this._context.destination)
         this._isReady = true
 
