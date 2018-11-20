@@ -25,7 +25,7 @@ const LicenseBody = styled.div(() => ({
 }))
 
 export default () => (
-    <Page className="app-back-color-soft-white app-text-color-dark-gray">
+    <Page className="app-text-color-dark-gray">
         <PageTitle>ライセンス</PageTitle>
 
         <LicenseTitle>Top page Images</LicenseTitle>
