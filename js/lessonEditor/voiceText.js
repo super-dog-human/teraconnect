@@ -143,7 +143,7 @@ export default class VoiceText extends React.Component {
                     .line {
                         position: relative;
                         display: block;
-                        width: 55vw;
+                        width: 54vw;
                         height: 40px;
                         margin-top: 20px;
                         margin-left: 1vw;
