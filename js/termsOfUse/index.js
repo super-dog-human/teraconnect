@@ -48,6 +48,7 @@ export default () => (
                 <a
                     href="https://policies.google.com/technologies/partner-sites?hl=ja"
                     target="_blank"
+                    rel="noopener noreferrer"
                 >
                     GOOGLE のサービスを使用するサイトやアプリから収集した情報の
                     GOOGLE による使用

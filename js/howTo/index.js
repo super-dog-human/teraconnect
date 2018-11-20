@@ -82,13 +82,18 @@ export default () => (
             <a
                 href="https://www.cpubenchmark.net/mid_range_cpus.html"
                 target="_blank"
+                rel="noopener noreferrer"
             >
                 PassMarkのベンチマーク
             </a>
             の結果が4,000以上のCPUが目安です。
             <br />
             Googleのベンチマーク「
-            <a href="http://chromium.github.io/octane/" target="_blank">
+            <a
+                href="http://chromium.github.io/octane/"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
                 Octane
             </a>
             」で、スコアが30,000以上になれば大丈夫です。
@@ -110,6 +115,7 @@ export default () => (
             <a
                 href="https://www.amazon.co.jp/gp/product/B01GJ9IUNY/"
                 target="_blank"
+                rel="noopener noreferrer"
             >
                 MPM-2000U
             </a>
