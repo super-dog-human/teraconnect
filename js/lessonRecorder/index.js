@@ -138,8 +138,7 @@ export default class LessonRecorder extends React.Component {
         requestAnimationFrame(() => this.faceDetectionInFrame())
     }
 
-    /* メソッド名変更 */
-    recordingStart() {
+    handleStartRecordingClick() {
         if (this.state.isReachedTimeLimit) {
             return
         }
@@ -147,19 +146,19 @@ export default class LessonRecorder extends React.Component {
         this.setState({ isRecording: true })
     }
 
-    recordingStop() {
+    handleStopRecordingClick() {
         this.setState({ isRecording: false, isPause: true })
     }
 
-    recordingResume() {
+    handleResumeRecordingClick() {
         this.setState({ isRecording: true, isPause: false })
     }
 
-    switchFace(faceName) {
+    handleSwitchFaceClick(faceName) {
         this.faceDetector.setBaseFace(faceName)
     }
 
-    switchGraphic(diff) {
+    handleSwitchGraphicClick(diff) {
         this.graphicURLIndex += diff
         const graphic =
             this.graphicURLIndex > -1
@@ -169,12 +168,12 @@ export default class LessonRecorder extends React.Component {
         this.recorder.recordSwitchingGraphic(graphic)
     }
 
-    async movePosition(direction) {
+    async handleMoveAvatarPositionClick(direction) {
         await this.setState({ moveDirection: direction })
         this.recorder.setAvatarStartMovingPositionTime()
     }
 
-    async stopMovingPosition() {
+    async handleStopAvatarPositionMouseUp() {
         if (this.state.moveDirection == 'stop') return
 
         await this.setState({ moveDirection: 'stop' })
@@ -182,9 +181,7 @@ export default class LessonRecorder extends React.Component {
         this.recorder.recordAvatarPosition(position)
     }
 
-    /* メソッド名変更おわり */
-
-    async postRecord() {
+    async handleSaveRecordClick() {
         disableAllButtons()
         await this.setState({ isPosting: true })
         this.waitAndPostRecord()
@@ -281,7 +278,7 @@ export default class LessonRecorder extends React.Component {
                                 }}
                                 isRecording={this.state.isRecording}
                                 stopRecording={() => {
-                                    this.recordingStop()
+                                    this.handleStopRecordingClick()
                                     this.setState({ isReachedTimeLimit: true })
                                 }}
                             />
@@ -291,7 +288,10 @@ export default class LessonRecorder extends React.Component {
                             <button
                                 type="button"
                                 className="btn btn-dark"
-                                onClick={this.switchFace.bind(this, 'Default')}
+                                onClick={this.handleSwitchFaceClick.bind(
+                                    this,
+                                    'Default'
+                                )}
                                 disabled={this.state.isLostFaceTracking}
                             >
                                 <FontAwesomeIcon icon={['far', 'meh-blank']} />
@@ -299,7 +299,10 @@ export default class LessonRecorder extends React.Component {
                             <button
                                 type="button"
                                 className="btn btn-dark"
-                                onClick={this.switchFace.bind(this, 'AllJoy')}
+                                onClick={this.handleSwitchFaceClick.bind(
+                                    this,
+                                    'AllJoy'
+                                )}
                                 disabled={this.state.isLostFaceTracking}
                             >
                                 <FontAwesomeIcon icon={['fas', 'laugh-beam']} />
@@ -307,7 +310,7 @@ export default class LessonRecorder extends React.Component {
                             <button
                                 type="button"
                                 className="btn btn-dark"
-                                onClick={this.switchFace.bind(
+                                onClick={this.handleSwitchFaceClick.bind(
                                     this,
                                     'AllSorrow'
                                 )}
@@ -318,7 +321,10 @@ export default class LessonRecorder extends React.Component {
                             <button
                                 type="button"
                                 className="btn btn-dark"
-                                onClick={this.switchFace.bind(this, 'AllAngry')}
+                                onClick={this.handleSwitchFaceClick.bind(
+                                    this,
+                                    'AllAngry'
+                                )}
                                 disabled={this.state.isLostFaceTracking}
                             >
                                 <FontAwesomeIcon icon={['fas', 'angry']} />
@@ -326,7 +332,7 @@ export default class LessonRecorder extends React.Component {
                             <button
                                 type="button"
                                 className="btn btn-dark"
-                                onClick={this.switchFace.bind(
+                                onClick={this.handleSwitchFaceClick.bind(
                                     this,
                                     'AllSurprised'
                                 )}
@@ -342,7 +348,10 @@ export default class LessonRecorder extends React.Component {
                                 id="prev-graphic-btn"
                                 className="btn btn-dark graphic-btn"
                                 disabled={this.graphicURLIndex == -1}
-                                onClick={this.switchGraphic.bind(this, -1)}
+                                onClick={this.handleSwitchGraphicClick.bind(
+                                    this,
+                                    -1
+                                )}
                                 data-tip="前の画像を表示"
                             >
                                 <FontAwesomeIcon icon={['fas', 'image']} />
@@ -355,7 +364,10 @@ export default class LessonRecorder extends React.Component {
                                     this.graphicURLIndex ==
                                     this.state.graphicURLs.length - 1
                                 }
-                                onClick={this.switchGraphic.bind(this, 1)}
+                                onClick={this.handleSwitchGraphicClick.bind(
+                                    this,
+                                    1
+                                )}
                                 data-tip="次の画像を表示"
                             >
                                 <FontAwesomeIcon icon={['fas', 'image']} />
@@ -367,7 +379,9 @@ export default class LessonRecorder extends React.Component {
                                 type="button"
                                 id="start-record-btn"
                                 className="btn btn-danger rec-btn"
-                                onClick={this.recordingStart.bind(this)}
+                                onClick={this.handleStartRecordingClick.bind(
+                                    this
+                                )}
                                 data-tip="収録を開始します"
                             >
                                 <FontAwesomeIcon icon={['far', 'dot-circle']} />{' '}
@@ -377,7 +391,9 @@ export default class LessonRecorder extends React.Component {
                                 type="button"
                                 id="btn-stop-record"
                                 className="btn btn-secondary btn-with-hover rec-btn"
-                                onClick={this.recordingStop.bind(this)}
+                                onClick={this.handleStopRecordingClick.bind(
+                                    this
+                                )}
                                 data-tip="録画を一時停止します"
                             >
                                 <FontAwesomeIcon
@@ -394,7 +410,7 @@ export default class LessonRecorder extends React.Component {
                                 ref={e => {
                                     this.saveRecordButton = e
                                 }}
-                                onClick={this.postRecord.bind(this)}
+                                onClick={this.handleSaveRecordClick.bind(this)}
                                 data-tip="収録を終了し、編集画面へ移動します"
                             >
                                 <FontAwesomeIcon
@@ -405,7 +421,9 @@ export default class LessonRecorder extends React.Component {
                             <button
                                 type="button"
                                 className="btn btn-danger rec-btn"
-                                onClick={this.recordingResume.bind(this)}
+                                onClick={this.handleResumeRecordingClick.bind(
+                                    this
+                                )}
                                 disabled={this.state.isReachedTimeLimit}
                                 data-tip="収録を再開します"
                             >
@@ -417,16 +435,18 @@ export default class LessonRecorder extends React.Component {
                         <div id="position-controller">
                             <div
                                 id="position-controller-pad"
-                                onMouseOut={this.stopMovingPosition.bind(this)}
+                                onMouseOut={this.handleStopAvatarPositionMouseUp.bind(
+                                    this
+                                )}
                             >
                                 <button
                                     type="button"
                                     className="btn btn-dark"
-                                    onMouseDown={this.movePosition.bind(
+                                    onMouseDown={this.handleMoveAvatarPositionClick.bind(
                                         this,
                                         'back'
                                     )}
-                                    onMouseUp={this.stopMovingPosition.bind(
+                                    onMouseUp={this.handleStopAvatarPositionMouseUp.bind(
                                         this
                                     )}
                                     data-tip="奥へ移動"
@@ -440,11 +460,11 @@ export default class LessonRecorder extends React.Component {
                                 <button
                                     type="button"
                                     className="btn btn-dark"
-                                    onMouseDown={this.movePosition.bind(
+                                    onMouseDown={this.handleMoveAvatarPositionClick.bind(
                                         this,
                                         'front'
                                     )}
-                                    onMouseUp={this.stopMovingPosition.bind(
+                                    onMouseUp={this.handleStopAvatarPositionMouseUp.bind(
                                         this
                                     )}
                                     data-tip="手前へ移動"
@@ -458,11 +478,11 @@ export default class LessonRecorder extends React.Component {
                                 <button
                                     type="button"
                                     className="btn btn-dark"
-                                    onMouseDown={this.movePosition.bind(
+                                    onMouseDown={this.handleMoveAvatarPositionClick.bind(
                                         this,
                                         'left'
                                     )}
-                                    onMouseUp={this.stopMovingPosition.bind(
+                                    onMouseUp={this.handleStopAvatarPositionMouseUp.bind(
                                         this
                                     )}
                                     data-tip="左へ移動"
@@ -476,11 +496,11 @@ export default class LessonRecorder extends React.Component {
                                 <button
                                     type="button"
                                     className="btn btn-dark"
-                                    onMouseDown={this.movePosition.bind(
+                                    onMouseDown={this.handleMoveAvatarPositionClick.bind(
                                         this,
                                         'right'
                                     )}
-                                    onMouseUp={this.stopMovingPosition.bind(
+                                    onMouseUp={this.handleStopAvatarPositionMouseUp.bind(
                                         this
                                     )}
                                     data-tip="右へ移動"
@@ -538,7 +558,9 @@ export default class LessonRecorder extends React.Component {
                         font-weight: bold;
                     }
                     #recording-status-icon {
-                        visibility: ${this.state.isRecording ? 'visible' : 'hidden'};
+                        visibility: ${this.state.isRecording
+                ? 'visible'
+                : 'hidden'};
                     }
                     #pose-detector-btn {
                         position: absolute;
