@@ -8,7 +8,10 @@ import { uploadRecord } from './utils/recordUploader'
 import AvatarPreview from './avatarPreview'
 import LessonAvatar from '../shared/utils/lessonAvatar'
 import LessonGraphic from './lessonGraphic'
-import { fetchLesson, fetchAvatarObjectURL } from '../shared/utils/networkManager'
+import {
+    fetchLesson,
+    fetchAvatarObjectURL
+} from '../shared/utils/networkManager'
 import {
     fetchLessonGraphicURLs,
     clearLessonObject
@@ -196,8 +199,11 @@ export default class LessonRecorder extends React.Component {
                 uploadRecord(this.lessonID, record)
                     .then(() => {
                         this.setState({ isPosting: false })
-                        this.props.history.push(`/lessons/${this.lessonID}/edit`)
-                    }).catch(err => {
+                        this.props.history.push(
+                            `/lessons/${this.lessonID}/edit`
+                        )
+                    })
+                    .catch(err => {
                         this.saveRecordButton.disabled = false
                         // modal
                     })
@@ -266,6 +272,9 @@ export default class LessonRecorder extends React.Component {
 
                     <div id="control-panel" disabled={this.state.isPosting}>
                         <div id="recording-status" className="text-danger">
+                            <div id="recording-status-icon">
+                                <FontAwesomeIcon icon={['fas', 'video']} /> REC
+                            </div>
                             <ElapsedTime
                                 currentRecordingTime={() => {
                                     return this.recorder.currentRecordingTime()
@@ -276,9 +285,6 @@ export default class LessonRecorder extends React.Component {
                                     this.setState({ isReachedTimeLimit: true })
                                 }}
                             />
-                            <div id="recording-status-icon">
-                                <FontAwesomeIcon icon={['fas', 'video']} /> REC
-                            </div>
                         </div>
 
                         <div id="emotion-controller" data-tip="表情の切り替え">
@@ -532,7 +538,7 @@ export default class LessonRecorder extends React.Component {
                         font-weight: bold;
                     }
                     #recording-status-icon {
-                        display: ${this.state.isRecording ? 'block' : 'none'};
+                        visibility: ${this.state.isRecording ? 'visible' : 'hidden'};
                     }
                     #pose-detector-btn {
                         position: absolute;
