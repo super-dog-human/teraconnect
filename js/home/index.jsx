@@ -159,10 +159,6 @@ export default class Home extends React.Component {
                 <style jsx>{`
                     --default-gray: #767676;
                     --heading-pink: #da7b7b;
-                    #home {
-                        width: 100%;
-                        height: 100%;
-                    }
                     .text-gray {
                         color: var(--default-gray);
                     }

@@ -1,28 +1,28 @@
 import React from 'react'
 import styled from '@emotion/styled'
 
-const Page = styled.div(() => ({
-    paddingTop: '50px',
-    paddingLeft: '5vw',
-    paddingRight: '5vw'
-}))
+const Page = styled.div`
+    padding-top: 50px;
+    padding-left: 5vw;
+    padding-right: 5vw;
+`
 
-const PageTitle = styled.div(() => ({
-    fontWeight: 700,
-    fontSize: '1.5rem'
-}))
+const PageTitle = styled.div`
+    font-weight: 700;
+    font-size: 1.5rem;
+`
 
-const LicenseTitle = styled.div(() => ({
-    fontWeight: 700,
-    fontSize: '1rem',
-    marginTop: '3vh'
-}))
+const LicenseTitle = styled.div`
+    font-weight: 700;
+    font-size: 1rem;
+    margin-top: 3vh;
+`
 
-const LicenseBody = styled.div(() => ({
-    marginTop: '1vh',
-    fontSize: '0.9rem',
-    whiteSpace: 'pre-line'
-}))
+const LicenseBody = styled.div`
+    margin-top: 1vh;
+    font-size: 0.9rem;
+    white-space: pre-line;
+`
 
 export default () => (
     <Page className="app-text-color-dark-gray">

@@ -1,33 +1,32 @@
 import React from 'react'
 import styled from '@emotion/styled'
 
-const Page = styled.div(() => ({
-    paddingTop: '50px',
-    paddingLeft: '5vw',
-    paddingRight: '5vw',
-    paddingBottom: '100px'
-}))
+const Page = styled.div`
+    padding-top: 50px;
+    padding-left: 5vw;
+    padding-right: 5vw;
+    padding-bottom: 100px;
+`
 
-const Question = styled.h4(() => ({
-    marginBottom: '10px'
-}))
+const Question = styled.h4`
+    margin-bottom: 10px;
+`
 
-const Answer = styled.div(() => ({
-    textAlign: 'left',
-    marginTop: '20px',
-    marginBottom: '60px'
-}))
+const Answer = styled.div`
+    margin-top: 20px;
+    margin-bottom: 60px;
+`
 
-const AnswerHeading = styled.h5(() => ({
-    marginTop: '50px',
-    marginBottom: '20px'
-}))
+const AnswerHeading = styled.h5`
+    margin-top: 50px;
+    margin-bottom: 20px;
+`
 
-const Graphic = styled.img(() => ({
-    width: '400px',
-    objectFit: 'contain',
-    margin: '30px'
-}))
+const Graphic = styled.img`
+    width: 400px;
+    objectfit: contain;
+    margin: 30px;
+`
 
 export default () => (
     <Page className="app-text-color-dark-gray">

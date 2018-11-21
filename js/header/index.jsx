@@ -1,5 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import styled from '@emotion/styled'
+import { css } from 'emotion'
 
 /*
     import { UserContext } from '../context'
@@ -7,78 +9,81 @@ import { Link } from 'react-router-dom'
     this.context.currentUser
 */
 
+const Header = styled.div`
+    height: 64px;
+`
+
+const AppLogo = styled.span`
+    width: 200px;
+    height: 64px;
+    padding: 0;
+    margin-left: 50px;
+`
+
+const AppLogoImage = styled.img`
+    width: 200px;
+    height: 64px;
+`
+
+const Menu = styled.span`
+    color: var(--soft-white);
+    font-size: 16px;
+    min-width: 100px;
+    margin-left: 10px;
+    margin-right: 10px;
+    text-align: center;
+    line-height: 64px;
+    &::after {
+        display: block;
+        content: '';
+        background-color: var(--dark-navy);
+        margin-top: -3px;
+        height: 3px;
+    }
+    &:hover::after {
+        background-color: var(--attention-orange);
+    }
+`
+//    &:nth-of-type(${props => props.selectedIndex})::after {
+//        background-color: var(--attention-orange);
+//    }
+
+const linkStyle = css`
+    text-decoration: none;
+    padding: 0;
+    &:link {
+        color: var(--soft-white);
+    }
+    &:visited {
+        color: var(--soft-white);
+    }
+    &:hover {
+        text-decoration: none;
+        color: var(--soft-white);
+    }
+    &:active {
+        color: var(--soft-white);
+    }
+`
+
 export default (
     { selectedIndex = 0 } // FIXME selectedIndex value
 ) => (
-    <header className="app-back-color-dark-navy fixed-top">
+    <Header className="app-back-color-dark-navy fixed-top">
         <div className="d-flex justify-content-right">
-            <span id="app-logo" className="mr-auto">
+            <AppLogo className="mr-auto">
                 <Link to="/">
-                    <img src="/img/logo-beta.png" />
+                    <AppLogoImage src="/img/logo-beta.png" />
                 </Link>
-            </span>
-            <span className="link-text">
-                <Link className="nav-link font-weight-light" to="/how_to">
+            </AppLogo>
+            <Menu className="link-text" selectedIndex={selectedIndex}>
+                <Link
+                    className={`nav-link font-weight-light ${linkStyle}`}
+                    to="/how_to"
+                >
                     使い方
                 </Link>
-            </span>
+            </Menu>
         </div>
-        <style jsx>{`
-            header {
-                height: 64px;
-            }
-            #app-logo {
-                width: 200px;
-                height: 64px;
-                padding: 0;
-                margin-left: 50px;
-            }
-            #app-logo img {
-                width: 200px;
-                height: 64px;
-            }
-            .link-text {
-                color: var(--soft-white);
-                font-size: 16px;
-                min-width: 100px;
-                margin-left: 10px;
-                margin-right: 10px;
-                text-align: center;
-                line-height: 64px;
-            }
-            .link-text::after {
-                display: block;
-                content: '';
-                background-color: var(--dark-navy);
-                margin-top: -3px;
-                height: 3px;
-            }
-            .link-text:hover::after {
-                background-color: var(--attention-orange);
-            }
-            .link-text:nth-of-type(${selectedIndex})::after {
-                background-color: var(--attention-orange);
-            }
-            .link-text > :global(.nav-link) {
-                text-decoration: none;
-                padding: 0;
-            }
-            .link-text > :global(.nav-link):link {
-                color: var(--soft-white);
-            }
-            .link-text > :global(.nav-link):visited {
-                color: var(--soft-white);
-            }
-            .link-text > :global(.nav-link):hover {
-                text-decoration: none;
-                color: var(--soft-white);
-            }
-            .link-text > :global(.nav-link):active {
-                color: var(--soft-white);
-            }
-            .disabled-link {
-                cursor: not-allowed;
-            }
-        `}</style>
-    </header>
+    </Header>
 )
