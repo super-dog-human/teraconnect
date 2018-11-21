@@ -1,6 +1,6 @@
 import React from 'react'
+import styled from '@emotion/styled'
 import { Switch, Route } from 'react-router-dom'
-
 import { UserContext } from '../context'
 //import Maintenance from './maintenance';
 import Home from '../home'
@@ -12,6 +12,21 @@ import Creator from '../lessonCreator'
 import Editor from '../lessonEditor'
 import Recorder from '../lessonRecorder'
 import Player from '../lessonPlayer'
+
+export default () => (
+    <Main>
+        <UserContext.Consumer>
+            {({ currentUser, updateUser }) => (
+                <RoutedComponent {...{ currentUser, updateUser }} />
+            )}
+        </UserContext.Consumer>
+    </Main>
+)
+const Main = styled.div`
+    padding-top: 64px;
+    padding-bottom: 50px;
+    height: 100%;
+`
 
 const RoutedComponent = contextProps => (
     <Switch>
@@ -49,21 +64,4 @@ const RoutedComponent = contextProps => (
             render={props => <Player {...props} {...contextProps} />}
         />
     </Switch>
-)
-
-export default () => (
-    <main>
-        <UserContext.Consumer>
-            {({ currentUser, updateUser }) => (
-                <RoutedComponent {...{ currentUser, updateUser }} />
-            )}
-        </UserContext.Consumer>
-        <style jsx>{`
-            main {
-                padding-top: 64px;
-                padding-bottom: 50px;
-                height: 100%;
-            }
-        `}</style>
-    </main>
 )
