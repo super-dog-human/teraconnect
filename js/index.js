@@ -60,6 +60,10 @@ import ErrorBoundary from './errorBoundary'
 import Header from './header'
 import Main from './main'
 import Footer from './footer'
+import ReactGA from 'react-ga'
+import { GA_TRACKING_ID } from './shared/utils/constants'
+
+ReactGA.initialize(GA_TRACKING_ID)
 
 render(
     <BrowserRouter>

@@ -8,6 +8,7 @@ import GraphicManager from './graphicManager'
 import Cookies from 'js-cookie'
 import { isMobile } from 'react-device-detect'
 import { postLesson } from '../shared/utils/networkManager'
+import ReactGA from 'react-ga'
 
 const mobileWarningTitle = '非対応の環境です'
 const mobileWarningMessage = 'モバイル環境では授業を作成できません。'
@@ -95,6 +96,10 @@ export default class LessonCreator extends React.Component {
                 this.checkCreatingStatus()
             })
             .catch(err => {
+                ReactGA.exception({
+                    description: `${err.message} ${err.stack}`,
+                    fatal: false
+                })
                 this.openErrorModal(creatingLessonErrorTitle, err, () => {
                     this.setState({ isCreating: false })
                 })

@@ -1,25 +1,32 @@
 import React from 'react'
 import ReactGA from 'react-ga'
 import { isProduction } from '../shared/utils/utility'
-import { GA_TRACKING_ID } from '../shared/utils/constants'
 
 export default class ErrorBoundary extends React.Component {
     constructor() {
         super()
 
-        ReactGA.initialize(GA_TRACKING_ID)
+        this.state = { hasError: false }
     }
 
-    componentDidCatch(error, errorInfo) {
+    static getDerivedStateFromError(_) {
+        return { hasError: true }
+    }
+
+    componentDidCatch(err) {
         if (isProduction()) {
             ReactGA.exception({
-                description: `${error}\n${errorInfo}`,
+                description: `${err.message} ${err.stack}`,
                 fatal: true
             })
         }
     }
 
     render() {
+        if (this.state.hasError) {
+            return <>致命的なエラーが発生しました。</>
+        }
+
         return <>{this.props.children}</>
     }
 }

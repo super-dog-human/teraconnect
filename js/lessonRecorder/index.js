@@ -20,6 +20,7 @@ import ElapsedTime from './elapsedTime'
 import ReactTooltip from 'react-tooltip'
 import { disableAllButtons } from '../shared/utils/utility'
 import * as Const from '../shared/utils/constants'
+import ReactGA from 'react-ga'
 
 export default class LessonRecorder extends React.Component {
     constructor(props) {
@@ -201,6 +202,10 @@ export default class LessonRecorder extends React.Component {
                         )
                     })
                     .catch(err => {
+                        ReactGA.exception({
+                            description: `${err.message} ${err.stack}`,
+                            fatal: false
+                        })
                         this.saveRecordButton.disabled = false
                         // modal
                     })
