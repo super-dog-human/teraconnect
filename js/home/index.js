@@ -14,8 +14,6 @@ export default class Home extends React.Component {
         this.state = {
             isAgreeToTerms: initAgreeToTerms
         }
-
-        throw new Error('era~~~~')
     }
 
     changeAgreeToTerms(event) {
