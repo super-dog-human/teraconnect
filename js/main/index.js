@@ -51,7 +51,7 @@ const RoutedComponent = contextProps => (
     </Switch>
 )
 
-const Main = () => (
+export default () => (
     <main>
         <UserContext.Consumer>
             {({ currentUser, updateUser }) => (
@@ -67,5 +67,3 @@ const Main = () => (
         `}</style>
     </main>
 )
-
-export default Main
