@@ -14,6 +14,8 @@ const LessonGraphicContainer = styled.div`
 `
 
 const LessonGraphicCell = styled.div`
+    width: 100%;
+    height: 100%;
     display: table-cell;
     text-align: ${props =>
         props.horizontalAlign != '' ? props.horizontalAlign : 'center'};
@@ -22,8 +24,8 @@ const LessonGraphicCell = styled.div`
 `
 
 const LessonGraphic = styled.img`
-    max-width: 100%;
-    max-height: 100%;
+    max-width: ${props => `${props.sizePct > 0 ? props.sizePct : 100}%`};
+    max-heidht: ${props => `${props.sizePct > 0 ? props.sizePct : 100}%`};
     object-fit: contain;
     animation-duration: 0.3s;
     animation-name: fadeIn;
@@ -32,8 +34,6 @@ const LessonGraphic = styled.img`
 export default ({ graphics }) => (
     <LessonGraphicContainer>
         {graphics.map((graphic, i) => {
-            const graphicWidthPercent =
-                graphic.sizePct > 0 ? graphic.sizePct : 100
             return (
                 <LessonGraphicCell
                     key={i}
@@ -42,8 +42,7 @@ export default ({ graphics }) => (
                 >
                     <LessonGraphic
                         src={graphic.url}
-                        width={`${graphicWidthPercent}%`}
-                        // TODO support height order
+                        sizePct={graphic.sizePct}
                     />
                 </LessonGraphicCell>
             )
