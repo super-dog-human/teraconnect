@@ -117,10 +117,10 @@ export async function fetchAvatarObjectURL(avatar) {
 
 export async function fetchSignedURLs(objects) {
     const header = customGetHeader(objects)
-    const zipParams = { headers: header }
-    const zipResult = await axios.get(Const.STORAGE_OBJECT_API_URL, zipParams)
+    const params = { headers: header }
+    const result = await axios.get(Const.STORAGE_OBJECT_API_URL, params)
 
-    return zipResult.data.signedURLs.map(obj => {
+    return result.data.signedURLs.map(obj => {
         return obj.signedURL
     })
 
