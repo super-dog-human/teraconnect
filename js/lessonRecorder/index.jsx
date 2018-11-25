@@ -175,7 +175,7 @@ export default class LessonRecorder extends React.Component {
     }
 
     async handleStopAvatarPositionMouseUp() {
-        if (this.state.moveDirection == 'stop') return
+        if (this.state.moveDirection === 'stop') return
 
         await this.setState({ moveDirection: 'stop' })
         const position = this.avatar.currentPosition()
@@ -352,7 +352,7 @@ export default class LessonRecorder extends React.Component {
                                 type="button"
                                 id="prev-graphic-btn"
                                 className="btn btn-dark graphic-btn"
-                                disabled={this.graphicURLIndex == -1}
+                                disabled={this.graphicURLIndex === -1}
                                 onClick={this.handleSwitchGraphicClick.bind(
                                     this,
                                     -1
@@ -595,7 +595,7 @@ export default class LessonRecorder extends React.Component {
                     }
                     .graphic-btn {
                         position: absolute;
-                        display: ${this.state.graphicURLs.length == 0
+                        display: ${this.state.graphicURLs.length === 0
                 ? 'none'
                 : 'block'};
                         width: 5vw;

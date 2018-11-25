@@ -87,7 +87,7 @@ function addPosesIfNeeded(time, poseKey) {
 
 function addFacesIfNeeded(time, faceKey) {
     Object.keys(faceKey).forEach(key => {
-        if (faceKey[key].values.length == 0) return
+        if (faceKey[key].values.length === 0) return
 
         const lastIndex = faceKey[key].values.length - 1
         if (faceKey[key].times[lastIndex] === time) {

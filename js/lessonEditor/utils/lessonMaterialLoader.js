@@ -81,7 +81,7 @@ export function mergeVoiceTextToTimeline(timelines, voiceTexts) {
     })
 
     timelines.forEach(t => {
-        if (t.voice.id == '') return
+        if (t.voice.id === '') return
 
         const id = t.voice.id
         const voiceText = voiceTextById[id]
@@ -113,7 +113,7 @@ export async function fetchVoiceURLsToTimelines(lessonID, timelines) {
     const urls = await fetchSignedURLs(files)
     let voiceIndex = -1
     timelines.forEach(t => {
-        if (t.voice.id == '') return
+        if (t.voice.id === '') return
         voiceIndex++
         t.voice.url = urls[voiceIndex]
     })

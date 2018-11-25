@@ -28,11 +28,11 @@ export default class VoiceText extends React.Component {
         const timelines = this.props.timelines
         let textIndex = -1
         for (const [_, t] of timelines.entries()) {
-            if (t.voice.id == '') continue
+            if (t.voice.id === '') continue
 
             textIndex++
             if (textIndex != targetIndex) continue
-            if (textIndex == targetIndex) {
+            if (textIndex === targetIndex) {
                 t.text.body = newText
                 break
             }

@@ -26,7 +26,7 @@ export default class LocalCacheManager {
         if (!avatarVersion) return false
         if (!avatarVersion[avatarID]) return false
 
-        if (avatarVersion[avatarID].version == version) {
+        if (avatarVersion[avatarID].version === version) {
             return true
         }
 
@@ -41,7 +41,7 @@ export default class LocalCacheManager {
         if (!lessonVersion) return false
         if (!lessonVersion[lessonID]) return false
 
-        if (lessonVersion[lessonID].version == version) {
+        if (lessonVersion[lessonID].version === version) {
             return true
         }
 

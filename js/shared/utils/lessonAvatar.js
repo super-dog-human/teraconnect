@@ -74,19 +74,19 @@ export default class LessonAvatar {
     }
 
     setDefaultPose(part = 'all') {
-        if (part == 'leftArm' || part == 'all') {
+        if (part === 'leftArm' || part === 'all') {
             this.bones.J_Bip_L_UpperArm.rotation.z = Const.RAD_70
             this.bones.J_Bip_L_LowerArm.rotation.set(0, 0, 0)
             this.bones.J_Bip_L_Hand.rotation.set(0, 0, 0)
         }
 
-        if (part == 'rightArm' || part == 'all') {
+        if (part === 'rightArm' || part === 'all') {
             this.bones.J_Bip_R_UpperArm.rotation.z = -Const.RAD_70
             this.bones.J_Bip_R_LowerArm.rotation.set(0, 0, 0)
             this.bones.J_Bip_R_Hand.rotation.set(0, 0, 0)
         }
 
-        if (part == 'all') {
+        if (part === 'all') {
             this.bones.J_Bip_C_Neck.rotation.set(0, 0, 0)
         }
     }

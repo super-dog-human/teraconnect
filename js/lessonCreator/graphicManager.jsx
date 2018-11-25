@@ -47,7 +47,7 @@ export default class GraphicManager extends React.Component {
 
     async onDrop(acceptedFiles) {
         if (this.props.isCreating) return
-        if (acceptedFiles.lenth == 0) return
+        if (acceptedFiles.lenth === 0) return
 
         this.props.onStatusChange(true)
 

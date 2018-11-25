@@ -129,7 +129,7 @@ export default class LessonEditor extends React.Component {
             return t.graphics
         }).length
 
-        if (allGraphicInitCount == 0) {
+        if (allGraphicInitCount === 0) {
             this.setState({ isGraphicLoaded: true })
             return
         }
@@ -146,13 +146,13 @@ export default class LessonEditor extends React.Component {
             return t.voice.id != ''
         }).length // id has blank when not voice.
 
-        if (allVoiceInitCount == 0) {
+        if (allVoiceInitCount === 0) {
             this.setState({ isTextVoiceLoaded: true })
             return
         }
 
         const voiceTexts = await fetchVoiceTexts(this.lessonID)
-        if (voiceTexts.length == 0) {
+        if (voiceTexts.length === 0) {
             setTimeout(async () => {
                 await this.setVoiceTextToTimeline()
             }, 1000)

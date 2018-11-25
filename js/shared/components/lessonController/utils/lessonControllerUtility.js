@@ -24,7 +24,7 @@ export function resetAnimation(avatar) {
 
 function setRecordedPoseAnimation(avatar) {
     Object.keys(avatar.poseKey).forEach(clipName => {
-        if (avatar.poseKey[clipName].length == 0) return
+        if (avatar.poseKey[clipName].length === 0) return
 
         let bone
 
@@ -73,7 +73,7 @@ function setRecordedFacialAnimation(avatar) {
     const tracks = []
     Object.keys(avatar.faceKey).forEach(clipName => {
         const facialWeight = avatar.faceKey[clipName]
-        if (facialWeight.values.length == 0) return
+        if (facialWeight.values.length === 0) return
 
         const targetIndex = avatar.faceIndexOf(stringToUpperCamel(clipName))
         tracks.push({

@@ -2,7 +2,7 @@ import axios from 'axios'
 import { fetchSignedURLs } from '../../shared/utils/networkManager'
 
 export async function fetchLessonGraphicURLs(lessonGraphics) {
-    if (lessonGraphics.length == 0) {
+    if (lessonGraphics.length === 0) {
         return []
     }
 

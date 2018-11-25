@@ -54,7 +54,7 @@ export default class AvatarManager extends React.Component {
             return
         }
 
-        if (acceptedFiles.length == 0) return
+        if (acceptedFiles.length === 0) return
 
         this.createNewAvatar(acceptedFiles[0])
     }
@@ -94,7 +94,7 @@ export default class AvatarManager extends React.Component {
                 <div className="form-inline">
                     {this.state.avatars.map((avatar, i) => {
                         const isSelected =
-                            avatar.id == this.state.selectedAvatarID
+                            avatar.id === this.state.selectedAvatarID
                         return (
                             <label
                                 key={i}
