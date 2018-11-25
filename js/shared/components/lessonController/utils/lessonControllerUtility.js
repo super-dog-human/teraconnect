@@ -11,6 +11,7 @@ export function loadAnimation(avatar, poseKey, faceKey) {
     setRecordedPoseAnimation(avatar)
     setRecordedFacialAnimation(avatar)
     setInitialAnimationFrame(avatar)
+    avatar.initAnimationPlaying()
 }
 
 export function resetAnimation(avatar) {

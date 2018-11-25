@@ -106,6 +106,7 @@ export default class LessonAvatar {
 
     setDefaultAnimation() {
         this.animationMixer = new THREE.AnimationMixer(this.faceSkin)
+        this.animationMixer.timeScale = 0
         this._setBreathAnimation()
     }
 
@@ -148,6 +149,13 @@ export default class LessonAvatar {
         )
 
         this.animationMixer.clipAction(breathClip)
+    }
+
+    initAnimationPlaying() {
+        this.animationMixer._actions.forEach(action => {
+            action.paused = false
+            action.play() // animation is not start playing because already set timescale to 0.
+        })
     }
 
     animate(deltaTime) {
@@ -195,18 +203,11 @@ export default class LessonAvatar {
     }
 
     play() {
-        this.animationMixer._actions.forEach(action => {
-            action.paused = false
-            action.play()
-        })
+        this.animationMixer.timeScale = 1
     }
 
     pause() {
         this.animationMixer.timeScale = 0
-    }
-
-    resume() {
-        this.animationMixer.timeScale = 1
     }
 
     stop() {

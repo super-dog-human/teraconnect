@@ -24,6 +24,7 @@ export default class LessonController extends React.Component {
 
         this.state = {
             isPlaying: false,
+            isPause: false,
             isSeeking: false,
             texts: [],
             graphics: [],
@@ -87,23 +88,25 @@ export default class LessonController extends React.Component {
         this.voicePlayer.reset()
     }
 
-    handleRangeSliderChange(event) {
-        const newElapsedTime = parseFloat(event.target.value)
+    async handleRangeSliderChange(event) {
+        if (!this.state.isSeeking) return
 
+        const newElapsedTime = parseFloat(event.target.value)
         this.preElapsedTime = newElapsedTime
         this.pausedElapsedTime = newElapsedTime
 
-        this.setState({ elapsedTime: newElapsedTime })
+        await this.setState({ elapsedTime: newElapsedTime })
         this.updateSeekingPreviewContents(newElapsedTime)
     }
 
     async handleRangeSliderMouseUp() {
-        await this.setState({ isSeeking: false })
-
         this.updateAfterSeekingContents()
+
+        await this.setState({ isSeeking: false })
 
         if (this.state.isPlaying) {
             this.clock.start()
+            this.animate()
         }
     }
 
@@ -112,12 +115,11 @@ export default class LessonController extends React.Component {
 
         await this.setState({ isPlaying: true })
 
-        if (this.pausedElapsedTime > 0) {
+        if (this.state.isPause) {
+            await this.setState({ isPause: false })
             this.voicePlayer.play() // for resume audio
-            this.props.avatar.resume()
-        } else {
-            this.props.avatar.play()
         }
+        this.props.avatar.play()
         this.animate()
     }
 
@@ -131,6 +133,7 @@ export default class LessonController extends React.Component {
         if (isEnd) {
             this.props.avatar.stop()
         } else {
+            await this.setState({ isPause: true })
             this.props.avatar.pause()
         }
     }

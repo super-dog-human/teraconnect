@@ -64,6 +64,7 @@ export default class AvatarPreview extends React.Component {
         )
 
         this.avatar.setDefaultAnimation()
+        this.avatar.initAnimationPlaying()
         this.avatar.play()
         this.animate()
 
