@@ -1,5 +1,6 @@
 import React from 'react'
 import { stringToMinutesFormat } from '../shared/utils/utility'
+import { css } from 'emotion'
 
 export default class ElapsedTime extends React.Component {
     constructor(props) {
@@ -41,15 +42,14 @@ export default class ElapsedTime extends React.Component {
     }
 
     render() {
+        const elapsedTimeStyle = css`
+            font-size: 1.5vw;
+            font-weight: bold;
+        `
+
         return (
-            <div id="elapsed-time">
+            <div className={elapsedTimeStyle}>
                 {this.state.elapsedTimeString}
-                <style jsx>{`
-                    #elapsed-time {
-                        font-size: 1.5vw;
-                        font-weight: bold;
-                    }
-                `}</style>
             </div>
         )
     }
