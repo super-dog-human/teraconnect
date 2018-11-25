@@ -1,51 +1,5 @@
 import React from 'react'
-
-const LessonText = ({
-    text,
-    textPadingSize,
-    textShadowHarfSize,
-    textShadowQuarterSize
-}) => (
-    <div id="lesson-text">
-        <div id="lesson-text-body">{text.body}</div>
-        <style jsx>{`
-            #lesson-text {
-                display: table;
-                width: 100%;
-                height: 100%;
-            }
-            #lesson-text-body {
-                display: table-cell;
-                text-align: ${text.horizontalAlign};
-                vertical-align: ${text.verticalAlign};
-                padding: ${textPadingSize}vw;
-                white-space: pre-wrap;
-                font-weight: bold;
-                font-size: ${text.sizeVW}vw;
-                color: ${text.bodyColor};
-                text-shadow: ${text.borderColor} ${textShadowHarfSize}vw 0,
-                    ${text.borderColor} -${textShadowHarfSize}vw 0,
-                    ${text.borderColor} 0 -${textShadowHarfSize}vw,
-                    ${text.borderColor} 0 ${textShadowHarfSize}vw,
-                    ${text.borderColor} ${textShadowHarfSize}vw
-                        ${textShadowHarfSize}vw,
-                    ${text.borderColor} -${textShadowHarfSize}vw ${textShadowHarfSize}vw,
-                    ${text.borderColor} ${textShadowHarfSize}vw -${textShadowHarfSize}vw,
-                    ${text.borderColor} -${textShadowHarfSize}vw -${textShadowHarfSize}vw,
-                    ${text.borderColor} ${textShadowQuarterSize}vw
-                        ${textShadowHarfSize}vw,
-                    ${text.borderColor} -${textShadowQuarterSize}vw ${textShadowHarfSize}vw,
-                    ${text.borderColor} ${textShadowQuarterSize}vw -${textShadowHarfSize}vw,
-                    ${text.borderColor} -${textShadowQuarterSize}vw -${textShadowHarfSize}vw,
-                    ${text.borderColor} ${textShadowHarfSize}vw
-                        ${textShadowQuarterSize}vw,
-                    ${text.borderColor} -${textShadowHarfSize}vw ${textShadowQuarterSize}vw,
-                    ${text.borderColor} ${textShadowHarfSize}vw -${textShadowQuarterSize}vw,
-                    ${text.borderColor} -${textShadowHarfSize}vw -${textShadowQuarterSize}vw;
-            }
-        `}</style>
-    </div>
-)
+import styled from '@emotion/styled'
 
 export default class LessonTexts extends React.Component {
     constructor(props) {
@@ -64,8 +18,7 @@ export default class LessonTexts extends React.Component {
 
     render() {
         return (
-            <div
-                id="lesson-texts"
+            <TextLines
                 ref={e => {
                     this.textsElement = e
                 }}
@@ -75,32 +28,65 @@ export default class LessonTexts extends React.Component {
                     text.horizontalAlign = text.horizontalAlign || 'center'
                     text.verticalAlign = text.verticalAlign || 'bottom'
                     text.sizeVW = (text.sizeVW || 5) * this.textSizeMultiplier
-                    text.bodyColor = text.bodyColor || 'var(--text-body-color)'
-                    text.borderColor =
-                        text.borderColor || 'var(--text-border-color)'
+                    text.bodyColor = text.bodyColor || 'white'
+                    text.borderColor = text.borderColor || '#ff6699'
 
                     return (
-                        <LessonText
-                            text={text}
-                            textPadingSize={this.textSizeMultiplier} // just use multiplier because default padidng is 1.
-                            textShadowHarfSize={this.textShadowHarfSize}
-                            textShadowQuarterSize={this.textShadowQuarterSize}
-                            key={i}
-                        />
+                        <TextLine key={i} >
+                            <TextBody
+                                text={text}
+                                textPadingSize={this.textSizeMultiplier} // just use multiplier because default padidng is 1.
+                                textShadowHarfSize={this.textShadowHarfSize}
+                                textShadowQuarterSize={this.textShadowQuarterSize}>
+                                    {text.body}
+                            </TextBody>
+                        </TextLine>
                     )
                 })}
-                <style jsx>{`
-                    --text-body-color: white;
-                    --text-border-color: #ff6699;
-                    #lesson-texts {
-                        position: absolute;
-                        z-index: 100; // text
-                        top: 0;
-                        width: 100%;
-                        height: 100%;
-                    }
-                `}</style>
-            </div>
+            </TextLines>
         )
     }
 }
+
+const TextLines = styled.div`
+    position: absolute;
+    z-index: 100; // text
+    top: 0;
+    width: 100%;
+    height: 100%;
+`
+
+const TextLine = styled.div`
+    display: table;
+    width: 100%;
+    height: 100%;
+`
+
+const TextBody = styled.div`
+    display: table-cell;
+    text-align: ${props => props.text.horizontalAlign};
+    vertical-align: ${props => props.text.verticalAlign};
+    padding: ${props=> props.textPadingSize}vw;
+    white-space: pre-wrap;
+    font-weight: bold;
+    font-size: ${props => props.text.sizeVW}vw;
+    color: ${props => props.text.bodyColor};
+    text-shadow: ${props => `
+        ${props.text.borderColor} ${props.textShadowHarfSize}vw      0,
+        ${props.text.borderColor} -${props.textShadowHarfSize}vw     0,
+        ${props.text.borderColor}  0                                -${props.textShadowHarfSize}vw,
+        ${props.text.borderColor}  0                                 ${props.textShadowHarfSize}vw,
+        ${props.text.borderColor}  ${props.textShadowHarfSize}vw     ${props.textShadowHarfSize}vw,
+        ${props.text.borderColor} -${props.textShadowHarfSize}vw     ${props.textShadowHarfSize}vw,
+        ${props.text.borderColor}  ${props.textShadowHarfSize}vw    -${props.textShadowHarfSize}vw,
+        ${props.text.borderColor} -${props.textShadowHarfSize}vw    -${props.textShadowHarfSize}vw,
+        ${props.text.borderColor}  ${props.textShadowQuarterSize}vw  ${props.textShadowHarfSize}vw,
+        ${props.text.borderColor} -${props.textShadowQuarterSize}vw  ${props.textShadowHarfSize}vw,
+        ${props.text.borderColor}  ${props.textShadowQuarterSize}vw -${props.textShadowHarfSize}vw,
+        ${props.text.borderColor} -${props.textShadowQuarterSize}vw -${props.textShadowHarfSize}vw,
+        ${props.text.borderColor}  ${props.textShadowHarfSize}vw     ${props.textShadowQuarterSize}vw,
+        ${props.text.borderColor} -${props.textShadowHarfSize}vw     ${props.textShadowQuarterSize}vw,
+        ${props.text.borderColor}  ${props.textShadowHarfSize}vw    -${props.textShadowQuarterSize}vw,
+        ${props.text.borderColor} -${props.textShadowHarfSize}vw    -${props.textShadowQuarterSize}vw
+    `};
+`

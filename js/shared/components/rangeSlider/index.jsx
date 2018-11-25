@@ -3,30 +3,31 @@ import { stringToMinutesFormat } from '../../utils/utility'
 import styled from '@emotion/styled'
 
 export default props => (
-    <>
-        <RangeSlider type="range" value="0" min="0" step="any" {...props} />
-        <span>
+    <RangeSlider isShow={props.isShow}>
+        <InputRange type="range" min="0" step="any" {...props} />
+        <TimeIndicator>
             {stringToMinutesFormat(props.value)} /{' '}
             {stringToMinutesFormat(props.max)}
-        </span>
-    </>
+        </TimeIndicator>
+    </RangeSlider>
 )
 
-const RangeSlider = styled.input`
-    appearance: none;
-    -webkit-appearance: none;
+const RangeSlider = styled.div`
     position: absolute;
-    bottom: 7%;
+    bottom: 2%;
     left: 3%;
     right: 3%;
-    width: 94%;
-    height: 4px;
+    opacity: ${props => (props.isShow ? 0.7 : 0)};
+`
+
+const InputRange = styled.input`
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    height: 10px;
     background-color: rgba(0, 0, 0, 0.2);
     z-index: 250; // seek bar
     cursor: pointer;
-    &:hover {
-        opacity: 0.7;
-    }
     &:focus,
     &:active {
         outline: none;
@@ -56,4 +57,10 @@ const RangeSlider = styled.input`
         border-radius: 50%;
         -webkit-border-radius: 50%;
     }
+`
+
+const TimeIndicator = styled.div`
+    margin-top: 10px;
+    font-size: 15px;
+    text-align: left;
 `

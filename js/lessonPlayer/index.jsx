@@ -5,6 +5,7 @@ import LessonAvatar from '../shared/utils/lessonAvatar'
 import LessonController from '../shared/components/lessonController'
 import ModalWindow from '../shared/components/modalWindow'
 import TweetButton from './tweetButton'
+import styled from '@emotion/styled'
 
 const initModalOption = {
     isError: '',
@@ -89,7 +90,7 @@ export default class LessonPlayer extends React.Component {
 
     render() {
         return (
-            <div
+            <LessonPlayerScreen
                 id="lesson-player"
                 ref={e => {
                     this.container = e
@@ -109,15 +110,16 @@ export default class LessonPlayer extends React.Component {
                     }}
                 />
                 <TweetButton
-                    lesson={this.state.lesson}
+                    title={this.state.lesson.title}
+                    description={this.state.lesson.description}
                     isLoading={this.state.isLoading}
                 />
-                <style jsx>{`
-                    #lesson-player {
-                        text-align: center;
-                    }
-                `}</style>
-            </div>
+            </LessonPlayerScreen>
         )
     }
 }
+
+const LessonPlayerScreen = styled.div`
+    absolute: relative;
+    text-align: center;
+`

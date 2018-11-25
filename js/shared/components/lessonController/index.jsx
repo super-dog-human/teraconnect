@@ -26,6 +26,7 @@ export default class LessonController extends React.Component {
             isPlaying: false,
             isPause: false,
             isSeeking: false,
+            isHoverControlPanel: false,
             texts: [],
             graphics: [],
             elapsedTime: 0
@@ -320,7 +321,14 @@ export default class LessonController extends React.Component {
         return (
             <LessonControllerScreen>
                 <Indicator isLoading={this.props.isLoading} />
-                <ControlPanel>
+                <ControlPanel
+                    onMouseOver={() => {
+                        this.setState({ isHoverControlPanel: true })
+                    }}
+                    onMouseOut={() => {
+                        this.setState({ isHoverControlPanel: false })
+                    }}
+                >
                     <ControlButton
                         onClick={this.handlePlayButtonClicked.bind(this)}
                         isLoading={this.props.isLoading}
@@ -335,7 +343,7 @@ export default class LessonController extends React.Component {
                                 ? this.props.lesson.durationSec
                                 : 0
                         }
-                        isPlaying={this.state.isPlaying}
+                        isShow={this.state.isHoverControlPanel}
                         onMouseDown={this.handleRangeSliderMouseDown.bind(this)}
                         onChange={this.handleRangeSliderChange.bind(this)}
                         onMouseUp={this.handleRangeSliderMouseUp.bind(this)}
@@ -367,17 +375,14 @@ const ControlPanel = styled.div`
 `
 
 const ControlButton = styled.button`
-    display: ${props => (props.isLoading ? 'none' : 'block')};
+    display: 'block';
+    opacity: ${props => (props.isLoading || props.isPlaying ? 0 : 0.2)};
     border: none;
     cursor: pointer;
     width: 100%;
     height: 100%;
     font-size: 10vw;
-    opacity: 0;
     &:focus {
         outline: 0;
-    }
-    &:hover {
-        opacity: ${props => (props.isLoading || props.isPlaying ? 0 : 0.2)};
     }
 `

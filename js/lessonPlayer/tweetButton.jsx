@@ -1,48 +1,41 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import styled from '@emotion/styled'
 
-export default class TweetButton extends React.Component {
-    constructor(props) {
-        super(props)
-    }
+export default ({ title, description, isLoading }) => (
+    <ShareTwitter isLoading={isLoading}>
+        <TweetButton
+            className="btn btn-primary"
+            onClick={event => {
+                clickButton(event, title, description)
+            }}
+        >
+            <FontAwesomeIcon icon={['fab', 'twitter']} />
+            &nbsp;ツイート
+        </TweetButton>
+    </ShareTwitter>
+)
 
-    clickButton(event) {
-        window.open(
-            `https://twitter.com/share?text=${this.props.lesson.title}%20${
-                this.props.lesson.description
-            }&url=${document.location.href}&hashtags=Teraconnect`,
-            'tweetwindow',
-            'width=650, height=470, personalbar=0, toolbar=0, scrollbars=1, sizable=1'
-        )
-        event.target.blur()
-    }
-
-    render() {
-        return (
-            <div id="share-twitter">
-                <button
-                    id="share-twitter-btn"
-                    className="btn btn-primary"
-                    onClick={this.clickButton.bind(this)}
-                >
-                    <FontAwesomeIcon icon={['fab', 'twitter']} />
-                    &nbsp;ツイート
-                </button>
-                <style jsx>{`
-                    #share-twitter {
-                        position: relative;
-                        display: ${this.props.isLoading ? 'none' : 'block'};
-                    }
-                    #share-twitter-btn {
-                        position: absolute;
-                        z-index: 200;
-                        width: 120px;
-                        height: 45px;
-                        top: -70px;
-                        right: 30px;
-                    }
-                `}</style>
-            </div>
-        )
-    }
+function clickButton(event, title, description) {
+    open(
+        `https://twitter.com/share?text=${title}%20${description}&url=${
+            document.location.href
+        }&hashtags=Teraconnect`,
+        'tweetwindow',
+        'width=650, height=470, personalbar=0, toolbar=0, scrollbars=1, sizable=1'
+    )
+    event.target.blur()
 }
+
+const ShareTwitter = styled.div`
+    z-index: 200;
+    position: absolute;
+    top: 100px;
+    right: 40px;
+    display: ${props => (props.isLoading ? 'none' : 'block')};
+`
+
+const TweetButton = styled.button`
+    width: 120px;
+    height: 45px;
+`
