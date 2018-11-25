@@ -103,8 +103,6 @@ export default class LessonRecorder extends React.Component {
     }
 
     componentDidUpdate(_, prevState) {
-        this.faceDetectionInFrame()
-
         if (prevState.isRecording != this.state.isRecording) {
             if (this.state.isRecording) {
                 this.recorder.startRecording()
@@ -119,6 +117,7 @@ export default class LessonRecorder extends React.Component {
             !this.state.isDetectorLoading &&
             !this.state.isAvatarLoading
         ) {
+            this.faceDetectionInFrame()
             this.setState({ isLoading: false })
         }
     }
@@ -133,8 +132,6 @@ export default class LessonRecorder extends React.Component {
     }
 
     async faceDetectionInFrame() {
-        if (this.state.isDetectorLoading) return
-
         this.faceDetector.detectFaceLandmarksInRealTime()
         requestAnimationFrame(() => this.faceDetectionInFrame())
     }
