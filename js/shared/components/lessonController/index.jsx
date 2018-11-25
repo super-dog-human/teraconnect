@@ -113,12 +113,16 @@ export default class LessonController extends React.Component {
     async play() {
         this.clock.start()
 
-        await this.setState({ isPlaying: true })
+        if (!this.state.isPlaying) {
+            await this.setState({ isPlaying: true })
+            this.voicePlayer.play() // for play seeked audio when stopping
+        }
 
         if (this.state.isPause) {
             await this.setState({ isPause: false })
             this.voicePlayer.play() // for resume audio
         }
+
         this.props.avatar.play()
         this.animate()
     }
@@ -326,7 +330,11 @@ export default class LessonController extends React.Component {
                     </ControlButton>
                     <RangeSlider
                         value={this.state.elapsedTime}
-                        max={this.props.lesson.durationSec}
+                        max={
+                            this.props.lesson // FIXME, you can write more better code.
+                                ? this.props.lesson.durationSec
+                                : 0
+                        }
                         isPlaying={this.state.isPlaying}
                         onMouseDown={this.handleRangeSliderMouseDown.bind(this)}
                         onChange={this.handleRangeSliderChange.bind(this)}
