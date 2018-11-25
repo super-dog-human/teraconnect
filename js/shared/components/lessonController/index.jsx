@@ -12,6 +12,7 @@ import {
     resetAnimation
 } from './utils/lessonControllerUtility'
 import * as Const from '../../../shared/utils/constants'
+import styled from '@emotion/styled'
 
 export default class LessonController extends React.Component {
     constructor(props) {
@@ -311,15 +312,16 @@ export default class LessonController extends React.Component {
 
     render() {
         return (
-            <div id="lesson-player">
+            <LessonPlayerScreen>
                 <Indicator isLoading={this.props.isLoading} />
-                <div id="control-panel">
-                    <button
-                        className="control-btn"
+                <ControlPanel>
+                    <ControlButton
                         onClick={this.handlePlayButtonClicked.bind(this)}
+                        isLoading={this.props.isLoading}
+                        isPlaying={this.state.isPlaying}
                     >
                         <FontAwesomeIcon icon="play-circle" />
-                    </button>
+                    </ControlButton>
                     <RangeSlider
                         value={this.state.elapsedTime}
                         max={this.props.lesson.durationSec}
@@ -329,45 +331,44 @@ export default class LessonController extends React.Component {
                         onChange={this.handleRangeSliderChange.bind(this)}
                         onMouseUp={this.handleRangeSliderMouseUp.bind(this)}
                     />
-                </div>
+                </ControlPanel>
                 <LessonGraphics graphics={this.state.graphics} />
                 <LessonTexts texts={this.state.texts} />
-                <style jsx>{`
-                    #lesson-player {
-                        position: relative;
-                        width: ${Const.RATIO_9_TO_16 * 100}vh;
-                        height: ${Const.RATIO_16_TO_9 * 100}vw;
-                        max-width: 100%;
-                        max-height: 100%;
-                        margin-left: auto;
-                        margin-right: auto;
-                    }
-                    #control-panel {
-                        position: absolute;
-                        top: 0;
-                        z-index: 200; // control panel
-                        width: 100%;
-                        height: 100%;
-                    }
-                    .control-btn {
-                        display: ${this.props.isLoading ? 'none' : 'block'};
-                        border: none;
-                        cursor: pointer;
-                        width: 100%;
-                        height: 100%;
-                        font-size: 10vw;
-                        opacity: 0;
-                    }
-                    .control-btn:focus {
-                        outline: 0;
-                    }
-                    .control-btn:hover {
-                        opacity: ${this.props.isLoading || this.state.isPlaying
-                ? 0
-                : 0.2};
-                    }
-                `}</style>
-            </div>
+            </LessonPlayerScreen>
         )
     }
 }
+
+const LessonPlayerScreen = styled.div`
+    position: relative;
+    width: ${Const.RATIO_9_TO_16 * 100}vh;
+    height: ${Const.RATIO_16_TO_9 * 100}vw;
+    max-width: 100%;
+    max-height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+`
+
+const ControlPanel = styled.div`
+    position: absolute;
+    top: 0;
+    z-index: 200; // control panel
+    width: 100%;
+    height: 100%;
+`
+
+const ControlButton = styled.button`
+    display: ${props => (props.isLoading ? 'none' : 'block')};
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    font-size: 10vw;
+    opacity: 0;
+    &:focus {
+        outline: 0;
+    }
+    &:hover {
+        opacity: ${props => (props.isLoading || props.isPlaying ? 0 : 0.2)};
+    }
+`

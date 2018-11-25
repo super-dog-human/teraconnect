@@ -24,7 +24,7 @@ const RangeSlider = styled.input`
     background-color: rgba(0, 0, 0, 0.2);
     z-index: 250; // seek bar
     cursor: pointer;
-    $:hover {
+    &:hover {
         opacity: 0.7;
     }
     &:focus,
