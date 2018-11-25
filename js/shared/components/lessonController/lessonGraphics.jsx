@@ -14,6 +14,7 @@ const LessonGraphicContainer = styled.div`
 `
 
 const LessonGraphicCell = styled.div`
+    position: absolute; /* necessary for img layout */
     width: 100%;
     height: 100%;
     display: table-cell;
@@ -24,8 +25,11 @@ const LessonGraphicCell = styled.div`
 `
 
 const LessonGraphic = styled.img`
-    max-width: ${props => `${props.sizePct > 0 ? props.sizePct : 100}%`};
-    max-heidht: ${props => `${props.sizePct > 0 ? props.sizePct : 100}%`};
+    position: relative;
+    width: ${props => `${props.sizePct > 0 ? props.sizePct : 100}%`};
+    height: ${props => `${props.sizePct > 0 ? props.sizePct : 100}%`};
+    max-width: 100%;
+    max-height: 100%;
     object-fit: contain;
     animation-duration: 0.3s;
     animation-name: fadeIn;
