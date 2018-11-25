@@ -1,17 +1,15 @@
 import React from 'react'
+import { stringToMinutesFormat } from '../../utils/utility'
 import styled from '@emotion/styled'
 
 export default props => (
-    <RangeSlider
-        type="range"
-        value="0"
-        min="0"
-        step="any"
-        {...props}
-        onMouseUp={event => {
-            event.target.blur()
-        }}
-    />
+    <>
+        <RangeSlider type="range" value="0" min="0" step="any" {...props} />
+        <span>
+            {stringToMinutesFormat(props.value)} /{' '}
+            {stringToMinutesFormat(props.max)}
+        </span>
+    </>
 )
 
 const RangeSlider = styled.input`

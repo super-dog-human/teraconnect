@@ -1,33 +1,58 @@
 export default class LessonVoicePlayer {
     constructor() {
         this._audioElement = new Audio()
-        this._canPlay = false
-        this._durationSec = 0 // it's will use seeking in lesson.
+        this._startAtSec = 0
+        this._stopAtSec = 0
+        this._stopTimeoutID
     }
 
-    setAndPlay(url, orderDurationSec, currentSec = 0) {
-        this._durationSec = orderDurationSec // this not use for now.
+    setAndPlay(url, startAtSec = 0, stopAtSec) {
         this._audioElement.src = url
-        this._audioElement.addEventListener('canplay', () => {
-            this._canPlay = true
-            this.play(true, currentSec)
-        })
-        this._audioElement.addEventListener('ended', () => {
-            this._canPlay = false
-        })
+        this._startAtSec = startAtSec
+        this._stopAtSec = stopAtSec
+
+        this._setStoppingTimeout()
+        this.play()
     }
 
-    play(startSec = 0) {
-        if (this._canPlay) {
-            this._audioElement.play(startSec)
+    set(url, startAtSec = 0, stopAtSec) {
+        this._audioElement.src = url
+        this._startAtSec = startAtSec
+        this._stopAtSec = stopAtSec
+
+        this._setStoppingTimeout()
+    }
+
+    play() {
+        if (!this._audioElement.src) return
+
+        if (this._startAtSec > 0) {
+            // avoid set 0 to currentTime, it cause error.
+            this._audioElement.currentTime = this._startAtSec
         }
+        this._audioElement.play()
     }
 
     stop() {
         this._audioElement.pause()
+        clearTimeout(this._stopTimeoutID)
+        this._stopTimeoutID = null
     }
 
     reset() {
-        this._canPlay = false
+        this._audioElement.pause()
+        this._audioElement = new Audio()
+    }
+
+    _setStoppingTimeout() {
+        const elapsedPlayingSec =
+            this._stopAtSec - this._audioElement.currentTime
+
+        if (elapsedPlayingSec < 0) return
+
+        clearTimeout(this._stopTimeoutID)
+        this._stopTimeoutID = setTimeout(() => {
+            this.reset()
+        }, elapsedPlayingSec * 1000)
     }
 }

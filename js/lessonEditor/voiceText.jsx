@@ -79,6 +79,7 @@ export default class VoiceText extends React.Component {
                                             className="voice-play-btn app-text-color-dark-gray"
                                             onClick={this.playVoice.bind(this)}
                                             disabled={this.props.isLoading}
+                                            tabIndex="-1"
                                         >
                                             <FontAwesomeIcon icon="volume-up" />
                                         </button>
@@ -111,6 +112,7 @@ export default class VoiceText extends React.Component {
                                             className="voice-play-btn app-text-color-dark-gray"
                                             onClick={this.playVoice.bind(this)}
                                             disabled={this.props.isLoading}
+                                            tabIndex="-1"
                                         >
                                             <FontAwesomeIcon icon="volume-up" />
                                         </button>
@@ -150,6 +152,7 @@ export default class VoiceText extends React.Component {
                     }
                     .voice-play-btn {
                         position: absolute;
+                        outline: none;
                         height: 25px;
                         border: none;
                         cursor: pointer;

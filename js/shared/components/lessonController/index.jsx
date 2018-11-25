@@ -2,6 +2,7 @@ import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Clock } from 'three'
 import Indicator from '../indicator'
+import RangeSlider from '../rangeSlider'
 import LessonTexts from './lessonTexts'
 import LessonGraphics from './lessonGraphics'
 import LessonVoicePlayer from './utils/lessonVoicePlayer'
@@ -22,8 +23,10 @@ export default class LessonController extends React.Component {
 
         this.state = {
             isPlaying: false,
+            isSeeking: false,
             texts: [],
-            graphics: []
+            graphics: [],
+            elapsedTime: 0
         }
 
         this.voicePlayer = new LessonVoicePlayer()
@@ -65,13 +68,39 @@ export default class LessonController extends React.Component {
         this.props.avatar.stop()
     }
 
-    panelClick(event) {
+    handlePlayButtonClicked(event) {
         if (this.state.isPlaying) {
             this.stop()
         } else {
             this.play()
         }
         event.target.blur()
+    }
+
+    async handleRangeSliderMouseDown() {
+        await this.setState({ isSeeking: true })
+
+        if (this.state.isPlaying) {
+            this.clock.stop()
+            this.props.avatar.pause()
+        }
+        this.voicePlayer.reset()
+    }
+
+    handleRangeSliderChange(event) {
+        const newElapsedTime = parseFloat(event.target.value)
+
+        this.preElapsedTime = newElapsedTime
+        this.pausedElapsedTime = newElapsedTime
+
+        this.setState({ elapsedTime: newElapsedTime })
+        this.updateSeekingPreviewContents(newElapsedTime)
+    }
+
+    async handleRangeSliderMouseUp() {
+        await this.setState({ isSeeking: false })
+
+        this.updateAfterSeekingContents()
     }
 
     async play() {
@@ -104,8 +133,11 @@ export default class LessonController extends React.Component {
 
     animate() {
         if (!this.state.isPlaying) return
+        if (this.state.isSeeking) return
 
         const elapsedTime = this.elapsedTime()
+        this.setState({ elapsedTime })
+
         if (elapsedTime >= this.props.lesson.durationSec) {
             this.endPlaying()
             return
@@ -123,10 +155,10 @@ export default class LessonController extends React.Component {
     }
 
     updateCurrentContents(elapsedTime) {
+        this.hideTimelineTextIfNeeded(elapsedTime)
+
         const since = this.preElapsedTime
         const until = elapsedTime
-
-        this.hideTimelineTextIfNeeded(elapsedTime)
 
         this.props.lesson.timelines
             .filter(t => {
@@ -134,16 +166,75 @@ export default class LessonController extends React.Component {
             })
             .forEach(timeline => {
                 this.avatarAction(timeline.action)
-                this.playTimelineVoice(timeline.voice, elapsedTime)
+                this.playTimelineVoice(timeline.voice)
                 this.showTimelineText(timeline.text, elapsedTime)
-                this.showTimelineGraphic(timeline.graphics)
+                this.updateTimelineGraphic(timeline.graphics)
             })
+    }
+
+    async updateSeekingPreviewContents(elapsedTime) {
+        await this.setState({ texts: [], graphics: [] })
+
+        let action, text, graphics
+        this.props.lesson.timelines.some(t => {
+            if (t.timeSec > elapsedTime) return true
+
+            if (t.action.action != '') action = t.action
+
+            if (t.text.durationSec > 0) {
+                const remainingDurationSec =
+                    t.timeSec + t.text.durationSec - elapsedTime
+                if (remainingDurationSec > 0) {
+                    text = Object.assign({}, t.text)
+                    text.durationSec = remainingDurationSec
+                }
+            }
+
+            if (t.graphics != null) graphics = t.graphics
+        })
+
+        if (text) {
+            this.showTimelineText(text, elapsedTime)
+        }
+
+        this.avatarAction(action)
+        // this.updateAvatarAnimation()
+        // this.props.avatar.animate(this.clock.getDelta())
+
+        if (graphics) {
+            this.updateTimelineGraphic(graphics)
+        }
+    }
+
+    async updateAfterSeekingContents() {
+        let voice, voiceStartTime
+        this.props.lesson.timelines.some(t => {
+            if (t.timeSec > this.pausedElapsedTime) return true
+            if (
+                t.voice.id != '' &&
+                t.timeSec + t.voice.durationSec > this.pausedElapsedTime
+            ) {
+                voiceStartTime = this.pausedElapsedTime - t.timeSec
+                voice = Object.assign({}, t.voice)
+                voice.durationSec =
+                    t.timeSec + t.voice.durationSec - this.pausedElapsedTime
+            }
+        })
+
+        if (this.state.isPlaying) {
+            this.playTimelineVoice(voice, voiceStartTime)
+            this.clock.start()
+            this.props.avatar.resume()
+
+            this.animate()
+        } else if (voice) {
+            this.playTimelineVoice(voice, voiceStartTime, false)
+        }
     }
 
     async endPlaying() {
         await this.stop(true)
         resetAnimation(this.props.avatar)
-        this.voicePlayer.reset()
 
         this.preElapsedTime = 0
         this.pausedElapsedTime = 0
@@ -154,25 +245,32 @@ export default class LessonController extends React.Component {
         // currently nothing to do
     }
 
-    playTimelineVoice(voice, elapsedTime) {
-        if (voice.id == '') return
+    playTimelineVoice(voice, startAtSec = 0, isImmediately = true) {
+        if (!voice || voice.id === '') return
 
-        this.voicePlayer.setAndPlay(voice.url, voice.durationSec)
-        voice.stopAtSec = voice.durationSec + elapsedTime
+        if (isImmediately) {
+            this.voicePlayer.setAndPlay(
+                voice.url,
+                startAtSec,
+                voice.durationSec
+            )
+        } else {
+            this.voicePlayer.set(voice.url, startAtSec, voice.durationSec)
+        }
     }
 
-    showTimelineText(text, elapsedTime) {
-        if (text.durationSec == 0) return
+    async showTimelineText(text, elapsedTime) {
+        if (!text || text.durationSec === 0) return
 
         const newTexts = this.state.texts
         text.hiddenAtSec = text.durationSec + elapsedTime
         newTexts.push(text)
-        this.setState({ texts: newTexts })
+        await this.setState({ texts: newTexts })
     }
 
     hideTimelineTextIfNeeded(elapsedTime) {
         const currentShowingTextLength = this.state.texts.length
-        if (currentShowingTextLength == 0) return
+        if (currentShowingTextLength === 0) return
 
         const shouldShowingTexts = this.state.texts.filter(text => {
             return text.hiddenAtSec > elapsedTime
@@ -183,8 +281,8 @@ export default class LessonController extends React.Component {
         }
     }
 
-    showTimelineGraphic(graphics) {
-        if (graphics == null) return
+    updateTimelineGraphic(graphics) {
+        if (!graphics) return
 
         graphics.forEach(graphic => {
             const currentGraphicsLength = this.state.graphics.length
@@ -198,7 +296,7 @@ export default class LessonController extends React.Component {
                 this.setState({ graphics: newGraphics })
                 break
             case 'hide':
-                if (currentGraphicsLength == 0) break
+                if (currentGraphicsLength === 0) break
                 newGraphics = this.state.graphics.filter(graphic => {
                     return graphic.id != targetGraphicID
                 })
@@ -218,12 +316,20 @@ export default class LessonController extends React.Component {
                 <div id="control-panel">
                     <button
                         className="control-btn"
-                        onClick={this.panelClick.bind(this)}
+                        onClick={this.handlePlayButtonClicked.bind(this)}
                     >
                         <FontAwesomeIcon icon="play-circle" />
                     </button>
+                    <RangeSlider
+                        value={this.state.elapsedTime}
+                        max={this.props.lesson.durationSec}
+                        // onInput={this.handleRangeSliderChange(this.value)}
+                        isPlaying={this.state.isPlaying}
+                        onMouseDown={this.handleRangeSliderMouseDown.bind(this)}
+                        onChange={this.handleRangeSliderChange.bind(this)}
+                        onMouseUp={this.handleRangeSliderMouseUp.bind(this)}
+                    />
                 </div>
-
                 <LessonGraphics graphics={this.state.graphics} />
                 <LessonTexts texts={this.state.texts} />
                 <style jsx>{`
