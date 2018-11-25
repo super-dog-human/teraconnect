@@ -83,7 +83,6 @@ export default class LessonController extends React.Component {
 
         if (this.state.isPlaying) {
             this.clock.stop()
-            this.props.avatar.pause()
         }
         this.voicePlayer.reset()
     }
@@ -102,6 +101,10 @@ export default class LessonController extends React.Component {
         await this.setState({ isSeeking: false })
 
         this.updateAfterSeekingContents()
+
+        if (this.state.isPlaying) {
+            this.clock.start()
+        }
     }
 
     async play() {
@@ -199,8 +202,7 @@ export default class LessonController extends React.Component {
         }
 
         this.avatarAction(action)
-        // this.updateAvatarAnimation()
-        // this.props.avatar.animate(this.clock.getDelta())
+        this.props.avatar.jumpAnimationAt(elapsedTime)
 
         if (graphics) {
             this.updateTimelineGraphic(graphics)
@@ -224,9 +226,6 @@ export default class LessonController extends React.Component {
 
         if (this.state.isPlaying) {
             this.playTimelineVoice(voice, voiceStartTime)
-            this.clock.start()
-            this.props.avatar.resume()
-
             this.animate()
         } else if (voice) {
             this.playTimelineVoice(voice, voiceStartTime, false)
@@ -312,7 +311,7 @@ export default class LessonController extends React.Component {
 
     render() {
         return (
-            <LessonPlayerScreen>
+            <LessonControllerScreen>
                 <Indicator isLoading={this.props.isLoading} />
                 <ControlPanel>
                     <ControlButton
@@ -325,7 +324,6 @@ export default class LessonController extends React.Component {
                     <RangeSlider
                         value={this.state.elapsedTime}
                         max={this.props.lesson.durationSec}
-                        // onInput={this.handleRangeSliderChange(this.value)}
                         isPlaying={this.state.isPlaying}
                         onMouseDown={this.handleRangeSliderMouseDown.bind(this)}
                         onChange={this.handleRangeSliderChange.bind(this)}
@@ -334,12 +332,12 @@ export default class LessonController extends React.Component {
                 </ControlPanel>
                 <LessonGraphics graphics={this.state.graphics} />
                 <LessonTexts texts={this.state.texts} />
-            </LessonPlayerScreen>
+            </LessonControllerScreen>
         )
     }
 }
 
-const LessonPlayerScreen = styled.div`
+const LessonControllerScreen = styled.div`
     position: relative;
     width: ${Const.RATIO_9_TO_16 * 100}vh;
     height: ${Const.RATIO_16_TO_9 * 100}vw;

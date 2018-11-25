@@ -189,8 +189,9 @@ export default class LessonAvatar {
 
     jumpAnimationAt(timeSec) {
         this.animationMixer._actions.forEach(action => {
-            action.startAt(timeSec)
+            action.time = timeSec
         })
+        this.animate(0)
     }
 
     play() {
