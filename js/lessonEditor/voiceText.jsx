@@ -21,8 +21,8 @@ export default class VoiceText extends React.Component {
         }
     }
 
-    changeText(event) {
-        const targetIndex = event.target.getAttribute('custom-index')
+    handleTextChange(event) {
+        const targetIndex = parseInt(event.target.getAttribute('custom-index'))
         const newText = event.target.value
 
         const timelines = this.props.timelines
@@ -89,7 +89,7 @@ export default class VoiceText extends React.Component {
                                             className="form-control voice-text"
                                             defaultValue={t.text.body}
                                             disabled={this.props.isLoading}
-                                            onChange={this.changeText.bind(
+                                            onChange={this.handleTextChange.bind(
                                                 this
                                             )}
                                         />
@@ -122,7 +122,7 @@ export default class VoiceText extends React.Component {
                                             className="form-control voice-text"
                                             placeholder="（検出なし）"
                                             disabled={this.props.isLoading}
-                                            onChange={this.changeText.bind(
+                                            onChange={this.handleTextChange.bind(
                                                 this
                                             )}
                                         />
