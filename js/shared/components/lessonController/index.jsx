@@ -9,7 +9,9 @@ import LessonVoicePlayer from './utils/lessonVoicePlayer'
 import {
     loadDefaultAnimation,
     loadAnimation,
-    resetAnimation
+    resetAnimation,
+    shouldShowContentsDuringSeeking,
+    shouldPlayVoiceAfterSeeking
 } from './utils/lessonControllerUtility'
 import * as Const from '../../../shared/utils/constants'
 import styled from '@emotion/styled'
@@ -26,7 +28,7 @@ export default class LessonController extends React.Component {
             isPlaying: false,
             isPause: false,
             isSeeking: false,
-            isHoverControlPanel: false,
+            isHoverControlPanel: false, // TODO separate control-panel componets, shouldn't has this status.
             texts: [],
             graphics: [],
             elapsedTime: 0
@@ -48,20 +50,16 @@ export default class LessonController extends React.Component {
             return
         }
 
-        if (prevProps.lesson.timelines != this.props.lesson.timelines) {
-            // FIXME array comparing
-            this.updateCurrentContents(this.elapsedTime())
-        }
-
-        if (
-            prevProps.lesson.poseKey != this.props.lesson.poseKey ||
-            prevProps.lesson.faceKey != this.props.lesson.faceKey
-        ) {
-            loadAnimation(
-                this.props.avatar,
-                this.props.lesson.poseKey,
-                this.props.lesson.faceKey
+        // update edited texts during not playing.
+        if (!this.state.isPlaying) {
+            const { texts } = shouldShowContentsDuringSeeking(
+                this.props.lesson.timelines,
+                this.pausedElapsedTime
             )
+
+            if (JSON.stringify(this.state.texts) != JSON.stringify(texts)) {
+                this.setState({ texts })
+            }
         }
     }
 
@@ -187,27 +185,14 @@ export default class LessonController extends React.Component {
     async updateSeekingPreviewContents(elapsedTime) {
         await this.setState({ texts: [], graphics: [] })
 
-        let action, text, graphics
-        this.props.lesson.timelines.some(t => {
-            if (t.timeSec > elapsedTime) return true
+        const { action, texts, graphics } = shouldShowContentsDuringSeeking(
+            this.props.lesson.timelines,
+            elapsedTime
+        )
 
-            if (t.action.action != '') action = t.action
-
-            if (t.text.durationSec > 0) {
-                const remainingDurationSec =
-                    t.timeSec + t.text.durationSec - elapsedTime
-                if (remainingDurationSec > 0) {
-                    text = Object.assign({}, t.text)
-                    text.durationSec = remainingDurationSec
-                }
-            }
-
-            if (t.graphics != null) graphics = t.graphics
-        })
-
-        if (text) {
+        texts.forEach(text => {
             this.showTimelineText(text, elapsedTime)
-        }
+        })
 
         this.avatarAction(action)
         this.props.avatar.jumpAnimationAt(elapsedTime)
@@ -218,19 +203,10 @@ export default class LessonController extends React.Component {
     }
 
     async updateAfterSeekingContents() {
-        let voice, voiceStartTime
-        this.props.lesson.timelines.some(t => {
-            if (t.timeSec > this.pausedElapsedTime) return true
-            if (
-                t.voice.id != '' &&
-                t.timeSec + t.voice.durationSec > this.pausedElapsedTime
-            ) {
-                voiceStartTime = this.pausedElapsedTime - t.timeSec
-                voice = Object.assign({}, t.voice)
-                voice.durationSec =
-                    t.timeSec + t.voice.durationSec - this.pausedElapsedTime
-            }
-        })
+        const { voice, voiceStartTime } = shouldPlayVoiceAfterSeeking(
+            this.props.lesson.timelines,
+            this.pausedElapsedTime
+        )
 
         if (this.state.isPlaying) {
             this.playTimelineVoice(voice, voiceStartTime)

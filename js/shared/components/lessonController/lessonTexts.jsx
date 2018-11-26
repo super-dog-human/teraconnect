@@ -32,13 +32,14 @@ export default class LessonTexts extends React.Component {
                     text.borderColor = text.borderColor || '#ff6699'
 
                     return (
-                        <TextLine key={i} >
+                        <TextLine key={i}>
                             <TextBody
                                 text={text}
                                 textPadingSize={this.textSizeMultiplier} // just use multiplier because default padidng is 1.
                                 textShadowHarfSize={this.textShadowHarfSize}
-                                textShadowQuarterSize={this.textShadowQuarterSize}>
-                                    {text.body}
+                                textShadowQuarterSize={this.textShadowQuarterSize}
+                        >
+                                {text.body}
                             </TextBody>
                         </TextLine>
                     )
@@ -57,6 +58,7 @@ const TextLines = styled.div`
 `
 
 const TextLine = styled.div`
+    position: absolute;
     display: table;
     width: 100%;
     height: 100%;

@@ -22,6 +22,44 @@ export function resetAnimation(avatar) {
     setInitialAnimationFrame(avatar)
 }
 
+export function shouldShowContentsDuringSeeking(timelines, currentTime) {
+    const texts = []
+    let action, graphics
+    timelines.some(t => {
+        if (t.timeSec > currentTime) return true
+
+        if (t.action.action != '') action = t.action
+
+        if (t.text.durationSec > 0) {
+            const remainingDurationSec =
+                t.timeSec + t.text.durationSec - currentTime
+            if (remainingDurationSec > 0) {
+                const text = Object.assign({}, t.text)
+                text.durationSec = remainingDurationSec
+                texts.push(text)
+            }
+        }
+
+        if (t.graphics != null) graphics = t.graphics
+    })
+
+    return { action, texts, graphics }
+}
+
+export function shouldPlayVoiceAfterSeeking(timelines, currentTime) {
+    let voice, voiceStartTime
+    timelines.some(t => {
+        if (t.timeSec > currentTime) return true
+        if (t.voice.id != '' && t.timeSec + t.voice.durationSec > currentTime) {
+            voiceStartTime = currentTime - t.timeSec
+            voice = Object.assign({}, t.voice)
+            voice.durationSec = t.timeSec + t.voice.durationSec - currentTime
+        }
+    })
+
+    return { voice, voiceStartTime }
+}
+
 function setRecordedPoseAnimation(avatar) {
     Object.keys(avatar.poseKey).forEach(clipName => {
         if (avatar.poseKey[clipName].length === 0) return
