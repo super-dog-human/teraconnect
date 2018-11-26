@@ -8,6 +8,7 @@ import {
     moveFacialExpression,
     moveEyesBlink
 } from './utils/avatarPreviewUtility'
+import { css } from 'emotion'
 
 export default class AvatarPreview extends React.Component {
     constructor(props) {
@@ -93,19 +94,17 @@ export default class AvatarPreview extends React.Component {
     }
 
     render() {
+        const avatarPreviewStyle = css`
+            text-align: center;
+        `
+
         return (
             <div
-                id="avatar-preview"
+                className={avatarPreviewStyle}
                 ref={e => {
                     this.container = e
                 }}
-            >
-                <style jsx>{`
-                    #avatar-preview {
-                        text-align: center;
-                    }
-                `}</style>
-            </div>
+            />
         )
     }
 }

@@ -1,5 +1,7 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import styled from '@emotion/styled'
+import { css } from 'emotion'
 
 export default class VoiceText extends React.Component {
     constructor(props) {
@@ -41,7 +43,7 @@ export default class VoiceText extends React.Component {
         this.props.changeTimelines(timelines)
     }
 
-    playVoice(event) {
+    handleVoicePlayClick(event) {
         const voiceIndex = event.currentTarget.value
         if (this.playingAudios[voiceIndex]) {
             this.playingAudios[voiceIndex].pause()
@@ -64,117 +66,113 @@ export default class VoiceText extends React.Component {
 
     render() {
         return (
-            <div id="lesson-text" className="app-back-color-dark-gray">
-                <div id="lesson-text-lines">
+            <div className="app-back-color-dark-gray">
+                <VoiceTextLines>
                     {this.props.timelines
                         .filter(t => {
                             return t.voice.id != ''
                         })
                         .map((t, i) => {
-                            if (t.text.body != '') {
-                                return (
-                                    <div key={i} className="line">
-                                        <button
-                                            value={i}
-                                            className="voice-play-btn app-text-color-dark-gray"
-                                            onClick={this.playVoice.bind(this)}
-                                            disabled={this.props.isLoading}
-                                            tabIndex="-1"
-                                        >
-                                            <FontAwesomeIcon icon="volume-up" />
-                                        </button>
-                                        <input
-                                            type="text"
-                                            custom-index={i}
-                                            className="form-control voice-text"
-                                            defaultValue={t.text.body}
-                                            disabled={this.props.isLoading}
-                                            onChange={this.handleTextChange.bind(
-                                                this
-                                            )}
-                                        />
-                                    </div>
-                                )
-                            } else if (this.props.isLoading) {
-                                return (
-                                    <div
-                                        key={i}
-                                        className="line text-detecting"
-                                    >
-                                        <FontAwesomeIcon icon="spinner" spin />
-                                    </div>
-                                )
-                            } else {
-                                return (
-                                    <div key={i} className="line">
-                                        <button
-                                            value={i}
-                                            className="voice-play-btn app-text-color-dark-gray"
-                                            onClick={this.playVoice.bind(this)}
-                                            disabled={this.props.isLoading}
-                                            tabIndex="-1"
-                                        >
-                                            <FontAwesomeIcon icon="volume-up" />
-                                        </button>
-                                        <input
-                                            type="text"
-                                            custom-index={i}
-                                            className="form-control voice-text"
-                                            placeholder="（検出なし）"
-                                            disabled={this.props.isLoading}
-                                            onChange={this.handleTextChange.bind(
-                                                this
-                                            )}
-                                        />
-                                    </div>
-                                )
-                            }
+                            return this.props.isLoading ? (
+                                <VoiceTextLine
+                                    key={i}
+                                    className={loadingVoiceTextLineStyle}
+                                >
+                                    <FontAwesomeIcon
+                                        icon="spinner"
+                                        spin
+                                        className="app-text-color-soft-white"
+                                    />
+                                </VoiceTextLine>
+                            ) : (
+                                <VoiceTextLine key={i}>
+                                    <DetectedVoiceText
+                                        index={i}
+                                        isLoading={this.props.isLoading}
+                                        onPlayButtonClick={this.handleVoicePlayClick.bind(
+                                            this
+                                        )}
+                                        onTextChange={this.handleTextChange.bind(
+                                            this
+                                        )}
+                                        body={t.text.body}
+                                    />
+                                </VoiceTextLine>
+                            )
                         })}
-                </div>
-                <style jsx>{`
-                    #lesson-text-lines {
-                        width: 100%;
-                        height: calc(
-                            100% - 50px - 146px
-                        ); // header and header controller buttons heights.
-                        overflow-y: scroll;
-                    }
-                    #lesson-text-lines::-webkit-scrollbar {
-                        display: none;
-                    }
-                    .line {
-                        position: relative;
-                        display: block;
-                        width: 54vw;
-                        height: 40px;
-                        margin-top: 20px;
-                        margin-left: 1vw;
-                    }
-                    .voice-play-btn {
-                        position: absolute;
-                        outline: none;
-                        height: 25px;
-                        border: none;
-                        cursor: pointer;
-                        top: 0;
-                        left: 3px;
-                        bottom: 0;
-                        margin: auto;
-                        font-size: 18px;
-                    }
-                    .voice-text {
-                        text-indent: 30px;
-                    }
-                    .text-detecting {
-                        padding-top: 8px;
-                        padding-left: 10px;
-                        border: 1px solid #d8d8d8;
-                        border-radius: 5px;
-                        font-size: 20px;
-                        color: var(--dark-gray);
-                    }
-                `}</style>
+                </VoiceTextLines>
             </div>
         )
     }
+}
+
+const VoiceTextLines = styled.div`
+    width: 100%;
+    height: calc(
+        100% - 50px - 146px
+    ); /* heights of header and header controller buttons. */
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+`
+
+const VoiceTextLine = styled.div`
+    position: relative;
+    display: block;
+    width: 54vw;
+    height: 40px;
+    margin-top: 20px;
+    margin-left: 1vw;
+`
+
+const loadingVoiceTextLineStyle = css`
+    padding-top: 8px;
+    padding-left: 10px;
+    border: 1px solid #d8d8d8;
+    border-radius: 5px;
+    font-size: 20px;
+    color: var(--dark-gray);
+`
+
+const DetectedVoiceText = props => {
+    const buttonStyle = css`
+        position: absolute;
+        outline: none;
+        height: 25px;
+        border: none;
+        cursor: pointer;
+        top: 0;
+        left: 3px;
+        bottom: 0;
+        margin: auto;
+        font-size: 18px;
+    `
+
+    const inputStyle = css`
+        text-indent: 30px;
+    `
+
+    return (
+        <>
+            <button
+                value={props.index}
+                className={`${buttonStyle} app-text-color-dark-gray`}
+                onClick={props.onPlayButtonClick}
+                disabled={props.isLoading}
+                tabIndex="-1"
+            >
+                <FontAwesomeIcon icon="volume-up" />
+            </button>
+            <input
+                type="text"
+                custom-index={props.index}
+                className={`form-control ${inputStyle}`}
+                defaultValue={props.body}
+                placeholder={props.body === '' ? '（検出なし）' : ''}
+                disabled={props.isLoading}
+                onChange={props.onTextChange}
+            />
+        </>
+    )
 }
