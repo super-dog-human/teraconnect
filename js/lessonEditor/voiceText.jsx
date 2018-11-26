@@ -12,6 +12,7 @@ export default class VoiceText extends React.Component {
     }
 
     async componentDidUpdate(prevProps) {
+        console.log(this.props.timelines)
         if (prevProps.isLoading && !this.props.isLoading) {
             this.urls = this.props.timelines
                 .filter(t => {
@@ -73,32 +74,33 @@ export default class VoiceText extends React.Component {
                             return t.voice.id != ''
                         })
                         .map((t, i) => {
-                            return this.props.isLoading ? (
-                                <VoiceTextLine
-                                    key={i}
-                                    className={loadingVoiceTextLineStyle}
-                                >
-                                    <FontAwesomeIcon
-                                        icon="spinner"
-                                        spin
-                                        className="app-text-color-soft-white"
-                                    />
-                                </VoiceTextLine>
-                            ) : (
-                                <VoiceTextLine key={i}>
-                                    <DetectedVoiceText
-                                        index={i}
-                                        isLoading={this.props.isLoading}
-                                        onPlayButtonClick={this.handleVoicePlayClick.bind(
-                                            this
-                                        )}
-                                        onTextChange={this.handleTextChange.bind(
-                                            this
-                                        )}
-                                        body={t.text.body}
-                                    />
-                                </VoiceTextLine>
-                            )
+                            return t.text.body === '' &&
+                                this.props.isLoading ? (
+                                    <VoiceTextLine
+                                        key={i}
+                                        className={loadingVoiceTextLineStyle}
+                                    >
+                                        <FontAwesomeIcon
+                                            icon="spinner"
+                                            spin
+                                            className="app-text-color-soft-white"
+                                        />
+                                    </VoiceTextLine>
+                                ) : (
+                                    <VoiceTextLine key={i}>
+                                        <DetectedVoiceText
+                                            index={i}
+                                            isLoading={this.props.isLoading}
+                                            onPlayButtonClick={this.handleVoicePlayClick.bind(
+                                                this
+                                            )}
+                                            onTextChange={this.handleTextChange.bind(
+                                                this
+                                            )}
+                                            body={t.text.body}
+                                        />
+                                    </VoiceTextLine>
+                                )
                         })}
                 </VoiceTextLines>
             </div>
