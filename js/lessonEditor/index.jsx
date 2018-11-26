@@ -20,6 +20,7 @@ import {
     packMaterial
 } from '../shared/utils/networkManager'
 import * as Const from '../shared/utils/constants'
+import styled from '@emotion/styled'
 import ReactGA from 'react-ga'
 
 const publishingLessonErrorTitle = '授業の公開に失敗しました'
@@ -300,44 +301,44 @@ export default class LessonEditor extends React.Component {
 
     render() {
         return (
-            <div>
+            <>
                 <ModalWindow
                     isOpen={this.state.isModalOpen}
                     {...this.state.modalOption}
                 />
-                <div id="lesson-editor" className="app-back-color-dark-gray">
+                <LessonEditorContainer className="app-back-color-dark-gray">
                     <div className="container-fluid">
-                        <div id="lesson-control-panel">
+                        <LessonControlPanel>
                             <div className="row">
                                 <div className="col text-right">
-                                    <button
+                                    <LessonControlButton
                                         className="btn btn-primary btn-lg"
                                         onClick={this.confirmPublish.bind(this)}
                                         disabled={this.state.isLoading}
                                         data-tip="授業を公開状態にします"
                                     >
                                         授業を公開する
-                                    </button>
+                                    </LessonControlButton>
                                 </div>
                             </div>
                             <div className="row">
                                 <div className="col text-right">
-                                    <button
+                                    <LessonControlButton
                                         className="btn btn-danger btn-lg"
                                         onClick={this.confirmDestroy.bind(this)}
                                         disabled={this.state.isLoading}
                                         data-tip="授業をすぐに削除します"
                                     >
                                         削除する
-                                    </button>
+                                    </LessonControlButton>
                                 </div>
                             </div>
-                        </div>
-                        <div id="editor-body" className="row">
-                            <div id="text-editor" className="col-lg-7">
-                                <h5 className="app-text-color-soft-white">
+                        </LessonControlPanel>
+                        <div className="row">
+                            <VoiceTextEditorContainer className="col-lg-7">
+                                <LessonEditorTitle className="app-text-color-soft-white">
                                     テキスト編集
-                                </h5>
+                                </LessonEditorTitle>
                                 <VoiceText
                                     isLoading={this.state.isLoading}
                                     lessonID={this.lessonID}
@@ -346,13 +347,12 @@ export default class LessonEditor extends React.Component {
                                         this
                                     )}
                                 />
-                            </div>
-                            <div className="col-lg-5">
-                                <h5 className="app-text-color-soft-white mb-4">
+                            </VoiceTextEditorContainer>
+                            <LessonPreviewContainer className="col-lg-5">
+                                <LessonEditorTitle className="app-text-color-soft-white mb-4">
                                     プレビュー
-                                </h5>
+                                </LessonEditorTitle>
                                 <div
-                                    id="lesson-preview"
                                     className="app-back-color-soft-white m-2"
                                     ref={e => {
                                         this.playerContainer = e
@@ -372,7 +372,7 @@ export default class LessonEditor extends React.Component {
                                         }}
                                     />
                                 </div>
-                            </div>
+                            </LessonPreviewContainer>
                         </div>
                     </div>
                     <ReactTooltip
@@ -380,43 +380,38 @@ export default class LessonEditor extends React.Component {
                         place="bottom"
                         type="warning"
                     />
-                </div>
-                <style jsx>{`
-                    #lesson-editor {
-                        width: 100%;
-                        height: 100%;
-                    }
-                    #lesson-control-panel {
-                        padding-top: 20px;
-                        padding-right: 20px;
-                    }
-                    #lesson-control-panel button {
-                        width: 150px;
-                        margin-bottom: 20px;
-                        font-size: 17px;
-                    }
-                    #publish-checkbox {
-                        display: none;
-                        margin-top: 10px;
-                        font-size: 13px;
-                    }
-                    #publish-checkbox label {
-                        cursor: pointer;
-                    }
-                    #editor-body h5 {
-                        font-size: 1vw;
-                        margin-left: 1vw;
-                    }
-                    #text-editor {
-                        position: relative;
-                        max-height: 100%;
-                    }
-                    #lesson-preview {
-                        width: 38vw;
-                        height: ${38 / Const.RATIO_9_TO_16}vw;
-                    }
-                `}</style>
-            </div>
+                </LessonEditorContainer>
+            </>
         )
     }
 }
+
+const LessonControlButton = styled.button`
+    width: 150px;
+    margin-bottom: 20px;
+    font-size: 17px;
+`
+
+const LessonEditorContainer = styled.div`
+    width: 100%;
+    height: 100%;
+`
+
+const LessonEditorTitle = styled.h5`
+    font-size: 1vw;
+    margin-left: 1vw;
+`
+
+const LessonControlPanel = styled.div`
+    padding-top: 20px;
+    padding-right: 20px;
+`
+const VoiceTextEditorContainer = styled.div`
+    position: relative;
+    max-height: 100%;
+`
+
+const LessonPreviewContainer = styled.div`
+    width: 38vw;
+    height: ${38 / Const.RATIO_9_TO_16}vw;
+`
