@@ -12,7 +12,6 @@ export default class VoiceText extends React.Component {
     }
 
     async componentDidUpdate(prevProps) {
-        console.log(this.props.timelines)
         if (prevProps.isLoading && !this.props.isLoading) {
             this.urls = this.props.timelines
                 .filter(t => {
