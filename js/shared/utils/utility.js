@@ -1,3 +1,5 @@
+import ReactGA from 'react-ga'
+
 export function isProduction() {
     return document.location.href.startsWith(
         'https://authoring.teraconnect.org/'
@@ -46,5 +48,16 @@ export function arrayAverage(arr) {
 export function arrayToUniq(arr) {
     return arr.filter((x, i, self) => {
         return self.indexOf(x) === i
+    })
+}
+
+export function sendExceptionToGA(componentName, err, isFatal) {
+    ReactGA.exception({
+        category: componentName,
+        description: `${err.message} ${err.stack.replace(
+            /\s.*?@.*?\s/,
+            '[MASKED EMAIL]'
+        )}`,
+        fatal: isFatal
     })
 }
