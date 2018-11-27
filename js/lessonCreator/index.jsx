@@ -8,7 +8,7 @@ import GraphicManager from './graphicManager'
 import Cookies from 'js-cookie'
 import { isMobile } from 'react-device-detect'
 import { postLesson } from '../shared/utils/networkManager'
-import ReactGA from 'react-ga'
+import { sendExceptionToGA } from '../shared/utils/utility'
 
 const mobileWarningTitle = '非対応の環境です'
 const mobileWarningMessage = 'モバイル環境では授業を作成できません。'
@@ -39,6 +39,12 @@ export default class LessonCreator extends React.Component {
     }
 
     componentDidMount() {
+        const isAgreeToTerms = Cookies.get('agreeToTerms')
+        if (isAgreeToTerms !== 'true') {
+            this.props.history.replace('/')
+            return
+        }
+
         if (!isMobile) return
 
         this.openErrorModal(mobileWarningTitle, mobileWarningMessage, () => {
@@ -96,10 +102,7 @@ export default class LessonCreator extends React.Component {
                 this.checkCreatingStatus()
             })
             .catch(err => {
-                ReactGA.exception({
-                    description: `${err.message} ${err.stack}`,
-                    fatal: false
-                })
+                sendExceptionToGA(this.constructor.name, err, false)
                 this.openErrorModal(creatingLessonErrorTitle, err, () => {
                     this.setState({ isCreating: false })
                 })
@@ -139,12 +142,6 @@ export default class LessonCreator extends React.Component {
     }
 
     render() {
-        const isAgreeToTerms = Cookies.get('agreeToTerms')
-        if (isAgreeToTerms !== 'true') {
-            this.props.history.replace('/')
-            return
-        }
-
         return (
             <>
                 <Indicator isLoading={this.state.isCreating} />

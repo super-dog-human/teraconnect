@@ -1,4 +1,7 @@
 import ReactGA from 'react-ga'
+import { GA_TRACKING_ID } from './constants'
+
+ReactGA.initialize(GA_TRACKING_ID)
 
 export function isProduction() {
     return document.location.href.startsWith(
@@ -52,12 +55,12 @@ export function arrayToUniq(arr) {
 }
 
 export function sendExceptionToGA(componentName, err, isFatal) {
+    if (!isProduction()) return
+
     ReactGA.exception({
         category: componentName,
-        description: `${err.message} ${err.stack.replace(
-            /\s.*?@.*?\s/,
-            '[MASKED EMAIL]'
-        )}`,
+        action: err.message,
+        description: `${err.stack.replace(/(@)(http|https):\/\//g, '(at)$2:')}`,
         fatal: isFatal
     })
 }

@@ -28,7 +28,7 @@ export default class GraphicManager extends React.Component {
             })
     }
 
-    async changeGraphicSelection(event) {
+    async handleGraphicChange(event) {
         let graphicIDs = this.state.selectedGraphicIDs
 
         const changedID = event.target.value
@@ -85,7 +85,7 @@ export default class GraphicManager extends React.Component {
                                     type="checkbox"
                                     value={graphic.id}
                                     checked={isSelected}
-                                    onChange={this.changeGraphicSelection.bind(
+                                    onChange={this.handleGraphicChange.bind(
                                         this
                                     )}
                                 />

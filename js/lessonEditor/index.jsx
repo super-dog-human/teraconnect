@@ -19,9 +19,9 @@ import {
     uploadMaterial,
     packMaterial
 } from '../shared/utils/networkManager'
+import { sendExceptionToGA } from '../shared/utils/utility'
 import * as Const from '../shared/utils/constants'
 import styled from '@emotion/styled'
-import ReactGA from 'react-ga'
 
 const publishingLessonErrorTitle = '授業の公開に失敗しました'
 const deletionDoneTitle = '授業を削除しました'
@@ -239,7 +239,7 @@ export default class LessonEditor extends React.Component {
                 this.props.history.push(`/${this.lessonID}`)
             })
             .catch(err => {
-                ReactGA.exception({ description: err.message, fatal: false })
+                sendExceptionToGA(this.constructor.name, err, false)
                 this.setState({ isLoading: false })
                 this.openModal({
                     title: publishingLessonErrorTitle,
@@ -282,10 +282,7 @@ export default class LessonEditor extends React.Component {
                 })
             })
             .catch(err => {
-                ReactGA.exception({
-                    description: `${err.message} ${err.stack}`,
-                    fatal: false
-                })
+                sendExceptionToGA(this.constructor.name, err, false)
                 this.setState({ isLoading: false })
                 this.openModal({ title: deletionErrorTitle, message: err })
             })

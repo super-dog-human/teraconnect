@@ -1,6 +1,5 @@
 import React from 'react'
-import ReactGA from 'react-ga'
-import { isProduction } from '../shared/utils/utility'
+import { sendExceptionToGA } from '../shared/utils/utility'
 
 export default class ErrorBoundary extends React.Component {
     constructor() {
@@ -14,12 +13,7 @@ export default class ErrorBoundary extends React.Component {
     }
 
     componentDidCatch(err) {
-        if (isProduction()) {
-            ReactGA.exception({
-                description: `${err.message} ${err.stack}`,
-                fatal: true
-            })
-        }
+        sendExceptionToGA(this.constructor.name, err, true)
     }
 
     render() {

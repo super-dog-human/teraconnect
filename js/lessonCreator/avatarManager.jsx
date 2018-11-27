@@ -17,7 +17,6 @@ export default class AvatarManager extends React.Component {
     constructor(props) {
         super(props)
 
-        this.checker = new AvatarRightsChecker()
         this.state = {
             hasAddedAvatar: false,
             selectedAvatarID: '',
@@ -37,7 +36,7 @@ export default class AvatarManager extends React.Component {
             })
     }
 
-    changeAvatarSelection(event) {
+    handleAvatarChange(event) {
         const id = event.target.value // can't unchecked after checked once.
         this.setState({ selectedAvatarID: id })
         this.props.onAvatarChange(id)
@@ -63,15 +62,10 @@ export default class AvatarManager extends React.Component {
         this.props.onStatusChange(true)
 
         const url = file.preview
-        await this.checker.loadAvatar(url)
+        const checker = new AvatarRightsChecker()
+        await checker.loadAvatar(url)
 
-        if (!this.checker.isEnableAvatar()) {
-            this.props.onError(
-                userAvatarFileErrorTitle,
-                userAvatarFileErrorMessage
-            )
-
-            this.props.onStatusChange(false)
+        if (!this.checkEnableAvatar(checker)) {
             return
         }
 
@@ -86,6 +80,24 @@ export default class AvatarManager extends React.Component {
             .catch(err => {
                 this.props.onError(failedUploadingAvatarFile, err)
             })
+    }
+
+    checkEnableAvatar(checker) {
+        if (!checker.canDistribute()) {
+            this.props.onError(
+                userAvatarFileErrorTitle,
+                userAvatarFileErrorMessage
+            )
+
+            this.props.onStatusChange(false)
+            return false
+        }
+
+        if (checker.shouldConfirm()) {
+            console.log('アバターを操作する許可を所有していますか？')
+        }
+
+        return true
     }
 
     render() {
@@ -115,7 +127,7 @@ export default class AvatarManager extends React.Component {
                                     type="checkbox"
                                     value={avatar.id}
                                     checked={isSelected}
-                                    onChange={this.changeAvatarSelection.bind(
+                                    onChange={this.handleAvatarChange.bind(
                                         this
                                     )}
                                 />

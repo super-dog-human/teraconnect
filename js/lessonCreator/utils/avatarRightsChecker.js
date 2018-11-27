@@ -4,6 +4,7 @@ import '../../shared/utils/GLTFLoader'
 export default class AvatarRightsChecker {
     constructor() {
         this.avatar = {}
+        this.meta = {}
     }
 
     async loadAvatar(url) {
@@ -14,20 +15,35 @@ export default class AvatarRightsChecker {
         })
 
         this.avatar = avatar
+        this.meta = this.avatar.userData.gltfExtensions.VRM.meta
     }
 
-    isEnableAvatar() {
-        const meta = this.avatar.userData.gltfExtensions.VRM.meta
-        //        if (meta.commercialUssageName === 'Disallow') return false;
-        if (meta.licenseName === 'CC0') return true
-        //        if (meta.licenseName === 'CC_BY') return true;
-        this.avatar = {}
-
-        return false
+    canDistribute() {
+        return this.meta.licenseName != 'Redistribution_Prohibited'
     }
+
+    canCommercialUsage() {
+        if (this.meta.commercialUssageName != 'Allow') return false
+        /* not checking commercial usage in CC
+        if (this.meta.licenseName === 'CC_BY_NC') return false
+        if (this.meta.licenseName === 'CC_BY_NC_SA') return false
+        if (this.meta.licenseName === 'CC_BY_NC_ND') return false
+        */
+        return true
+    }
+
+    canEveryonePerform() {
+        return this.meta.allowedUserName === 'Everyone'
+    }
+
+    shouldConfirm() {
+        if (this.meta.licenseName === 'CC0') return false
+
+        return true
+    }
+
     /*
     thumbnailObjectURL() {
-
     }
-*/
+    */
 }
