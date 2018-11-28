@@ -22,8 +22,13 @@ export default class GraphicManager extends React.Component {
                 this.setState({ graphics: graphics })
             })
             .catch(err => {
-                this.props.onError(failedDownloadingGraphics, err, () => {
-                    location.reload()
+                this.props.openModal({
+                    title: failedDownloadingGraphics,
+                    message: err.message,
+                    onClose: () => {
+                        this.props.closeModal()
+                        location.reload()
+                    }
                 })
             })
     }
@@ -59,7 +64,11 @@ export default class GraphicManager extends React.Component {
                 this.props.onStatusChange(false)
             })
             .catch(err => {
-                this.props.onError(failedUploadingGraphics, err)
+                this.props.openModal({
+                    title: failedUploadingGraphics,
+                    message: err.message,
+                    onClose: this.props.closeModal
+                })
             })
     }
 

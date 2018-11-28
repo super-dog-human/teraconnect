@@ -10,7 +10,10 @@ const userAvatarFileErrorTitle = '使用できないファイルです'
 const failedDownloadingAvatarFile = 'アバターの読み込みに失敗しました'
 const failedUploadingAvatarFile = 'アバターのアップロードに失敗しました'
 const userAvatarFileErrorMessage =
-    '下記の条件を確認してください。\n\n・VRoid Studioで作成したVRMファイルである\n・ライセンスがCC0である\n・ファイルサイズが30MB以下である'
+    '下記の条件を確認してください。\n\n・再配布可能な設定である\n・VRoid Studioで作成したVRMファイルである\n・ファイルサイズが30MB以下である'
+const confirmAvatarLicenceTitle = 'アバターの使用権を確認してください。'
+const confirmAvatarLicenceMessage =
+    '\n※上記全てに該当しないと、このファイルは使用できません。'
 const maxFileBytes = 31457280
 
 export default class AvatarManager extends React.Component {
@@ -30,8 +33,13 @@ export default class AvatarManager extends React.Component {
                 this.setState({ avatars: avatars })
             })
             .catch(err => {
-                this.props.onError(failedDownloadingAvatarFile, err, () => {
-                    location.reload()
+                this.props.openModal({
+                    title: failedDownloadingAvatarFile,
+                    message: err.message,
+                    onClose: () => {
+                        this.props.closeModal()
+                        location.reload()
+                    }
                 })
             })
     }
@@ -46,10 +54,11 @@ export default class AvatarManager extends React.Component {
         if (this.props.isCreating) return
 
         if (rejectedFiles.length > 0) {
-            this.props.onError(
-                userAvatarFileErrorTitle,
-                userAvatarFileErrorMessage
-            )
+            this.props.openModal({
+                title: userAvatarFileErrorTitle,
+                message: userAvatarFileErrorMessage,
+                onClose: this.props.closeModal
+            })
             return
         }
 
@@ -63,12 +72,43 @@ export default class AvatarManager extends React.Component {
 
         const url = file.preview
         const checker = new AvatarRightsChecker()
-        await checker.loadAvatar(url)
 
-        if (!this.checkEnableAvatar(checker)) {
+        await checker.loadAvatar(url) // TODO catch error
+
+        if (!checker.canUse()) {
+            this.props.openModal({
+                title: userAvatarFileErrorTitle,
+                message: userAvatarFileErrorMessage,
+                onClose: this.props.closeModal,
+                isError: true
+            })
+
+            this.props.onStatusChange(false)
             return
         }
 
+        if (checker.shouldShowConfirmForUsing()) {
+            this.props.openModal({
+                title: confirmAvatarLicenceTitle,
+                message: checker.confirmMessage() + confirmAvatarLicenceMessage,
+                onClickOK: () => {
+                    this.props.closeModal()
+                    this.uploadUserAvatar(url, checker)
+                },
+                onClickCancel: () => {
+                    this.props.closeModal()
+                    this.props.onStatusChange(false)
+                },
+                needsConfirm: true,
+                okButtonLabel: 'はい',
+                cancelButtonLabel: 'いいえ'
+            })
+        } else {
+            this.uploadUserAvatar(url, checker)
+        }
+    }
+
+    uploadUserAvatar(url, checker) {
         uploadAvatar(url)
             .then(id => {
                 const avatars = this.state.avatars
@@ -78,26 +118,16 @@ export default class AvatarManager extends React.Component {
                 this.props.onStatusChange(false)
             })
             .catch(err => {
-                this.props.onError(failedUploadingAvatarFile, err)
+                this.props.openModal({
+                    title: failedUploadingAvatarFile,
+                    message: err.message,
+                    onClose: this.props.closeModal
+                })
             })
-    }
 
-    checkEnableAvatar(checker) {
-        if (!checker.canDistribute()) {
-            this.props.onError(
-                userAvatarFileErrorTitle,
-                userAvatarFileErrorMessage
-            )
-
-            this.props.onStatusChange(false)
-            return false
-        }
-
-        if (checker.shouldConfirm()) {
-            console.log('アバターを操作する許可を所有していますか？')
-        }
-
-        return true
+        console.log(checker.meta)
+        // updateAvatar
+        // needsCredit, Title, author, Reference, Contact Information
     }
 
     render() {
@@ -141,7 +171,7 @@ export default class AvatarManager extends React.Component {
                                 ? 'd-none'
                                 : 'd-block'
                         }
-                        data-tip="VRMファイルは、授業再生のため再配布されます。画面右上の「使い方」をご確認ください。"
+                        data-tip="VRMファイルは、授業再生のため再配布されます"
                     >
                         <Dropzone
                             onDrop={this.onDrop.bind(this)}

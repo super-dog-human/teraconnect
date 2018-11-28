@@ -18,8 +18,31 @@ export default class AvatarRightsChecker {
         this.meta = this.avatar.userData.gltfExtensions.VRM.meta
     }
 
-    canDistribute() {
+    canUse() {
         return this.meta.licenseName != 'Redistribution_Prohibited'
+    }
+
+    shouldShowConfirmForUsing() {
+        return this.confirmMessage() != ''
+    }
+
+    confirmMessage() {
+        let message = ''
+
+        if (!this.canCommercialUsage()) {
+            message += '・アバターを商用利用しない\n'
+        }
+
+        if (this.canPerformOnlyAuthor()) {
+            message += '・アバターの作者本人である\n'
+        } else if (this.canPerformOnlyLicensee()) {
+            message += '・アバターを操作する権利を有している\n'
+        }
+
+        // otherLicenseUrl
+        // otherPermissionUrl
+
+        return message
     }
 
     canCommercialUsage() {
@@ -32,14 +55,16 @@ export default class AvatarRightsChecker {
         return true
     }
 
-    canEveryonePerform() {
-        return this.meta.allowedUserName === 'Everyone'
+    canPerformOnlyAuthor() {
+        return this.meta.allowedUserName === 'OnlyAuthor'
     }
 
-    shouldConfirm() {
-        if (this.meta.licenseName === 'CC0') return false
+    canPerformOnlyLicensee() {
+        return this.meta.allowedUserName === 'ExplicitlyLicensedPerson'
+    }
 
-        return true
+    shouldShowCredit() {
+        return this.meta.licenseName != 'CC0'
     }
 
     /*

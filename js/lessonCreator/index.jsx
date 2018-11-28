@@ -5,6 +5,7 @@ import ModalWindow from '../shared/components/modalWindow'
 import ReactTooltip from 'react-tooltip'
 import AvatarManager from './avatarManager'
 import GraphicManager from './graphicManager'
+
 import Cookies from 'js-cookie'
 import { isMobile } from 'react-device-detect'
 import { postLesson } from '../shared/utils/networkManager'
@@ -31,10 +32,7 @@ export default class LessonCreator extends React.Component {
             avatarID: null,
             graphicIDs: [],
             isModalOpen: false,
-            isErrorModal: false,
-            modalTitle: '',
-            modalMessage: '',
-            modalCloseCallback: () => {}
+            modalOption: {}
         }
     }
 
@@ -47,8 +45,13 @@ export default class LessonCreator extends React.Component {
 
         if (!isMobile) return
 
-        this.openErrorModal(mobileWarningTitle, mobileWarningMessage, () => {
-            this.props.history.replace('/')
+        this.openModal({
+            title: mobileWarningTitle,
+            message: mobileWarningMessage,
+            onClose: () => {
+                this.closeModal()
+                this.props.history.replace('/')
+            }
         })
     }
 
@@ -103,8 +106,13 @@ export default class LessonCreator extends React.Component {
             })
             .catch(err => {
                 sendExceptionToGA(this.constructor.name, err, false)
-                this.openErrorModal(creatingLessonErrorTitle, err, () => {
-                    this.setState({ isCreating: false })
+                this.openModal({
+                    title: creatingLessonErrorTitle,
+                    message: err.message,
+                    onClose: () => {
+                        this.closeModal()
+                        this.setState({ isCreating: false })
+                    }
                 })
             })
     }
@@ -118,27 +126,12 @@ export default class LessonCreator extends React.Component {
         }, 1000)
     }
 
-    openErrorModal(title, message, callback = () => {}) {
-        this.setState({
-            isModalOpen: true,
-            isErrorModal: true,
-            modalTitle: title,
-            modalMessage: message,
-            modalCloseCallback: () => {
-                this.closeModal()
-                callback()
-            }
-        })
+    openModal(option) {
+        this.setState({ isModalOpen: true, modalOption: option })
     }
 
     closeModal() {
-        this.setState({
-            isModalOpen: false,
-            isErrorModal: '',
-            modalTitle: '',
-            modalMessage: '',
-            modalCloseCallback: () => {}
-        })
+        this.setState({ isModalOpen: false, modalOption: {} })
     }
 
     render() {
@@ -147,10 +140,7 @@ export default class LessonCreator extends React.Component {
                 <Indicator isLoading={this.state.isCreating} />
                 <ModalWindow
                     isOpen={this.state.isModalOpen}
-                    isError={this.state.isErrorModal}
-                    title={this.state.modalTitle}
-                    message={this.state.modalMessage}
-                    onClose={this.state.modalCloseCallback.bind(this)}
+                    {...this.state.modalOption}
                 />
                 <LessonCreatorScreen className="app-back-color-soft-white">
                     <LessonForm onSubmit={this.handleFormSubmit.bind(this)}>
@@ -170,7 +160,8 @@ export default class LessonCreator extends React.Component {
                                     isGraphicCreating: status
                                 })
                             }}
-                            onError={this.openErrorModal.bind(this)}
+                            openModal={this.openModal.bind(this)}
+                            closeModal={this.closeModal.bind(this)}
                             isCreating={this.state.isGraphicCreating}
                         />
                         <LessonAvatar
@@ -181,7 +172,8 @@ export default class LessonCreator extends React.Component {
                                 })
                             }}
                             isCreating={this.state.isAvatarCreating}
-                            onError={this.openErrorModal.bind(this)}
+                            openModal={this.openModal.bind(this)}
+                            closeModal={this.closeModal.bind(this)}
                         />
                         <SubmitButton
                             disabled={
@@ -264,44 +256,16 @@ const LessonDescription = ({ value, onChange }) => (
     </div>
 )
 
-const LessonGraphic = ({
-    onGraphicsChange,
-    onStatusChange,
-    isCreating,
-    onError
-}) => (
+const LessonGraphic = props => (
     <div className="form-group" data-tip="選択した順で画像が使用できます">
         <FormLabel body="メディア" />
-        <GraphicManager
-            onGraphicsChange={ids => {
-                onGraphicsChange(ids)
-            }}
-            onStatusChange={status => {
-                onStatusChange(status)
-            }}
-            isCreating={isCreating}
-            onError={onError}
-        />
+        <GraphicManager {...props} />
     </div>
 )
 
-const LessonAvatar = ({
-    onAvatarChange,
-    onStatusChange,
-    isCreating,
-    onError
-}) => (
+const LessonAvatar = props => (
     <div className="form-group">
         <FormLabel body="アバター" isRequired={true} />
-        <AvatarManager
-            onAvatarChange={id => {
-                onAvatarChange(id)
-            }}
-            onStatusChange={status => {
-                onStatusChange(status)
-            }}
-            isCreating={isCreating}
-            onError={onError}
-        />
+        <AvatarManager {...props} />
     </div>
 )

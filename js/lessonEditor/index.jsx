@@ -32,16 +32,6 @@ const confirmPublishingMessage =
 const confirmDestroyingTitle = '授業を削除しますか？'
 const confirmDestroyingMessage = '収録した授業を公開せずに削除します。'
 
-const initModalOption = {
-    isError: '',
-    title: '',
-    message: '',
-    onClose: () => {},
-    onClickOK: () => {},
-    onClickCancel: () => {},
-    needsConfirm: false
-}
-
 export default class LessonEditor extends React.Component {
     constructor(props) {
         super(props)
@@ -60,7 +50,7 @@ export default class LessonEditor extends React.Component {
             poseKey: {},
             faceKey: {},
             isModalOpen: false,
-            modalOption: initModalOption
+            modalOption: {}
         }
     }
 
@@ -243,7 +233,7 @@ export default class LessonEditor extends React.Component {
                 this.setState({ isLoading: false })
                 this.openModal({
                     title: publishingLessonErrorTitle,
-                    message: err
+                    message: err.message
                 })
             })
     }
@@ -284,7 +274,10 @@ export default class LessonEditor extends React.Component {
             .catch(err => {
                 sendExceptionToGA(this.constructor.name, err, false)
                 this.setState({ isLoading: false })
-                this.openModal({ title: deletionErrorTitle, message: err })
+                this.openModal({
+                    title: deletionErrorTitle,
+                    message: err.message
+                })
             })
     }
 
@@ -293,7 +286,7 @@ export default class LessonEditor extends React.Component {
     }
 
     closeModal() {
-        this.setState({ isModalOpen: false, modalOption: initModalOption })
+        this.setState({ isModalOpen: false, modalOption: {} })
     }
 
     render() {

@@ -1,18 +1,38 @@
 import React from 'react'
 import { css } from 'emotion'
 
-export default props => (
-    <Modal
-        className={props.isOpen ? 'modal fade show' : 'modal fade'}
-        isOpen={props.isOpen}
-        onClose={props.onClose}
-        needsConfirm={props.needsConfirm}
-    >
-        <ModalHeader {...props} />
-        <ModalBody onClick={e => e.stopPropagation()} message={props.message} />
-        <ModalFooter {...props} />
-    </Modal>
-)
+const initProps = {
+    isOpen: false,
+    isError: false,
+    title: '',
+    message: '',
+    onClose: () => {},
+    onClickOK: () => {},
+    onClickCancel: () => {},
+    needsConfirm: false,
+    okButtonLabel: 'OK',
+    cancelButtonLabel: 'キャンセル'
+}
+
+export default props => {
+    props = Object.assign({}, initProps, props)
+
+    return (
+        <Modal
+            className={props.isOpen ? 'modal fade show' : 'modal fade'}
+            isOpen={props.isOpen}
+            onClose={props.onClose}
+            needsConfirm={props.needsConfirm}
+        >
+            <ModalHeader {...props} />
+            <ModalBody
+                onClick={e => e.stopPropagation()}
+                message={props.message}
+            />
+            <ModalFooter {...props} />
+        </Modal>
+    )
+}
 
 const Modal = ({ isOpen, onClose, needsConfirm, children }) => {
     const modalStyle = css`
@@ -51,9 +71,7 @@ const ModalHeader = props => {
             type="button"
             className="close"
             data-dismiss="modal"
-            onClick={() => {
-                onClose()
-            }}
+            onClick={onClose}
         >
             <span aria-hidden="true">&times;</span>
         </button>
@@ -90,25 +108,29 @@ const ModalBody = ({ message }) => (
 const ModalFooter = props => {
     const ModalFooterButton = props => {
         if (props.needsConfirm) {
-            return (
-                <ModalConfirmButton
-                    onClickCancel={props.onClickCancel}
-                    onClickOK={props.onClickOK}
-                />
-            )
+            return <ModalConfirmButton {...props} />
         } else {
             return <ModalCloseButton onClose={props.onClose} />
         }
     }
 
-    const ModalConfirmButton = ({ onClickCancel, onClickOK }) => (
+    const ModalConfirmButton = ({
+        onClickCancel,
+        onClickOK,
+        cancelButtonLabel,
+        okButtonLabel
+    }) => (
         <>
             <ModalButton
                 type="secondary"
                 callback={onClickCancel}
-                text="キャンセル"
+                text={cancelButtonLabel}
             />
-            <ModalButton type="primary" callback={onClickOK} text="OK" />
+            <ModalButton
+                type="primary"
+                callback={onClickOK}
+                text={okButtonLabel}
+            />
         </>
     )
 
@@ -117,13 +139,7 @@ const ModalFooter = props => {
     )
 
     const ModalButton = ({ type, callback, text }) => (
-        <button
-            type="button"
-            className={`btn btn-${type}`}
-            onClick={() => {
-                callback()
-            }}
-        >
+        <button type="button" className={`btn btn-${type}`} onClick={callback}>
             {text}
         </button>
     )

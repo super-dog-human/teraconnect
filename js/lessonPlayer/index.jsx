@@ -7,16 +7,6 @@ import ModalWindow from '../shared/components/modalWindow'
 import TweetButton from './tweetButton'
 import styled from '@emotion/styled'
 
-const initModalOption = {
-    isError: '',
-    title: '',
-    message: '',
-    onClose: () => {},
-    onClickOK: () => {},
-    onClickCancel: () => {},
-    needsConfirm: false
-}
-
 export default class LessonPlayer extends React.Component {
     constructor(props) {
         super(props)
@@ -30,7 +20,7 @@ export default class LessonPlayer extends React.Component {
             packedlesson: {},
             isLoading: true,
             isModalOpen: false,
-            modalOption: initModalOption
+            modalOption: {}
         }
     }
 
@@ -40,11 +30,12 @@ export default class LessonPlayer extends React.Component {
             lesson,
             packedLesson,
             avatarFileURL
-        } = await this.lessonLoader.loadLesson(lessonID).catch(_ => {
+        } = await this.lessonLoader.loadLesson(lessonID).catch(() => {
             this.openModal({
                 title: '読み込みに失敗しました',
                 message: 'URLが間違っているか、公開期間が終了しています。',
                 onClose: () => {
+                    this.closeModal()
                     this.props.history.push('/')
                 }
             })
@@ -85,7 +76,7 @@ export default class LessonPlayer extends React.Component {
     }
 
     closeModal() {
-        this.setState({ isModalOpen: false, modalOption: initModalOption })
+        this.setState({ isModalOpen: false, modalOption: {} })
     }
 
     render() {
