@@ -37,17 +37,6 @@ export function stringToMinutesFormat(currentSecWithFloat) {
     return `${minutes.padStart(2, '0')}:${seconds.padStart(2, '0')}`
 }
 
-export function arraySum(arr) {
-    return arr.reduce(
-        (accumulator, currentValue) => accumulator + currentValue,
-        0
-    )
-}
-
-export function arrayAverage(arr) {
-    return arraySum(arr) / arr.length
-}
-
 export function arrayToUniq(arr) {
     return arr.filter((x, i, self) => {
         return self.indexOf(x) === i

@@ -1,5 +1,3 @@
-import { arrayAverage } from '../../shared/utils/utility'
-
 let eyebrowDistanceHistories = []
 let standardEyebrowDistance = 0.25
 let baseFaceName = 'Default'
@@ -204,4 +202,15 @@ function distanceTwoPoint(points, landmarkIndexA, landmarkIndexB) {
     const xDistance = points[landmarkIndexB].x - points[landmarkIndexA].x
     const yDistance = points[landmarkIndexB].y - points[landmarkIndexA].y
     return Math.hypot(xDistance, yDistance)
+}
+
+function arrayAverage(arr) {
+    return arraySum(arr) / arr.length
+}
+
+function arraySum(arr) {
+    return arr.reduce(
+        (accumulator, currentValue) => accumulator + currentValue,
+        0
+    )
 }
