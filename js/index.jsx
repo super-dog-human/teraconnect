@@ -60,6 +60,12 @@ import ErrorBoundary from './errorBoundary'
 import Header from './header'
 import Main from './main'
 import Footer from './footer'
+import { isProduction } from './shared/utils/utility'
+
+if (!isProduction()) {
+    const { whyDidYouUpdate } = require('why-did-you-update')
+    whyDidYouUpdate(React)
+}
 
 render(
     <BrowserRouter>
