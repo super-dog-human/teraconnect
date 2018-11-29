@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Dropzone from 'react-dropzone'
 import AvatarRightsChecker from './utils/avatarRightsChecker'
 import { fetchAvatars, uploadAvatar } from '../shared/utils/networkManager'
+import styled from '@emotion/styled'
+import { css } from 'emotion'
 
 const defaultThumbnailURL =
     'https://storage.googleapis.com/teraconn_thumbnail/avatar/default.png'
@@ -125,35 +127,34 @@ export default class AvatarManager extends React.Component {
                 })
             })
 
-        console.log(checker.meta)
-        // updateAvatar
-        // needsCredit, Title, author, Reference, Contact Information
+        // TODO updateAvatar
+        // checker.meta.author
     }
 
     render() {
         return (
-            <div id="avatar-manager" className="app-back-color-dark-gray">
+            <AvatarMangaerContainer className="app-back-color-dark-gray">
                 <div className="form-inline">
                     {this.state.avatars.map((avatar, i) => {
                         const isSelected =
                             avatar.id === this.state.selectedAvatarID
                         return (
-                            <label
+                            <AvatarLabel
                                 key={i}
                                 className={
                                     isSelected
-                                        ? 'checkable-thumbnail selected-element'
-                                        : 'checkable-thumbnail nonselected-element'
+                                        ? selectedElementStyle
+                                        : unselectElementStyle
                                 }
                             >
-                                <img
+                                <AvatarThumbnail
                                     src={
                                         avatar.thumbnailURL
                                             ? avatar.thumbnailURL
                                             : defaultThumbnailURL
                                     }
                                 />
-                                <input
+                                <AvatarSelector
                                     type="checkbox"
                                     value={avatar.id}
                                     checked={isSelected}
@@ -161,11 +162,10 @@ export default class AvatarManager extends React.Component {
                                         this
                                     )}
                                 />
-                            </label>
+                            </AvatarLabel>
                         )
                     })}
-                    <div
-                        id="upload-avatar"
+                    <AvatarUploader
                         className={
                             this.props.isCreating || this.state.hasAddedAvatar
                                 ? 'd-none'
@@ -184,111 +184,109 @@ export default class AvatarManager extends React.Component {
                                 position: 'absolute'
                             }}
                         >
-                            <div
-                                id="upload-avatar-icon"
-                                className="app-text-color-soft-white"
-                            >
+                            <UploadIcon className="app-text-color-soft-white">
                                 <FontAwesomeIcon icon="file-upload" />
-                            </div>
-                            <div
+                            </UploadIcon>
+                            <UploadIconLabel
                                 id="upload-avatar-text"
                                 className="app-text-color-soft-white"
                             >
                                 &nbsp;追加
-                            </div>
+                            </UploadIconLabel>
                         </Dropzone>
-                    </div>
-                    <div
-                        id="upload-loading-status"
+                    </AvatarUploader>
+                    <UploadingStatus
                         className={this.props.isCreating ? 'd-block' : 'd-none'}
                     >
-                        <div
-                            id="upload-loading-icon"
-                            className="app-text-color-soft-white"
-                        >
+                        <LoadingIcon className="app-text-color-soft-white">
                             <FontAwesomeIcon icon="spinner" spin />
-                        </div>
-                    </div>
+                        </LoadingIcon>
+                    </UploadingStatus>
                 </div>
-                <style jsx>{`
-                    .selected-element {
-                        border: solid 6px #ec9f05;
-                    }
-                    .nonselected-element {
-                        border: 6px solid rgba(0, 0, 0, 0);
-                    }
-                    #avatar-manager {
-                        position: relative;
-                        padding: 15px;
-                        width: 600px;
-                        height: 140px;
-                    }
-                    #avatar-manager::-webkit-scrollbar {
-                        display: none;
-                    }
-                    #avatar-manager img {
-                        width: 100px;
-                        height: 100px;
-                    }
-                    .checkable-thumbnail {
-                        width: 110px;
-                        height: 110px;
-                        position: relative;
-                        margin-right: 10px;
-                        cursor: pointer;
-                    }
-                    .checkable-thumbnail input {
-                        display: none;
-                        position: absolute;
-                        top: 0;
-                        right: 0;
-                    }
-                    #upload-avatar {
-                        position: relative;
-                        width: 100px;
-                        height: 100px;
-                        border: 2px dashed white;
-                        cursor: pointer;
-                    }
-                    #upload-avatar:hover {
-                        opacity: 0.7;
-                    }
-                    #upload-avatar-icon {
-                        position: absolute;
-                        width: 40px;
-                        height: 40px;
-                        font-size: 40px;
-                        text-align: center;
-                        top: 20%;
-                        left: 0;
-                        right: 0;
-                        margin: auto;
-                    }
-                    #upload-avatar-text {
-                        position: absolute;
-                        width: 100%;
-                        text-align: center;
-                        bottom: 20%;
-                        font-size: 12px;
-                    }
-                    #upload-loading-status {
-                        position: relative;
-                        width: 100px;
-                        height: 100px;
-                    }
-                    #upload-loading-icon {
-                        position: absolute;
-                        width: 40px;
-                        height: 40px;
-                        font-size: 40px;
-                        top: 0;
-                        bottom: 0;
-                        left: 0;
-                        right: 0;
-                        margin: auto;
-                    }
-                `}</style>
-            </div>
+            </AvatarMangaerContainer>
         )
     }
 }
+
+const AvatarMangaerContainer = styled.div`
+    position: relative;
+    padding: 15px;
+    width: 600px;
+    height: 140px;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+`
+const AvatarThumbnail = styled.img`
+    width: 100px;
+    height: 100px;
+`
+
+const selectedElementStyle = css`
+    border: solid 6px #ec9f05;
+`
+
+const unselectElementStyle = css`
+    border: 6px solid rgba(0, 0, 0, 0);
+`
+
+const AvatarLabel = styled.label`
+    width: 110px;
+    height: 110px;
+    position: relative;
+    margin-right: 10px;
+    cursor: pointer;
+`
+
+const AvatarSelector = styled.input`
+    display: none;
+`
+
+const AvatarUploader = styled.div`
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border: 2px dashed white;
+    cursor: pointer;
+    &:hover {
+        opacity: 0.7;
+    }
+`
+
+const UploadIcon = styled.div`
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+    text-align: center;
+    top: 20%;
+    left: 0;
+    right: 0;
+    margin: auto;
+`
+
+const UploadIconLabel = styled.div`
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    bottom: 20%;
+    font-size: 12px;
+`
+
+const UploadingStatus = styled.div`
+    position: relative;
+    width: 100px;
+    height: 100px;
+`
+
+const LoadingIcon = styled.div`
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+`

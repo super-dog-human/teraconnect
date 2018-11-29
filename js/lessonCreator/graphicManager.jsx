@@ -2,6 +2,8 @@ import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Dropzone from 'react-dropzone'
 import { fetchGraphics, uploadGraphics } from '../shared/utils/networkManager'
+import styled from '@emotion/styled'
+import { css } from 'emotion'
 
 const failedDownloadingGraphics = '画像の読み込みに失敗しました'
 const failedUploadingGraphics = '画像のアップロードに失敗しました'
@@ -50,7 +52,7 @@ export default class GraphicManager extends React.Component {
         this.props.onGraphicsChange(this.state.selectedGraphicIDs)
     }
 
-    async onDrop(acceptedFiles) {
+    async handleDrop(acceptedFiles) {
         if (this.props.isCreating) return
         if (acceptedFiles.lenth === 0) return
 
@@ -74,23 +76,23 @@ export default class GraphicManager extends React.Component {
 
     render() {
         return (
-            <div id="graphic-manager" className="app-back-color-dark-gray">
-                <div id="graphic-scroll-selector">
+            <GraphicManagerContainer className="app-back-color-dark-gray">
+                <GraphicScrollList>
                     {this.state.graphics.map((graphic, i) => {
                         const isSelected = this.state.selectedGraphicIDs.includes(
                             graphic.id
                         )
                         return (
-                            <label
+                            <GraphicLabel
                                 key={i}
                                 className={
                                     isSelected
-                                        ? 'checkable-thumbnail selected-element'
-                                        : 'checkable-thumbnail nonselected-element'
+                                        ? selectedElementStyle
+                                        : unselectElementStyle
                                 }
                             >
-                                <img src={graphic.thumbnailURL} />
-                                <input
+                                <GraphicThumbnail src={graphic.thumbnailURL} />
+                                <GraphicSelector
                                     type="checkbox"
                                     value={graphic.id}
                                     checked={isSelected}
@@ -98,103 +100,108 @@ export default class GraphicManager extends React.Component {
                                         this
                                     )}
                                 />
-                            </label>
+                            </GraphicLabel>
                         )
                     })}
-                </div>
-                <div
-                    id="upload-graphic"
+                </GraphicScrollList>
+                <GraphicUploader
                     className={this.props.isCreating ? 'd-none' : 'd-block'}
                 >
                     <Dropzone
-                        onDrop={this.onDrop.bind(this)}
+                        onDrop={this.handleDrop.bind(this)}
                         accept="image/*"
                         style={{}}
                     >
                         <span className="app-text-color-soft-white">
-                            <span id="upload-graphic-icon">
+                            <UploadIcon>
                                 <FontAwesomeIcon icon="folder-plus" />
-                            </span>
-                            <span id="upload-graphic-text">&nbsp;追加</span>
+                            </UploadIcon>
+                            <UploadIconLabel>&nbsp;追加</UploadIconLabel>
                         </span>
                     </Dropzone>
-                </div>
-                <div
-                    id="upload-loading-icon"
-                    className={
-                        this.props.isCreating
-                            ? 'app-text-color-soft-white d-block'
-                            : 'app-text-color-soft-white d-none'
-                    }
+                </GraphicUploader>
+                <UploadingStatus
+                    className={`app-text-color-soft-white ${
+                        this.props.isCreating ? 'd-block' : 'd-none'
+                    }`}
                 >
                     <FontAwesomeIcon icon="spinner" spin />
-                </div>
-                <style jsx>{`
-                    #graphic-manager {
-                        position: relative;
-                    }
-                    #graphic-scroll-selector {
-                        position: relative;
-                        width: 600px;
-                        height: 250px;
-                        padding: 15px;
-                        overflow-y: scroll;
-                    }
-                    #graphic-scroll-selector::-webkit-scrollbar {
-                        display: none;
-                    }
-                    .checkable-thumbnail {
-                        position: relative;
-                        margin-right: 10px;
-                        cursor: pointer;
-                        width: 122px;
-                        height: 122px;
-                    }
-                    .checkable-thumbnail input {
-                        display: none;
-                    }
-                    .checkable-thumbnail img {
-                        position: absolute;
-                        margin: auto;
-                        width: 110px;
-                        height: 110px;
-                        object-fit: contain;
-                    }
-                    .nonselected-element {
-                        border: 6px solid rgba(255, 0, 0, 0);
-                    }
-                    .selected-element {
-                        border: solid 6px #ec9f05;
-                    }
-                    #upload-graphic {
-                        position: absolute;
-                        width: 200px;
-                        height: 20px;
-                        right: 20px;
-                        bottom: 20px;
-                        cursor: pointer;
-                        text-align: right;
-                    }
-                    #upload-graphic:hover {
-                        opacity: 0.7;
-                    }
-                    #upload-graphic-icon {
-                        font-size: 25px;
-                    }
-                    #upload-graphic-text {
-                        padding-left: 10px;
-                        font-size: 15px;
-                    }
-                    #upload-loading-icon {
-                        position: absolute;
-                        width: 40px;
-                        height: 40px;
-                        font-size: 40px;
-                        top: 200px;
-                        right: 30px;
-                    }
-                `}</style>
-            </div>
+                </UploadingStatus>
+            </GraphicManagerContainer>
         )
     }
 }
+
+const GraphicManagerContainer = styled.div`
+    position: relative;
+`
+
+const GraphicScrollList = styled.div`
+    position: relative;
+    width: 600px;
+    height: 250px;
+    padding: 15px;
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+`
+
+const selectedElementStyle = css`
+    border: solid 6px #ec9f05;
+`
+
+const unselectElementStyle = css`
+    border: 6px solid rgba(0, 0, 0, 0);
+`
+
+const GraphicLabel = styled.label`
+    position: relative;
+    margin-right: 10px;
+    cursor: pointer;
+    width: 122px;
+    height: 122px;
+`
+
+const GraphicSelector = styled.input`
+    display: none;
+`
+
+const GraphicThumbnail = styled.img`
+    position: absolute;
+    margin: auto;
+    width: 110px;
+    height: 110px;
+    object-fit: contain;
+`
+
+const GraphicUploader = styled.div`
+    position: absolute;
+    width: 200px;
+    height: 20px;
+    right: 20px;
+    bottom: 20px;
+    cursor: pointer;
+    text-align: right;
+    &:hover {
+        opacity: 0.7;
+    }
+`
+
+const UploadIcon = styled.span`
+    font-size: 25px;
+`
+
+const UploadIconLabel = styled.span`
+    padding-left: 10px;
+    font-size: 15px;
+`
+
+const UploadingStatus = styled.div`
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+    top: 200px;
+    right: 30px;
+`

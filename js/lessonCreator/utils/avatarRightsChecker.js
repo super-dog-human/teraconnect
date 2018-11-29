@@ -68,6 +68,11 @@ export default class AvatarRightsChecker {
     }
 
     /*
+        console.log(this.meta.otherLicenseUrl === '')
+        console.log(this.meta.otherPermissionUrl === '')
+*/
+
+    /*
     thumbnailObjectURL() {
     }
     */
