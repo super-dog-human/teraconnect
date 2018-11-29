@@ -20,17 +20,16 @@ export default class LessonCreator extends React.Component {
         super(props)
 
         this.lessonID = ''
-
+        this.title = ''
+        this.description = ''
+        this.avatarID = ''
+        this.graphicIDs = []
         this.state = {
             isFormCreatable: false,
             isGraphicCreating: false,
             isAvatarCreating: false,
             isCreating: false,
             isCreated: false,
-            title: '',
-            description: '',
-            avatarID: null,
-            graphicIDs: [],
             isModalOpen: false,
             modalOption: {}
         }
@@ -61,30 +60,29 @@ export default class LessonCreator extends React.Component {
         }
     }
 
-    async handleChangeTitle(event) {
-        await this.setState({ title: event.target.value })
+    handleChangeTitle(event) {
+        this.title = event.target.value
         this.switchCreatableForm()
     }
 
     handleChangeDescription(event) {
-        this.setState({ description: event.target.value })
+        this.description = event.target.value
     }
 
     async handleChangeAvatar(id) {
-        await this.setState({ avatarID: id })
+        this.avatarID = id
         this.switchCreatableForm()
     }
 
     switchCreatableForm() {
-        if (this.state.title.length > 0 && this.state.avatarID != null) {
-            this.setState({ isFormCreatable: true })
-        } else {
-            this.setState({ isFormCreatable: false })
+        const isFormCreatable = this.title.length > 0 && this.avatarID != ''
+        if (this.state.isFormCreatable != isFormCreatable) {
+            this.setState({ isFormCreatable: isFormCreatable })
         }
     }
 
     handleChangeGraphics(graphicIDs) {
-        this.setState({ graphicIDs: graphicIDs })
+        this.graphicIDs = graphicIDs
     }
 
     handleFormSubmit(event) {
@@ -93,10 +91,10 @@ export default class LessonCreator extends React.Component {
         this.setState({ isCreating: true })
 
         const lessonBody = {
-            title: this.state.title,
-            description: this.state.description,
-            avatarID: this.state.avatarID,
-            graphicIDs: this.state.graphicIDs
+            title: this.title,
+            description: this.description,
+            avatarID: this.avatarID,
+            graphicIDs: this.graphicIDs
         }
 
         postLesson(lessonBody)
@@ -148,7 +146,6 @@ export default class LessonCreator extends React.Component {
                             onChange={this.handleChangeTitle.bind(this)}
                         />
                         <LessonDescription
-                            value={this.state.description}
                             onChange={this.handleChangeDescription.bind(this)}
                         />
                         <LessonGraphic
