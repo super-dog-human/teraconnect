@@ -4,9 +4,7 @@ import { GA_TRACKING_ID } from './constants'
 ReactGA.initialize(GA_TRACKING_ID)
 
 export function isProduction() {
-    return document.location.href.startsWith(
-        'https://authoring.teraconnect.org/'
-    )
+    return process.env.NODE_ENV === 'production'
 }
 
 export function filterObject(obj, keys) {
