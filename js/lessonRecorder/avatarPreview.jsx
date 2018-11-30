@@ -9,7 +9,6 @@ import {
     moveFacialExpression,
     moveEyesBlink
 } from './utils/avatarPreviewUtility'
-import styled from '@emotion/styled'
 
 export default class AvatarPreview extends React.Component {
     constructor(props) {
