@@ -1,7 +1,6 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Indicator from '../shared/components/indicator'
-import FaceDetector from './utils/faceDetector'
 import MainRecorder from './utils/mainRecorder'
 import VoiceRecorder from './utils/voiceRecorder'
 import { uploadRecord } from './utils/recordUploader'
@@ -29,15 +28,11 @@ export default class LessonRecorder extends React.Component {
 
         this.state = {
             avatarURL: '',
+            movingDirection: 'stop',
+            faceName: 'Default',
             graphicURL: '',
-            graphicURLs: [],
-            faceWeight: {},
-            pose: {},
-            moveDirection: 'stop',
             isLoading: true,
-            isDetectorLoading: true,
             isLostFaceTracking: true,
-            isEyesBlink: false,
             isAvatarLoading: true,
             isRecording: false,
             isPause: false,
@@ -47,39 +42,12 @@ export default class LessonRecorder extends React.Component {
 
         this.lesson = {}
         this.graphicURLIndex = -1
+        this.graphicURLs = []
         this.avatar = new LessonAvatar()
         this.avatarPreview
-        this.userVideo
-        this.userVideoPreview
 
         this.recorder = new MainRecorder()
         this.lessonID = props.match.params.id
-        this.faceDetector = new FaceDetector(
-            // callback when completed loading
-            () => {
-                this.setState({ isDetectorLoading: false })
-            },
-            // callback when get face
-            (weight, neckPoses, isBlink) => {
-                this.recorder.recordDetectedMoving(weight, neckPoses, isBlink)
-                this.setState({
-                    isLostFaceTracking: false,
-                    isEyesBlink: isBlink,
-                    faceWeight: weight,
-                    pose: { neck: neckPoses }
-                })
-
-                if (isBlink) {
-                    setTimeout(() => {
-                        this.setState({ isEyesBlink: false })
-                    }, 100)
-                }
-            },
-            // callback when lost face tracking
-            () => {
-                this.setState({ isLostFaceTracking: true })
-            }
-        )
         this.voiceRecorder = new VoiceRecorder(this.lessonID, voice => {
             this.recorder.recordVoice(voice)
         })
@@ -93,13 +61,9 @@ export default class LessonRecorder extends React.Component {
             return
         }
 
-        const avatarObjectURL = await fetchAvatarObjectURL(this.lesson.avatar)
-        this.setState({ avatarURL: avatarObjectURL })
-
-        const graphics = await fetchLessonGraphicURLs(this.lesson.graphics)
-        this.setState({ graphicURLs: graphics })
-
-        await this.faceDetector.setup(this.userVideo, this.userVideoPreview)
+        const avatarURL = await fetchAvatarObjectURL(this.lesson.avatar)
+        this.setState({ avatarURL })
+        this.graphicURLs = await fetchLessonGraphicURLs(this.lesson.graphics)
     }
 
     componentDidUpdate(_, prevState) {
@@ -112,28 +76,17 @@ export default class LessonRecorder extends React.Component {
             this.voiceRecorder.start(this.state.isRecording)
         }
 
-        if (
-            this.state.isLoading &&
-            !this.state.isDetectorLoading &&
-            !this.state.isAvatarLoading
-        ) {
-            this.faceDetectionInFrame()
+        if (this.state.isLoading && !this.state.isAvatarLoading) {
             this.setState({ isLoading: false })
         }
     }
 
     componentWillUnmount() {
-        const graphicURLs = this.state.graphicURLs.map(g => {
+        const graphicURLs = this.graphicURLs.map(g => {
             return g.url
         })
         clearLessonObject([this.state.avatarURL, ...graphicURLs])
-        this.faceDetector.stop()
         this.voiceRecorder.turnOff()
-    }
-
-    async faceDetectionInFrame() {
-        this.faceDetector.detectFaceLandmarksInRealTime()
-        requestAnimationFrame(() => this.faceDetectionInFrame())
     }
 
     handleStartRecordingClick() {
@@ -153,28 +106,30 @@ export default class LessonRecorder extends React.Component {
     }
 
     handleSwitchFaceClick(faceName) {
-        this.faceDetector.setBaseFace(faceName)
+        this.setState({ faceName })
     }
 
     handleSwitchGraphicClick(diff) {
         this.graphicURLIndex += diff
         const graphic =
             this.graphicURLIndex > -1
-                ? this.state.graphicURLs[this.graphicURLIndex]
+                ? this.graphicURLs[this.graphicURLIndex]
                 : { id: null, url: '', fileType: '' }
         this.setState({ graphicURL: graphic.url })
         this.recorder.recordSwitchingGraphic(graphic)
     }
 
     async handleMoveAvatarPositionClick(direction) {
-        await this.setState({ moveDirection: direction })
+        if (this.state.movingDirection === direction) return
+
+        await this.setState({ movingDirection: direction })
         this.recorder.setAvatarStartMovingPositionTime()
     }
 
     async handleStopAvatarPositionMouseUp() {
-        if (this.state.moveDirection === 'stop') return
+        if (this.state.movingDirection === 'stop') return
 
-        await this.setState({ moveDirection: 'stop' })
+        await this.setState({ movingDirection: 'stop' })
         const position = this.avatar.currentPosition()
         this.recorder.recordAvatarPosition(position)
     }
@@ -221,32 +176,33 @@ export default class LessonRecorder extends React.Component {
                 >
                     <AvatarPreview
                         avatar={this.avatar}
+                        previewContainer={this.avatarPreview}
                         avatarURL={this.state.avatarURL}
-                        faceWeight={this.state.faceWeight}
-                        isEyesBlink={this.state.isEyesBlink}
-                        pose={this.state.pose}
-                        moveDirection={this.state.moveDirection}
+                        movingDirection={this.state.movingDirection}
+                        faceName={this.state.faceName}
                         loadingCompleted={() => {
                             this.setState({ isAvatarLoading: false })
                         }}
-                        previewContainer={this.avatarPreview}
+                        lostTracking={() => {
+                            if (!this.state.isLostFaceTracking) {
+                                this.setState({ isLostFaceTracking: true })
+                            }
+                        }}
+                        recordMotion={(weight, neckPoses, isBlink) => {
+                            if (this.state.isLostFaceTracking) {
+                                this.setState({ isLostFaceTracking: false })
+                            }
+
+                            if (!this.state.isRecording) return
+                            this.recorder.recordDetectedMoving(
+                                weight,
+                                neckPoses,
+                                isBlink
+                            )
+                        }}
                     />
 
                     <LessonGraphic url={this.state.graphicURL} />
-
-                    <video
-                        className="d-none"
-                        playsInline
-                        ref={e => {
-                            this.userVideo = e
-                        }}
-                    />
-                    <canvas
-                        className="d-none"
-                        ref={e => {
-                            this.userVideoPreview = e
-                        }}
-                    />
 
                     <ControlPanel
                         isLoading={this.state.isLoading}
@@ -318,35 +274,29 @@ export default class LessonRecorder extends React.Component {
                             </EmotionSwitchButton>
                         </EmotionSwitcher>
 
-                        <div>
-                            <GraphicSwitchButton
-                                disabled={this.graphicURLIndex === -1}
-                                onClick={this.handleSwitchGraphicClick.bind(
-                                    this,
-                                    -1
-                                )}
-                                data-is-prev={true}
-                                data-display={
-                                    this.state.graphicURLs.length === 0
-                                }
-                                data-tip="前の画像を表示"
-                            />
-                            <GraphicSwitchButton
-                                disabled={
-                                    this.graphicURLIndex ==
-                                    this.state.graphicURLs.length - 1
-                                }
-                                onClick={this.handleSwitchGraphicClick.bind(
-                                    this,
-                                    1
-                                )}
-                                data-is-prev={false}
-                                data-display={
-                                    this.state.graphicURLs.length === 0
-                                }
-                                data-tip="次の画像を表示"
-                            />
-                        </div>
+                        <GraphicSwitchButton
+                            disabled={this.graphicURLIndex === -1}
+                            onClick={this.handleSwitchGraphicClick.bind(
+                                this,
+                                -1
+                            )}
+                            data-is-prev={true}
+                            data-display={this.graphicURLs.length === 0}
+                            data-tip="前の画像を表示"
+                        />
+                        <GraphicSwitchButton
+                            disabled={
+                                this.graphicURLIndex ==
+                                this.graphicURLs.length - 1
+                            }
+                            onClick={this.handleSwitchGraphicClick.bind(
+                                this,
+                                1
+                            )}
+                            data-is-prev={false}
+                            data-display={this.graphicURLs.length === 0}
+                            data-tip="次の画像を表示"
+                        />
 
                         <SingleRecordingButton
                             type="start"
@@ -536,7 +486,7 @@ const EmotionSwitcher = styled.div`
     top: 1vh;
     left: 0;
     right: 0;
-    width: 24vw; // for 6 buttons.
+    width: 20vw; // for 5 buttons.
     margin-left: auto;
     margin-right: auto;
     text-align: center;
