@@ -37,6 +37,8 @@ export default class LessonEditor extends React.Component {
         super(props)
 
         this.lessonID = props.match.params.id
+        this.playerContainer
+        this.playerElement
 
         this.state = {
             isLoading: true,
