@@ -9,7 +9,7 @@ export default class LessonTexts extends React.Component {
         this.textShadowQuarterSize = 0
     }
 
-    componentWillReceiveProps() {
+    componentDidMount() {
         this.textSizeMultiplier =
             this.textsElement.clientWidth / document.documentElement.clientWidth
         this.textShadowHarfSize = 0.5 * this.textSizeMultiplier
@@ -37,8 +37,10 @@ export default class LessonTexts extends React.Component {
                                 text={text}
                                 textPadingSize={this.textSizeMultiplier} // just use multiplier because default padidng is 1.
                                 textShadowHarfSize={this.textShadowHarfSize}
-                                textShadowQuarterSize={this.textShadowQuarterSize}
-                        >
+                                textShadowQuarterSize={
+                                    this.textShadowQuarterSize
+                                }
+                            >
                                 {text.body}
                             </TextBody>
                         </TextLine>
@@ -68,7 +70,7 @@ const TextBody = styled.div`
     display: table-cell;
     text-align: ${props => props.text.horizontalAlign};
     vertical-align: ${props => props.text.verticalAlign};
-    padding: ${props=> props.textPadingSize}vw;
+    padding: ${props => props.textPadingSize}vw;
     white-space: pre-wrap;
     font-weight: bold;
     font-size: ${props => props.text.sizeVW}vw;
@@ -76,19 +78,47 @@ const TextBody = styled.div`
     text-shadow: ${props => `
         ${props.text.borderColor} ${props.textShadowHarfSize}vw      0,
         ${props.text.borderColor} -${props.textShadowHarfSize}vw     0,
-        ${props.text.borderColor}  0                                -${props.textShadowHarfSize}vw,
-        ${props.text.borderColor}  0                                 ${props.textShadowHarfSize}vw,
-        ${props.text.borderColor}  ${props.textShadowHarfSize}vw     ${props.textShadowHarfSize}vw,
-        ${props.text.borderColor} -${props.textShadowHarfSize}vw     ${props.textShadowHarfSize}vw,
-        ${props.text.borderColor}  ${props.textShadowHarfSize}vw    -${props.textShadowHarfSize}vw,
-        ${props.text.borderColor} -${props.textShadowHarfSize}vw    -${props.textShadowHarfSize}vw,
-        ${props.text.borderColor}  ${props.textShadowQuarterSize}vw  ${props.textShadowHarfSize}vw,
-        ${props.text.borderColor} -${props.textShadowQuarterSize}vw  ${props.textShadowHarfSize}vw,
-        ${props.text.borderColor}  ${props.textShadowQuarterSize}vw -${props.textShadowHarfSize}vw,
-        ${props.text.borderColor} -${props.textShadowQuarterSize}vw -${props.textShadowHarfSize}vw,
-        ${props.text.borderColor}  ${props.textShadowHarfSize}vw     ${props.textShadowQuarterSize}vw,
-        ${props.text.borderColor} -${props.textShadowHarfSize}vw     ${props.textShadowQuarterSize}vw,
-        ${props.text.borderColor}  ${props.textShadowHarfSize}vw    -${props.textShadowQuarterSize}vw,
-        ${props.text.borderColor} -${props.textShadowHarfSize}vw    -${props.textShadowQuarterSize}vw
+        ${props.text.borderColor}  0                                -${
+    props.textShadowHarfSize
+}vw,
+        ${props.text.borderColor}  0                                 ${
+    props.textShadowHarfSize
+}vw,
+        ${props.text.borderColor}  ${props.textShadowHarfSize}vw     ${
+    props.textShadowHarfSize
+}vw,
+        ${props.text.borderColor} -${props.textShadowHarfSize}vw     ${
+    props.textShadowHarfSize
+}vw,
+        ${props.text.borderColor}  ${props.textShadowHarfSize}vw    -${
+    props.textShadowHarfSize
+}vw,
+        ${props.text.borderColor} -${props.textShadowHarfSize}vw    -${
+    props.textShadowHarfSize
+}vw,
+        ${props.text.borderColor}  ${props.textShadowQuarterSize}vw  ${
+    props.textShadowHarfSize
+}vw,
+        ${props.text.borderColor} -${props.textShadowQuarterSize}vw  ${
+    props.textShadowHarfSize
+}vw,
+        ${props.text.borderColor}  ${props.textShadowQuarterSize}vw -${
+    props.textShadowHarfSize
+}vw,
+        ${props.text.borderColor} -${props.textShadowQuarterSize}vw -${
+    props.textShadowHarfSize
+}vw,
+        ${props.text.borderColor}  ${props.textShadowHarfSize}vw     ${
+    props.textShadowQuarterSize
+}vw,
+        ${props.text.borderColor} -${props.textShadowHarfSize}vw     ${
+    props.textShadowQuarterSize
+}vw,
+        ${props.text.borderColor}  ${props.textShadowHarfSize}vw    -${
+    props.textShadowQuarterSize
+}vw,
+        ${props.text.borderColor} -${props.textShadowHarfSize}vw    -${
+    props.textShadowQuarterSize
+}vw
     `};
 `
