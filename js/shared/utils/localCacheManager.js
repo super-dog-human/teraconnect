@@ -17,69 +17,68 @@ export default class LocalCacheManager {
 
         this.avatarVersion = 'avatarVersion'
         this.lessonVersion = 'lessonVersion'
+        this.faceDetectorVersion = 'faceDetectorVersion'
         this.avatarZipPrefix = 'avatarZip-'
         this.lessonZipPrefix = 'lessonZip-'
+        this.faceDetectorPrefix = 'faceDetector-'
     }
 
-    async isCachedAvatar(avatarID, version) {
-        const avatarVersion = await this.localforage.getItem(this.avatarVersion)
-        if (!avatarVersion) return false
-        if (!avatarVersion[avatarID]) return false
+    async isFileCached(fileType, id, version) {
+        const cacheVersion = await this._currentCacheVersion(fileType)
+        if (!cacheVersion) return false
+        if (!cacheVersion[id]) return false
 
-        if (avatarVersion[avatarID].version === version) {
+        if (cacheVersion[id].version === version) {
             return true
         }
 
-        const cacheKey = this.avatarZipPrefix + avatarID
+        const cacheKey = this._filePrefix(fileType) + id
         this.localforage.removeItem(cacheKey)
 
         return false
     }
 
-    async isCachedLesson(lessonID, version) {
-        const lessonVersion = await this.localforage.getItem(this.lessonVersion)
-        if (!lessonVersion) return false
-        if (!lessonVersion[lessonID]) return false
-
-        if (lessonVersion[lessonID].version === version) {
-            return true
+    _fileVersion(fileType) {
+        if (fileType === 'avatar') {
+            return this.avatarVersion
+        } else if (fileType === 'lesson') {
+            return this.lessonVersion
+        } else if (fileType === 'faceDetector') {
+            return this.faceDetectorVersion
         }
-
-        const cacheKey = this.lessonZipPrefix + lessonID
-        this.localforage.removeItem(cacheKey)
-
-        return false
     }
 
-    async cacheAvatarZip(avatarID, blob, version) {
-        const cacheZipKey = this.avatarZipPrefix + avatarID
-        await this.localforage.setItem(cacheZipKey, blob)
-
-        let avatarVersion = await this.localforage.getItem(this.avatarVersion)
-        if (!avatarVersion) avatarVersion = {}
-        avatarVersion[avatarID] = { version: version }
-
-        await this.localforage.setItem(this.avatarVersion, avatarVersion)
+    _filePrefix(fileType) {
+        if (fileType === 'avatar') {
+            return this.avatarZipPrefix
+        } else if (fileType === 'lesson') {
+            return this.lessonZipPrefix
+        } else if (fileType === 'faceDetector') {
+            return this.faceDetectorPrefix
+        }
     }
 
-    async cacheLessonZip(lessonID, blob, version) {
-        const cacheZipKey = this.lessonZipPrefix + lessonID
-        await this.localforage.setItem(cacheZipKey, blob)
-
-        let lessonVersion = await this.localforage.getItem(this.lessonVersion)
-        if (!lessonVersion) lessonVersion = {}
-        lessonVersion[lessonID] = { version: version }
-
-        await this.localforage.setItem(this.lessonVersion, lessonVersion)
+    async _currentCacheVersion(fileType) {
+        const version = this._fileVersion(fileType)
+        return await this.localforage.getItem(version)
     }
 
-    async cachedAvatarZip(avatarID) {
-        const cacheKey = this.avatarZipPrefix + avatarID
-        return await this.localforage.getItem(cacheKey)
+    async storeFile(fileType, id, blob, version) {
+        const cacheKey = this._filePrefix(fileType) + id
+        await this.localforage.setItem(cacheKey, blob)
+
+        let cacheVersion = await this._currentCacheVersion(fileType)
+        if (!cacheVersion) cacheVersion = {}
+        cacheVersion[id] = { version }
+
+        await this.localforage.setItem(
+            this._fileVersion(fileType),
+            cacheVersion
+        )
     }
 
-    async cachedLessonZip(lessonID) {
-        const cacheKey = this.lessonZipPrefix + lessonID
+    async fetchCacheFile(fileType, id) {
+        const cacheKey = this._filePrefix(fileType) + id
         return await this.localforage.getItem(cacheKey)
     }
 }

@@ -1,11 +1,7 @@
 import { initializeBRF } from './BRFv4_JS_TK101018_v4.1.0_trial'
 import { faceWeight, isBlink } from './faceWeightCalculator'
 
-const brfv4 = {
-    locateFile: fileName => {
-        return '/' + fileName
-    }
-}
+const brfv4 = {}
 let brfManager
 let isSDKLoading = false
 let baseFaceName = 'Default'
@@ -13,7 +9,7 @@ let baseFaceName = 'Default'
 onmessage = function(event) {
     const order = event.data.order
     if (order === 'init') {
-        loadingSDK(event.data.videoSize)
+        loadingSDK(event.data.detectorURL, event.data.videoSize)
     } else if (order === 'detect') {
         detectFaceLandmarks(event.data.image)
     } else if (order === 'setBaseFase') {
@@ -21,10 +17,14 @@ onmessage = function(event) {
     }
 }
 
-function loadingSDK(videoSize) {
+function loadingSDK(detectorURL, videoSize) {
     if (!isSDKLoading) {
-        initializeBRF(brfv4)
         isSDKLoading = true
+
+        brfv4.locateFile = () => {
+            return detectorURL
+        }
+        initializeBRF(brfv4)
     }
 
     if (brfv4.sdkReady) {
@@ -46,7 +46,7 @@ function loadingSDK(videoSize) {
 
         self.postMessage({ status: 'completedLoading' })
     } else {
-        setTimeout(loadingSDK, 250, videoSize)
+        setTimeout(loadingSDK, 250, detectorURL, videoSize)
     }
 }
 

@@ -3,6 +3,9 @@ import JSZip from 'jszip'
 import * as Const from './constants'
 import LocalCacheManager from './localCacheManager'
 
+const faceDetectorFileID = 'BRFv4_JS_TK101018_v4.1.0_trial.wasm'
+const faceDetectorFileVersion = 'af9c3fa5d65266b838b0eb95ba3b9b57' // MD5 hash of file
+
 export async function fetchLesson(lessonID) {
     const url = Const.LESSON_API_URL.replace('{lessonID}', lessonID)
     const result = await axios.get(url)
@@ -50,13 +53,17 @@ export async function fetchVoiceTexts(lessonID) {
 
 export async function fetchLessonZipBlob(lesson) {
     const cacheManager = new LocalCacheManager()
-    return (await cacheManager.isCachedLesson(lesson.id, lesson.version))
+    return (await cacheManager.isFileCached(
+        'lesson',
+        lesson.id,
+        lesson.version
+    ))
         ? await fetchFromCache()
         : await fetchFromServer()
 
     async function fetchFromCache() {
         console.log('found lesson cache!')
-        return await cacheManager.cachedLessonZip(lesson.id)
+        return await cacheManager.fetchCacheFile('lesson', lesson.id)
     }
 
     async function fetchFromServer() {
@@ -71,7 +78,7 @@ export async function fetchLessonZipBlob(lesson) {
         const result = await axios.get(signedURLs, { responseType: 'blob' })
 
         const zip = result.data
-        await cacheManager.cacheLessonZip(lesson.id, zip, lesson.version)
+        await cacheManager.storeFile('lesson', lesson.id, zip, lesson.version)
 
         return zip
     }
@@ -79,13 +86,17 @@ export async function fetchLessonZipBlob(lesson) {
 
 export async function fetchAvatarObjectURL(avatar) {
     const cacheManager = new LocalCacheManager()
-    return (await cacheManager.isCachedAvatar(avatar.id, avatar.version))
+    return (await cacheManager.isFileCached(
+        'avatar',
+        avatar.id,
+        avatar.version
+    ))
         ? await fetchFromCache()
         : await fetchFromServer()
 
     async function fetchFromCache() {
         console.log('found avatar cache!')
-        const zip = await cacheManager.cachedAvatarZip(avatar.id)
+        const zip = await cacheManager.fetchCacheFile('avatar', avatar.id)
         return await avatarZipToObjectURL(zip)
     }
 
@@ -102,7 +113,7 @@ export async function fetchAvatarObjectURL(avatar) {
             responseType: 'blob'
         })
         const zip = result.data
-        await cacheManager.cacheAvatarZip(avatar.id, zip, avatar.version)
+        await cacheManager.storeFile('avatar', avatar.id, zip, avatar.version)
 
         return await avatarZipToObjectURL(zip)
     }
@@ -112,6 +123,41 @@ export async function fetchAvatarObjectURL(avatar) {
         const filePath = avatar.id + '.vrm'
         const blob = await unzip.file(filePath).async('blob')
         return URL.createObjectURL(blob)
+    }
+}
+
+export async function fetchFaceDetectorObjectURL() {
+    const cacheManager = new LocalCacheManager()
+    const isCached = await cacheManager.isFileCached(
+        'faceDetector',
+        faceDetectorFileID,
+        faceDetectorFileVersion
+    )
+
+    const blob = isCached ? await fetchFromCache() : await fetchFromServer()
+    return URL.createObjectURL(blob)
+
+    async function fetchFromCache() {
+        console.log('found face detector cache!')
+        const blob = await cacheManager.fetchCacheFile(
+            'faceDetector',
+            faceDetectorFileID
+        )
+        return blob
+    }
+
+    async function fetchFromServer() {
+        const result = await axios.get(`/${faceDetectorFileID}`, {
+            responseType: 'blob'
+        })
+        const blob = result.data
+        await cacheManager.storeFile(
+            'faceDetector',
+            faceDetectorFileID,
+            blob,
+            faceDetectorFileVersion
+        )
+        return blob
     }
 }
 

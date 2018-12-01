@@ -3,33 +3,36 @@ const videoHeight = 480
 const frameRate = 30
 
 export default class FaceDetector {
-    constructor(loadingCallback, detectedCallback, trackingLostCallback) {
+    constructor() {
         this._worker = new Worker('faceDetectionWorker.js')
+        this._detectorURL = ''
         this._stream
         this._video
         this._imageCtx
         this._isDetecting
+    }
+
+    setup = async (url, callback, userVideo, userVideoPreview) => {
+        this._detectorURL = url
 
         this._worker.onmessage = event => {
             const status = event.data.status
             if (status === 'completedLoading') {
-                loadingCallback()
+                callback.loadedCallback()
             } else if (status === 'detectedFace') {
                 this._isDetecting = false
                 const result = event.data
-                detectedCallback(
+                callback.detectedCallback(
                     result.faceWeight,
                     result.neckPoses,
                     result.isBlink
                 )
             } else if (status === 'lostFace') {
                 this._isDetecting = false
-                trackingLostCallback()
+                callback.lostTrackingCallback()
             }
         }
-    }
 
-    setup = async (userVideo, userVideoPreview) => {
         this._video = userVideo
 
         await this._setupCamera(userVideoPreview)
@@ -55,6 +58,7 @@ export default class FaceDetector {
 
             this._worker.postMessage({
                 order: 'init',
+                detectorURL: this._detectorURL,
                 videoSize: { width: videoWidth, height: videoHeight }
             })
         }
@@ -95,5 +99,6 @@ export default class FaceDetector {
         this._stream.getVideoTracks().forEach(track => {
             track.stop()
         })
+        URL.revokeObjectURL(this._detectorURL)
     }
 }

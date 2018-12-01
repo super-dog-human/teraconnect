@@ -9,6 +9,7 @@ import {
     moveFacialExpression,
     moveEyesBlink
 } from './utils/avatarPreviewUtility'
+import { fetchFaceDetectorObjectURL } from '../shared/utils/networkManager'
 
 export default class AvatarPreview extends React.Component {
     constructor(props) {
@@ -19,6 +20,7 @@ export default class AvatarPreview extends React.Component {
         this.isAvatarLoading = false
         this.isAvatarLoadingCompleted = false
         this.isDetectorLoadingCompleted = false
+        this.faceDetector = new FaceDetector()
         this.userVideo
         this.userVideoPreview
 
@@ -28,15 +30,22 @@ export default class AvatarPreview extends React.Component {
             pose: {}
         }
 
-        this.faceDetector = new FaceDetector(
-            // callback when completed loading
-            () => {
+        addEventListener('resize', () => {
+            if (!this.isAvatarLoadingCompleted) return
+            this.avatar.updateSize(this.props.previewContainer)
+        })
+    }
+
+    async componentDidMount() {
+        const faceDetectorFileURL = await fetchFaceDetectorObjectURL()
+
+        const callback = {
+            loadedCallback: () => {
                 this.isDetectorLoadingCompleted = true
                 this.checkLoadingComplete()
                 this.faceDetectionInFrame()
             },
-            // callback when get face
-            (weight, neckPoses, isBlink) => {
+            detectedCallback: (weight, neckPoses, isBlink) => {
                 this.props.recordMotion(weight, neckPoses, isBlink)
                 this.setState({
                     isEyesBlink: isBlink,
@@ -50,20 +59,17 @@ export default class AvatarPreview extends React.Component {
                     }, 100)
                 }
             },
-            // callback when lost face tracking
-            () => {
+            lostTrackingCallback: () => {
                 this.props.lostTracking()
             }
+        }
+
+        this.faceDetector.setup(
+            faceDetectorFileURL,
+            callback,
+            this.userVideo,
+            this.userVideoPreview
         )
-
-        addEventListener('resize', () => {
-            if (!this.isAvatarLoadingCompleted) return
-            this.avatar.updateSize(this.props.previewContainer)
-        })
-    }
-
-    async componentDidMount() {
-        this.faceDetector.setup(this.userVideo, this.userVideoPreview)
     }
 
     componentDidUpdate(prevProps, prevState) {
