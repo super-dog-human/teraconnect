@@ -1,10 +1,23 @@
+import { detect } from 'detect-browser'
+import { isMobile } from 'react-device-detect'
 import ReactGA from 'react-ga'
 import { GA_TRACKING_ID } from './constants'
-
 ReactGA.initialize(GA_TRACKING_ID)
 
 export function isProduction() {
-    return process.env.NODE_ENV === 'production'
+    //    return process.env.NODE_ENV === 'production'
+    return document.location.href.startsWith(
+        'https://authoring.teraconnect.org/'
+    )
+}
+
+export function canRecordLessonBrowser() {
+    const browser = detect()
+    if (browser.name === 'chrome') return true
+    if (browser.name === 'firefox') return true
+    if (!isMobile) return
+
+    return false
 }
 
 export function filterObject(obj, keys) {

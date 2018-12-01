@@ -7,12 +7,15 @@ import AvatarManager from './avatarManager'
 import GraphicManager from './graphicManager'
 
 import Cookies from 'js-cookie'
-import { isMobile } from 'react-device-detect'
 import { postLesson } from '../shared/utils/networkManager'
-import { sendExceptionToGA } from '../shared/utils/utility'
+import {
+    canRecordLessonBrowser,
+    sendExceptionToGA
+} from '../shared/utils/utility'
 
 const mobileWarningTitle = '非対応の環境です'
-const mobileWarningMessage = 'モバイル環境では授業を作成できません。'
+const mobileWarningMessage =
+    '・授業はChromeまたはFirefoxで作成できます\n・モバイル環境では授業を作成できません\n'
 const creatingLessonErrorTitle = '授業の作成に失敗しました'
 
 export default class LessonCreator extends React.Component {
@@ -42,7 +45,7 @@ export default class LessonCreator extends React.Component {
             return
         }
 
-        if (!isMobile) return
+        if (canRecordLessonBrowser()) return
 
         this.openModal({
             title: mobileWarningTitle,

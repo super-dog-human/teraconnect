@@ -55,6 +55,7 @@ library.add(
     faEdit,
     faTwitter
 )
+import { whyDidYouUpdate } from 'why-did-you-update'
 import Context from './context'
 import ErrorBoundary from './errorBoundary'
 import Header from './header'
@@ -63,7 +64,6 @@ import Footer from './footer'
 import { isProduction } from './shared/utils/utility'
 
 if (!isProduction()) {
-    const { whyDidYouUpdate } = require('why-did-you-update')
     whyDidYouUpdate(React)
 }
 
