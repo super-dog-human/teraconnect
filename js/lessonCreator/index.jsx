@@ -140,7 +140,7 @@ export default class LessonCreator extends React.Component {
                     isOpen={this.state.isModalOpen}
                     {...this.state.modalOption}
                 />
-                <LessonCreatorScreen className="app-back-color-soft-white">
+                <LessonCreatorContainer className="app-back-color-soft-white">
                     <LessonForm onSubmit={this.handleFormSubmit.bind(this)}>
                         <LessonTitle
                             onChange={this.handleChangeTitle.bind(this)}
@@ -184,13 +184,13 @@ export default class LessonCreator extends React.Component {
                         place="top"
                         type="warning"
                     />
-                </LessonCreatorScreen>
+                </LessonCreatorContainer>
             </>
         )
     }
 }
 
-const LessonCreatorScreen = styled.div`
+const LessonCreatorContainer = styled.div`
     padding-top: 50px;
     padding-bottom: 100px;
 `

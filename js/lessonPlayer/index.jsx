@@ -81,7 +81,7 @@ export default class LessonPlayer extends React.Component {
 
     render() {
         return (
-            <LessonPlayerScreen
+            <LessonPlayerContainer
                 id="lesson-player"
                 ref={e => {
                     this.container = e
@@ -105,12 +105,12 @@ export default class LessonPlayer extends React.Component {
                     description={this.state.lesson.description}
                     isLoading={this.state.isLoading}
                 />
-            </LessonPlayerScreen>
+            </LessonPlayerContainer>
         )
     }
 }
 
-const LessonPlayerScreen = styled.div`
+const LessonPlayerContainer = styled.div`
     absolute: relative;
     text-align: center;
 `

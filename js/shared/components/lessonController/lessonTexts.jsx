@@ -53,7 +53,7 @@ export default class LessonTexts extends React.Component {
 
 const TextLines = styled.div`
     position: absolute;
-    z-index: 100; // text
+    z-index: 100; /* text */
     top: 0;
     width: 100%;
     height: 100%;

@@ -295,7 +295,7 @@ export default class LessonController extends React.Component {
 
     render() {
         return (
-            <LessonControllerScreen>
+            <LessonControllerContainer>
                 <Indicator isLoading={this.props.isLoading} />
                 <ControlPanel
                     onMouseOver={() => {
@@ -327,12 +327,12 @@ export default class LessonController extends React.Component {
                 </ControlPanel>
                 <LessonGraphics graphics={this.state.graphics} />
                 <LessonTexts texts={this.state.texts} />
-            </LessonControllerScreen>
+            </LessonControllerContainer>
         )
     }
 }
 
-const LessonControllerScreen = styled.div`
+const LessonControllerContainer = styled.div`
     position: relative;
     width: ${Const.RATIO_9_TO_16 * 100}vh;
     height: ${Const.RATIO_16_TO_9 * 100}vw;

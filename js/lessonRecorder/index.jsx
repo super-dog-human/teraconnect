@@ -164,7 +164,7 @@ export default class LessonRecorder extends React.Component {
 
     render() {
         return (
-            // TODO separate component
+            // TODO separate controlpanel component
             <>
                 <Indicator
                     isLoading={this.state.isLoading || this.state.isPosting}
