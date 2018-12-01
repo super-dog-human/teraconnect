@@ -340,11 +340,11 @@ export default class LessonEditor extends React.Component {
                                     )}
                                 />
                             </VoiceTextEditorContainer>
-                            <LessonPreviewContainer className="col-lg-5">
+                            <div className="col-lg-5">
                                 <LessonEditorTitle className="app-text-color-soft-white mb-4">
                                     プレビュー
                                 </LessonEditorTitle>
-                                <div
+                                <LessonPreviewContainer
                                     className="app-back-color-soft-white m-2"
                                     ref={e => {
                                         this.playerContainer = e
@@ -363,8 +363,8 @@ export default class LessonEditor extends React.Component {
                                             this.playerElement = e
                                         }}
                                     />
-                                </div>
-                            </LessonPreviewContainer>
+                                </LessonPreviewContainer>
+                            </div>
                         </div>
                     </div>
                     <ReactTooltip
