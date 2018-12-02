@@ -6,7 +6,6 @@ import ReactTooltip from 'react-tooltip'
 import AvatarManager from './avatarManager'
 import GraphicManager from './graphicManager'
 
-import Cookies from 'js-cookie'
 import { postLesson } from '../shared/utils/networkManager'
 import {
     canRecordLessonBrowser,
@@ -15,7 +14,7 @@ import {
 
 const mobileWarningTitle = '非対応の環境です'
 const mobileWarningMessage =
-    '・授業はChromeまたはFirefoxで作成できます\n・モバイル環境では授業を作成できません\n'
+    '・授業はChrome/Firefox/Operaで作成できます\n・モバイル環境では授業を作成できません\n'
 const creatingLessonErrorTitle = '授業の作成に失敗しました'
 
 export default class LessonCreator extends React.Component {
@@ -39,12 +38,6 @@ export default class LessonCreator extends React.Component {
     }
 
     componentDidMount() {
-        const isAgreeToTerms = Cookies.get('agreeToTerms')
-        if (isAgreeToTerms !== 'true') {
-            this.props.history.replace('/')
-            return
-        }
-
         if (canRecordLessonBrowser()) return
 
         this.openModal({

@@ -72,7 +72,7 @@ export default () => (
 
         <Question>Q. 動作環境は？</Question>
         <Answer>
-            対応ブラウザは、PC版ChromeまたはFirefoxの最新版です。
+            対応ブラウザは、PC版Chrome/Firefox/Operaの最新版です。
             <br />
             PCの推奨環境は下記の通りです。
             <br />
