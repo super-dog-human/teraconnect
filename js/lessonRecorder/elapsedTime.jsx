@@ -13,10 +13,10 @@ export default class ElapsedTime extends React.Component {
     }
 
     componentDidMount() {
-        this._updateCurrentRecordingTime()
+        this.updateCurrentRecordingTime()
     }
 
-    _updateCurrentRecordingTime() {
+    updateCurrentRecordingTime() {
         const interval = setInterval(() => {
             const currentSec = this.props.currentRecordingTime()
             this.setState({
@@ -36,7 +36,7 @@ export default class ElapsedTime extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (!prevProps.isRecording && this.props.isRecording) {
-            this._updateCurrentRecordingTime()
+            this.updateCurrentRecordingTime()
             return
         }
     }
