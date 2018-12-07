@@ -24,7 +24,7 @@ export default class LessonTexts extends React.Component {
                 }}
             >
                 {this.props.texts.map((t, i) => {
-                    const text = Object.assign({}, t)
+                    const text = { ...t }
                     text.horizontalAlign = text.horizontalAlign || 'center'
                     text.verticalAlign = text.verticalAlign || 'bottom'
                     text.sizeVW = (text.sizeVW || 5) * this.textSizeMultiplier

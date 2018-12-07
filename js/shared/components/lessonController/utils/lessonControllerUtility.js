@@ -34,7 +34,7 @@ export function shouldShowContentsDuringSeeking(timelines, currentTime) {
             const remainingDurationSec =
                 t.timeSec + t.text.durationSec - currentTime
             if (remainingDurationSec > 0) {
-                const text = Object.assign({}, t.text)
+                const text = { ...t.text }
                 text.durationSec = remainingDurationSec
                 texts.push(text)
             }
@@ -52,7 +52,7 @@ export function shouldPlayVoiceAfterSeeking(timelines, currentTime) {
         if (t.timeSec > currentTime) return true
         if (t.voice.id != '' && t.timeSec + t.voice.durationSec > currentTime) {
             voiceStartTime = currentTime - t.timeSec
-            voice = Object.assign({}, t.voice)
+            voice = { ...t.voice }
             voice.durationSec = t.timeSec + t.voice.durationSec - currentTime
         }
     })

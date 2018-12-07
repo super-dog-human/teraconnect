@@ -15,7 +15,7 @@ const initProps = {
 }
 
 export default props => {
-    props = Object.assign({}, initProps, props)
+    props = { ...initProps, ...props }
 
     return (
         <Modal

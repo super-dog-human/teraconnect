@@ -51,12 +51,9 @@ async function uploadLessonMaterial(lessonID, record) {
 function addPosesIfNeeded(time, poseKey) {
     Object.keys(poseKey).forEach(key => {
         if (poseKey[key].length > 0) {
-            const lastPose = Object.assign(
-                {},
-                poseKey[key][poseKey[key].length - 1]
-            )
+            const lastPose = poseKey[key][poseKey[key].length - 1]
             lastPose.time = time
-            poseKey[key].push(lastPose)
+            poseKey[key].push({ ...lastPose }) // copy object
         } else {
             if (key === 'leftShoulders') {
                 poseKey.leftShoulders.push({
