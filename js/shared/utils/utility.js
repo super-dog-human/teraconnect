@@ -5,10 +5,11 @@ import { GA_TRACKING_ID } from './constants'
 ReactGA.initialize(GA_TRACKING_ID)
 
 export function isProduction() {
-    //    return process.env.NODE_ENV === 'production'
-    return document.location.href.startsWith(
-        'https://authoring.teraconnect.org/'
-    )
+    return document.location.href.startsWith('https://teraconnect.org/')
+}
+
+export function isStaging() {
+    return !isProduction() && process.env.NODE_ENV === 'production'
 }
 
 export function canRecordLessonBrowser() {

@@ -1,10 +1,25 @@
-import { isProduction } from './utility'
+import { isProduction, isStaging } from './utility'
 
 export const PRODUCTION_API_URL = 'https://api.teraconnect.org/'
-export const DEVELOPMENT_API_URL =
+export const STAGING_API_URL =
     'https://teraconnect-api-development-dot-teraconnect-209509.appspot.com/'
+export const PRODUCTION_URL = 'https://teraconnect.org/'
+export const STAGING_URL =
+    'https://teraconnect-authoring-development-dot-teraconnect-209509.appspot.com/'
+export const DEVELOPMENT_URL = 'http://localhost:1234/'
 
-export const API_URL = isProduction() ? PRODUCTION_API_URL : DEVELOPMENT_API_URL
+export const FRONT_URL = isProduction()
+    ? PRODUCTION_API_URL
+    : isStaging()
+        ? STAGING_API_URL
+        : DEVELOPMENT_URL
+export const API_URL = isProduction() ? PRODUCTION_API_URL : STAGING_API_URL
+export const AUTH0_PRODUCTION_CLIENT_ID = 'm0b05bVI1hIfAjNE20V6YDHU4lmk5eG4'
+export const AUTH0_DEVELOPMENT_CLIENT_ID = 'fKN9OEt7vlcyspp8qLrvPqFteSXGI8DO'
+export const AUTH0_CLIENT_ID = isProduction()
+    ? AUTH0_PRODUCTION_CLIENT_ID
+    : AUTH0_DEVELOPMENT_CLIENT_ID
+export const AUTH_REDIRECT_URL = FRONT_URL + 'auth_callback'
 export const LESSON_API_URL = API_URL + 'lessons/{lessonID}'
 export const LESSON_MATERIAL_API_URL = API_URL + 'lessons/{lessonID}/materials'
 export const LESSON_VOICE_TEXT_API_URL =

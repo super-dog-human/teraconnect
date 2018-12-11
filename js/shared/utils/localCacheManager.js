@@ -1,6 +1,10 @@
 import localforage from 'localforage'
 
 export default class LocalCacheManager {
+    /*
+    // clear old stores data.
+    teraconnectCacheStore
+    */
     constructor() {
         localforage.config({
             driver: [
@@ -8,8 +12,8 @@ export default class LocalCacheManager {
                 localforage.WEBSQL,
                 localforage.LOCALSTORAGE
             ],
-            name: 'teraconnectCache',
-            storeName: 'teraconnectCacheStore', // Should be alphanumeric, with underscores.
+            name: 'Teraconnect',
+            storeName: 'teraconnect_cache_store',
             description: 'caches for avatar and lesson zip files.'
         })
 
