@@ -38,4 +38,5 @@ const IndicatorIcon = styled.div`
 const IndicatorMessage = styled.div`
     font-size: 0.9vw;
     margin-top: 1vh;
+    color: gray;
 `
