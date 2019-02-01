@@ -13,6 +13,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.3.1",
     "auth0-js": "^9.8.2",
     "axios": "^0.18.0",
+    "connected-react-router": "^6.1.0",
     "detect-browser": "^3.0.1",
     "emotion": "^9.2.12",
     "imports-loader": "^0.8.0",
@@ -29,7 +30,7 @@
     "react-slick": "^0.23.1",
     "react-tooltip": "^3.8.1",
     "redux": "^2.0.0 || ^3.0.0 || ^4.0.0-0",
-    "three": "^0.98.0"
+    "three": "^0.101.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-0",
@@ -43,6 +44,7 @@
     "@emotion/styled": "^10.0.0-beta.12",
     "@fortawesome/react-fontawesome": "^0.1.2",
     "audioworklet-polyfill": "^1.1.2",
+    "audit": "^0.0.6",
     "babel-eslint": "^10.0.1",
     "eslint": "^5.8.0",
     "eslint-plugin-react": "^7.11.1",
