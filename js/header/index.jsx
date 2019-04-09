@@ -9,7 +9,7 @@ import { css } from 'emotion'
     this.context.currentUser
 */
 
-const Header = styled.div`
+const Header = styled.header`
     height: 64px;
 `
 
@@ -80,9 +80,7 @@ export default (
                 <Link
                     className={`nav-link font-weight-light ${linkStyle}`}
                     to="/how_to"
-                >
-                    使い方
-                </Link>
+                />
             </Menu>
         </div>
     </Header>
