@@ -8,3 +8,4 @@
 *brfv4_javascript_examples/*
 !brfv4_javascript_examples/js/libs/brf_wasm/BRFv4_JS_TK101018_v4.1.0_trial.wasm
 yarn-error.log
+.env
