@@ -3,12 +3,6 @@ import { Link } from 'react-router-dom'
 import styled from '@emotion/styled'
 import { css } from 'emotion'
 
-/*
-    import { UserContext } from '../context'
-    static contextType = UserContext
-    this.context.currentUser
-*/
-
 const Header = styled.header`
     height: 64px;
 `

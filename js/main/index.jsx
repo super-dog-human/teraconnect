@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 import { Switch, Route } from 'react-router-dom'
 import AuthRoute from './authRoute'
 import Home from '../home'
+import AuthCallback from '../AuthCallback'
 import HowTo from '../howTo'
 import License from '../license'
 import TermsOfUse from '../termsOfUse'
@@ -23,10 +24,11 @@ export default () => (
     <Main>
         <Switch>
             <Route exact path="/" component={Home} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/_auth_callback" component={AuthCallback} />
             <Route exact path="/how_to" component={HowTo} />
             <Route exact path="/license" component={License} />
             <Route exact path="/terms_of_use" component={TermsOfUse} />
-            <Route exact path="/login" component={Login} />
             <Route exact path="/:id" component={Player} />
             <AuthRoute>
                 <Switch>

@@ -56,7 +56,6 @@ library.add(
     faTwitter
 )
 import { whyDidYouUpdate } from 'why-did-you-update'
-import Context from './context'
 import ErrorBoundary from './errorBoundary'
 import Header from './header'
 import Main from './main'
@@ -69,13 +68,11 @@ if (!isProduction()) {
 
 render(
     <BrowserRouter>
-        <Context>
-            <ErrorBoundary>
-                <Header />
-                <Main />
-                <Footer />
-            </ErrorBoundary>
-        </Context>
+        <ErrorBoundary>
+            <Header />
+            <Main />
+            <Footer />
+        </ErrorBoundary>
     </BrowserRouter>,
     document.getElementById('app')
 )

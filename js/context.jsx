@@ -1,7 +1,7 @@
-import React from 'react'
+//import React from 'react'
 
-export const UserContext = React.createContext()
-
+//export const UserContext = React.createContext()
+/*
 export default class Context extends React.Component {
     constructor() {
         super()
@@ -29,3 +29,4 @@ export default class Context extends React.Component {
         )
     }
 }
+*/
