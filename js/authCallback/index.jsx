@@ -6,11 +6,10 @@ export default props => {
     const router = useContext(__RouterContext)
     useEffect(() => {
         const suceededCallback = () => {
-            console.log('成功')
             router.history.replace('/')
         }
-        const failedCallback = () => {
-            console.error('ログイン失敗')
+        const failedCallback = err => {
+            console.error('login failed', err)
         }
         afterLoggedIn(props.location.hash, suceededCallback, failedCallback)
     }, [])
