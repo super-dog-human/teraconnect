@@ -16,9 +16,7 @@ export function isLoggedIn() {
     if (authString === null) return false
 
     const auth = JSON.parse(authString)
-    const loggedInAt = auth.loggedInAt
-    const expiresIn = auth.expiresIn
-    if (loggedInAt + expiresIn - REQUEST_MARGIN_MSEC < Date.now()) {
+    if (auth.expiresAt - REQUEST_MARGIN_MSEC < Date.now()) {
         return true
     }
 
