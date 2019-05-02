@@ -35,8 +35,9 @@ export default props => {
             </Modal>
             <ModalWindowContext.Provider
                 value={{
-                    setModalState: state =>
+                    setModalState: state => {
                         setModalState({ ...initState, ...state })
+                    }
                 }}
             >
                 {props.children}

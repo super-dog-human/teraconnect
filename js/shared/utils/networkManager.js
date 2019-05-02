@@ -196,7 +196,7 @@ export async function uploadGraphics(files) {
     const uploadedGraphics = []
 
     for (const [i, storage] of result.signedURLs.entries()) {
-        const objectURL = files[i].preview
+        const objectURL = URL.createObjectURL(files[i])
         const graphicFile = await axios.get(objectURL, {
             responseType: 'blob'
         })

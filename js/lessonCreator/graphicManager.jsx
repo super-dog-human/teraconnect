@@ -1,138 +1,131 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { fetchGraphics, uploadGraphics } from '../shared/utils/networkManager'
 import styled from '@emotion/styled'
 import { css } from 'emotion'
+import { LessonGraphicCreatingContext } from './context'
+import { ModalWindowContext } from '../shared/components/modalWindow/context'
+import { openModal, closeModal } from '../shared/utils/utility'
 
 const failedDownloadingGraphics = '画像の読み込みに失敗しました'
 const failedUploadingGraphics = '画像のアップロードに失敗しました'
 
-export default () => {
-}
+export default props => {
+    const [graphics, setGraphics] = useState([])
+    const [selectedGraphicIDs, setSelectedGraphicIDs] = useState([])
+    const { isCreating, setIsCreating } = useContext(
+        LessonGraphicCreatingContext
+    )
+    const modalWindow = useContext(ModalWindowContext)
 
-export default class GraphicManager extends React.Component {
-    constructor(props) {
-        super(props)
-
-        this.state = {
-            graphics: [],
-            selectedGraphicIDs: []
-        }
-    }
-
-    componentWillMount() {
+    useEffect(() => {
         fetchGraphics()
             .then(graphics => {
-                this.setState({ graphics: graphics })
+                setGraphics(graphics)
             })
             .catch(err => {
-                this.props.openModal({
+                openModal(modalWindow, {
                     title: failedDownloadingGraphics,
                     message: err.message,
                     onClose: () => {
-                        this.props.closeModal()
+                        closeModal(modalWindow)
                         location.reload()
                     }
                 })
             })
-    }
+    }, [])
 
-    async handleGraphicChange(event) {
-        let graphicIDs = this.state.selectedGraphicIDs
+    async function handleGraphicChange(event) {
+        let selectedIDs = selectedGraphicIDs
 
         const changedID = event.target.value
         if (event.target.checked) {
-            graphicIDs.push(changedID)
+            selectedIDs.push(changedID)
         } else {
-            graphicIDs = graphicIDs.filter(id => {
+            selectedIDs = selectedIDs.filter(id => {
                 return id != changedID
             })
         }
 
-        await this.setState({ selectedGraphicIDs: graphicIDs })
-
-        this.props.onGraphicsChange(this.state.selectedGraphicIDs)
+        await setSelectedGraphicIDs(selectedIDs)
+        props.onGraphicsChange(selectedGraphicIDs)
     }
 
-    async handleDrop(acceptedFiles) {
-        if (this.props.isCreating) return
+    const onDrop = useCallback(async acceptedFiles => {
+        if (isCreating) return
         if (acceptedFiles.lenth === 0) return
 
-        this.props.onStatusChange(true)
+        setIsCreating(true)
 
         await uploadGraphics(acceptedFiles)
             .then(newGraphics => {
-                const graphics = this.state.graphics.concat(newGraphics)
-                this.setState({ graphics: graphics })
-
-                this.props.onStatusChange(false)
+                setGraphics(graphics => graphics.concat(newGraphics))
+                setIsCreating(false)
             })
             .catch(err => {
-                this.props.openModal({
+                setIsCreating(false)
+                openModal(modalWindow, {
                     title: failedUploadingGraphics,
                     message: err.message,
-                    onClose: this.props.closeModal
+                    onClose: () => {
+                        closeModal(modalWindow)
+                    }
                 })
             })
-    }
+    }, [])
 
-    render() {
-        return (
-            <GraphicManagerContainer className="app-back-color-dark-gray">
-                <GraphicScrollList>
-                    {this.state.graphics.map((graphic, i) => {
-                        const isSelected = this.state.selectedGraphicIDs.includes(
-                            graphic.id
-                        )
-                        return (
-                            <GraphicLabel
-                                key={i}
-                                className={
-                                    isSelected
-                                        ? selectedElementStyle
-                                        : unselectElementStyle
-                                }
-                            >
-                                <GraphicThumbnail src={graphic.thumbnailURL} />
-                                <GraphicSelector
-                                    type="checkbox"
-                                    value={graphic.id}
-                                    checked={isSelected}
-                                    onChange={this.handleGraphicChange.bind(
-                                        this
-                                    )}
-                                />
-                            </GraphicLabel>
-                        )
-                    })}
-                </GraphicScrollList>
-                <GraphicUploader
-                    className={this.props.isCreating ? 'd-none' : 'd-block'}
-                >
-                    <Dropzone
-                        onDrop={this.handleDrop.bind(this)}
-                        accept="image/*"
-                        style={{}}
-                    >
-                        <span className="app-text-color-soft-white">
-                            <UploadIcon>
-                                <FontAwesomeIcon icon="folder-plus" />
-                            </UploadIcon>
-                            <UploadIconLabel>&nbsp;追加</UploadIconLabel>
-                        </span>
-                    </Dropzone>
-                </GraphicUploader>
-                <UploadingStatus
-                    className={`app-text-color-soft-white ${
-                        this.props.isCreating ? 'd-block' : 'd-none'
-                    }`}
-                >
-                    <FontAwesomeIcon icon="spinner" spin />
-                </UploadingStatus>
-            </GraphicManagerContainer>
-        )
-    }
+    const { getRootProps, getInputProps } = useDropzone({
+        accept: 'image/*',
+        onDrop
+    })
+
+    return (
+        <GraphicManagerContainer className="app-back-color-dark-gray">
+            <GraphicScrollList>
+                {console.log(graphics)}
+                {graphics.map((graphic, i) => {
+                    const isSelected = selectedGraphicIDs.includes(graphic.id)
+                    return (
+                        <GraphicLabel
+                            key={i}
+                            className={
+                                isSelected
+                                    ? selectedElementStyle
+                                    : unselectElementStyle
+                            }
+                        >
+                            <GraphicThumbnail src={graphic.thumbnailURL} />
+                            <GraphicSelector
+                                type="checkbox"
+                                value={graphic.id}
+                                checked={isSelected}
+                                onChange={handleGraphicChange}
+                            />
+                        </GraphicLabel>
+                    )
+                })}
+            </GraphicScrollList>
+            <GraphicUploader className={isCreating ? 'd-none' : 'd-block'}>
+                <div {...getRootProps()}>
+                    <input {...getInputProps()} />
+                    <span className="app-text-color-soft-white">
+                        <UploadIcon>
+                            <FontAwesomeIcon icon="folder-plus" />
+                        </UploadIcon>
+                        <UploadIconLabel>&nbsp;追加</UploadIconLabel>
+                    </span>
+                </div>
+            </GraphicUploader>
+            <UploadingStatus
+                className={`app-text-color-soft-white ${
+                    isCreating ? 'd-block' : 'd-none'
+                }`}
+            >
+                <FontAwesomeIcon icon="spinner" spin />
+            </UploadingStatus>
+        </GraphicManagerContainer>
+    )
 }
 
 const GraphicManagerContainer = styled.div`
