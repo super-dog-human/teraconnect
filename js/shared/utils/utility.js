@@ -61,3 +61,21 @@ export function sendExceptionToGA(componentName, err, isFatal) {
         fatal: isFatal
     })
 }
+
+export function showLoading(context, message = '') {
+    context.setLoading(true)
+    context.setMessage(message)
+}
+
+export function hideLoading(context) {
+    context.setLoading(false)
+    context.setMessage('')
+}
+
+export function openModal(context, option) {
+    context.setModalState({ isModalOpen: true, ...option })
+}
+
+export function closeModal(context) {
+    context.setModalState({ isModalOpen: false })
+}
