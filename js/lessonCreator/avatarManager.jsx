@@ -32,25 +32,23 @@ export default props => {
     const modalWindow = useContext(ModalWindowContext)
 
     useEffect(() => {
-        if (avatars.length === 0) {
-            fetchAvatars()
-                .then(fetchedAvatars => {
-                    setIsLoading(false)
-                    setAvatars(fetchedAvatars)
+        fetchAvatars()
+            .then(fetchedAvatars => {
+                setIsLoading(false)
+                setAvatars(fetchedAvatars)
+            })
+            .catch(err => {
+                console.error(err)
+                setIsLoading(false)
+                openModal(modalWindow, {
+                    title: failedDownloadingAvatarFile,
+                    message: err.message,
+                    onClose: () => {
+                        closeModal(modalWindow)
+                        location.reload()
+                    }
                 })
-                .catch(err => {
-                    console.error(err)
-                    setIsLoading(false)
-                    openModal(modalWindow, {
-                        title: failedDownloadingAvatarFile,
-                        message: err.message,
-                        onClose: () => {
-                            closeModal(modalWindow)
-                            location.reload()
-                        }
-                    })
-                })
-        }
+            })
     }, [])
 
     const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
@@ -88,7 +86,7 @@ export default props => {
     async function createNewAvatar(file) {
         setIsCreating(true)
 
-        const url = file.preview
+        const url = URL.createObjectURL(file)
         const checker = new AvatarRightsChecker()
 
         await checker.loadAvatar(url) // TODO catch error
@@ -131,8 +129,7 @@ export default props => {
     function uploadUserAvatar(url, checker) {
         uploadAvatar(url)
             .then(id => {
-                avatars.push({ id: id })
-                setAvatars(avatars)
+                setAvatars(avatars => [...avatars, { id: id }])
                 setHasAddedAvatar(true)
                 setIsCreating(false)
             })
