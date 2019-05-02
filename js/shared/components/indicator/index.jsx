@@ -19,12 +19,11 @@ export default props => {
             </LoadingIndicator>
 
             <IndicatorLoadingContext.Provider
-                value={{ isLoading, setLoading: status => setLoading(status) }}
+                value={{ setLoading: status => setLoading(status) }}
             >
                 <IndicatorMessageContext.Provider
                     value={{
-                        message,
-                        setMessage: message => setMessage(message)
+                        setLoadingMessage: message => setMessage(message)
                     }}
                 >
                     {props.children}
