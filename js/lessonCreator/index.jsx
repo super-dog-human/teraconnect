@@ -1,189 +1,160 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { __RouterContext } from 'react-router-dom'
 import styled from '@emotion/styled'
-import Indicator from '../shared/components/indicator'
-import ModalWindow from '../shared/components/modalWindow'
 import ReactTooltip from 'react-tooltip'
-import AvatarManager from './avatarManager'
 import GraphicManager from './graphicManager'
-
+import AvatarManager from './avatarManager'
+import {
+    LessonGraphicCreatingContext,
+    LessonAvatarCreatingContext
+} from './context'
+import { IndicatorContext } from '../shared/components/indicator/context'
+import { ModalWindowContext } from '../shared/components/modalWindow/context'
 import { postLesson } from '../shared/utils/networkManager'
 import {
     canRecordLessonBrowser,
-    sendExceptionToGA
+    sendExceptionToGA,
+    showLoading,
+    hideLoading,
+    openModal,
+    closeModal
 } from '../shared/utils/utility'
 
+// メッセージ定数はreact-intl導入時にここから追い出す
 const mobileWarningTitle = '非対応の環境です'
 const mobileWarningMessage =
     '・授業はChrome/Firefox/Operaで作成できます\n・モバイル環境では授業を作成できません\n'
 const creatingLessonErrorTitle = '授業の作成に失敗しました'
 
-export default class LessonCreator extends React.Component {
-    constructor(props) {
-        super(props)
+export default () => {
+    const [isFormCreatable, setIsFormCreatable] = useState(false)
+    const [isCreating, setIsCreating] = useState(false)
+    const [isGraphicCreating, setIsGraphicCreating] = useState(false)
+    const [isAvatarCreating, setIsAvatarCreating] = useState(false)
+    const indicator = useContext(IndicatorContext)
+    const modalWindow = useContext(ModalWindowContext)
+    const router = useContext(__RouterContext)
 
-        this.lessonID = ''
-        this.title = ''
-        this.description = ''
-        this.avatarID = ''
-        this.graphicIDs = []
-        this.state = {
-            isFormCreatable: false,
-            isGraphicCreating: false,
-            isAvatarCreating: false,
-            isCreating: false,
-            isCreated: false,
-            isModalOpen: false,
-            modalOption: {}
+    let title = ''
+    let description = ''
+    let avatarID = ''
+    let graphicIDs = []
+
+    useEffect(() => {
+        if (!canRecordLessonBrowser()) {
+            openModal(modalWindow, {
+                title: mobileWarningTitle,
+                message: mobileWarningMessage,
+                onClose: () => {
+                    closeModal(modalWindow)
+                    router.history.replace('/')
+                }
+            })
         }
-    }
 
-    componentDidMount() {
-        if (canRecordLessonBrowser()) return
-
-        this.openModal({
-            title: mobileWarningTitle,
-            message: mobileWarningMessage,
-            onClose: () => {
-                this.closeModal()
-                this.props.history.replace('/')
-            }
-        })
-    }
-
-    componentDidUpdate() {
-        if (this.state.isCreated) {
-            this.props.history.push(`/lessons/${this.lessonID}/record`)
+        if (isCreating) {
+            showLoading(indicator)
+        } else {
+            hideLoading(indicator)
         }
+    }, [isCreating])
+
+    function handleChangeTitle(event) {
+        title = event.target.value
+        switchCreatableForm()
     }
 
-    handleChangeTitle(event) {
-        this.title = event.target.value
-        this.switchCreatableForm()
+    function handleChangeDescription(event) {
+        description = event.target.value
     }
 
-    handleChangeDescription(event) {
-        this.description = event.target.value
+    function handleChangeAvatar(id) {
+        avatarID = id
+        switchCreatableForm()
     }
 
-    async handleChangeAvatar(id) {
-        this.avatarID = id
-        this.switchCreatableForm()
+    function handleChangeGraphics(ids) {
+        graphicIDs = ids
     }
 
-    switchCreatableForm() {
-        const isFormCreatable = this.title.length > 0 && this.avatarID != ''
-        if (this.state.isFormCreatable != isFormCreatable) {
-            this.setState({ isFormCreatable: isFormCreatable })
-        }
+    function switchCreatableForm() {
+        const isFormCreatable = title.length > 0 && avatarID !== ''
+        setIsFormCreatable(isFormCreatable)
     }
 
-    handleChangeGraphics(graphicIDs) {
-        this.graphicIDs = graphicIDs
-    }
-
-    handleFormSubmit(event) {
+    function handleFormSubmit(event) {
         event.preventDefault()
 
-        this.setState({ isCreating: true })
+        setIsCreating(true)
 
         const lessonBody = {
-            title: this.title,
-            description: this.description,
-            avatarID: this.avatarID,
-            graphicIDs: this.graphicIDs
+            title: title,
+            description: description,
+            avatarID: avatarID,
+            graphicIDs: graphicIDs
         }
 
         postLesson(lessonBody)
             .then(lesson => {
-                this.lessonID = lesson.id
-                this.checkCreatingStatus()
+                afterPostLesson(lesson.id)
             })
             .catch(err => {
-                sendExceptionToGA(this.constructor.name, err, false)
-                this.openModal({
+                sendExceptionToGA(constructor.name, err, false)
+                openModal(modalWindow, {
                     title: creatingLessonErrorTitle,
                     message: err.message,
                     onClose: () => {
-                        this.closeModal()
-                        this.setState({ isCreating: false })
+                        closeModal(modalWindow)
+                        setIsCreating(false)
                     }
                 })
             })
     }
 
-    checkCreatingStatus() {
+    function afterPostLesson(lessonID) {
         const interval = setInterval(() => {
-            if (!this.state.isGraphicCreating && !this.state.isAvatarCreating) {
-                this.setState({ isCreating: false, isCreated: true })
+            if (!isGraphicCreating && !isAvatarCreating) {
+                setIsCreating(false)
                 clearInterval(interval)
+                router.history.push(`/lessons/${lessonID}/record`)
             }
         }, 1000)
     }
 
-    openModal(option) {
-        this.setState({ isModalOpen: true, modalOption: option })
-    }
-
-    closeModal() {
-        this.setState({ isModalOpen: false, modalOption: {} })
-    }
-
-    render() {
-        return (
-            <>
-                <Indicator isLoading={this.state.isCreating} />
-                <ModalWindow
-                    isOpen={this.state.isModalOpen}
-                    {...this.state.modalOption}
-                />
-                <LessonCreatorContainer className="app-back-color-soft-white">
-                    <LessonForm onSubmit={this.handleFormSubmit.bind(this)}>
-                        <LessonTitle
-                            onChange={this.handleChangeTitle.bind(this)}
-                        />
-                        <LessonDescription
-                            onChange={this.handleChangeDescription.bind(this)}
-                        />
-                        <LessonGraphic
-                            onGraphicsChange={this.handleChangeGraphics.bind(
-                                this
-                            )}
-                            onStatusChange={status => {
-                                this.setState({
-                                    isGraphicCreating: status
-                                })
-                            }}
-                            openModal={this.openModal.bind(this)}
-                            closeModal={this.closeModal.bind(this)}
-                            isCreating={this.state.isGraphicCreating}
-                        />
-                        <LessonAvatar
-                            onAvatarChange={this.handleChangeAvatar.bind(this)}
-                            onStatusChange={status => {
-                                this.setState({
-                                    isAvatarCreating: status
-                                })
-                            }}
-                            isCreating={this.state.isAvatarCreating}
-                            openModal={this.openModal.bind(this)}
-                            closeModal={this.closeModal.bind(this)}
-                        />
-                        <SubmitButton
-                            disabled={
-                                !this.state.isFormCreatable ||
-                                this.state.isCreating
+    return (
+        <>
+            <LessonCreatorContainer className="app-back-color-soft-white">
+                <LessonForm onSubmit={handleFormSubmit}>
+                    <LessonTitle onChange={handleChangeTitle} />
+                    <LessonDescription onChange={handleChangeDescription} />
+                    <LessonGraphicCreatingContext.Provider
+                        value={{
+                            isCreating: isGraphicCreating,
+                            setIsCreating: isCreating => {
+                                setIsGraphicCreating(isCreating)
                             }
+                        }}
+                    >
+                        <LessonGraphic
+                            onGraphicsChange={handleChangeGraphics}
                         />
-                    </LessonForm>
-                    <ReactTooltip
-                        className="tooltip"
-                        place="top"
-                        type="warning"
-                    />
-                </LessonCreatorContainer>
-            </>
-        )
-    }
+                    </LessonGraphicCreatingContext.Provider>
+                    <LessonAvatarCreatingContext.Provider
+                        value={{
+                            isCreating: isAvatarCreating,
+                            setIsCreating: isCreating => {
+                                setIsAvatarCreating(isCreating)
+                            }
+                        }}
+                    >
+                        <LessonAvatar onAvatarChange={handleChangeAvatar} />
+                    </LessonAvatarCreatingContext.Provider>
+                    <SubmitButton disabled={!isFormCreatable || isCreating} />
+                </LessonForm>
+                <ReactTooltip className="tooltip" place="top" type="warning" />
+            </LessonCreatorContainer>
+        </>
+    )
 }
 
 const LessonCreatorContainer = styled.div`

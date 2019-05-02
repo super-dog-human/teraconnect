@@ -1,12 +1,15 @@
-import React from 'react'
+import React, { useCallback } from 'react'
+import { useDropzone } from 'react-dropzone'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Dropzone from 'react-dropzone'
 import { fetchGraphics, uploadGraphics } from '../shared/utils/networkManager'
 import styled from '@emotion/styled'
 import { css } from 'emotion'
 
 const failedDownloadingGraphics = '画像の読み込みに失敗しました'
 const failedUploadingGraphics = '画像のアップロードに失敗しました'
+
+export default () => {
+}
 
 export default class GraphicManager extends React.Component {
     constructor(props) {

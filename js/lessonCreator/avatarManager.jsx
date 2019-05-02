@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Dropzone from 'react-dropzone'
+import { useDropzone } from 'react-dropzone'
 import AvatarRightsChecker from './utils/avatarRightsChecker'
 import { fetchAvatars, uploadAvatar } from '../shared/utils/networkManager'
 import styled from '@emotion/styled'
 import { css } from 'emotion'
+import { LessonAvatarCreatingContext } from './context'
+import { ModalWindowContext } from '../shared/components/modalWindow/context'
+import { openModal, closeModal } from '../shared/utils/utility'
 
 const defaultThumbnailURL =
     'https://storage.googleapis.com/teraconn_thumbnail/avatar/default.png'
@@ -18,59 +21,72 @@ const confirmAvatarLicenceMessage =
     '\n※上記全てに該当しないと、このファイルは使用できません。'
 const maxFileBytes = 31457280
 
-export default class AvatarManager extends React.Component {
-    constructor(props) {
-        super(props)
+export default props => {
+    const [isLoading, setIsLoading] = useState(true)
+    const [hasAddedAvatar, setHasAddedAvatar] = useState(false)
+    const [avatars, setAvatars] = useState([])
+    const { isCreating, setIsCreating } = useContext(
+        LessonAvatarCreatingContext
+    )
+    const modalWindow = useContext(ModalWindowContext)
 
-        this.state = {
-            hasAddedAvatar: false,
-            selectedAvatarID: '',
-            avatars: []
-        }
-    }
+    let selectedAvatarID = ''
 
-    componentWillMount() {
-        fetchAvatars()
-            .then(avatars => {
-                this.setState({ avatars: avatars })
-            })
-            .catch(err => {
-                this.props.openModal({
-                    title: failedDownloadingAvatarFile,
-                    message: err.message,
-                    onClose: () => {
-                        this.props.closeModal()
-                        location.reload()
-                    }
+    useEffect(() => {
+        if (avatars.length === 0) {
+            fetchAvatars()
+                .then(fetchedAvatars => {
+                    setIsLoading(false)
+                    setAvatars(fetchedAvatars)
                 })
-            })
-    }
+                .catch(err => {
+                    console.error(err)
+                    setIsLoading(false)
+                    openModal(modalWindow, {
+                        title: failedDownloadingAvatarFile,
+                        message: err.message,
+                        onClose: () => {
+                            closeModal(modalWindow)
+                            location.reload()
+                        }
+                    })
+                })
+        }
+    }, [])
 
-    handleAvatarChange(event) {
-        const id = event.target.value // can't unchecked after checked once.
-        this.setState({ selectedAvatarID: id })
-        this.props.onAvatarChange(id)
-    }
-
-    async onDrop(acceptedFiles, rejectedFiles) {
-        if (this.props.isCreating) return
+    const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
+        if (isCreating) return
 
         if (rejectedFiles.length > 0) {
-            this.props.openModal({
+            openModal(modalWindow, {
                 title: userAvatarFileErrorTitle,
                 message: userAvatarFileErrorMessage,
-                onClose: this.props.closeModal
+                onClose: () => {
+                    closeModal(modalWindow)
+                }
             })
             return
         }
 
         if (acceptedFiles.length === 0) return
 
-        this.createNewAvatar(acceptedFiles[0])
+        createNewAvatar(acceptedFiles[0])
+    }, [])
+
+    const { getRootProps, getInputProps } = useDropzone({
+        accept: '.vrm',
+        maxSize: maxFileBytes,
+        multiple: false,
+        onDrop
+    })
+
+    function handleAvatarChange(event) {
+        selectedAvatarID = event.target.value // can't unchecked after checked once.
+        props.onAvatarChange(selectedAvatarID)
     }
 
-    async createNewAvatar(file) {
-        this.props.onStatusChange(true)
+    async function createNewAvatar(file) {
+        setIsCreating(true)
 
         const url = file.preview
         const checker = new AvatarRightsChecker()
@@ -78,52 +94,55 @@ export default class AvatarManager extends React.Component {
         await checker.loadAvatar(url) // TODO catch error
 
         if (!checker.canUse()) {
-            this.props.openModal({
+            openModal(modalWindow, {
                 title: userAvatarFileErrorTitle,
                 message: userAvatarFileErrorMessage,
-                onClose: this.props.closeModal,
+                onClose: () => {
+                    closeModal(modalWindow)
+                },
                 isError: true
             })
 
-            this.props.onStatusChange(false)
+            setIsCreating(false)
             return
         }
 
         if (checker.shouldShowConfirmForUsing()) {
-            this.props.openModal({
+            openModal(modalWindow, {
                 title: confirmAvatarLicenceTitle,
                 message: checker.confirmMessage() + confirmAvatarLicenceMessage,
                 onClickOK: () => {
-                    this.props.closeModal()
-                    this.uploadUserAvatar(url, checker)
+                    closeModal(modalWindow)
+                    uploadUserAvatar(url, checker)
                 },
                 onClickCancel: () => {
-                    this.props.closeModal()
-                    this.props.onStatusChange(false)
+                    closeModal(modalWindow)
+                    setIsCreating(false)
                 },
                 needsConfirm: true,
                 okButtonLabel: 'はい',
                 cancelButtonLabel: 'いいえ'
             })
         } else {
-            this.uploadUserAvatar(url, checker)
+            uploadUserAvatar(url, checker)
         }
     }
 
-    uploadUserAvatar(url, checker) {
+    function uploadUserAvatar(url, checker) {
         uploadAvatar(url)
             .then(id => {
-                const avatars = this.state.avatars
                 avatars.push({ id: id })
-
-                this.setState({ avatars: avatars, hasAddedAvatar: true })
-                this.props.onStatusChange(false)
+                setAvatars(avatars)
+                setHasAddedAvatar(true)
+                setIsCreating(false)
             })
             .catch(err => {
-                this.props.openModal({
+                openModal(modalWindow, {
                     title: failedUploadingAvatarFile,
                     message: err.message,
-                    onClose: this.props.closeModal
+                    onClose: () => {
+                        closeModal(modalWindow)
+                    }
                 })
             })
 
@@ -131,81 +150,73 @@ export default class AvatarManager extends React.Component {
         // checker.meta.author
     }
 
-    render() {
-        return (
-            <AvatarMangaerContainer className="app-back-color-dark-gray">
-                <div className="form-inline">
-                    {this.state.avatars.map((avatar, i) => {
-                        const isSelected =
-                            avatar.id === this.state.selectedAvatarID
-                        return (
-                            <AvatarLabel
-                                key={i}
-                                className={
-                                    isSelected
-                                        ? selectedElementStyle
-                                        : unselectElementStyle
+    return (
+        <AvatarMangaerContainer className="app-back-color-dark-gray">
+            <div className="form-inline">
+                {avatars.map((avatar, i) => {
+                    const isSelected = avatar.id === selectedAvatarID
+                    return (
+                        <AvatarLabel
+                            key={i}
+                            className={
+                                isSelected
+                                    ? selectedElementStyle
+                                    : unselectElementStyle
+                            }
+                        >
+                            <AvatarThumbnail
+                                src={
+                                    avatar.thumbnailURL
+                                        ? avatar.thumbnailURL
+                                        : defaultThumbnailURL
                                 }
-                            >
-                                <AvatarThumbnail
-                                    src={
-                                        avatar.thumbnailURL
-                                            ? avatar.thumbnailURL
-                                            : defaultThumbnailURL
-                                    }
-                                />
-                                <AvatarSelector
-                                    type="checkbox"
-                                    value={avatar.id}
-                                    checked={isSelected}
-                                    onChange={this.handleAvatarChange.bind(
-                                        this
-                                    )}
-                                />
-                            </AvatarLabel>
-                        )
-                    })}
-                    <AvatarUploader
-                        className={
-                            this.props.isCreating || this.state.hasAddedAvatar
-                                ? 'd-none'
-                                : 'd-block'
-                        }
-                        data-tip="VRMファイルは、授業再生のため再配布されます"
-                    >
-                        <Dropzone
-                            onDrop={this.onDrop.bind(this)}
-                            accept=".vrm"
-                            maxSize={maxFileBytes}
-                            multiple={false}
-                            style={{
+                            />
+                            <AvatarSelector
+                                type="checkbox"
+                                value={avatar.id}
+                                checked={isSelected}
+                                onChange={handleAvatarChange}
+                            />
+                        </AvatarLabel>
+                    )
+                })}
+                <AvatarUploader
+                    className={
+                        isCreating || hasAddedAvatar ? 'd-none' : 'd-block'
+                    }
+                    data-tip="VRMファイルは、授業再生のため再配布されます"
+                >
+                    <div
+                        {...getRootProps({
+                            style: {
                                 width: '100px',
                                 height: '100px',
                                 position: 'absolute'
-                            }}
-                        >
-                            <UploadIcon className="app-text-color-soft-white">
-                                <FontAwesomeIcon icon="file-upload" />
-                            </UploadIcon>
-                            <UploadIconLabel
-                                id="upload-avatar-text"
-                                className="app-text-color-soft-white"
-                            >
-                                &nbsp;追加
-                            </UploadIconLabel>
-                        </Dropzone>
-                    </AvatarUploader>
-                    <UploadingStatus
-                        className={this.props.isCreating ? 'd-block' : 'd-none'}
+                            }
+                        })}
                     >
-                        <LoadingIcon className="app-text-color-soft-white">
-                            <FontAwesomeIcon icon="spinner" spin />
-                        </LoadingIcon>
-                    </UploadingStatus>
-                </div>
-            </AvatarMangaerContainer>
-        )
-    }
+                        <input {...getInputProps()} />
+                        <UploadIcon className="app-text-color-soft-white">
+                            <FontAwesomeIcon icon="file-upload" />
+                        </UploadIcon>
+                        <UploadIconLabel
+                            id="upload-avatar-text"
+                            className="app-text-color-soft-white"
+                        >
+                            &nbsp;追加
+                        </UploadIconLabel>
+                    </div>
+                </AvatarUploader>
+                <UploadingStatus
+                    className={isLoading || isCreating ? 'd-block' : 'd-none'}
+                >
+                    <LoadingIcon className="app-text-color-soft-white">
+                        <FontAwesomeIcon icon="spinner" spin />
+                    </LoadingIcon>
+                </UploadingStatus>
+            </div>
+        </AvatarMangaerContainer>
+    )
 }
 
 const AvatarMangaerContainer = styled.div`
