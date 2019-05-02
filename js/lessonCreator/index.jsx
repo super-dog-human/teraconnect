@@ -26,6 +26,11 @@ const mobileWarningMessage =
     '・授業はChrome/Firefox/Operaで作成できます\n・モバイル環境では授業を作成できません\n'
 const creatingLessonErrorTitle = '授業の作成に失敗しました'
 
+let title = ''
+let description = ''
+let avatarID = ''
+let graphicIDs = []
+
 export default () => {
     const [isFormCreatable, setIsFormCreatable] = useState(false)
     const [isCreating, setIsCreating] = useState(false)
@@ -34,11 +39,6 @@ export default () => {
     const indicator = useContext(IndicatorContext)
     const modalWindow = useContext(ModalWindowContext)
     const router = useContext(__RouterContext)
-
-    let title = ''
-    let description = ''
-    let avatarID = ''
-    let graphicIDs = []
 
     useEffect(() => {
         if (!canRecordLessonBrowser()) {
