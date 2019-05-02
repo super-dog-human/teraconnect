@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { css } from 'emotion'
+import { ModalWindowContext } from './context'
 
-const initProps = {
+const initState = {
     isOpen: false,
     isError: false,
     title: '',
@@ -15,22 +16,32 @@ const initProps = {
 }
 
 export default props => {
-    props = { ...initProps, ...props }
+    const [modalState, setModalState] = useState(initState)
 
     return (
-        <Modal
-            className={props.isOpen ? 'modal fade show' : 'modal fade'}
-            isOpen={props.isOpen}
-            onClose={props.onClose}
-            needsConfirm={props.needsConfirm}
-        >
-            <ModalHeader {...props} />
-            <ModalBody
-                onClick={e => e.stopPropagation()}
-                message={props.message}
-            />
-            <ModalFooter {...props} />
-        </Modal>
+        <>
+            <Modal
+                className={modalState.isOpen ? 'modal fade show' : 'modal fade'}
+                isOpen={modalState.isOpen}
+                onClose={modalState.onClose}
+                needsConfirm={modalState.needsConfirm}
+            >
+                <ModalHeader {...modalState} />
+                <ModalBody
+                    onClick={e => e.stopPropagation()}
+                    message={modalState.message}
+                />
+                <ModalFooter {...modalState} />
+            </Modal>
+            <ModalWindowContext.Provider
+                value={{
+                    setModalState: state =>
+                        setModalState({ ...initState, ...state })
+                }}
+            >
+                {props.children}
+            </ModalWindowContext.Provider>
+        </>
     )
 }
 
