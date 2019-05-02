@@ -57,6 +57,8 @@ library.add(
 )
 import { whyDidYouUpdate } from 'why-did-you-update'
 import ErrorBoundary from './errorBoundary'
+import Indicator from './shared/components/indicator'
+import ModalWindow from './shared/components/modalWindow'
 import Header from './header'
 import Main from './main'
 import Footer from './footer'
