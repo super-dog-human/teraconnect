@@ -73,9 +73,9 @@ export function hideLoading(context) {
 }
 
 export function openModal(context, option) {
-    context.setModalState({ isModalOpen: true, ...option })
+    context.setModalState({ isOpen: true, ...option })
 }
 
 export function closeModal(context) {
-    context.setModalState({ isModalOpen: false })
+    context.setModalState({ isOpen: false })
 }
