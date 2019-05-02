@@ -1,17 +1,38 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { IndicatorLoadingContext, IndicatorMessageContext } from './context'
 
-export default ({ isLoading, message = '' }) => (
-    <LoadingIndicator isLoading={isLoading}>
-        <IndicatorBody>
-            <IndicatorIcon>
-                <FontAwesomeIcon icon="spinner" spin />
-            </IndicatorIcon>
-            <IndicatorMessage>{message}</IndicatorMessage>
-        </IndicatorBody>
-    </LoadingIndicator>
-)
+export default props => {
+    const [isLoading, setLoading] = useState(false)
+    const [message, setMessage] = useState('')
+
+    return (
+        <>
+            <LoadingIndicator isLoading={isLoading}>
+                <IndicatorBody>
+                    <IndicatorIcon>
+                        <FontAwesomeIcon icon="spinner" spin />
+                    </IndicatorIcon>
+                    <IndicatorMessage>{message}</IndicatorMessage>
+                </IndicatorBody>
+            </LoadingIndicator>
+
+            <IndicatorLoadingContext.Provider
+                value={{ isLoading, setLoading: status => setLoading(status) }}
+            >
+                <IndicatorMessageContext.Provider
+                    value={{
+                        message,
+                        setMessage: message => setMessage(message)
+                    }}
+                >
+                    {props.children}
+                </IndicatorMessageContext.Provider>
+            </IndicatorLoadingContext.Provider>
+        </>
+    )
+}
 
 const LoadingIndicator = styled.div`
     display: ${props => (props.isLoading ? 'flex' : 'none')};

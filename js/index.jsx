@@ -69,9 +69,13 @@ if (!isProduction()) {
 render(
     <BrowserRouter>
         <ErrorBoundary>
-            <Header />
-            <Main />
-            <Footer />
+            <Indicator>
+                <ModalWindow>
+                    <Header />
+                    <Main />
+                    <Footer />
+                </ModalWindow>
+            </Indicator>
         </ErrorBoundary>
     </BrowserRouter>,
     document.getElementById('app')
