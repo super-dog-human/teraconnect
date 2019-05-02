@@ -23,14 +23,13 @@ const maxFileBytes = 31457280
 
 export default props => {
     const [isLoading, setIsLoading] = useState(true)
+    const [selectedAvatarID, setSelectedAvatarID] = useState('')
     const [hasAddedAvatar, setHasAddedAvatar] = useState(false)
     const [avatars, setAvatars] = useState([])
     const { isCreating, setIsCreating } = useContext(
         LessonAvatarCreatingContext
     )
     const modalWindow = useContext(ModalWindowContext)
-
-    let selectedAvatarID = ''
 
     useEffect(() => {
         if (avatars.length === 0) {
@@ -81,8 +80,9 @@ export default props => {
     })
 
     function handleAvatarChange(event) {
-        selectedAvatarID = event.target.value // can't unchecked after checked once.
-        props.onAvatarChange(selectedAvatarID)
+        const avatarID = event.target.value // can't unchecked after checked once.
+        setSelectedAvatarID(avatarID)
+        props.onAvatarChange(avatarID)
     }
 
     async function createNewAvatar(file) {
