@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from '@emotion/styled'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { IndicatorLoadingContext, IndicatorMessageContext } from './context'
+import { IndicatorContext } from './context'
 
 export default props => {
     const [isLoading, setLoading] = useState(false)
@@ -18,17 +18,14 @@ export default props => {
                 </IndicatorBody>
             </LoadingIndicator>
 
-            <IndicatorLoadingContext.Provider
-                value={{ setLoading: status => setLoading(status) }}
+            <IndicatorContext.Provider
+                value={{
+                    setLoading: status => setLoading(status),
+                    setMessage: message => setMessage(message)
+                }}
             >
-                <IndicatorMessageContext.Provider
-                    value={{
-                        setLoadingMessage: message => setMessage(message)
-                    }}
-                >
-                    {props.children}
-                </IndicatorMessageContext.Provider>
-            </IndicatorLoadingContext.Provider>
+                {props.children}
+            </IndicatorContext.Provider>
         </>
     )
 }
