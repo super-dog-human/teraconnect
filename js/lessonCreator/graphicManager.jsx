@@ -36,21 +36,19 @@ export default props => {
             })
     }, [])
 
-    async function handleGraphicChange(event) {
-        let selectedIDs = selectedGraphicIDs
-
+    const handleGraphicChange = useCallback(event => {
         const changedID = event.target.value
         if (event.target.checked) {
-            selectedIDs.push(changedID)
+            setSelectedGraphicIDs(ids => [...ids, changedID])
         } else {
-            selectedIDs = selectedIDs.filter(id => {
-                return id != changedID
-            })
+            setSelectedGraphicIDs(ids =>
+                ids.filter(id => {
+                    return id != changedID
+                })
+            )
         }
-
-        await setSelectedGraphicIDs(selectedIDs)
         props.onGraphicsChange(selectedGraphicIDs)
-    }
+    }, [])
 
     const onDrop = useCallback(async acceptedFiles => {
         if (isCreating) return
@@ -83,7 +81,6 @@ export default props => {
     return (
         <GraphicManagerContainer className="app-back-color-dark-gray">
             <GraphicScrollList>
-                {console.log(graphics)}
                 {graphics.map((graphic, i) => {
                     const isSelected = selectedGraphicIDs.includes(graphic.id)
                     return (
