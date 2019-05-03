@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { __RouterContext } from 'react-router-dom'
 import styled from '@emotion/styled'
 import ReactTooltip from 'react-tooltip'
@@ -59,30 +59,30 @@ export default () => {
         }
     }, [isCreating])
 
-    function handleChangeTitle(event) {
+    const handleChangeTitle = useCallback(event => {
         title = event.target.value
         switchCreatableForm()
-    }
+    }, [])
 
-    function handleChangeDescription(event) {
+    const handleChangeDescription = useCallback(event => {
         description = event.target.value
-    }
+    }, [])
 
-    function handleChangeAvatar(id) {
+    const handleChangeAvatar = useCallback(id => {
         avatarID = id
         switchCreatableForm()
-    }
+    }, [])
 
-    function handleChangeGraphics(ids) {
+    const handleChangeGraphics = useCallback(ids => {
         graphicIDs = ids
-    }
+    }, [])
 
-    function switchCreatableForm() {
+    const switchCreatableForm = useCallback(() => {
         const isFormCreatable = title.length > 0 && avatarID !== ''
         setIsFormCreatable(isFormCreatable)
-    }
+    }, [])
 
-    function handleFormSubmit(event) {
+    const handleFormSubmit = useCallback(event => {
         event.preventDefault()
 
         setIsCreating(true)
@@ -109,9 +109,9 @@ export default () => {
                     }
                 })
             })
-    }
+    }, [])
 
-    function afterPostLesson(lessonID) {
+    const afterPostLesson = useCallback(lessonID => {
         const interval = setInterval(() => {
             if (!isGraphicCreating && !isAvatarCreating) {
                 setIsCreating(false)
@@ -119,7 +119,7 @@ export default () => {
                 router.history.push(`/lessons/${lessonID}/record`)
             }
         }, 1000)
-    }
+    }, [])
 
     return (
         <>

@@ -77,13 +77,13 @@ export default props => {
         onDrop
     })
 
-    function handleAvatarChange(event) {
+    const handleAvatarChange = useCallback(event => {
         const avatarID = event.target.value // can't unchecked after checked once.
         setSelectedAvatarID(avatarID)
         props.onAvatarChange(avatarID)
-    }
+    }, [])
 
-    async function createNewAvatar(file) {
+    const createNewAvatar = useCallback(async file => {
         setIsCreating(true)
 
         const url = URL.createObjectURL(file)
@@ -124,9 +124,9 @@ export default props => {
         } else {
             uploadUserAvatar(url, checker)
         }
-    }
+    }, [])
 
-    function uploadUserAvatar(url, checker) {
+    const uploadUserAvatar = useCallback((url, checker) => {
         uploadAvatar(url)
             .then(id => {
                 setAvatars(avatars => [...avatars, { id: id }])
@@ -145,7 +145,7 @@ export default props => {
 
         // TODO updateAvatar
         // checker.meta.author
-    }
+    }, [])
 
     return (
         <AvatarMangaerContainer className="app-back-color-dark-gray">
