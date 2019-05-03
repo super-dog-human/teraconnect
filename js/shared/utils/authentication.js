@@ -55,7 +55,7 @@ export function fetchUserAccount(callback) {
     })
 }
 
-function accessToken() {
+export function accessToken() {
     const auth = localStorage.getItem('auth')
     if (auth === null) return
     return auth.accessToken

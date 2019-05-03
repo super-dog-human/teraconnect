@@ -1,8 +1,12 @@
 import axios from 'axios'
 import JSZip from 'jszip'
+import { accessToken } from './authentication'
 import * as Const from './constants'
 import LocalCacheManager from './localCacheManager'
 
+const authAxios = axios.create({
+    headers: { Authorization: `Bearer ${accessToken()}` }
+})
 const faceDetectorFileID = 'BRFv4_JS_TK101018_v4.1.0_trial.wasm'
 const faceDetectorFileVersion = 'af9c3fa5d65266b838b0eb95ba3b9b57' // MD5 hash of file
 
@@ -15,17 +19,17 @@ export async function fetchLesson(lessonID) {
 
 export async function postLesson(body) {
     const url = Const.LESSON_API_URL.replace('{lessonID}', '') // API URL has no id when creating new.
-    const result = await axios.post(url, body)
+    const result = await authAxios.post(url, body)
     return result.data
 }
 
 export async function fetchGraphics() {
-    const result = await axios.get(Const.GRAPHIC_API_URL)
+    const result = await authAxios.get(Const.GRAPHIC_API_URL)
     return result.data
 }
 
 export async function fetchAvatars() {
-    const result = await axios.get(Const.AVATAR_API_URL)
+    const result = await authAxios.get(Const.AVATAR_API_URL)
     return result.data
 }
 
@@ -34,13 +38,13 @@ export async function fetchRawLessonMaterial(lessonID) {
         '{lessonID}',
         lessonID
     )
-    const result = await axios.get(materialURL)
+    const result = await authAxios.get(materialURL)
     return result.data
 }
 
 export async function fetchVoiceTexts(lessonID) {
     const url = Const.LESSON_VOICE_TEXT_API_URL.replace('{lessonID}', lessonID)
-    const result = await axios.get(url).catch(err => {
+    const result = await authAxios.get(url).catch(err => {
         if (err.response.status == 404) {
             return { data: [] }
         } else {
@@ -109,7 +113,7 @@ export async function fetchAvatarObjectURL(avatar) {
             }
         ]
         const signedURLs = await fetchSignedURLs(headers)
-        const result = await axios.get(signedURLs[0], {
+        const result = await authAxios.get(signedURLs[0], {
             responseType: 'blob'
         })
         const zip = result.data
@@ -260,23 +264,23 @@ export async function uploadAvatar(avatarURL) {
 
 export async function updateLesson(lessonID, body) {
     const url = Const.LESSON_API_URL.replace('{lessonID}', lessonID)
-    await axios.patch(url, body)
+    await authAxios.patch(url, body)
 }
 
 export async function uploadMaterial(lessonID, body) {
     const url = Const.LESSON_MATERIAL_API_URL.replace('{lessonID}', lessonID)
-    await axios.put(url, body)
+    await authAxios.put(url, body)
 }
 
 export async function packMaterial(lessonID) {
     const url = Const.LESSON_PACK_API_URL.replace('{lessonID}', lessonID)
     const body = { dummy: 'dummyBody' }
-    await axios.put(url, body)
+    await authAxios.put(url, body)
 }
 
 export async function deleteLesson(lessonID) {
     const url = Const.LESSON_API_URL.replace('{lessonID}', lessonID)
     const body = { dummy: 'dummyBody' }
-    const result = await axios.delete(url, body)
+    const result = await authAxios.delete(url, body)
     return result.data
 }
