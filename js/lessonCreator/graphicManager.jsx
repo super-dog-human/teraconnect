@@ -36,18 +36,18 @@ export default props => {
             })
     }, [])
 
-    const handleGraphicChange = useCallback(event => {
+    const handleGraphicChange = useCallback(async event => {
         const changedID = event.target.value
-        if (event.target.checked) {
-            setSelectedGraphicIDs(ids => [...ids, changedID])
-        } else {
-            setSelectedGraphicIDs(ids =>
-                ids.filter(id => {
+        const isChecked = event.target.checked
+        await setSelectedGraphicIDs(ids => {
+            const newIds = isChecked
+                ? [...ids, changedID]
+                : ids.filter(id => {
                     return id != changedID
                 })
-            )
-        }
-        props.onGraphicsChange(selectedGraphicIDs)
+            props.onGraphicsChange(newIds)
+            return newIds
+        })
     }, [])
 
     const onDrop = useCallback(async acceptedFiles => {
