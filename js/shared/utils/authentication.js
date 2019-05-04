@@ -17,6 +17,11 @@ export function isLoggedIn() {
 
     const auth = JSON.parse(authString)
     if (auth.expiresAt - REQUEST_MARGIN_MSEC > Date.now()) {
+        if (!tokenRenewalTimeout) {
+            const expiresIn =
+                (auth.expiresAt - REQUEST_MARGIN_MSEC - Date.now()) / 1000
+            scheduleRenewalToken(expiresIn)
+        }
         return true
     }
 
@@ -70,6 +75,7 @@ function scheduleRenewalToken(expiresIn) {
 }
 
 function renewToken() {
+    console.log('renewToken', Date.now())
     webAuth.checkSession({}, (err, authResult) => {
         if (err) {
             console.error(err)
