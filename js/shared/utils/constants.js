@@ -5,6 +5,9 @@ import { isProduction } from './utility'
 export const AUTH0_CLIENT_ID = isProduction()
     ? process.env.PROD_AUTH0_CLIENT_ID
     : process.env.DEV_AUTH0_CLIENT_ID
+export const AUTH0_REDIRECT_URL = isProduction()
+    ? 'https://authoring.teraconnect.org/_auth_callback'
+    : 'http://localhost:1234/_auth_callback'
 export const API_URL = isProduction()
     ? process.env.PROD_API_URL
     : process.env.DEV_API_URL

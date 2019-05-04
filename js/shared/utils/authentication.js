@@ -1,5 +1,5 @@
 import auth0 from 'auth0-js'
-import { AUTH0_CLIENT_ID } from './constants'
+import { AUTH0_CLIENT_ID, AUTH_REDIRECT_URL } from './constants'
 
 const REQUEST_MARGIN_MSEC = 10000
 let tokenRenewalTimeout
@@ -7,6 +7,7 @@ let tokenRenewalTimeout
 export const webAuth = new auth0.WebAuth({
     domain: 'teraconnect.auth0.com',
     clientID: AUTH0_CLIENT_ID,
+    redirectUri: AUTH_REDIRECT_URL,
     responseType: 'token id_token',
     scope: 'openid profile'
 })
@@ -81,6 +82,7 @@ function renewToken() {
             console.error(err)
         } else {
             storeAuthToken(authResult)
+            scheduleRenewalToken(authResult.expiresIn)
         }
     })
 }
