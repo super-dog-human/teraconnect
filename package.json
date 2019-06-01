@@ -12,7 +12,7 @@
     "@fortawesome/free-regular-svg-icons": "^5.3.1",
     "@fortawesome/free-solid-svg-icons": "^5.3.1",
     "auth0-js": "^9.8.2",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "detect-browser": "^4.2.0",
     "emotion": "^10.0.9",
     "imports-loader": "^0.8.0",
