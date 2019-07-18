@@ -33,7 +33,7 @@ export async function fetchAndMergeGraphicToTimeline(graphics, timelines) {
         const files = graphics.map(graphic => {
             return {
                 id: graphic.id,
-                entity: 'graphic',
+                entity: 'Graphic',
                 extension: graphic.fileType
             }
         })
