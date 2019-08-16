@@ -27,7 +27,7 @@
     "react-router-dom": "^5.0.0",
     "react-slick": "^0.23.1",
     "react-tooltip": "^3.8.1",
-    "three": ">=0.103.0"
+    "three": ">=0.107.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-0",
