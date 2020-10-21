@@ -1,6 +1,6 @@
 {
   "name": "teraconnect",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,8 +8,27 @@
     "start": "next start"
   },
   "dependencies": {
-    "next": "9.1.7",
-    "react": "16.12.0",
-    "react-dom": "16.12.0"
+    "@emotion/core": "^10.0.27",
+    "@emotion/styled": "^10.0.27",
+    "@pixiv/three-vrm": "^0.4.3",
+    "dotenv-load": "^2.0.0",
+    "next": "~9",
+    "next-auth": "^3.1.0",
+    "next-env": "^1.1.1",
+    "react": "~16.14",
+    "react-device-detect": "^1.14",
+    "react-dom": "~16.14",
+    "three": "^0.121"
+  },
+  "devDependencies": {
+    "@welldone-software/why-did-you-render": "^4.3.2",
+    "dotenv": "^8.2.0",
+    "eslint": "^7.11.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.17.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "isomorphic-unfetch": "^3.0.0"
   }
 }
