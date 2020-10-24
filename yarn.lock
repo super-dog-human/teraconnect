@@ -1265,10 +1265,10 @@
   resolved "https://registry.yarnpkg.com/@panva/asn1.js/-/asn1.js-1.0.0.tgz#dd55ae7b8129e02049f009408b97c61ccf9032f6"
   integrity sha512-UdkG3mLEqXgnlKsWanWcgb6dOjUzJ+XC5f+aWw30qrtjxeNUSfKX1cd5FBzOaXQumoe9nIqeZUvrRJS03HCCtw==
 
-"@pixiv/three-vrm@^0.4.3":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@pixiv/three-vrm/-/three-vrm-0.4.3.tgz#31cd6c6924693034ba79ea87a3af0baa2328b196"
-  integrity sha512-OdS950QQ6esQKbqs37zHqvtlk26Jqly7gQti2YYsQseWhM97N6dpwpFznDN1oIXBCLInN6lJdOylvcFnUdnVJQ==
+"@pixiv/three-vrm@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@pixiv/three-vrm/-/three-vrm-0.5.0.tgz#fd298b98c9841a9264f8f1d8296574fb249152e0"
+  integrity sha512-wSH9YjVPD2vCX+mierJzlzfuPQ8ZtwLhI0CiY6FhtpNwZ2qBLBBzLs8Mnw6r6V4FOoJ3Q2GKiaMLIyZJ/IIJRw==
 
 "@sqltools/formatter@1.2.2":
   version "1.2.2"
@@ -5078,9 +5078,9 @@ postcss@^7.0.14, postcss@^7.0.26, postcss@^7.0.32, postcss@^7.0.5, postcss@^7.0.
     supports-color "^6.1.0"
 
 preact-render-to-string@^5.1.7:
-  version "5.1.10"
-  resolved "https://registry.yarnpkg.com/preact-render-to-string/-/preact-render-to-string-5.1.10.tgz#cce03d73b166c550148af9dedc9e06fdf6820f8a"
-  integrity sha512-40svy7NDe5Qe0ymdsIC11f0hZb05MeTSUqqIaWJ5DEFCh/sF86KcpRW0kN/ymGYDVVUCfv9qFrVuLCXR7aQxgQ==
+  version "5.1.11"
+  resolved "https://registry.yarnpkg.com/preact-render-to-string/-/preact-render-to-string-5.1.11.tgz#7d8d77c23ef40ae6abc3d390b7430b3cb6206020"
+  integrity sha512-8DXkx8WzeUexYyh9ZjlBSsqcJVOndidw10t1MK1gLx6at4QxQE3RfqaObPgy5WOnw2piyh9kanNB7w7+dmaq4g==
   dependencies:
     pretty-format "^3.8.0"
 
@@ -5226,6 +5226,13 @@ react-dom@~16.14:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     scheduler "^0.19.1"
+
+react-grid-system@^7.1.1:
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/react-grid-system/-/react-grid-system-7.1.1.tgz#bab6770e889f7377c9a8ca3898126046af8d309e"
+  integrity sha512-ttKTdme+eW0fyFX7LKQmc9M/ujHfs99Kiv5zgid7htdEPxUbjuBbEDgi1FaWwcciCgkRgBJguQ+WYqsGGJdGRw==
+  dependencies:
+    prop-types "^15.7.2"
 
 react-is@16.13.1, react-is@^16.8.1:
   version "16.13.1"

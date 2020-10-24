@@ -6,10 +6,10 @@ export default function Page() {
   return (
     <>
       <Head>
-        <title>TERACONNECT</title>
+        <title>検索結果 | TERACONNECT</title>
       </Head>
       <Layout>
-        <div>index.</div>
+        <div>Search</div>
       </Layout>
     </>
   )
