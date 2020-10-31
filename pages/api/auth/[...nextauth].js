@@ -16,12 +16,15 @@ const options = {
       clientSecret: process.env.TWITTER_CLIENT_SECRET
     }),
   ],
-  database: process.env.DATABASE_URL,
-  secret: process.env.SECRET,
+  secret: process.env.AUTH_SECRET,
   session: {
     jwt: true,
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
   },
   jwt: {
+    signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
+    verificationOptions:  {},
   },
   pages: {
     // signIn: '/api/auth/signin',  // Displays signin buttons
@@ -36,11 +39,10 @@ const options = {
     // session: async (session, user) => { return Promise.resolve(session) },
     // jwt: async (token, user, account, profile, isNewUser) => { return Promise.resolve(token) }
   },
-
   // Events are useful for logging
   // https://next-auth.js.org/configuration/events
   events: { },
-  debug: true,
+  debug: process.env.IS_DEBUG,
 }
 
 export default (req, res) => NextAuth(req, res, options)
