@@ -7,6 +7,6 @@ the recording and publishing tools for teaching lesson with virtual avatar.
 ### create JSON key for signing
 
 ```bash
-$ yarn run -s jose newkey -t RSA -s 2048 -K > dev_keystore.json
-$ yarn run -s jose findkey -p -j dev_keystore.json > dev_public.json
+$ yarn -s run jose newkey -t RSA -s 2048 -a RS256 -K > dev.jwk
+$ yarn -s run jose findkey -p -j dev.jwk | yarn -s run pem-jwk | openssl rsa -RSAPublicKey_in -pubout > dev_public.pkcs8
 ```
