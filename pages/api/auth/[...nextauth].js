@@ -37,7 +37,11 @@ const options = {
     // signIn: async (user, account, profile) => { return Promise.resolve(true) },
     // redirect: async (url, baseUrl) => { return Promise.resolve(baseUrl) },
     // session: async (session, user) => { return Promise.resolve(session) },
-    // jwt: async (token, user, account, profile, isNewUser) => { return Promise.resolve(token) }
+    jwt: async (token, _, account) => {
+      if (account && account.provider) { token.provider = account.provider}
+      if (account && account.id) { token.id = account.id}
+      return Promise.resolve(token)
+    }
   },
   // Events are useful for logging
   // https://next-auth.js.org/configuration/events
