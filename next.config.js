@@ -7,4 +7,5 @@ const withNextEnv = nextEnv()
 module.exports = withNextEnv({
   target: 'serverless',
   poweredByHeader: false,
+  distDir: 'build'
 })
