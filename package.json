@@ -19,7 +19,7 @@
     "react-device-detect": "^1.14",
     "react-dom": "~16.14",
     "react-grid-system": "^7.1.1",
-    "three": "^0.121"
+    "three": "^0.122"
   },
   "devDependencies": {
     "@welldone-software/why-did-you-render": "^4.3.2",
