@@ -1,58 +1,82 @@
 /** @jsx jsx */
 import React from 'react'
 import Link from 'next/link'
+import { useSession } from 'next-auth/client'
 import { jsx, css } from '@emotion/core'
+import { Container, Row, Col, Hidden } from 'react-grid-system'
 
-const Footer = () => (
-  <footer className="text-align-center" css={bodyStyle}>
-    <div>
-      <div css={logoCopyStyle}>あなたの知識が、誰かを照らす。</div>
-      <img src="../img/logo_text.png" />
-    </div>
+export default function Footer() {
+  const [ session, loading ] = useSession()
 
-    <div className="flex" css={footerMenus}>
-      <div>
-        <div>
-          <Link href="/">サービス概要</Link>
+  return (
+    <footer className="text-align-center" css={bodyStyle}>
+
+      <div css={logoStyle}>
+        {!loading && !session && <div>
+          <div css={logoCopyStyle}>君の光をさがそう。</div>
+          <img src="../img/logo_text.png" />
         </div>
-        <div>
-          <Link href="/">ライセンス表記</Link>
+        }
+
+        {!loading && session && <div>
+          <div css={logoCopyStyle}>あなたの知識が、誰かを照らす。</div>
+          <img src="../img/logo_text.png" />
         </div>
-        <div>
-          <Link href="/">運営者</Link>
-        </div>
+        }
       </div>
 
-      <div>
-        <div>
-          <Link href="/">はじめ方</Link>
-        </div>
-        <div>
-          <Link href="/">授業をさがす</Link>
-        </div>
-        <div>
-          <Link href="/">授業をつくる</Link>
-        </div>
-      </div>
+      <Container>
+        <Row justify="center" css={footerMenus}>
+          <Col md={3}>
+            <div>
+              <Link href="/">サービス概要</Link>
+            </div>
+            <Hidden xs sm>&nbsp;</Hidden>
+            <div>
+              <Link href="/">ライセンス表記</Link>
+            </div>
+            <Hidden xs sm>&nbsp;</Hidden>
+            <div>
+              <Link href="/">運営者</Link>
+            </div>
+          </Col>
 
-      <div>
-        <div>
-          <Link href="/">よくある質問</Link>
-        </div>
-        <div>
-          <Link href="/terms_of_use">利用規約</Link>
-        </div>
-        <div>
-          <a href="https://goo.gl/forms/Rmp3dNKN7ZsDoF2k2">問い合わせ</a>
-        </div>
-      </div>
-    </div>
-  </footer>
-)
+          <Col md={3}>
+            <div>
+              <Link href="/">はじめ方</Link>
+            </div>
+            <Hidden xs sm>&nbsp;</Hidden>
+            <div>
+              <Link href="/">授業をさがす</Link>
+            </div>
+            <Hidden xs sm>&nbsp;</Hidden>
+            <div>
+              <Link href="/">授業をつくる</Link>
+            </div>
+            <Hidden xs sm>&nbsp;</Hidden>
+          </Col>
+
+          <Col md={3}>
+            <div>
+              <Link href="/">よくある質問</Link>
+            </div>
+            <Hidden xs sm>&nbsp;</Hidden>
+            <div>
+              <Link href="/terms_of_use">利用規約</Link>
+            </div>
+            <Hidden xs sm>&nbsp;</Hidden>
+            <div>
+              <a href="https://goo.gl/forms/Rmp3dNKN7ZsDoF2k2">問い合わせ</a>
+            </div>
+          </Col>
+        </Row>
+      </Container>
+    </footer>
+  )
+}
 
 const bodyStyle = css({
   width: '100%',
-  height: '350px',
   paddingTop: '120px',
   justifyContent: 'center',
   backgroundColor: 'var(--dark-gray)',
@@ -64,16 +88,21 @@ const bodyStyle = css({
     opacity: 0.8,
   },
 })
+
+const logoStyle = css({
+  height: '63px',
+  marginBottom: '100px',
+})
+
 const logoCopyStyle = css({
   fontSize: '12px',
   marginBottom: '15px',
 })
 
 const footerMenus = css({
-  justifyContent: 'center',
-  a: {
-    margin: '200px',
-  },
+  marginTop: '50px',
+  marginBottom: '150px',
+  div: {
+    lineHeight: '30px',
+  }
 })
-
-export default Footer
