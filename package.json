@@ -19,6 +19,7 @@
     "react-device-detect": "^1.14",
     "react-dom": "~16.14",
     "react-grid-system": "^7.1.1",
+    "swr": "^0.3.8",
     "three": "^0.122"
   },
   "devDependencies": {
@@ -28,7 +29,7 @@
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-import": "^2.20.0",
     "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.17.0",
+    "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
     "isomorphic-unfetch": "^3.0.0"
   }
