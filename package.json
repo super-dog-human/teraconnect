@@ -10,7 +10,7 @@
   "dependencies": {
     "@emotion/core": "^10.0.27",
     "@emotion/styled": "^10.0.27",
-    "@pixiv/three-vrm": "^0.5.2",
+    "@pixiv/three-vrm": "^0.5.5",
     "dotenv-load": "^2.0.0",
     "next": "~9",
     "next-auth": "^3.1.0",
