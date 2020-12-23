@@ -1,6 +1,6 @@
 import React from 'react'
 import Document, { Html, Head, Main, NextScript } from 'next/document'
-import { GA_TRACKING_ID } from '../lib/constants'
+import { GA_TRACKING_ID } from '../libs/constants'
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx) {
@@ -24,6 +24,7 @@ export default class MyDocument extends Document {
             gtag('js', new Date());
             gtag('config', '${GA_TRACKING_ID}', {
               page_path: window.location.pathname,
+              transport_type: 'beacon'
             });
           `,
             }}
