@@ -1,36 +1,35 @@
 import { useState } from 'react'
+import useSWR from 'swr'
 import fetch from '../../../libs/fetch'
 
 export default function useCategoryBySubject(setValue) {
-  const [categoryDisabled, setCategoryDisabled] = useState(true)
-  const [categories, setCategories] = useState([])
+  const [subjectID, setSubjectID] = useState()
 
-  async function handleSubjectChange(e) {
-    setValue('category', undefined)
-
-    const subjectID = e.target.value
-
-    if (!subjectID) {
-      setCategories([])
-      setCategoryDisabled(true)
-      return
-    }
-
-    const results = {}
-    Array.from(await(fetch(`/categories?subjectID=${subjectID}`))).forEach(sub => {
-      if (!results[sub.groupName]) {
-        results[sub.groupName] = []
+  const fetcher = async (sourceID) => {
+    const result = {}
+    Array.from(await fetch(sourceID)).forEach(sub => {
+      if (!result[sub.groupName]) {
+        result[sub.groupName] = []
       }
 
-      results[sub.groupName].push({
+      result[sub.groupName].push({
         value: sub.name,
         label: sub.name
       })
     })
 
-    setCategories(results)
-    setCategoryDisabled(false)
+    return result
   }
 
-  return [categoryDisabled, categories, handleSubjectChange]
+  const { data: categories, error } = useSWR(
+    () => subjectID ? `/categories?subjectID=${subjectID}` : null,
+    fetcher, { dedupingInterval: 86400000 }
+  )
+
+  function handleSubjectChange(e) {
+    setValue('category', undefined)
+    setSubjectID(e.target.value)
+  }
+
+  return [error || !categories, categories, handleSubjectChange]
 }

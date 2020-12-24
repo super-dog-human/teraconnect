@@ -1,10 +1,10 @@
 /** @jsx jsx */
 import React from 'react'
-import Link from 'next/link'
 import { jsx, css } from '@emotion/core'
 import { useForm } from 'react-hook-form'
 import SubjectAndCategorySelector from './subjectAndCategorySelector'
 import InputText from '../../form/inputText'
+import useCreatingLesson from './useCreatingLesson'
 
 const bodyStyle = css({
   minHeight: '100%',
@@ -13,9 +13,7 @@ const bodyStyle = css({
 
 export default function LessonNewForm(props) {
   const { register, errors, handleSubmit, setValue } = useForm()
-  const onSubmit = data => {
-    console.log(data)
-  }
+  const [onSubmit, creatingError] = useCreatingLesson(props.token)
 
   return (
     <form onSubmit={ handleSubmit(onSubmit) } css={ bodyStyle }>
@@ -35,14 +33,16 @@ export default function LessonNewForm(props) {
         <hr />
         <div>セリフを入力し、AIによる合成音声を出力します。手持ちの音声ファイルも使用できます。</div>
       </div>
+      { errors.createMethod && '選択してください' }
 
 
-      <SubjectAndCategorySelector subjects={ props.subjects } setValue={ setValue } errors={ errors } register={ register } />
+      <SubjectAndCategorySelector subjects={ props.subjects } setValue={ setValue } errors={ errors } ref={ register({ required: true }) } />
 
       <InputText name="name" ref={ register({ required: true }) } />
       { errors.name && '入力してください' }
 
-      <button type="submit">送信</button>
+      <input type="submit" />
+      { creatingError }
     </form>
   )
 }

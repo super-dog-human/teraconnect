@@ -28,14 +28,14 @@ const Select = React.forwardRef((props, ref) => {
       )) }
 
       { !Array.isArray(props.options) && Object.keys(props.options).map((key, i) => (
-        <optgroup label={key} key={ i }>
+        <optgroup label={ key } key={ i }>
           { props.options[key].map((opt, i) => (
             <option value={ opt.value } key={ i } label={ opt.label } />
           )) }
         </optgroup>
       )) }
     </select>
-  )})
+  )} )
 
 Select.defaultProps = {
   options: [],
