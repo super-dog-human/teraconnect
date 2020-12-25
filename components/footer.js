@@ -14,18 +14,18 @@ export default function Footer() {
       <div css={logoStyle}>
         {!loading && !session && <div>
           <div css={logoCopyStyle}>君の光をさがそう。</div>
-          <img src="../img/logo_text.png" />
+          <img src="/img/logo_text.png" />
         </div>
         }
 
         {!loading && session && <div>
           <div css={logoCopyStyle}>あなたの知識が、誰かを照らす。</div>
-          <img src="../img/logo_text.png" />
+          <img src="/img/logo_text.png" />
         </div>
         }
       </div>
 
-      <Container>
+      <Container fluid>
         <Row justify="center" css={footerMenus}>
           <Col md={3}>
             <div>
@@ -78,6 +78,7 @@ export default function Footer() {
 const bodyStyle = css({
   width: '100%',
   paddingTop: '120px',
+  paddingBottom: '120px',
   justifyContent: 'center',
   backgroundColor: 'var(--dark-gray)',
   color: 'var(--text-gray)',
@@ -91,7 +92,7 @@ const bodyStyle = css({
 
 const logoStyle = css({
   height: '63px',
-  marginBottom: '100px',
+  marginBottom: '80px',
 })
 
 const logoCopyStyle = css({
@@ -100,9 +101,7 @@ const logoCopyStyle = css({
 })
 
 const footerMenus = css({
-  marginTop: '50px',
-  marginBottom: '150px',
   div: {
-    lineHeight: '30px',
+    minHeight: '30px',
   }
 })

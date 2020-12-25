@@ -76,7 +76,7 @@ const CopyForTeacher = () => (
       <div className="flex">
         <div className="displayFlexNone" css={authoringImageStyle}>
           <img
-            src="img/pc_authoring.png"
+            src="/img/pc_authoring.png"
             alt="Webブラウザで簡単に授業を作成・編集できるよ"
           />
         </div>
@@ -84,7 +84,7 @@ const CopyForTeacher = () => (
         <div className="displayFlexNone" css={featuresStyle}>
           <div className="flex">
             <img
-              src="img/yeti.png"
+              src="/img/yeti.png"
               width="80px"
               height="80px"
               css={featureImageStyle}
@@ -99,7 +99,7 @@ const CopyForTeacher = () => (
               </div>
             </div>
             <img
-              src="img/microphone.png"
+              src="/img/microphone.png"
               width="80px"
               height="80px"
               css={featureImageStyle}
@@ -116,7 +116,7 @@ const CopyForTeacher = () => (
           </div>
           <div className="flex">
             <img
-              src="img/chat.png"
+              src="/img/chat.png"
               width="77px"
               height="77px"
               alt="仲間と話し合おう"
@@ -126,7 +126,7 @@ const CopyForTeacher = () => (
               <div css={featureBodyStyle}>フォーラムで意見を交換しよう。</div>
             </div>
             <img
-              src="img/yen.png"
+              src="/img/yen.png"
               width="75px"
               height="75px"
               alt="お金はかからないよ"

@@ -15,60 +15,62 @@ export default function Header() {
             <span css={logoStyle}>
               <img
                 css={logoImageStyle}
-                src="../img/logo.png"
-                srcSet="../img/logo.png 1x, ../img/logo@2x.png 2x"
+                src="/img/logo.png"
+                srcSet="/img/logo.png 1x, /img/logo@2x.png 2x"
               />
             </span>
           </a>
         </Link>
 
-        <a css={[linkStyle, linkHoverStyle]}>
-          <span css={menuStyle}>
-            <span css={largeMenuTextStyle}>教科</span>
-            <span css={smallMenuTextStyle}>で</span>
-            <span css={middleMenuTextStyle}>探</span>
-            <span css={smallMenuTextStyle}>す</span>
-          </span>
-        </a>
+        <Link href="/search">
+          <div css={[linkStyle, linkHoverStyle]}>
+            <span css={menuStyle}>
+              <span css={largeMenuTextStyle}>教科</span>
+              <span css={smallMenuTextStyle}>で</span>
+              <span css={middleMenuTextStyle}>探</span>
+              <span css={smallMenuTextStyle}>す</span>
+            </span>
+          </div>
+        </Link>
 
-        <a css={[linkStyle, linkHoverStyle]}>
-          <span css={menuStyle}>
-            <span css={largeMenuTextStyle}>人</span>
-            <span css={smallMenuTextStyle}>で</span>
-            <span css={middleMenuTextStyle}>探</span>
-            <span css={smallMenuTextStyle}>す</span>
-          </span>
-        </a>
+        <Link href="/search">
+          <div css={[linkStyle, linkHoverStyle]}>
+            <span css={menuStyle}>
+              <span css={largeMenuTextStyle}>人</span>
+              <span css={smallMenuTextStyle}>で</span>
+              <span css={middleMenuTextStyle}>探</span>
+              <span css={smallMenuTextStyle}>す</span>
+            </span>
+          </div>
+        </Link>
 
-        <a css={[linkStyle, linkHoverStyle]}>
-          <span css={menuStyle}>
-            <span css={largeMenuTextStyle}>教科書</span>
-            <span css={smallMenuTextStyle}>で</span>
-            <span css={middleMenuTextStyle}>探</span>
-            <span css={smallMenuTextStyle}>す</span>
-          </span>
-        </a>
+        <Link href="/search">
+          <div css={[linkStyle, linkHoverStyle]}>
+            <span css={menuStyle}>
+              <span css={largeMenuTextStyle}>教科書</span>
+              <span css={smallMenuTextStyle}>で</span>
+              <span css={middleMenuTextStyle}>探</span>
+              <span css={smallMenuTextStyle}>す</span>
+            </span>
+          </div>
+        </Link>
 
         <input type="text" css={searchInputStyle} />
         <button>
           <img
-            src="../img/search.png"
-            srcSet="../img/search.png 1x, ../img/search@2x.png 2x"
+            src="/img/search.png"
+            srcSet="/img/search.png 1x, /img/search@2x.png 2x"
           />
         </button>
         {!loading && !session && <>
           <Link href="/login">
-            <a>
-              <button css={loginButtonStyle}>ログイン</button>
-            </a>
+            <button className="dark" css={loginButtonStyle}>授業をつくる</button>
           </Link>
-        </> 
+        </>
         }
         {!loading && session && <>
-          <Link href="/logout">
-            <a>
-              <button css={loginButtonStyle}>ログアウト</button>
-            </a>
+          <Link href="/dashboard">
+            <button className="light" css={loginButtonStyle}>マイページ</button>
           </Link>
         </>
         }
@@ -165,6 +167,4 @@ const loginButtonStyle = css({
   fontSize: '15px',
   marginLeft: '30px',
   marginRight: '5px',
-  backgroundColor: 'var(--dark-purple)',
-  color: 'white',
 })

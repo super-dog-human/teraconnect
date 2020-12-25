@@ -6,7 +6,7 @@ import { jsx, css } from '@emotion/core'
 const bodyStyle = css({
   width: '100%',
   height: '680px',
-  backgroundColor: '#F0F0F0'
+  backgroundColor: 'var(--bg-light-gray)'
 })
 
 const appCopyStyle = css({
@@ -55,7 +55,7 @@ const AppCopy = () => (
     <div css={appCopyStyle} className="flex">
       <div className="displayFlexNone">
         <img
-          src="img/telescope.png"
+          src="/img/telescope.png"
           css={imageStyle}
           title="望遠鏡"
           alt="闇の中から光を探す望遠鏡。きみの好きな星が見つかるといいな。"
