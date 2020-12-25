@@ -1,17 +1,3 @@
-//import { detect } from 'detect-browser'
-//import { isMobile } from 'react-device-detect'
-
-/*
-export function canRecordLessonBrowser() {
-  const browser = detect()
-  if (browser.name === 'chrome') return true
-  if (browser.name === 'firefox') return true
-  if (!isMobile) return
-
-  return false
-}
-*/
-
 export function filterObject(obj, keys) {
   return Object.keys(obj)
     .filter(key => keys.includes(key))
