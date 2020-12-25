@@ -1,11 +1,6 @@
-const nextEnv = require('next-env')
-const dotenvLoad = require('dotenv-load')
-
-dotenvLoad()
-const withNextEnv = nextEnv()
-
-module.exports = withNextEnv({
-  target: 'serverless',
-  poweredByHeader: false,
-  distDir: 'build'
-})
+require('dotenv').config()
+module.exports = {
+  env: {
+    TERACONNECT_API_URL: process.env.TERACONNECT_API_URL,
+  },
+}
