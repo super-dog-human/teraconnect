@@ -1,4 +1,4 @@
-/** @jsx jsx */
+/** @jsxImportSource @emotion/react */
 import React, { useCallback } from 'react'
 import { jsx, css } from '@emotion/core'
 
@@ -19,7 +19,7 @@ const SignUpForm = () => {
 
   const handleSubmit = useCallback(event => {
     event.preventDefault()
-    
+
   }, [])
 
   return (

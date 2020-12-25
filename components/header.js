@@ -1,4 +1,4 @@
-/** @jsx jsx */
+/** @jsxImportSource @emotion/react */
 import React from 'react'
 import Link from 'next/link'
 import { useSession } from 'next-auth/client'

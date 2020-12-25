@@ -1,4 +1,4 @@
-/** @jsx jsx */
+/** @jsxImportSource @emotion/react */
 import React from 'react'
 import { jsx, css } from '@emotion/core'
 import { useForm } from 'react-hook-form'
@@ -38,7 +38,7 @@ export default function LessonNewForm(props) {
 
       <SubjectAndCategorySelector subjects={ props.subjects } setValue={ setValue } errors={ errors } ref={ register({ required: true }) } />
 
-      <InputText name="title" ref={ register({ required: true }) } />
+      <InputText name="title" maxlength="100" ref={ register({ required: true }) } />
       { errors.title && '入力してください' }
 
       <input type="submit" disabled={ creating }/>

@@ -1,4 +1,4 @@
-/** @jsx jsx */
+/** @jsxImportSource @emotion/react */
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { jsx, css } from '@emotion/core'
