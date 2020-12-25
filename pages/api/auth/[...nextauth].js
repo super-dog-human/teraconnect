@@ -19,8 +19,7 @@ const options = {
   secret: process.env.AUTH_SECRET,
   session: {
     jwt: true,
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-    updateAge: 24 * 60 * 60, // 24 hours
+    maxAge: 1 * 24 * 60 * 60, // 1 day
   },
   jwt: {
     signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
@@ -33,13 +32,15 @@ const options = {
     // verifyRequest: '/api/auth/verify-request', // Used for check email page
     // newUser: null // If set, new users will be directed here on first sign in
   },
-  callbacks: { 
+  callbacks: {
     // signIn: async (user, account, profile) => { return Promise.resolve(true) },
-    // redirect: async (url, baseUrl) => { return Promise.resolve(baseUrl) },
+    redirect: async (url) => {
+      return Promise.resolve(url)
+    },
     // session: async (session, user) => { return Promise.resolve(session) },
     jwt: async (token, _, account) => {
-      if (account && account.provider) { token.provider = account.provider}
-      if (account && account.id) { token.id = account.id}
+      if (account && account.provider) { token.provider = account.provider }
+      if (account && account.id) { token.id = account.id }
       return Promise.resolve(token)
     }
   },

@@ -1,20 +1,20 @@
 import { useState } from 'react'
 import useSWR from 'swr'
-import fetch from '../../../libs/fetch'
+import { fetch } from '../../../libs/fetch'
 
 export default function useCategoryBySubject(setValue) {
   const [subjectID, setSubjectID] = useState()
 
   const fetcher = async (sourceID) => {
     const result = {}
-    Array.from(await fetch(sourceID)).forEach(sub => {
-      if (!result[sub.groupName]) {
-        result[sub.groupName] = []
+    Array.from(await fetch(sourceID)).forEach(cat => {
+      if (!result[cat.groupName]) {
+        result[cat.groupName] = []
       }
 
-      result[sub.groupName].push({
-        value: sub.name,
-        label: sub.name
+      result[cat.groupName].push({
+        value: cat.id,
+        label: cat.name
       })
     })
 

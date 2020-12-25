@@ -2,8 +2,9 @@ import React from 'react'
 import Head from 'next/head'
 import Layout from '../../../components/layout'
 import { withRouter } from 'next/router'
+import requirePageAuth from '../../../components/requirePageAuth'
 
-const Forum = withRouter(({ router }) => (
+const Page = withRouter(({ router }) => (
   <>
     <Head>
       <title>TERACONNECT</title>
@@ -14,4 +15,8 @@ const Forum = withRouter(({ router }) => (
   </>
 ))
 
-export default Forum
+export default Page
+
+export async function getServerSideProps(context) {
+  return await requirePageAuth(context)
+}

@@ -13,7 +13,7 @@ const bodyStyle = css({
 
 export default function LessonNewForm(props) {
   const { register, errors, handleSubmit, setValue } = useForm()
-  const [onSubmit, creatingError] = useCreatingLesson(props.token)
+  const [onSubmit, creating, creatingError] = useCreatingLesson(props.token)
 
   return (
     <form onSubmit={ handleSubmit(onSubmit) } css={ bodyStyle }>
@@ -38,10 +38,10 @@ export default function LessonNewForm(props) {
 
       <SubjectAndCategorySelector subjects={ props.subjects } setValue={ setValue } errors={ errors } ref={ register({ required: true }) } />
 
-      <InputText name="name" ref={ register({ required: true }) } />
-      { errors.name && '入力してください' }
+      <InputText name="title" ref={ register({ required: true }) } />
+      { errors.title && '入力してください' }
 
-      <input type="submit" />
+      <input type="submit" disabled={ creating }/>
       { creatingError }
     </form>
   )

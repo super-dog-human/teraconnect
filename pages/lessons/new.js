@@ -3,7 +3,7 @@ import Head from 'next/head'
 import Layout from '../../components/layout'
 import LessonNewForm from '../../components/lesson/new/form'
 import requirePageAuth from '../../components/requirePageAuth'
-import fetch from '../../libs/fetch'
+import { fetch } from '../../libs/fetch'
 
 const Page = (props) => (
   <>
@@ -11,7 +11,7 @@ const Page = (props) => (
       <title>TERACONNECT</title>
     </Head>
     <Layout>
-      <LessonNewForm subjects={ props.subjects } />
+      <LessonNewForm {...props} subjects={ props.subjects } />
     </Layout>
   </>
 )
@@ -19,6 +19,7 @@ const Page = (props) => (
 export default Page
 
 export async function getServerSideProps(context) {
+  const authProps = await requirePageAuth(context)
   const subjects = Array.from(await(fetch('/subjects'))).map((sub) => {
     return {
       value: sub.id,
@@ -26,6 +27,5 @@ export async function getServerSideProps(context) {
     }
   })
 
-  const authProps = await requirePageAuth(context)
-  return { props: { authProps, subjects } }
+  return { props: { ...authProps.props, subjects } }
 }
