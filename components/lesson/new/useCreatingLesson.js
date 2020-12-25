@@ -31,5 +31,5 @@ export default function useCreatingLesson(token) {
       })
   }
 
-  return [onSubmit, creating, error]
+  return { onSubmit, creating, creatingError: error }
 }

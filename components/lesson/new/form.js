@@ -13,7 +13,7 @@ const bodyStyle = css({
 
 export default function LessonNewForm(props) {
   const { register, errors, handleSubmit, setValue } = useForm()
-  const [onSubmit, creating, creatingError] = useCreatingLesson(props.token)
+  const { onSubmit, creating, creatingError } = useCreatingLesson(props.token)
 
   return (
     <form onSubmit={ handleSubmit(onSubmit) } css={ bodyStyle }>

@@ -5,7 +5,7 @@ import useCategoryBySubject from './useCategoryBySubject'
 import Select from '../../form/select'
 
 const SubjectAndCategorySelector = React.forwardRef((props, ref) => {
-  const [categoryDisabled, categories, handleSubjectChange] = useCategoryBySubject(props.setValue)
+  const { categoryDisabled, categories, handleSubjectChange } = useCategoryBySubject(props.setValue)
 
   return (
     <>

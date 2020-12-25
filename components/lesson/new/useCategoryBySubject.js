@@ -31,5 +31,5 @@ export default function useCategoryBySubject(setValue) {
     setSubjectID(e.target.value)
   }
 
-  return [error || !categories, categories, handleSubjectChange]
+  return { categoryDisabled: error || !categories, categories, handleSubjectChange }
 }
