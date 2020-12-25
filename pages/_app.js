@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { Provider } from 'next-auth/client'
-import * as gtag from '../lib/gtag'
+import * as gtag from '../libs/gtag'
 import whyDidYouRender from '@welldone-software/why-did-you-render'
 import '../app.css'
 

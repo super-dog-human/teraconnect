@@ -2,7 +2,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { jsx, css } from '@emotion/core'
-import AvatarLoader from '../../lib/avatar/loader'
+import AvatarLoader from '../../libs/avatar/loader'
 import { Clock } from 'three'
 
 export default class AloneAvatar extends React.Component {
