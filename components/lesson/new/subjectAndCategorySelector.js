@@ -9,9 +9,9 @@ const SubjectAndCategorySelector = React.forwardRef((props, ref) => {
 
   return (
     <>
-      <Select name="subjectID" ref={ ref } options={ props.subjects } onChange={ handleSubjectChange } />
+      <Select name="subjectID" ref={ref} options={props.subjects} onChange={handleSubjectChange} />
       { props.errors.subjectID && '選択してください' }
-      <Select name="categoryID" ref={ ref } options={ categories } disabled={ categoryDisabled } />
+      <Select name="categoryID" ref={ref} options={categories} disabled={categoryDisabled} />
       { props.errors.categoryID && '選択してください' }
     </>
   )

@@ -11,7 +11,7 @@ const Page = (props) => (
       <title>TERACONNECT</title>
     </Head>
     <Layout>
-      <LessonNewForm {...props} subjects={ props.subjects } />
+      <LessonNewForm {...props} subjects={props.subjects} />
     </Layout>
   </>
 )
