@@ -17,6 +17,7 @@
     "react": "~17.0.1",
     "react-device-detect": "^1.14",
     "react-dom": "~16.14",
+    "react-ga": "^3.3.0",
     "react-grid-system": "^7.1.1",
     "react-hook-form": "^6.13.0",
     "swr": "^0.3.8",
