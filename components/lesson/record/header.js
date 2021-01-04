@@ -13,11 +13,13 @@ export default function LessonRecordHeader(props) {
       <div css={headerBodyStyle}>
         <span css={logoStyle}>
           <Link href="/">
-            <img
-              css={logoImageStyle}
-              src="/img/logo.png"
-              srcSet="/img/logo.png 1x, /img/logo@2x.png 2x"
-            />
+            <a>
+              <img
+                css={logoImageStyle}
+                src="/img/logo.png"
+                srcSet="/img/logo.png 1x, /img/logo@2x.png 2x"
+              />
+            </a>
           </Link>
         </span>
         <img src="/img/icon/recording.svg" css={{ width: '26px', height: '26px' }} /> <span>停止中</span>
