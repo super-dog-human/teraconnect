@@ -15,7 +15,7 @@
     "next": "~10",
     "next-auth": "^3.1.0",
     "react": "~17.0.1",
-    "react-color": "^2.19.3",
+    "react-colorful": "^4.4.4",
     "react-device-detect": "^1.14",
     "react-dom": "~16.14",
     "react-draggable": "^4.4.3",

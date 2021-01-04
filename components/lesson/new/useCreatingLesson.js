@@ -16,7 +16,7 @@ export default function useCreatingLesson(token) {
       title: form.title,
     }
 
-    await post('/lessons', body, token)
+    await post('/lessons', body, 'token')
       .then(response => {
         if (body.createMethod === 'useVoice') {
           router.push(`/lessons/${response.id}/record`)
@@ -25,8 +25,10 @@ export default function useCreatingLesson(token) {
         }
       })
       .catch(error => {
+        // TODO redirect login page when status 401
+
         setCreating(false)
-        setError(error)
+        setError('授業の作成に失敗しました。')
         throw error
       })
   }

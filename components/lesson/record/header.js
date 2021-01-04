@@ -1,15 +1,15 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
-import { jsx, css } from '@emotion/core'
+import { css } from '@emotion/core'
 
 export default function LessonRecordHeader(props) {
   function handleSettingPanel() {
-    props.setShow(!props.show)
+    props.setShowControlPanel(state => !state)
   }
 
   return (
-    <header css={headerStyle}>
+    <header css={headerStyle} className='header-z'>
       <div css={headerBodyStyle}>
         <span css={logoStyle}>
           <Link href="/">
@@ -20,11 +20,11 @@ export default function LessonRecordHeader(props) {
             />
           </Link>
         </span>
-        <button>録画開始</button>
-        <button>非表示</button>
-        <button>線を描く</button>
-        <button>一括削除</button>
-        <button onClick={handleSettingPanel}>設定</button>
+        <img src="/img/icon/recording.svg" css={{ width: '26px', height: '26px' }} /> <span>停止中</span>
+        <img src="/img/icon/hide.svg" css={{ width: '2%', height: 'auto%' }} />
+        <img src="/img/icon/drawing.svg" css={{ width: '2%', height: 'auto' }} />
+        <img src="/img/icon/trash.svg" css={{ width: '2%', height: 'auto' }} />
+        <img src="/img/icon/settings.svg" css={{ width: '20px', height: '20px' }} onClick={handleSettingPanel} />
       </div>
     </header>
   )

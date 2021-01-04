@@ -19,8 +19,8 @@ const Select = React.forwardRef((props, ref) => {
 
   return (
     <select ref={ ref } css={ style } { ...selectProps }>
-      { props.toplabel && (
-        <option label={ props.toplabel }></option>
+      { props.topLabel && (
+        <option label={ props.topLabel }></option>
       ) }
 
       { Array.isArray(props.options) && props.options.map((opt, i) => (
@@ -39,7 +39,7 @@ const Select = React.forwardRef((props, ref) => {
 
 Select.defaultProps = {
   options: [],
-  toplabel: ' ',
+  topLabel: ' ',
 }
 
 export default Select
