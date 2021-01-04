@@ -7,27 +7,17 @@ export default function BGMTab(props) {
   const [options, setOptions] = useState([])
 
   function handleClick(e) {
-    const id = parseInt(e.target.value)
-
     audio.pause()
+    audio.loop = true
+
+    const id = parseInt(e.target.value)
 
     if (id) {
       audio.src = props.bgms.find(b => b.id === id).url
-      audio.play().catch(e => {
-        if (e.name === 'NotAllowedError') {
-          console.log('show play button')
-        } else {
-          throw e
-        }
-      })
+      audio.play()
     }
 
     props.setRecord({ bgmID: id })
-  }
-
-  function handleLoopChange(e) {
-    audio.loop = e.target.checked
-    props.setRecord({ bgmLoop: e.target.checked })
   }
 
   useEffect(() => {
@@ -46,8 +36,7 @@ export default function BGMTab(props) {
   return (
     <>
       <Select options={options} topLabel={'なし'} size={5} onClick={handleClick} />
-      ループ
-      <input type='checkbox' onChange={handleLoopChange} />
+      後から音量や停止時刻を変更できます。
     </>
   )
 }
