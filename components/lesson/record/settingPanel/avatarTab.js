@@ -6,15 +6,7 @@ import 'react-colorful/dist/index.css'
 
 export default function AvatarTab(props) {
   const [options, setOptions] = useState([])
-  const [lightColor, setLightColor] = useState('#ffffff')
-
-  function handleDisableDragMouseDown() {
-    props.setDisabledDrag(true)
-  }
-
-  function handleDisableDragMouseUp() {
-    props.setDisabledDrag(false)
-  }
+  const [lightColor, setLightColor] = useState({ r: 255, g: 255, b: 255, a: 1 })
 
   function handleAvatarChange (e) {
     const id = parseInt(e.target.value)
@@ -24,8 +16,8 @@ export default function AvatarTab(props) {
 
   function handleColorChange(color) {
     setLightColor(color)
-    props.setAvatarConfig({ lightColor })
-    props.setRecord({ avatarLightColor: lightColor })
+    props.setAvatarConfig({ lightColor: color })
+    props.setRecord({ avatarLightColor: color })
   }
 
   useEffect(() => {
@@ -51,10 +43,8 @@ export default function AvatarTab(props) {
       </div>
       <div>
         <span>環境光</span>
-        <div css={{ backgroundColor: lightColor, width: '100px', height: '30px' }}></div>
-        <div onMouseEnter={handleDisableDragMouseDown} onMouseLeave={handleDisableDragMouseUp}>
-          <RgbaColorPicker color={lightColor} onChange={handleColorChange} />
-        </div>
+        <div css={{ backgroundColor: `rgba(${Object.values(lightColor).join(',')})`, width: '100px', height: '30px' }}></div>
+        <RgbaColorPicker color={lightColor} alpha={1.0} onChange={handleColorChange} />
       </div>
     </>
   )
