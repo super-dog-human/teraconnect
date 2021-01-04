@@ -1,12 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from 'react'
 import Select from '../../../form/select'
-import { RgbaColorPicker } from 'react-colorful'
+import { RgbaStringColorPicker } from 'react-colorful'
 import 'react-colorful/dist/index.css'
 
 export default function AvatarTab(props) {
   const [options, setOptions] = useState([])
-  const [lightColor, setLightColor] = useState({ r: 255, g: 255, b: 255, a: 1 })
+  const [lightColor, setLightColor] = useState('rgba(255, 255, 255, 1)')
 
   function handleAvatarChange (e) {
     const id = parseInt(e.target.value)
@@ -31,6 +31,7 @@ export default function AvatarTab(props) {
       )))
 
       props.setRecord({ avatarID: props.avatars[0].id })
+      props.setRecord({ avatarLightColor: lightColor })
     }
   }, [props.avatars])
 
@@ -43,8 +44,8 @@ export default function AvatarTab(props) {
       </div>
       <div>
         <span>環境光</span>
-        <div css={{ backgroundColor: `rgba(${Object.values(lightColor).join(',')})`, width: '100px', height: '30px' }}></div>
-        <RgbaColorPicker color={lightColor} alpha={1.0} onChange={handleColorChange} />
+        <div css={{ backgroundColor: lightColor, width: '100px', height: '30px' }}></div>
+        <RgbaStringColorPicker color={lightColor} alpha={1.0} onChange={handleColorChange} />
       </div>
     </>
   )
