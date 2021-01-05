@@ -49,7 +49,7 @@ export default function LessonRecordDrawing(props) {
   }
 
   useEffect(() => {
-    if (canvasContext === undefined) {
+    if (!canvasContext) {
       drawingElement.current.width = drawingElement.current.clientWidth
       drawingElement.current.height = drawingElement.current.clientHeight
       setCanvasContext(drawingElement.current.getContext('2d'))
