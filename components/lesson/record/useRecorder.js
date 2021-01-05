@@ -1,14 +1,12 @@
 import { useState } from 'react'
 
 export default function useRecorder(id, token, backgroungImage, avatarConfig) {
-
-  const recorder = null
-  const recorderConfig = null
+  const [recording, setRecording] = useState(false)
 
   function setRecord(record) {
     console.log('new record: ', record)
   }
 
 
-  return { recorder, recorderConfig, setRecord }
+  return { recording, startRecording: setRecording, setRecord }
 }

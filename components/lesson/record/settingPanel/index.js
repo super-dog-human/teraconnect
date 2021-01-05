@@ -56,7 +56,7 @@ export default function LessonRecordSettingPanel(props) {
 
         <Tabs forceRenderTabPanel={true}>
           <TabList>
-            <Tab>背景画像</Tab>
+            <Tab>背景</Tab>
             <Tab>BGM</Tab>
             <Tab>アバター</Tab>
             <Tab>マイク設定</Tab>

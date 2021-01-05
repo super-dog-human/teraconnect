@@ -28,14 +28,14 @@ const Page = (props) => {
   const { recording, startRecording, setRecord } = useRecorder(props.lesson.id, props.token, bgImageURL, avatarConfig)
   const { lessonImage, setLessonImage, uploadLessonImage } = useLessonImage(props.lesson.id, props.token)
   const { talking, setVoiceRecorderConfig } = useVoiceRecorder(props.lesson.id, props.token, recording, setRecord)
-  const { drawingConfig, setDrawingConfig } = useState({})
+  const [drawingConfig, setDrawingConfig] = useState({})
 
   return (
     <>
       <Head>
         <title>{props.lesson.title}の収録 - TERACONNECT</title>
       </Head>
-      <LessonRecordHeader startRecording={startRecording} setDrawingConfig={setDrawingConfig} setShowControlPanel={setShowControlPanel} />
+      <LessonRecordHeader recording={recording} startRecording={startRecording} setRecord={setRecord} setDrawingConfig={setDrawingConfig} setShowControlPanel={setShowControlPanel} />
       <main css={mainStyle}>
         <div css={bodyStyle}>
           <div css={loadingStyle}>
@@ -44,12 +44,11 @@ const Page = (props) => {
           <LessonBackgroundImage src={bgImageURL} />
           <LessonImage src={lessonImage} />
           <LessonAvatar config={avatarConfig} setLoading={setLoading} talking={talking} />
-          <LessonRecordDrawing config={drawingConfig} setRecord={setRecord} />
+          <LessonRecordDrawing drawingConfig={drawingConfig} setRecord={setRecord} />
           <LessonRecordSettingPanel show={showControlPanel} setShow={setShowControlPanel} bgImages={bgImages} setBgImageURL={setBgImageURL}
             avatars={avatars} setAvatarConfig={setAvatarConfig} bgms={bgms} setVoiceRecorderConfig={setVoiceRecorderConfig}
-            setDrawingConfig={setDrawingConfig} recording={recording} startRecording={startRecording} setRecord={setRecord} />
+            recording={recording} startRecording={startRecording} setRecord={setRecord} />
         </div>
-
         <LessonRecordImageController setLessonImage={setLessonImage} uploadImage={uploadLessonImage} setRecord={setRecord} />
         <LessonRecordRandomTips />
       </main>

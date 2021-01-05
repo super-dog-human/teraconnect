@@ -7,6 +7,16 @@ export default function LessonRecordDrawing(props) {
   const [canvasContext, setCanvasContext] = useState()
   const [drawing, setDrawing] = useState(false)
   const [startPosition, setStartPosition] = useState({})
+  const [hide, setHide] = useState(false)
+
+  const bodyStyle = css({
+    display: hide ? 'none': 'block',
+    position: 'absolute',
+    cursor: 'pointer',
+    top: 0,
+    width: '100%',
+    height: '100%',
+  })
 
   function handleMouseDown(e) {
     canvasContext.beginPath()
@@ -45,7 +55,22 @@ export default function LessonRecordDrawing(props) {
       setCanvasContext(drawingElement.current.getContext('2d'))
     }
 
-    // canvasContext(0, 0, drawingElement.current.width, drawingElement.current.height)
+    if (!props.drawingConfig) return
+
+    Object.keys(props.drawingConfig).forEach(key => {
+      switch(key) {
+      case 'undo':
+        console.log('undo has not implement.')
+        break
+      case 'erase':
+        canvasContext.clearRect(0, 0, drawingElement.current.width, drawingElement.current.height)
+        break
+      case 'hide':
+        setHide(!hide)
+        break
+      }
+    })
+
     // color
     // lineHeight
 
@@ -53,18 +78,10 @@ export default function LessonRecordDrawing(props) {
     // hide
     // erase
     // clearRect(0, 0, canvas.width, canvas.height);
-  }, [props.drawing])
+  }, [props.drawingConfig])
 
   return (
     <canvas css={bodyStyle} className='drawing-z' onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp} ref={drawingElement}>
     </canvas>
   )
 }
-
-const bodyStyle = css({
-  position: 'absolute',
-  cursor: 'pointer',
-  top: 0,
-  width: '100%',
-  height: '100%',
-})

@@ -60,6 +60,14 @@
     transform:rotate(360deg);
   }
 }
+@keyframes recording-color-change {
+  from {
+      background-color: #440000;
+  }
+  to {
+      background-color: #ff0000;
+  }
+}
 html {
   height: 100%;
   margin: 0;
@@ -120,16 +128,14 @@ button {
   line-height: 1.5;
   border-radius: 0.25rem;
   cursor: pointer;
-  transition: all 0.4s ease;
+  transition: all 0.1s ease;
+  background-color: inherit;
 }
 button:focus {
   outline: none;
 }
 button:focus-visible {
   outline: 2px dotted gray;
-}
-button:hover {
-  opacity: 0.7;
 }
 button.dark {
   background-color: var(--dark-purple);
@@ -145,6 +151,9 @@ button.light {
 }
 .text-align-left {
   text-align: left;
+}
+.text-align-right {
+  text-align: right;
 }
 .flex {
   display: -webkit-flex;

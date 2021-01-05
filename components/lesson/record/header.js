@@ -2,16 +2,31 @@
 import React from 'react'
 import Link from 'next/link'
 import { css } from '@emotion/core'
+import styled from '@emotion/styled'
 
 export default function LessonRecordHeader(props) {
+  function handleRecording() {
+    props.startRecording(!props.recording)
+  }
+
+  function handleDrawingErase() {
+    props.setDrawingConfig({ erase: true })
+    props.setRecord({ drawingErase: true })
+  }
+
+  function handleDrawingHide() {
+    props.setDrawingConfig({ hide: true })
+    props.setRecord({ drawingHide: true })
+  }
+
   function handleSettingPanel() {
     props.setShowControlPanel(state => !state)
   }
 
   return (
     <header css={headerStyle} className='header-z'>
-      <div css={headerBodyStyle}>
-        <span css={logoStyle}>
+      <div css={bodyStyle}>
+        <div css={flexItemStyle}>
           <Link href="/">
             <a>
               <img
@@ -21,12 +36,22 @@ export default function LessonRecordHeader(props) {
               />
             </a>
           </Link>
-        </span>
-        <img src="/img/icon/recording.svg" css={{ width: '26px', height: '26px' }} /> <span>停止中</span>
-        <img src="/img/icon/hide.svg" css={{ width: '2%', height: 'auto%' }} />
-        <img src="/img/icon/drawing.svg" css={{ width: '2%', height: 'auto' }} />
-        <img src="/img/icon/trash.svg" css={{ width: '2%', height: 'auto' }} />
-        <img src="/img/icon/settings.svg" css={{ width: '20px', height: '20px' }} onClick={handleSettingPanel} />
+        </div>
+        <div css={flexItemStyle}>
+          <button onClick={handleRecording} css={recordingButtonStyle}>
+            <img src="/img/icon/recording.svg" />
+            <div css={recordingStatusStyle}>
+              <span>{props.recording ? '録画中' : '停止中'}</span>
+            </div>
+          </button>
+        </div>
+        <div css={flexItemStyle}>
+          <DrawingButton onClick={handleDrawingHide}><img src="/img/icon/hide.svg" /></DrawingButton>
+          <DrawingButton><img src="/img/icon/drawing.svg" /></DrawingButton>
+          <DrawingButton><img src="/img/icon/undo.svg" /></DrawingButton>
+          <DrawingButton onClick={handleDrawingErase}><img src="/img/icon/trash.svg" /></DrawingButton>
+          <DrawingButton css={{ marginLeft: '150px' }} onClick={handleSettingPanel}><img src="/img/icon/settings.svg" /></DrawingButton>
+        </div>
       </div>
     </header>
   )
@@ -40,24 +65,53 @@ const headerStyle = css({
   left: 0,
 })
 
-const headerBodyStyle = css({
+const bodyStyle = css({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
   maxWidth: '1280px',
   height: '77px',
   marginLeft: 'auto',
   marginRight: 'auto',
 })
 
-const logoStyle = css({
-  verticalAlign: 'middle',
-  lineHeight: '77px',
-  marginLeft: '20px',
-  marginRight: '100px',
-})
-
 const logoImageStyle = css({
   width: '181px',
   height: '25px',
-  marginLeft: '0px',
-  lineHeight: '77px',
   verticalAlign: 'middle',
 })
+
+const flexItemStyle = css({
+  width: '100%',
+  textAlign: 'center',
+})
+
+const recordingButtonStyle = css({
+  position: 'relative',
+  ['img']: {
+    width: '26px',
+    height: 'auto',
+    verticalAlign: 'middle',
+  },
+  [':hover']: {
+    backgroundColor: 'var(--text-gray)',
+  }
+})
+
+const recordingStatusStyle = css({
+  position: 'absolute',
+  height: '77px',
+  top: 0,
+  left: 50,
+})
+
+const DrawingButton = styled.button`
+  > img {
+    width: 20px;
+    height: auto;
+    vertical-align: middle;
+  }
+  :hover {
+    background-color: var(--text-gray);
+  }
+`
