@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
 import Link from 'next/link'
-import { jsx, css } from '@emotion/core'
+import { css } from '@emotion/core'
 
 const bodyStyle = css({
   width: '100%',

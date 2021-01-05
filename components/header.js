@@ -2,7 +2,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { useSession } from 'next-auth/client'
-import { jsx, css } from '@emotion/core'
+import { css } from '@emotion/core'
 
 export default function Header() {
   const [ session, loading ] = useSession()

@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { jsx, css } from '@emotion/core'
+import { css } from '@emotion/core'
 import AvatarLoader from '../../libs/avatar/loader'
 import { Clock } from 'three'
 

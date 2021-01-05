@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { jsx, css } from '@emotion/core'
+import { css } from '@emotion/core'
 import AloneAvatar from '../avatar/aloneAvatar'
 
 const bodyStyle = css({
