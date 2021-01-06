@@ -3,6 +3,7 @@ import React from 'react'
 import Link from 'next/link'
 import { css } from '@emotion/core'
 import styled from '@emotion/styled'
+import RecordIcon from '../../recordIcon'
 
 export default function LessonRecordHeader(props) {
   function handleRecording() {
@@ -39,7 +40,9 @@ export default function LessonRecordHeader(props) {
         </div>
         <div css={flexItemStyle}>
           <button onClick={handleRecording} css={recordingButtonStyle}>
-            <img src="/img/icon/recording.svg" />
+            <div css={{ width: '26px', height: '26px' }}>
+              <RecordIcon recording={props.recording} />
+            </div>
             <div css={recordingStatusStyle}>
               <span>{props.recording ? '録画中' : '停止中'}</span>
             </div>

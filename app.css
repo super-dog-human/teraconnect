@@ -60,14 +60,6 @@
     transform:rotate(360deg);
   }
 }
-@keyframes recording-color-change {
-  from {
-      background-color: #440000;
-  }
-  to {
-      background-color: #ff0000;
-  }
-}
 html {
   height: 100%;
   margin: 0;
