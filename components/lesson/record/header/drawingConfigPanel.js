@@ -26,7 +26,9 @@ export default function DrawingConfigPanel(props) {
     props.setDrawingConfig({ eraser: false, color })
   }
 
-  // 5/10/20
+  function handleWidthChange(e) {
+    props.setDrawingConfig({ lineWidth: e.target.dataset.width, color: props.drawingConfig.color })
+  }
 
   const backgroundStyle = css({
     position: 'absolute',
@@ -55,6 +57,10 @@ export default function DrawingConfigPanel(props) {
       </button>
       <div css={backgroundStyle} onClick={handleShowPanel}>
         <div css={contextMenuStyle} onClick={handleMenuClick}>
+          <button onClick={handleWidthChange} data-width='5'>細</button>
+          <button onClick={handleWidthChange} data-width='10'>中</button>
+          <button onClick={handleWidthChange} data-width='20'>太</button>
+
           <button onClick={handleEraser}>Eraser</button>
           <button onClick={handleColorChange} data-color='#ff0000'>red</button>
           <button onClick={handleColorChange} data-color='#00ff00'>green</button>
