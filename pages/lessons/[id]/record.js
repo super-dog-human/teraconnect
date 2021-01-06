@@ -1,11 +1,11 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Head from 'next/head'
 import useRecordResource from '../../../components/lesson/record/useRecordResource'
 import useRecorder from '../../../components/lesson/record/useRecorder'
 import useLessonImage from '../../../components/lesson/record/useLessonImage'
 import useVoiceRecorder from '../../../components/lesson/record/useVoiceRecorder'
-import LessonRecordHeader from '../../../components/lesson/record/header'
+import LessonRecordHeader from '../../../components/lesson/record/header/'
 import LoadingIndicator from '../../../components/loadingIndicator'
 import LessonBackgroundImage from '../../../components/lesson/backgroundImage'
 import LessonAvatar from '../../../components/lesson/avatar'
@@ -28,23 +28,40 @@ const Page = (props) => {
   const { recording, startRecording, setRecord } = useRecorder(props.lesson.id, props.token, bgImageURL, avatarConfig)
   const { lessonImage, setLessonImage, uploadLessonImage } = useLessonImage(props.lesson.id, props.token)
   const { talking, setVoiceRecorderConfig } = useVoiceRecorder(props.lesson.id, props.token, recording, setRecord)
-  const [drawingConfig, setDrawingConfig] = useState({})
+  const [drawingConfig, setDrawingConfig] = useState({ color: '#ff0000', lineWidth: 5 })
+  const [hasResize, setHasResize] = useState()
+  const containerRef = useRef(null)
+
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver((e) => {
+      const width = e[0].contentRect.width
+      const height = e[0].contentRect.height
+      setHasResize(width, height)
+    })
+
+    containerRef.current && resizeObserver.observe(containerRef.current)
+
+    return () => {
+      resizeObserver.disconnect()
+    }
+  }, [])
 
   return (
     <>
       <Head>
         <title>{props.lesson.title}の収録 - TERACONNECT</title>
       </Head>
-      <LessonRecordHeader recording={recording} startRecording={startRecording} setRecord={setRecord} setDrawingConfig={setDrawingConfig} setShowControlPanel={setShowControlPanel} />
+      <LessonRecordHeader recording={recording} startRecording={startRecording} setRecord={setRecord}
+        drawingConfig={drawingConfig} setDrawingConfig={setDrawingConfig} setShowControlPanel={setShowControlPanel} />
       <main css={mainStyle}>
-        <div css={bodyStyle}>
+        <div css={bodyStyle} ref={containerRef}>
           <div css={loadingStyle}>
             <LoadingIndicator loading={loading}/>
           </div>
           <LessonBackgroundImage src={bgImageURL} />
           <LessonImage src={lessonImage} />
-          <LessonAvatar config={avatarConfig} setLoading={setLoading} talking={talking} />
-          <LessonRecordDrawing drawingConfig={drawingConfig} setRecord={setRecord} />
+          <LessonAvatar config={avatarConfig} setLoading={setLoading} talking={talking} hasResize={hasResize} />
+          <LessonRecordDrawing drawingConfig={drawingConfig} setRecord={setRecord} hasResize={hasResize} />
           <LessonRecordSettingPanel show={showControlPanel} setShow={setShowControlPanel} bgImages={bgImages} setBgImageURL={setBgImageURL}
             avatars={avatars} setAvatarConfig={setAvatarConfig} bgms={bgms} setVoiceRecorderConfig={setVoiceRecorderConfig}
             recording={recording} startRecording={startRecording} setRecord={setRecord} />
@@ -85,6 +102,7 @@ const mainStyle = css({
   width: '100%',
   height: '100%',
   backgroundColor: 'var(--back-movie-black)',
+  userSelect: 'none',
 })
 
 const bodyStyle = css({

@@ -1,18 +1,22 @@
 /** @jsxImportSource @emotion/react */
-import React from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import { css } from '@emotion/core'
 import styled from '@emotion/styled'
-import RecordIcon from '../../recordIcon'
+import RecordIcon from './recordIcon'
+import DrawingConfigPanel from './drawingConfigPanel'
 
 export default function LessonRecordHeader(props) {
+  const [showDrawingConfig, setShowDrawingConfig] = useState(false)
+  const [drawingConfigPanelPosition, setDrawingConfigPanelPosition] = useState({ top: 0, left: 0 })
+
   function handleRecording() {
     props.startRecording(!props.recording)
   }
 
-  function handleDrawingErase() {
-    props.setDrawingConfig({ erase: true })
-    props.setRecord({ drawingErase: true })
+  function handleDrawingClear() {
+    props.setDrawingConfig({ clear: true })
+    props.setRecord({ drawingClear: true })
   }
 
   function handleDrawingHide() {
@@ -22,6 +26,15 @@ export default function LessonRecordHeader(props) {
 
   function handleSettingPanel() {
     props.setShowControlPanel(state => !state)
+  }
+
+  function handleShowDrawingConfigPanel(e) {
+    setDrawingConfigPanelPosition({ top: e.nativeEvent.pageY + 20, left: e.nativeEvent.pageX - 30 })
+    setShowDrawingConfig(!showDrawingConfig)
+  }
+
+  function handleDrawingConfigPanel(e) {
+    e.stopPropagation()
   }
 
   return (
@@ -40,20 +53,26 @@ export default function LessonRecordHeader(props) {
         </div>
         <div css={flexItemStyle}>
           <button onClick={handleRecording} css={recordingButtonStyle}>
-            <div css={{ width: '26px', height: '26px' }}>
+            <div css={recordingIconStyle}>
               <RecordIcon recording={props.recording} />
             </div>
             <div css={recordingStatusStyle}>
-              <span>{props.recording ? '録画中' : '停止中'}</span>
+              <span>{props.recording ? '' : ''}</span>
             </div>
           </button>
         </div>
         <div css={flexItemStyle}>
           <DrawingButton onClick={handleDrawingHide}><img src="/img/icon/hide.svg" /></DrawingButton>
-          <DrawingButton><img src="/img/icon/drawing.svg" /></DrawingButton>
+          <DrawingButton css={{  paddingRight: '0px' }}><img src="/img/icon/drawing.svg" /></DrawingButton>
+          <DrawingConfigPanel drawingConfig={props.drawingConfig} setDrawingConfig={props.setDrawingConfig}/>
           <DrawingButton><img src="/img/icon/undo.svg" /></DrawingButton>
-          <DrawingButton onClick={handleDrawingErase}><img src="/img/icon/trash.svg" /></DrawingButton>
+          <DrawingButton onClick={handleDrawingClear}><img src="/img/icon/trash.svg" /></DrawingButton>
           <DrawingButton css={{ marginLeft: '150px' }} onClick={handleSettingPanel}><img src="/img/icon/settings.svg" /></DrawingButton>
+        </div>
+      </div>
+      <div css={{ position: 'absolute', top: 0, width: '100vw', height: '100vh', display: showDrawingConfig ? 'block' : 'none' }} onClick={handleShowDrawingConfigPanel}>
+        <div css={{ borderRadius: '10px',filter: 'drop-shadow(2px 2px 2px gray)', position: 'absolute', top: drawingConfigPanelPosition.top, left: drawingConfigPanelPosition.left, width: '150px', height: '250px', backgroundColor: 'gray' }} onClick={handleDrawingConfigPanel}>
+          context menu.
         </div>
       </div>
     </header>
@@ -106,6 +125,11 @@ const recordingStatusStyle = css({
   height: '77px',
   top: 0,
   left: 50,
+})
+
+const recordingIconStyle = css({
+  width: '26px',
+  height: '26px',
 })
 
 const DrawingButton = styled.button`

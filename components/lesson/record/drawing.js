@@ -41,28 +41,40 @@ export default function LessonRecordDrawing(props) {
   }
 
   function drawLine(x, y) {
-    canvasContext.strokeStyle = '#ff0000'
-    canvasContext.lineWidth = 5 // 5/10/20
-    canvasContext.lineTo(x, y)
+    canvasContext.globalCompositeOperation = (props.drawingConfig.eraser) ?
+      'destination-out': 'source-over'
     canvasContext.quadraticCurveTo(startPosition.x, startPosition.y, x, y)
     canvasContext.stroke()
   }
 
+  function setCanvasSize() {
+    drawingElement.current.width = drawingElement.current.clientWidth
+    drawingElement.current.height = drawingElement.current.clientHeight
+  }
+
   useEffect(() => {
     if (!canvasContext) {
-      drawingElement.current.width = drawingElement.current.clientWidth
-      drawingElement.current.height = drawingElement.current.clientHeight
+      setCanvasSize()
       setCanvasContext(drawingElement.current.getContext('2d'))
+    } else if (props.hasResize) {
+      //      setCanvasSize()
+      //      canvasContext.drawImage(drawingElement.current, 0, 0, drawingElement.current.clientWidth, drawingElement.current.clientHeight)
     }
 
     if (!props.drawingConfig) return
 
     Object.keys(props.drawingConfig).forEach(key => {
       switch(key) {
+      case 'color':
+        if (canvasContext) canvasContext.strokeStyle = props.drawingConfig.color
+        break
+      case 'lineWidth':
+        if (canvasContext) canvasContext.lineWidth = props.drawingConfig.lineWidth
+        break
       case 'undo':
         console.log('undo has not implement.')
         break
-      case 'erase':
+      case 'clear':
         canvasContext.clearRect(0, 0, drawingElement.current.width, drawingElement.current.height)
         break
       case 'hide':
@@ -70,15 +82,7 @@ export default function LessonRecordDrawing(props) {
         break
       }
     })
-
-    // color
-    // lineHeight
-
-    // undo
-    // hide
-    // erase
-    // clearRect(0, 0, canvas.width, canvas.height);
-  }, [props.drawingConfig])
+  }, [props.drawingConfig, props.hasResize])
 
   return (
     <canvas css={bodyStyle} className='drawing-z' onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp} ref={drawingElement}>

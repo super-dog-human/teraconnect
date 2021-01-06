@@ -21,7 +21,6 @@ export default function AvatarTab(props) {
   }
 
   useEffect(() => {
-    // パネルが開かれるのはimageURLsのロード後
     if (props.avatars.length > 0 && options.length === 0) {
       setOptions(props.avatars.map(avatar => (
         {
