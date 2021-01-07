@@ -7,11 +7,10 @@ export default function LessonRecordDrawing(props) {
   const [canvasContext, setCanvasContext] = useState()
   const [drawing, setDrawing] = useState(false)
   const [startPosition, setStartPosition] = useState({})
-  const [hide, setHide] = useState(false)
   const [drawingHistories, setDrawingHistories] = useState([])
 
   const bodyStyle = css({
-    display: hide ? 'none': 'block',
+    display: props.drawingConfig.hide ? 'none': 'block',
     position: 'absolute',
     cursor: 'pointer',
     top: 0,
@@ -47,9 +46,40 @@ export default function LessonRecordDrawing(props) {
   function drawLine(x, y) {
     canvasContext.globalCompositeOperation = props.drawingConfig.eraser ?
       'destination-out': 'source-over'
+    // カーブの終点をマウスの動く前の座標に、頂点を動いた後の座標にすると滑らかな線が描画できる
     canvasContext.quadraticCurveTo(startPosition.x, startPosition.y, x, y)
     canvasContext.stroke()
+
     addHistory(startPosition)
+  }
+
+  function redrawFromHistory() {
+    drawingHistories.forEach(h => {
+      if (h.clear) {
+        clearCanvas()
+      } else {
+        canvasContext.strokeStyle = h.color
+        canvasContext.lineWidth = h.lineWidth
+        canvasContext.globalCompositeOperation = h.eraser ? 'destination-out': 'source-over'
+        const coef = { x: currentDrawingSize().width / h.width, y: currentDrawingSize().height / h.height }
+
+        canvasContext.beginPath()
+        h.drawings.slice(1).forEach((d, i) => {
+          canvasContext.quadraticCurveTo(...calcResizePosition(coef, h.drawings[i], d))
+          canvasContext.stroke()
+        })
+      }
+    })
+  }
+
+  function calcResizePosition(coefficient, originalPosition, newPosition) {
+    return [coefficient.x * originalPosition.x, coefficient.y * originalPosition.y, coefficient.x * newPosition.x, coefficient.y * newPosition.y].map(f => (
+      Math.round(f)
+    ))
+  }
+
+  function isSamePosition(oldPosition, newPosition) {
+    return oldPosition.x === newPosition.x && oldPosition.y === newPosition.y
   }
 
   function createNewHistory(drawing) {
@@ -60,7 +90,7 @@ export default function LessonRecordDrawing(props) {
       color: canvasContext.strokeStyle,
       eraser: props.drawingConfig.eraser,
       lineWidth: canvasContext.lineWidth,
-      drawings: [drawing]
+      drawings: [drawing],
     })
     setDrawingHistories(drawingHistories)
   }
@@ -68,9 +98,11 @@ export default function LessonRecordDrawing(props) {
   function addHistory(drawing) {
     const drawings = drawingHistories[drawingHistories.length - 1].drawings
     const oldPosition = drawings[drawings.length - 1]
-    if (oldPosition.x === drawing.x && oldPosition.y === drawing.y) {
+    if (isSamePosition(oldPosition, drawing)) {
       return
     }
+
+    // 描写が発生しないクリックだけの場合もスキップしたい
 
     drawings.push(drawing)
     setDrawingHistories(drawingHistories)
@@ -82,30 +114,16 @@ export default function LessonRecordDrawing(props) {
   }
 
   function undoDrawing() {
-    canvasContext.save()
+    if (drawingHistories.length === 0) return
+
+    //    canvasContext.save()
     clearCanvas()
 
-    drawingHistories.pop() // 直近の描写を捨てて最初から描き直す
+    drawingHistories.pop()
     setDrawingHistories(drawingHistories)
+    redrawFromHistory()
 
-    drawingHistories.forEach(h => {
-      if (h.clear) {
-        clearCanvas()
-      } else {
-        // setCanvasSize(h.width, h.height)
-        canvasContext.strokeStyle = h.color
-        canvasContext.lineWidth = h.lineWidth
-        canvasContext.globalCompositeOperation = h.eraser ? 'destination-out': 'source-over'
-
-        canvasContext.beginPath()
-        h.drawings.slice(1).forEach((d, i) => {
-          canvasContext.quadraticCurveTo(h.drawings[i].x, h.drawings[i].y, d.x, d.y)
-          canvasContext.stroke()
-        })
-        canvasContext.closePath()
-      }
-    })
-    canvasContext.restore()
+    //    canvasContext.restore()
   }
 
   function setCanvasSize(width, height) {
@@ -113,19 +131,27 @@ export default function LessonRecordDrawing(props) {
     drawingElement.current.height = height
   }
 
+  function setCanvasResize(width, height) {
+    setCanvasSize(width, height)
+    redrawFromHistory()
+  }
+
   function clearCanvas() {
+    canvasContext.save()
     canvasContext.clearRect(0, 0, drawingElement.current.width, drawingElement.current.height)
+    canvasContext.restore()
+  }
+
+  function currentDrawingSize() {
+    return { width: drawingElement.current.clientWidth, height: drawingElement.current.clientHeight }
   }
 
   useEffect(() => {
     if (!canvasContext) {
-      setCanvasSize(drawingElement.current.clientWidth, drawingElement.current.clientHeight)
       setCanvasContext(drawingElement.current.getContext('2d'))
     } else if (props.hasResize) {
-      //      setCanvasSize(drawingElement.current.clientWidth, drawingElement.current.clientHeight)
+      setCanvasResize(currentDrawingSize().width, currentDrawingSize().height)
     }
-
-    if (!props.drawingConfig) return
 
     Object.keys(props.drawingConfig).forEach(key => {
       switch(key) {
@@ -142,15 +168,11 @@ export default function LessonRecordDrawing(props) {
         addClearHistory()
         clearCanvas()
         break
-      case 'hide':
-        setHide(!hide)
-        break
       }
     })
   }, [props.drawingConfig, props.hasResize])
 
   return (
-    <canvas css={bodyStyle} className='drawing-z' onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp} ref={drawingElement}>
-    </canvas>
+    <canvas css={bodyStyle} className='drawing-z' onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp} ref={drawingElement} />
   )
 }
