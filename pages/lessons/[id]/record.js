@@ -28,7 +28,7 @@ const Page = (props) => {
   const { recording, startRecording, setRecord } = useRecorder(props.lesson.id, props.token, bgImageURL, avatarConfig)
   const { lessonImage, setLessonImage, uploadLessonImage } = useLessonImage(props.lesson.id, props.token)
   const { talking, setVoiceRecorderConfig } = useVoiceRecorder(props.lesson.id, props.token, recording, setRecord)
-  const [drawingConfig, setDrawingConfig] = useState({ color: '#ff0000', lineWidth: 5 })
+  const [drawingConfig, setDrawingConfig] = useState({ color: '#ff0000', lineWidth: 5, eraser: false })
   const [hasResize, setHasResize] = useState()
   const containerRef = useRef(null)
 

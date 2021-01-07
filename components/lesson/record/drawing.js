@@ -8,6 +8,7 @@ export default function LessonRecordDrawing(props) {
   const [drawing, setDrawing] = useState(false)
   const [startPosition, setStartPosition] = useState({})
   const [hide, setHide] = useState(false)
+  const [drawingHistories, setDrawingHistories] = useState([])
 
   const bodyStyle = css({
     display: hide ? 'none': 'block',
@@ -21,7 +22,10 @@ export default function LessonRecordDrawing(props) {
   function handleMouseDown(e) {
     canvasContext.beginPath()
     setDrawing(true)
-    setStartPosition({ x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY })
+
+    const position = { x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY }
+    setStartPosition(position)
+    createNewHistory(position)
   }
 
   async function handleMouseMove(e) {
@@ -41,24 +45,84 @@ export default function LessonRecordDrawing(props) {
   }
 
   function drawLine(x, y) {
-    canvasContext.globalCompositeOperation = (props.drawingConfig.eraser) ?
+    canvasContext.globalCompositeOperation = props.drawingConfig.eraser ?
       'destination-out': 'source-over'
     canvasContext.quadraticCurveTo(startPosition.x, startPosition.y, x, y)
     canvasContext.stroke()
+    addHistory(startPosition)
   }
 
-  function setCanvasSize() {
-    drawingElement.current.width = drawingElement.current.clientWidth
-    drawingElement.current.height = drawingElement.current.clientHeight
+  function createNewHistory(drawing) {
+    drawingHistories.push({
+      clear: false,
+      width: drawingElement.current.clientWidth,
+      height: drawingElement.current.clientHeight,
+      color: canvasContext.strokeStyle,
+      eraser: props.drawingConfig.eraser,
+      lineWidth: canvasContext.lineWidth,
+      drawings: [drawing]
+    })
+    setDrawingHistories(drawingHistories)
+  }
+
+  function addHistory(drawing) {
+    const drawings = drawingHistories[drawingHistories.length - 1].drawings
+    const oldPosition = drawings[drawings.length - 1]
+    if (oldPosition.x === drawing.x && oldPosition.y === drawing.y) {
+      return
+    }
+
+    drawings.push(drawing)
+    setDrawingHistories(drawingHistories)
+  }
+
+  function addClearHistory() {
+    if (drawingHistories.length === 0) return
+    drawingHistories.push({ clear: true })
+  }
+
+  function undoDrawing() {
+    canvasContext.save()
+    clearCanvas()
+
+    drawingHistories.pop() // 直近の描写を捨てて最初から描き直す
+    setDrawingHistories(drawingHistories)
+
+    drawingHistories.forEach(h => {
+      if (h.clear) {
+        clearCanvas()
+      } else {
+        // setCanvasSize(h.width, h.height)
+        canvasContext.strokeStyle = h.color
+        canvasContext.lineWidth = h.lineWidth
+        canvasContext.globalCompositeOperation = h.eraser ? 'destination-out': 'source-over'
+
+        canvasContext.beginPath()
+        h.drawings.slice(1).forEach((d, i) => {
+          canvasContext.quadraticCurveTo(h.drawings[i].x, h.drawings[i].y, d.x, d.y)
+          canvasContext.stroke()
+        })
+        canvasContext.closePath()
+      }
+    })
+    canvasContext.restore()
+  }
+
+  function setCanvasSize(width, height) {
+    drawingElement.current.width = width
+    drawingElement.current.height = height
+  }
+
+  function clearCanvas() {
+    canvasContext.clearRect(0, 0, drawingElement.current.width, drawingElement.current.height)
   }
 
   useEffect(() => {
     if (!canvasContext) {
-      setCanvasSize()
+      setCanvasSize(drawingElement.current.clientWidth, drawingElement.current.clientHeight)
       setCanvasContext(drawingElement.current.getContext('2d'))
     } else if (props.hasResize) {
-      //      setCanvasSize()
-      //      canvasContext.drawImage(drawingElement.current, 0, 0, drawingElement.current.clientWidth, drawingElement.current.clientHeight)
+      //      setCanvasSize(drawingElement.current.clientWidth, drawingElement.current.clientHeight)
     }
 
     if (!props.drawingConfig) return
@@ -72,10 +136,11 @@ export default function LessonRecordDrawing(props) {
         if (canvasContext) canvasContext.lineWidth = props.drawingConfig.lineWidth
         break
       case 'undo':
-        console.log('undo has not implement.')
+        undoDrawing()
         break
       case 'clear':
-        canvasContext.clearRect(0, 0, drawingElement.current.width, drawingElement.current.height)
+        addClearHistory()
+        clearCanvas()
         break
       case 'hide':
         setHide(!hide)
