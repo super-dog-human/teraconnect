@@ -21,8 +21,8 @@ export default function LessonRecordHeader(props) {
   }
 
   function handleDrawingHide() {
-    props.setDrawingConfig({ hide: true })
-    props.setRecord({ drawingHide: true })
+    props.setDrawingConfig({ hide: !props.drawingConfig.hide })
+    props.setRecord({ drawingHide: !props.drawingConfig.hide })
   }
 
   function handleSettingPanel() {
