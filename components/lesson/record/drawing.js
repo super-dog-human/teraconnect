@@ -52,7 +52,7 @@ export default function LessonRecordDrawing(props) {
     canvasContext.quadraticCurveTo(startPosition.x, startPosition.y, x, y)
     canvasContext.stroke()
 
-    addHistory(startPosition)
+    addHistory({ x, y })
   }
 
   function redrawFromHistory() {
