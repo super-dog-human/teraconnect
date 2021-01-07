@@ -34,9 +34,7 @@ const Page = (props) => {
 
   useEffect(() => {
     const resizeObserver = new ResizeObserver((e) => {
-      const width = e[0].contentRect.width
-      const height = e[0].contentRect.height
-      setHasResize(width, height)
+      setHasResize(e[0].contentRect.width, e[0].contentRect.height)
     })
 
     containerRef.current && resizeObserver.observe(containerRef.current)
