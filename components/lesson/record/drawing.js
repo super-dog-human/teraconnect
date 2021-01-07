@@ -27,7 +27,7 @@ export default function LessonRecordDrawing(props) {
     createNewHistory(position)
   }
 
-  async function handleMouseMove(e) {
+  function handleMouseMove(e) {
     if (!drawing) return
 
     drawLine(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
@@ -39,7 +39,6 @@ export default function LessonRecordDrawing(props) {
 
     drawLine(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
     cleanHistory()
-    canvasContext.closePath()
 
     setDrawing(false)
   }
