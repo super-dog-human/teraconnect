@@ -38,12 +38,15 @@ export default function LessonRecordDrawing(props) {
     if (!drawing) return
 
     drawLine(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
+    cleanHistory()
     canvasContext.closePath()
 
     setDrawing(false)
   }
 
   function drawLine(x, y) {
+    if (isSamePosition(startPosition, { x, y })) return
+
     canvasContext.globalCompositeOperation = props.drawingConfig.eraser ?
       'destination-out': 'source-over'
     // カーブの終点をマウスの動く前の座標に、頂点を動いた後の座標にすると滑らかな線が描画できる
@@ -95,16 +98,15 @@ export default function LessonRecordDrawing(props) {
     setDrawingHistories(drawingHistories)
   }
 
-  function addHistory(drawing) {
-    const drawings = drawingHistories[drawingHistories.length - 1].drawings
-    const oldPosition = drawings[drawings.length - 1]
-    if (isSamePosition(oldPosition, drawing)) {
-      return
+  function cleanHistory() {
+    if (drawingHistories[drawingHistories.length - 1].drawings.length === 1) {
+      drawingHistories.pop()
+      setDrawingHistories(drawingHistories)
     }
+  }
 
-    // 描写が発生しないクリックだけの場合もスキップしたい
-
-    drawings.push(drawing)
+  function addHistory(drawing) {
+    drawingHistories[drawingHistories.length - 1].drawings.push(drawing)
     setDrawingHistories(drawingHistories)
   }
 
