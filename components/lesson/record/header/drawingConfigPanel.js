@@ -13,10 +13,6 @@ export default function DrawingConfigPanel(props) {
     setShowDrawingConfig(!showDrawingConfig)
   }
 
-  function handleMenuClick(e) {
-    e.stopPropagation()
-  }
-
   function handleEraser() {
     props.setDrawingConfig({ eraser: true })
   }
@@ -56,7 +52,7 @@ export default function DrawingConfigPanel(props) {
         <img src="/img/icon/sort-down.svg" />
       </button>
       <div css={backgroundStyle} onClick={handleShowPanel}>
-        <div css={contextMenuStyle} onClick={handleMenuClick}>
+        <div css={contextMenuStyle}>
           <button onClick={handleWidthChange} data-width='5'>細</button>
           <button onClick={handleWidthChange} data-width='10'>中</button>
           <button onClick={handleWidthChange} data-width='20'>太</button>
