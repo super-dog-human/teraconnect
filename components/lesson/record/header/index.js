@@ -12,17 +12,17 @@ export default function LessonRecordHeader(props) {
   }
 
   function handleDrawingUndo() {
-    props.setDrawingConfig({ undo: true })
+    props.undoDrawing()
   }
 
   function handleDrawingClear() {
-    props.setDrawingConfig({ clear: true })
+    props.clearDrawing()
     props.setRecord({ drawingClear: true })
   }
 
   function handleDrawingHide() {
-    props.setDrawingConfig({ hide: !props.drawingConfig.hide })
-    props.setRecord({ drawingHide: !props.drawingConfig.hide })
+    props.setIsDrawingHide(!props.isDrawingHide)
+    props.setRecord({ drawingHide: !props.isDrawingHide })
   }
 
   function handleSettingPanel() {
@@ -56,7 +56,8 @@ export default function LessonRecordHeader(props) {
         <div css={flexItemStyle}>
           <DrawingButton onClick={handleDrawingHide}><img src="/img/icon/hide.svg" /></DrawingButton>
           <DrawingButton css={{ paddingRight: '0px' }}><img src="/img/icon/drawing.svg" /></DrawingButton>
-          <DrawingConfigPanel drawingConfig={props.drawingConfig} setDrawingConfig={props.setDrawingConfig}/>
+          <DrawingConfigPanel color={props.drawingColor} setColor={props.setDrawingColor}
+            lineWidth={props.drawingLineWidth} setLineWidth={props.setDrawingLineWidth} />
           <DrawingButton onClick={handleDrawingUndo}><img src="/img/icon/undo.svg" /></DrawingButton>
           <DrawingButton onClick={handleDrawingClear}><img src="/img/icon/trash.svg" /></DrawingButton>
           <DrawingButton css={{ marginLeft: '150px' }} onClick={handleSettingPanel}><img src="/img/icon/settings.svg" /></DrawingButton>

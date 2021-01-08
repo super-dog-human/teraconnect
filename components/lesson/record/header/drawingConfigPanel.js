@@ -14,16 +14,16 @@ export default function DrawingConfigPanel(props) {
   }
 
   function handleEraser() {
-    props.setDrawingConfig({ eraser: true })
+    props.setColor('eraser')
   }
 
   function handleColorChange(e) {
     const color = (typeof e === 'string') ? e : e.target.dataset.color
-    props.setDrawingConfig({ eraser: false, color })
+    props.setColor(color)
   }
 
   function handleWidthChange(e) {
-    props.setDrawingConfig({ lineWidth: e.target.dataset.width, color: props.drawingConfig.color })
+    props.setLineWidth(e.target.dataset.width)
   }
 
   const backgroundStyle = css({
@@ -46,6 +46,8 @@ export default function DrawingConfigPanel(props) {
     backgroundColor: 'gray'
   })
 
+  // props.lineWidthを反映させる
+
   return (
     <>
       <button css={sortDownButtonStyle} onMouseDown={handleShowPanel}>
@@ -61,7 +63,7 @@ export default function DrawingConfigPanel(props) {
           <button onClick={handleColorChange} data-color='#ff0000'>red</button>
           <button onClick={handleColorChange} data-color='#00ff00'>green</button>
           <button onClick={handleColorChange} data-color='#000000'>black</button>
-          <HexColorInput color={props.drawingConfig.color} onChange={handleColorChange}/>
+          <HexColorInput color={props.color} onChange={handleColorChange}/>
         </div>
       </div>
     </>

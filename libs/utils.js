@@ -1,3 +1,7 @@
+import ReactGA from 'react-ga'
+import { GA_TRACKING_ID } from './constants'
+ReactGA.initialize(GA_TRACKING_ID)
+
 export function filterObject(obj, keys) {
   return Object.keys(obj)
     .filter(key => keys.includes(key))
@@ -32,7 +36,19 @@ export function arrayToUniq(arr) {
   })
 }
 
+export function sendExceptionToGA(componentName, err, isFatal) {
+//  if (!isProduction()) return
+
+  ReactGA.exception({
+    category: componentName,
+    action: err.message,
+    description: `${err.stack.replace(/(@)(http|https):\/\//g, '(at)$2:')}`,
+    fatal: isFatal
+  })
+}
+
 /*
+
 export function showLoading(context, message = '') {
   context.setLoading(true)
   context.setMessage(message)

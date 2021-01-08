@@ -5,6 +5,7 @@ import useRecordResource from '../../../components/lesson/record/useRecordResour
 import useRecorder from '../../../components/lesson/record/useRecorder'
 import useLessonImage from '../../../components/lesson/record/useLessonImage'
 import useVoiceRecorder from '../../../components/lesson/record/useVoiceRecorder'
+import useDrawing from '../../../libs/hooks/lesson/record/useDrawing'
 import LessonRecordHeader from '../../../components/lesson/record/header/'
 import LoadingIndicator from '../../../components/loadingIndicator'
 import LessonBackgroundImage from '../../../components/lesson/backgroundImage'
@@ -20,21 +21,23 @@ import { fetchWithAuth } from '../../../libs/fetch'
 import { css } from '@emotion/core'
 
 const Page = (props) => {
+  const [hasResize, setHasResize] = useState()
   const [isLoading, setIsLoading] = useState(true)
   const [bgImageURL, setBgImageURL] = useState()
   const [avatarConfig, setAvatarConfig] = useState({})
   const { bgImages, avatars, bgms } = useRecordResource(props.token, setBgImageURL, setAvatarConfig)
   const [isShowControlPanel, setIsShowControlPanel] = useState(false)
+  const [isDrawingHide, setIsDrawingHide] = useState(false)
   const { isRecording, setIsRecording, setRecord } = useRecorder(props.lesson.id, props.token, bgImageURL, avatarConfig)
   const { lessonImage, setLessonImage, uploadLessonImage } = useLessonImage(props.lesson.id, props.token)
   const { isTalking, setVoiceRecorderConfig } = useVoiceRecorder(props.lesson.id, props.token, isRecording, setRecord)
-  const [drawingConfig, setDrawingConfig] = useState({ color: '#ff0000', lineWidth: 5, eraser: false })
-  const [hasResize, setHasResize] = useState()
+  const { undoDrawing, clearDrawing, drawingColor, setDrawingColor, drawingLineWidth, setDrawingLineWidth,
+    startDrawing, inDrawing, endDrawing, drawingRef } = useDrawing(setRecord, hasResize)
   const containerRef = useRef(null)
 
   useEffect(() => {
-    const resizeObserver = new ResizeObserver((e) => {
-      setHasResize(e[0].contentRect.width, e[0].contentRect.height)
+    const resizeObserver = new ResizeObserver(e => {
+      setHasResize({ width: e[0].contentRect.width, height: e[0].contentRect.height })
     })
 
     containerRef.current && resizeObserver.observe(containerRef.current)
@@ -50,7 +53,11 @@ const Page = (props) => {
         <title>{props.lesson.title}の収録 - TERACONNECT</title>
       </Head>
       <LessonRecordHeader isRecording={isRecording} setIsRecording={setIsRecording} setRecord={setRecord}
-        drawingConfig={drawingConfig} setDrawingConfig={setDrawingConfig} setIsShowControlPanel={setIsShowControlPanel} />
+        isDrawingHide={isDrawingHide} setIsDrawingHide={setIsDrawingHide}
+        undoDrawing={undoDrawing} clearDrawing={clearDrawing}
+        drawingColor={drawingColor} setDrawingColor={setDrawingColor}
+        drawingLineWidth={drawingLineWidth} setDrawingLineWidth={setDrawingLineWidth}
+        setIsShowControlPanel={setIsShowControlPanel} />
       <main css={mainStyle}>
         <div css={bodyStyle} ref={containerRef}>
           <div css={loadingStyle}>
@@ -59,7 +66,7 @@ const Page = (props) => {
           <LessonBackgroundImage src={bgImageURL} />
           <LessonImage src={lessonImage} />
           <LessonAvatar config={avatarConfig} setIsLoading={setIsLoading} isTalking={isTalking} hasResize={hasResize} />
-          <LessonRecordDrawing drawingConfig={drawingConfig} setRecord={setRecord} hasResize={hasResize} />
+          <LessonRecordDrawing isHide={isDrawingHide} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing} drawingRef={drawingRef}  />
           <LessonRecordSettingPanel isShow={isShowControlPanel} setIsShow={setIsShowControlPanel} bgImages={bgImages} setBgImageURL={setBgImageURL}
             avatars={avatars} setAvatarConfig={setAvatarConfig} bgms={bgms} setVoiceRecorderConfig={setVoiceRecorderConfig}
             setRecord={setRecord} />
