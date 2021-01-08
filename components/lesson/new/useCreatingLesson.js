@@ -4,11 +4,11 @@ import { post } from '../../../libs/fetch'
 
 export default function useCreatingLesson(token) {
   const [error, setError] = useState()
-  const [creating, setCreating] = useState(false)
+  const [isCreating, setIsCreating] = useState(false)
   const router = useRouter()
 
   async function onSubmit(form) {
-    setCreating(true)
+    setIsCreating(true)
 
     const body = {
       subjectID: parseInt(form.subjectID),
@@ -27,11 +27,11 @@ export default function useCreatingLesson(token) {
       .catch(error => {
         // TODO redirect login page when status 401
 
-        setCreating(false)
+        setIsCreating(false)
         setError('授業の作成に失敗しました。')
         throw error
       })
   }
 
-  return { onSubmit, creating, creatingError: error }
+  return { onSubmit, isCreating, creatingError: error }
 }

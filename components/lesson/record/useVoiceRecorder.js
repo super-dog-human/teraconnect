@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
 export default function useVoiceRecorder(id, token, recording, setRecord) {
-  const [talking, setTalking] = useState(false)
+  const [isTalking, setIsTalking] = useState(false)
   const [config, setConfig] = useState()
   /*
   useEffect(async () => {
@@ -20,5 +20,5 @@ export default function useVoiceRecorder(id, token, recording, setRecord) {
   }, [recording, config])
 
 */
-  return { talking, setVoiceRecorderConfig: setConfig }
+  return { isTalking, setVoiceRecorderConfig: setConfig }
 }

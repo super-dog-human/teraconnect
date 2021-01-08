@@ -3,9 +3,9 @@ import React, { useRef, useState, useEffect } from 'react'
 import { css } from '@emotion/core'
 
 export default function LessonRecordDrawing(props) {
-  const drawingElement = useRef(null)
+  const drawingRef = useRef(null)
   const [canvasContext, setCanvasContext] = useState()
-  const [drawing, setDrawing] = useState(false)
+  const [isDrawing, setIsDrawing] = useState(false)
   const [startPosition, setStartPosition] = useState({})
   const [drawingHistories, setDrawingHistories] = useState([])
 
@@ -20,7 +20,7 @@ export default function LessonRecordDrawing(props) {
 
   function handleMouseDown(e) {
     canvasContext.beginPath()
-    setDrawing(true)
+    setIsDrawing(true)
 
     const position = { x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY }
     setStartPosition(position)
@@ -28,19 +28,19 @@ export default function LessonRecordDrawing(props) {
   }
 
   function handleMouseMove(e) {
-    if (!drawing) return
+    if (!isDrawing) return
 
     drawLine(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
     setStartPosition({ x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY })
   }
 
   function handleMouseUp (e) {
-    if (!drawing) return
+    if (!isDrawing) return
 
     drawLine(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
     cleanHistory()
 
-    setDrawing(false)
+    setIsDrawing(false)
   }
 
   function drawLine(x, y) {
@@ -56,6 +56,8 @@ export default function LessonRecordDrawing(props) {
   }
 
   function redrawFromHistory() {
+    clearCanvas()
+
     drawingHistories.forEach(h => {
       if (h.clear) {
         clearCanvas()
@@ -63,7 +65,7 @@ export default function LessonRecordDrawing(props) {
         canvasContext.strokeStyle = h.color
         canvasContext.lineWidth = h.lineWidth
         canvasContext.globalCompositeOperation = h.eraser ? 'destination-out': 'source-over'
-        const coef = { x: currentDrawingSize().width / h.width, y: currentDrawingSize().height / h.height }
+        const coef = { x: canvasContext.canvas.clientWidth / h.width, y: canvasContext.canvas.clientHeight / h.height }
 
         canvasContext.beginPath()
         h.drawings.slice(1).forEach((d, i) => {
@@ -87,8 +89,8 @@ export default function LessonRecordDrawing(props) {
   function createNewHistory(drawing) {
     drawingHistories.push({
       clear: false,
-      width: drawingElement.current.clientWidth,
-      height: drawingElement.current.clientHeight,
+      width: canvasContext.canvas.clientWidth,
+      height: canvasContext.canvas.clientHeight,
       color: canvasContext.strokeStyle,
       eraser: props.drawingConfig.eraser,
       lineWidth: canvasContext.lineWidth,
@@ -117,41 +119,31 @@ export default function LessonRecordDrawing(props) {
   function undoDrawing() {
     if (drawingHistories.length === 0) return
 
-    //    canvasContext.save()
-    clearCanvas()
-
     drawingHistories.pop()
     setDrawingHistories(drawingHistories)
-    redrawFromHistory()
 
-    //    canvasContext.restore()
+    redrawFromHistory() // これはsetStateが間に合わない可能性がある。引数で渡すなど修正要
   }
 
-  function setCanvasSize(width, height) {
-    drawingElement.current.width = width
-    drawingElement.current.height = height
-  }
+  function resetCanvasSize() {
+    canvasContext.canvas.width = canvasContext.canvas.clientWidth
+    canvasContext.canvas.height = canvasContext.canvas.clientHeight
+    //    canvasContext.strokeStyle = props.drawingConfig.color
+    //    canvasContext.lineWidth = props.drawingConfig.lineWidth
 
-  function setCanvasResize(width, height) {
-    setCanvasSize(width, height)
     redrawFromHistory()
   }
 
   function clearCanvas() {
-    canvasContext.save()
-    canvasContext.clearRect(0, 0, drawingElement.current.width, drawingElement.current.height)
-    canvasContext.restore()
-  }
-
-  function currentDrawingSize() {
-    return { width: drawingElement.current.clientWidth, height: drawingElement.current.clientHeight }
+    canvasContext.clearRect(0, 0, canvasContext.canvas.clientWidth, canvasContext.canvas.clientHeight)
+    canvasContext.beginPath()
   }
 
   useEffect(() => {
     if (!canvasContext) {
-      setCanvasContext(drawingElement.current.getContext('2d'))
+      setCanvasContext(drawingRef.current.getContext('2d'))
     } else if (props.hasResize) {
-      setCanvasResize(currentDrawingSize().width, currentDrawingSize().height)
+      resetCanvasSize()
     }
 
     Object.keys(props.drawingConfig).forEach(key => {
@@ -174,6 +166,6 @@ export default function LessonRecordDrawing(props) {
   }, [props.drawingConfig, props.hasResize])
 
   return (
-    <canvas css={bodyStyle} className='drawing-z' onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp} ref={drawingElement} />
+    <canvas css={bodyStyle} className='drawing-z' onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp} ref={drawingRef} />
   )
 }

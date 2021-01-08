@@ -9,12 +9,11 @@ import 'react-tabs/style/react-tabs.css'
 import { css } from '@emotion/core'
 
 export default function LessonRecordSettingPanel(props) {
-  const [disabledDrag, setDisabledDrag] = useState(false)
   const [draggableBounds, setDraggableBounds] = useState({})
-  const draggableElement = useRef(null)
+  const draggableRef = useRef(null)
 
   const bodyStyle = css({
-    display: `${props.show ? 'block' : 'none'}`,
+    display: `${props.isShow ? 'block' : 'none'}`,
     position: 'absolute',
     top: '10%',
     left: 'calc(50% - 250px)',
@@ -29,27 +28,27 @@ export default function LessonRecordSettingPanel(props) {
   })
 
   function handleClose() {
-    props.setShow(false)
+    props.setIsShow(false)
   }
 
   function calcDraggableBounds() {
-    const left = draggableElement.current.offsetLeft * -1
-    const top = draggableElement.current.offsetTop * -1
-    const right = draggableElement.current.offsetParent.clientWidth - draggableElement.current.offsetLeft - draggableElement.current.offsetWidth
-    const bottom = draggableElement.current.offsetParent.clientHeight - draggableElement.current.offsetTop - draggableElement.current.offsetHeight
+    const left = draggableRef.current.offsetLeft * -1
+    const top = draggableRef.current.offsetTop * -1
+    const right = draggableRef.current.offsetParent.clientWidth - draggableRef.current.offsetLeft - draggableRef.current.offsetWidth
+    const bottom = draggableRef.current.offsetParent.clientHeight - draggableRef.current.offsetTop - draggableRef.current.offsetHeight
     return { left ,top, right, bottom }
   }
 
   useEffect(() => {
-    if (!props.show) return
+    if (!props.isShow) return
     setDraggableBounds(calcDraggableBounds())
-  }, [props.show])
+  }, [props.isShow])
 
   resetIdCounter()
 
   return (
-    <Draggable bounds={draggableBounds} disabled={disabledDrag} handle=".drag-handle">
-      <div css={bodyStyle} ref={draggableElement} className='modal-panel-z'>
+    <Draggable bounds={draggableBounds} handle=".drag-handle">
+      <div css={bodyStyle} ref={draggableRef} className='modal-panel-z'>
         <div css={panelHeaderStyle} className='drag-handle'>
           <button onClick={handleClose}>x</button>
         </div>
@@ -71,7 +70,7 @@ export default function LessonRecordSettingPanel(props) {
           </TabPanel>
 
           <TabPanel>
-            <AvatarTab avatars={props.avatars} setAvatarConfig={props.setAvatarConfig} setDisabledDrag={setDisabledDrag} setRecord={props.setRecord} />
+            <AvatarTab avatars={props.avatars} setAvatarConfig={props.setAvatarConfig} setRecord={props.setRecord} />
           </TabPanel>
 
           <TabPanel>

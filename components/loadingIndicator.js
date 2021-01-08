@@ -6,8 +6,8 @@ export default function LoadingIndicator(props) {
   const bodyStyle = css({
     width: '100%',
     height: '100%',
-    display: props.loading ? 'flex':  'none',
-    backgroundColor: props.loading ? 'rgba(255, 255, 255, 0.7)' : '',
+    display: props.isLoading ? 'flex':  'none',
+    backgroundColor: props.isLoading ? 'rgba(255, 255, 255, 0.7)' : '',
     justifyContent: 'center',
     alignItems: 'center',
   })

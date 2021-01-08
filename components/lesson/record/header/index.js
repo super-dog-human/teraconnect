@@ -8,7 +8,7 @@ import DrawingConfigPanel from './drawingConfigPanel'
 
 export default function LessonRecordHeader(props) {
   function handleRecording() {
-    props.startRecording(!props.recording)
+    props.setIsRecording(!props.isRecording)
   }
 
   function handleDrawingUndo() {
@@ -26,7 +26,7 @@ export default function LessonRecordHeader(props) {
   }
 
   function handleSettingPanel() {
-    props.setShowControlPanel(state => !state)
+    props.setIsShowControlPanel(state => !state)
   }
 
   return (
@@ -46,10 +46,10 @@ export default function LessonRecordHeader(props) {
         <div css={flexItemStyle}>
           <button onClick={handleRecording} css={recordingButtonStyle}>
             <div css={recordingIconStyle}>
-              <RecordIcon recording={props.recording} />
+              <RecordIcon recording={props.isRecording} />
             </div>
             <div css={recordingStatusStyle}>
-              <span>{props.recording ? '' : ''}</span>
+              <span>{props.isRecording ? '' : ''}</span>
             </div>
           </button>
         </div>
