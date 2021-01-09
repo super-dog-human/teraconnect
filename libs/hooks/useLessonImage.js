@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { post } from '../../../libs/fetch'
+import { post } from '../fetch'
 
 export default function useLessonImage(id, token) {
   const [lessonImage, setLessonImage] = useState()

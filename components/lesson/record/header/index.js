@@ -54,7 +54,7 @@ export default function LessonRecordHeader(props) {
           </button>
         </div>
         <div css={flexItemStyle}>
-          <DrawingButton onClick={handleDrawingHide}><img src="/img/icon/hide.svg" /></DrawingButton>
+          <DrawingButton onClick={handleDrawingHide} css={props.isDrawingHide && selectedButtonStyle}><img src="/img/icon/hide.svg" /></DrawingButton>
           <DrawingButton css={{ paddingRight: '0px' }}><img src="/img/icon/drawing.svg" /></DrawingButton>
           <DrawingConfigPanel color={props.drawingColor} setColor={props.setDrawingColor}
             lineWidth={props.drawingLineWidth} setLineWidth={props.setDrawingLineWidth} />
@@ -129,4 +129,10 @@ const DrawingButton = styled.button`
   :hover {
     background-color: var(--text-gray);
   }
+  :active {
+    background-color: var(--dark-gray);
+  }
 `
+const selectedButtonStyle = css({
+  backgroundColor: 'black',
+})
