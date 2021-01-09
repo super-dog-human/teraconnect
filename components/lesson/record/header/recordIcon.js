@@ -4,7 +4,7 @@ import { css } from '@emotion/core'
 
 export default function RecordIcon(props) {
   const recordingStyle = css({
-    animation: 'gradation 1s ease-out infinite alternate',
+    animation: 'gradation 1s ease-in infinite alternate',
     ['@keyframes gradation']:  {
       ['0%']: { fill: '#ff0000' },
       ['100%']: { fill: '#550000' },
