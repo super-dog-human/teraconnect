@@ -63,7 +63,7 @@ export default function DrawingConfigPanel(props) {
           <button onClick={handleColorChange} data-color='#ff0000'>red</button>
           <button onClick={handleColorChange} data-color='#00ff00'>green</button>
           <button onClick={handleColorChange} data-color='#000000'>black</button>
-          <HexColorInput color={props.color} onChange={handleColorChange}/>
+          <HexColorInput color={props.color} onChange={handleColorChange} />
         </div>
       </div>
     </>

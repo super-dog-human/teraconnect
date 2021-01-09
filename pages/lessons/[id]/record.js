@@ -5,7 +5,7 @@ import useRecordResource from '../../../components/lesson/record/useRecordResour
 import useRecorder from '../../../components/lesson/record/useRecorder'
 import useLessonImage from '../../../components/lesson/record/useLessonImage'
 import useVoiceRecorder from '../../../components/lesson/record/useVoiceRecorder'
-import useDrawing from '../../../libs/hooks/lesson/record/useDrawing'
+import useDrawing from '../../../libs/hooks/lesson/useDrawing'
 import LessonRecordHeader from '../../../components/lesson/record/header/'
 import LoadingIndicator from '../../../components/loadingIndicator'
 import LessonBackgroundImage from '../../../components/lesson/backgroundImage'
