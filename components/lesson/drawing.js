@@ -2,7 +2,7 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-export default function LessonRecordDrawing(props) {
+export default function LessonDrawing(props) {
 
   const bodyStyle = css({
     display: props.isHide ? 'none': 'block',

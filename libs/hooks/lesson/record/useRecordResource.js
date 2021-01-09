@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { fetch, fetchWithAuth } from '../fetch'
+import { fetch, fetchWithAuth } from '../../../fetch'
 
 export default function useRecordResource(token, setBgImageURL, setAvatarConfig) {
 

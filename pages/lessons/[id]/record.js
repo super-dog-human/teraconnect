@@ -1,17 +1,17 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useEffect, useRef } from 'react'
 import Head from 'next/head'
-import useRecordResource from '../../../libs/hooks/useRecordResource'
-import useRecorder from '../../../libs/hooks/useRecorder'
-import useLessonImage from '../../../libs/hooks/useLessonImage'
-import useVoiceRecorder from '../../../libs/hooks/useVoiceRecorder'
+import useRecordResource from '../../../libs/hooks/lesson/record/useRecordResource'
+import useRecorder from '../../../libs/hooks/lesson/record/useRecorder'
+import useLessonImage from '../../../libs/hooks/lesson/useImage'
+import useVoiceRecorder from '../../../libs/hooks/lesson/record/useVoiceRecorder'
 import useDrawing from '../../../libs/hooks/lesson/useDrawing'
 import LessonRecordHeader from '../../../components/lesson/record/header/'
 import LoadingIndicator from '../../../components/loadingIndicator'
 import LessonBackgroundImage from '../../../components/lesson/backgroundImage'
 import LessonAvatar from '../../../components/lesson/avatar'
 import LessonImage from '../../../components/lesson/image'
-import LessonRecordDrawing from '../../../components/lesson/record/drawing'
+import LessonDrawing from '../../../components/lesson/drawing'
 import LessonRecordSettingPanel from '../../../components/lesson/record/settingPanel/'
 import LessonRecordImageController from '../../../components/lesson/record/imageController'
 import LessonRecordRandomTips from '../../../components/lesson/record/randomTips'
@@ -66,7 +66,7 @@ const Page = (props) => {
           <LessonBackgroundImage src={bgImageURL} />
           <LessonImage src={lessonImage} />
           <LessonAvatar config={avatarConfig} setIsLoading={setIsLoading} isTalking={isTalking} hasResize={hasResize} />
-          <LessonRecordDrawing isHide={isDrawingHide} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing} drawingRef={drawingRef}  />
+          <LessonDrawing isHide={isDrawingHide} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing} drawingRef={drawingRef}  />
           <LessonRecordSettingPanel isShow={isShowControlPanel} setIsShow={setIsShowControlPanel} bgImages={bgImages} setBgImageURL={setBgImageURL}
             avatars={avatars} setAvatarConfig={setAvatarConfig} bgms={bgms} setVoiceRecorderConfig={setVoiceRecorderConfig}
             setRecord={setRecord} />
