@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import { GLTFLoader } from './GLTFLoader'
+import { OrbitControls } from '../../node_modules/three/examples/jsm/controls/OrbitControls.js'
 import { VRM } from '@pixiv/three-vrm'
 import * as Const from '../constants'
 
@@ -44,7 +45,7 @@ export default class AvatarLoader {
       160.0
     )
     //    this.camera.position.set(-0.6, 1.05, 155.0)
-    this.camera.position.set(0, 0.8, 155.0)
+    this.camera.position.set(0, 0, 155.0)
   }
 
   async _setupAvatar(avatarURL) {
@@ -166,6 +167,8 @@ export default class AvatarLoader {
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setSize(domSize.width, domSize.height)
     this.renderer.render(this.scene, this.camera)
+
+    new OrbitControls(this.camera, this.renderer.domElement)
 
     return this.renderer.domElement
   }
