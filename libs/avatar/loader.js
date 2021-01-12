@@ -1,8 +1,15 @@
 import * as THREE from 'three'
 import { GLTFLoader } from './GLTFLoader'
-import { OrbitControls } from '../../node_modules/three/examples/jsm/controls/OrbitControls.js'
 import { VRM } from '@pixiv/three-vrm'
 import * as Const from '../constants'
+
+let domSize = {}
+const raycaster = new THREE.Raycaster()
+const mousePosition = new THREE.Vector2()
+const plane = new THREE.Plane()
+const planeNormal = new THREE.Vector3(0, 0, 1)
+const planeIntersect = new THREE.Vector3()
+const positionShift = new THREE.Vector3()
 
 export default class AvatarLoader {
   constructor() {
@@ -35,6 +42,82 @@ export default class AvatarLoader {
       this.light = new THREE.DirectionalLight(color, intensity)
       this.scene.add(this.light)
     }
+  }
+
+  isMouseOver(x, y) {
+    return this._intersectObjects(x, y).length > 0
+  }
+
+  prepareMovePosition(x, y) {
+    const intersects = this._intersectObjects(x, y)
+    if (intersects.length === 0) return false
+
+    plane.setFromNormalAndCoplanarPoint(planeNormal, intersects[0].point)
+    positionShift.subVectors(this.vrm.scene.position, intersects[0].point)
+
+    return true
+  }
+
+  movePosition(x, y) {
+    this._intersectObjects(x, y) // 関数内でraycastの位置をセットしている
+
+    raycaster.ray.intersectPlane(plane, planeIntersect)
+    this.vrm.scene.position.addVectors(planeIntersect, positionShift)
+  }
+
+  initAnimationPlaying() {
+    this.animationMixer._actions.forEach(action => {
+      action.paused = false
+      action.play() // animation is not start playing because already set timescale to 0.
+    })
+  }
+
+  animate(deltaTime) {
+    this.animationMixer.update(deltaTime)
+    this.renderer.render(this.scene, this.camera)
+  }
+
+  updateSize(container) {
+    if (!container) return // for resized before rendering completed.
+    const size = this._domSize(container)
+    this.renderer.setSize(size.width, size.height)
+    this.renderer.render(this.scene, this.camera)
+  }
+
+  clearBeforeUnload() {
+    if (this.scene) {
+      this.scene.remove(this.scene.children)
+    }
+  }
+
+  jumpAnimationAt(timeSec) {
+    this.animationMixer._actions.forEach(action => {
+      action.time = timeSec
+    })
+    this.animate(0)
+  }
+
+  play() {
+    this.animationMixer.timeScale = 1
+  }
+
+  pause() {
+    this.animationMixer.timeScale = 0
+  }
+
+  stop() {
+    this.animationMixer._actions.forEach(action => {
+      action.paused = true
+    })
+  }
+
+
+
+  _intersectObjects(x, y) {
+    mousePosition.x = (x / domSize.width) * 2 - 1
+    mousePosition.y = ((y / domSize.height) * 2 - 1) * -1
+    raycaster.setFromCamera(mousePosition, this.camera)
+    return raycaster.intersectObjects(this.vrm.scene.children)
   }
 
   _setupCamera(domSize) {
@@ -168,8 +251,6 @@ export default class AvatarLoader {
     this.renderer.setSize(domSize.width, domSize.height)
     this.renderer.render(this.scene, this.camera)
 
-    new OrbitControls(this.camera, this.renderer.domElement)
-
     return this.renderer.domElement
   }
 
@@ -177,7 +258,6 @@ export default class AvatarLoader {
     this.animationMixer = new THREE.AnimationMixer(this.vrm.scene)
     this.animationMixer.timeScale = 0
     //    this._setBreathAnimation()
-    console.log(this.vrm.humanoid)
   }
 
   _setBreathAnimation() {
@@ -203,24 +283,6 @@ export default class AvatarLoader {
     this.animationMixer.clipAction(clip)
   }
 
-  initAnimationPlaying() {
-    this.animationMixer._actions.forEach(action => {
-      action.paused = false
-      action.play() // animation is not start playing because already set timescale to 0.
-    })
-  }
-
-  animate(deltaTime) {
-    this.animationMixer.update(deltaTime)
-    this.renderer.render(this.scene, this.camera)
-  }
-
-  updateSize(container) {
-    if (!container) return // for resized before rendering completed.
-    const size = this._domSize(container)
-    this.renderer.setSize(size.width, size.height)
-    this.renderer.render(this.scene, this.camera)
-  }
 
   _domSize(container) {
     let playerWidth, playerHeight
@@ -232,84 +294,7 @@ export default class AvatarLoader {
       playerHeight = container.clientHeight
     }
 
-    return { width: playerWidth, height: playerHeight }
-  }
-
-  clearBeforeUnload() {
-    if (this.scene) {
-      this.scene.remove(this.scene.children)
-    }
-  }
-
-  jumpAnimationAt(timeSec) {
-    this.animationMixer._actions.forEach(action => {
-      action.time = timeSec
-    })
-    this.animate(0)
-  }
-
-  play() {
-    this.animationMixer.timeScale = 1
-  }
-
-  pause() {
-    this.animationMixer.timeScale = 0
-  }
-
-  stop() {
-    this.animationMixer._actions.forEach(action => {
-      action.paused = true
-    })
-  }
-
-  currentPosition() {
-    /* これはなんだろう */
-    //    return this.bones.Position.position
-    return null
-  }
-
-  faceIndex(faceName) {
-    return [
-      'AllAngry',
-      'AllFun',
-      'AllJoy',
-      'AllSorrow',
-      'AllSurprised',
-      'BrwAngry',
-      'BrwFun',
-      'BrwJoy',
-      'BrwSorrow',
-      'BrwSurprised',
-      'EyeAngry',
-      'EyeClose',
-      'EyeCloseR',
-      'EyeCloseL',
-      'EyeJoy',
-      'EyeJoyR',
-      'EyeJoyL',
-      'EyeSorrow',
-      'EyeSurprised',
-      'EyeExtra',
-      'MouthUp',
-      'MouthDown',
-      'MouthAngry',
-      'MouthCorner',
-      'MouthFun',
-      'MouthJoy',
-      'MouthSorrow',
-      'MouthSurprised',
-      'MouthA',
-      'MouthI',
-      'MouthU',
-      'MouthE',
-      'MouthO',
-      'Fung1',
-      'Fung1Low',
-      'Fung1Up',
-      'Fung2',
-      'Fung2Low',
-      'Fung2Up',
-      'EyeExtraOn'
-    ].indexOf(faceName)
+    domSize = { width: playerWidth, height: playerHeight }
+    return domSize
   }
 }

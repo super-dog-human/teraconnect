@@ -33,7 +33,7 @@ const Page = ({ token, lesson }) => {
   const { bgImages, avatars, bgms } = useRecordResource(token, setBgImageURL)
   const { lessonImage, setLessonImage, uploadLessonImage } = useLessonImage(lesson.id, token)
   const { isTalking, setVoiceRecorderConfig } = useVoiceRecorder(lesson.id, token, isRecording, setRecord)
-  const { setAvatarConfig, avatarRef } = useLessonAvatar(setIsLoading, isTalking, hasResize)
+  const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useLessonAvatar(setIsLoading, isTalking, hasResize)
   const { undoDrawing, clearDrawing, drawingColor, setDrawingColor, drawingLineWidth, setDrawingLineWidth,
     startDrawing, inDrawing, endDrawing, drawingRef } = useLessonDrawing(setRecord, hasResize)
 
@@ -77,7 +77,7 @@ const Page = ({ token, lesson }) => {
           </div>
           <LessonBackgroundImage src={bgImageURL} />
           <LessonImage src={lessonImage} />
-          <LessonAvatar avatarRef={avatarRef} />
+          <LessonAvatar ref={avatarRef} onMouseDown={startDragging} onMouseMove={inDragging} onMouseUp={endDragging} onMouseLeave={endDragging} />
           <LessonDrawing isHide={isDrawingHide} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing} drawingRef={drawingRef}  />
           <LessonRecordSettingPanel isShow={isShowControlPanel} setIsShow={setIsShowControlPanel} bgImages={bgImages} setBgImageURL={setBgImageURL}
             avatars={avatars} setAvatarConfig={setAvatarConfig} bgms={bgms} setVoiceRecorderConfig={setVoiceRecorderConfig}

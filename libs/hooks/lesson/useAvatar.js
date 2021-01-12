@@ -3,7 +3,9 @@ import AvatarLoader from '../../avatar/loader'
 import { Clock } from 'three'
 
 const clock = new Clock()
-const avatarLoader = new AvatarLoader()
+const avatar = new AvatarLoader()
+let startDraggingTime
+let isDragging = false
 
 export default function useLessonAvatar(setIsLoading, isTalking, hasResize) {
   const [config, setConfig] = useState({})
@@ -11,18 +13,44 @@ export default function useLessonAvatar(setIsLoading, isTalking, hasResize) {
   //    ReactDOM.findDOMNode(containerRef).append(dom)
 
   function animate() {
-    avatarLoader.animate(clock.getDelta())
+    avatar.animate(clock.getDelta())
     requestAnimationFrame(() => animate())
+  }
+
+  function startDragging(e) {
+    if (avatar.prepareMovePosition(e.nativeEvent.offsetX, e.nativeEvent.offsetY)) {
+      //      e.target.style.cursor = 'move'
+      isDragging = true
+      //      startDraggingTime
+    }
+  }
+
+  function inDragging(e) {
+    if (isDragging) {
+      e.target.style.cursor = 'move'
+      avatar.movePosition(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
+      return
+    }
+
+    if(avatar.isMouseOver(e.nativeEvent.offsetX, e.nativeEvent.offsetY)) {
+      e.target.style.cursor = 'move'
+    } else {
+      e.target.style.cursor = 'default'
+    }
+  }
+
+  function endDragging() {
+    isDragging = false
   }
 
   async function changeAvatar() {
     setIsLoading(true)
 
     // avatarごと渡してurlとかdefaultActionとかをclassないで見てもらう
-    const dom = await avatarLoader.render(config.avatar.url, containerRef.current)
-    avatarLoader.setDefaultAnimation()
-    avatarLoader.initAnimationPlaying()
-    avatarLoader.play()
+    const dom = await avatar.render(config.avatar.url, containerRef.current)
+    avatar.setDefaultAnimation()
+    avatar.initAnimationPlaying()
+    avatar.play()
     animate()
 
     containerRef.current.append(dom)
@@ -32,7 +60,7 @@ export default function useLessonAvatar(setIsLoading, isTalking, hasResize) {
 
   function changeLightColor() {
     const color = parseInt(rgb2hex(Object.values(config.lightColor).slice(0, 3)), 16)
-    avatarLoader.setLightColor(color, config.lightColor.a * 2)
+    avatar.setLightColor(color, config.lightColor.a * 2)
   }
 
   function changeSpeakMotion() {
@@ -41,7 +69,7 @@ export default function useLessonAvatar(setIsLoading, isTalking, hasResize) {
 
   function changeScreenSize() {
     console.log('hasResize', hasResize)
-    //    avatarLoader.updateSize(containerRef.current)
+    //    avatar.updateSize(containerRef.current)
   }
 
   function rgb2hex(rgb) {
@@ -53,7 +81,7 @@ export default function useLessonAvatar(setIsLoading, isTalking, hasResize) {
 
   useEffect(() => {
     return () => {
-      avatarLoader.clearBeforeUnload()
+      avatar.clearBeforeUnload()
     }
   }, [])
 
@@ -79,5 +107,5 @@ export default function useLessonAvatar(setIsLoading, isTalking, hasResize) {
     changeScreenSize()
   }, [hasResize])
 
-  return { setAvatarConfig: setConfig, avatarRef: containerRef }
+  return { setAvatarConfig: setConfig, avatarRef: containerRef, startDragging, inDragging, endDragging }
 }

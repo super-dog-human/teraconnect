@@ -2,11 +2,13 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-export default function LessonAvatar({ avatarRef }) {
-  return (
-    <div css={bodyStyle} className='avatar-z' ref={avatarRef} />
+const LessonAvatar = React.forwardRef(function lessonAvatar(props, ref) {
+  return(
+    <div css={bodyStyle} className='avatar-z' ref={ref} {...props} />
   )
-}
+})
+
+export default LessonAvatar
 
 const bodyStyle = css({
   position: 'absolute',
