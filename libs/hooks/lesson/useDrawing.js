@@ -5,7 +5,7 @@ let startPosition = {}
 let isDrawing = false
 const histories = []
 
-export default function useDrawing(setRecord, hasResize) {
+export default function useLessonDrawing(setRecord, hasResize) {
   const drawingRef = useRef(null)
   const [color, setColor] = useState('#ff0000')
   const [lineWidth, setLineWidth] = useState(5)

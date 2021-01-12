@@ -4,8 +4,9 @@ import Head from 'next/head'
 import useRecordResource from '../../../libs/hooks/lesson/record/useRecordResource'
 import useRecorder from '../../../libs/hooks/lesson/record/useRecorder'
 import useLessonImage from '../../../libs/hooks/lesson/useImage'
+import useLessonAvatar from '../../../libs/hooks/lesson/useAvatar'
 import useVoiceRecorder from '../../../libs/hooks/lesson/record/useVoiceRecorder'
-import useDrawing from '../../../libs/hooks/lesson/useDrawing'
+import useLessonDrawing from '../../../libs/hooks/lesson/useDrawing'
 import LessonRecordHeader from '../../../components/lesson/record/header/'
 import LoadingIndicator from '../../../components/loadingIndicator'
 import LessonBackgroundImage from '../../../components/lesson/backgroundImage'
@@ -20,37 +21,48 @@ import requirePageAuth from '../../../components/requirePageAuth'
 import { fetchWithAuth } from '../../../libs/fetch'
 import { css } from '@emotion/core'
 
-const Page = (props) => {
+const Page = ({ token, lesson }) => {
+  const containerRef = useRef(null)
   const [hasResize, setHasResize] = useState()
   const [isLoading, setIsLoading] = useState(true)
+  const [isRecording, setIsRecording] = useState(false)
   const [bgImageURL, setBgImageURL] = useState()
-  const [avatarConfig, setAvatarConfig] = useState({})
-  const { bgImages, avatars, bgms } = useRecordResource(props.token, setBgImageURL, setAvatarConfig)
   const [isShowControlPanel, setIsShowControlPanel] = useState(false)
   const [isDrawingHide, setIsDrawingHide] = useState(false)
-  const { isRecording, setIsRecording, setRecord } = useRecorder(props.lesson.id, props.token, bgImageURL, avatarConfig)
-  const { lessonImage, setLessonImage, uploadLessonImage } = useLessonImage(props.lesson.id, props.token)
-  const { isTalking, setVoiceRecorderConfig } = useVoiceRecorder(props.lesson.id, props.token, isRecording, setRecord)
+  const { setRecord } = useRecorder(lesson.id, token, isRecording)
+  const { bgImages, avatars, bgms } = useRecordResource(token, setBgImageURL)
+  const { lessonImage, setLessonImage, uploadLessonImage } = useLessonImage(lesson.id, token)
+  const { isTalking, setVoiceRecorderConfig } = useVoiceRecorder(lesson.id, token, isRecording, setRecord)
+  const { setAvatarConfig, avatarRef } = useLessonAvatar(setIsLoading, isTalking, hasResize)
   const { undoDrawing, clearDrawing, drawingColor, setDrawingColor, drawingLineWidth, setDrawingLineWidth,
-    startDrawing, inDrawing, endDrawing, drawingRef } = useDrawing(setRecord, hasResize)
-  const containerRef = useRef(null)
+    startDrawing, inDrawing, endDrawing, drawingRef } = useLessonDrawing(setRecord, hasResize)
 
   useEffect(() => {
     const resizeObserver = new ResizeObserver(e => {
       setHasResize({ width: e[0].contentRect.width, height: e[0].contentRect.height })
     })
-
-    containerRef.current && resizeObserver.observe(containerRef.current)
+    resizeObserver.observe(containerRef.current)
 
     return () => {
       resizeObserver.disconnect()
     }
   }, [])
 
+  const loadingStyle = css({
+    display: isLoading ? 'block' : 'none',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    width: '100%',
+    height: '100%',
+  })
+
   return (
     <>
       <Head>
-        <title>{props.lesson.title}の収録 - TERACONNECT</title>
+        <title>{lesson.title}の収録 - TERACONNECT</title>
       </Head>
       <LessonRecordHeader isRecording={isRecording} setIsRecording={setIsRecording} setRecord={setRecord}
         isDrawingHide={isDrawingHide} setIsDrawingHide={setIsDrawingHide}
@@ -60,12 +72,12 @@ const Page = (props) => {
         setIsShowControlPanel={setIsShowControlPanel} />
       <main css={mainStyle}>
         <div css={bodyStyle} ref={containerRef}>
-          <div css={loadingStyle}>
-            <LoadingIndicator isLoading={isLoading}/>
+          <div css={loadingStyle} className="indicator-z">
+            <LoadingIndicator />
           </div>
           <LessonBackgroundImage src={bgImageURL} />
           <LessonImage src={lessonImage} />
-          <LessonAvatar config={avatarConfig} setIsLoading={setIsLoading} isTalking={isTalking} hasResize={hasResize} />
+          <LessonAvatar avatarRef={avatarRef} />
           <LessonDrawing isHide={isDrawingHide} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing} drawingRef={drawingRef}  />
           <LessonRecordSettingPanel isShow={isShowControlPanel} setIsShow={setIsShowControlPanel} bgImages={bgImages} setBgImageURL={setBgImageURL}
             avatars={avatars} setAvatarConfig={setAvatarConfig} bgms={bgms} setVoiceRecorderConfig={setVoiceRecorderConfig}
@@ -116,14 +128,4 @@ const bodyStyle = css({
   marginRight: 'auto',
   maxWidth: '1280px',
   maxHeight: '720px',
-})
-
-const loadingStyle = css({
-  position: 'absolute',
-  top: 0,
-  bottom: 0,
-  left: 0,
-  right: 0,
-  width: '100%',
-  height: '100%',
 })

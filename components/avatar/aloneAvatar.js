@@ -20,6 +20,7 @@ export default class AloneAvatar extends React.Component {
       '/model/alone.vrm',
       this.container
     )
+    this.state.avatarLoader.setLightColor(0x888888)
     this.state.avatarLoader.setForLandscape()
     this.state.avatarLoader.setDefaultAnimation()
     this.state.avatarLoader.initAnimationPlaying()

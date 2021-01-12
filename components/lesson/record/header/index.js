@@ -134,5 +134,5 @@ const DrawingButton = styled.button`
   }
 `
 const selectedButtonStyle = css({
-  backgroundColor: 'black',
+  backgroundColor: 'var(--back-movie-black)',
 })

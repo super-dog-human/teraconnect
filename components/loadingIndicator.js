@@ -2,12 +2,12 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-export default function LoadingIndicator(props) {
+export default function LoadingIndicator() {
   const bodyStyle = css({
     width: '100%',
     height: '100%',
-    display: props.isLoading ? 'flex':  'none',
-    backgroundColor: props.isLoading ? 'rgba(255, 255, 255, 0.7)' : '',
+    display: 'flex',
+    backgroundColor: '#ffffff',
     justifyContent: 'center',
     alignItems: 'center',
   })
@@ -19,7 +19,7 @@ export default function LoadingIndicator(props) {
   })
 
   return (
-    <div css={bodyStyle} className='indicator-z'>
+    <div css={bodyStyle}>
       <img src="/img/icon/loading.svg" css={imageStyle} />
     </div>
   )

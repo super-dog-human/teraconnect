@@ -3,60 +3,48 @@ import { GLTFLoader } from './GLTFLoader'
 import { VRM } from '@pixiv/three-vrm'
 import * as Const from '../constants'
 
-// const cameraPositions = [0, 1.4, 150]
-const cameraPositions = [0.2, 1, 250]
-const cameraLookAts = [0, 1.1, 0]
-const lightColor = 0xbbbbff
-const coreBodyInitPosition = [0, 0, 100]
-
 export default class AvatarLoader {
   constructor() {
     this.poseKey = {}
     this.faceKey = {}
     this.vrm
     this.camera
-    this.scene
+    this.scene = new THREE.Scene()
     this.renderer
     this.bodySkin
     this.moveDirection
     this.animationMixer
+    this.light
   }
 
   async render(avatarURL, container) {
     const domSize = this._domSize(container)
 
     this._setupCamera(domSize)
-    this._setupScene()
     await this._setupAvatar(avatarURL)
 
     return this._createDom(domSize)
   }
 
+  setLightColor(color, intensity) {
+    if (this.light) {
+      this.light.color.setHex(color)
+      this.light.intensity = intensity
+    } else {
+      this.light = new THREE.DirectionalLight(color, intensity)
+      this.scene.add(this.light)
+    }
+  }
+
   _setupCamera(domSize) {
-    /*
-    this.camera = new THREE.PerspectiveCamera(
-      1,
-      domSize.width / domSize.height,
-      1,
-      200
-    )
-    this.camera.position.set(...cameraPositions)
-    this.camera.lookAt(new THREE.Vector3(...cameraLookAts))
-*/
     this.camera = new THREE.PerspectiveCamera(
       1,
       domSize.width / domSize.height,
       150.0,
       160.0
     )
-    this.camera.position.set(-0.6, 1.05, 155.0)
-  }
-
-  _setupScene() {
-    this.scene = new THREE.Scene()
-
-    const light = new THREE.DirectionalLight(0x888888)
-    this.scene.add(light)
+    //    this.camera.position.set(-0.6, 1.05, 155.0)
+    this.camera.position.set(0, 0.8, 155.0)
   }
 
   async _setupAvatar(avatarURL) {
@@ -72,7 +60,7 @@ export default class AvatarLoader {
     this.vrm = vrm
     this.scene.add(this.vrm.scene)
     this.setDefaultPose()
-    this._getBone('hips').rotation.y = Math.PI / 2
+    this._getBone('hips').rotation.y = -2.7
   }
 
   setDefaultPose(part = 'all') {
@@ -96,13 +84,14 @@ export default class AvatarLoader {
   }
 
   setForLandscape() {
+    this._getBone('hips').rotation.y = Math.PI / 2
     this._getBone('hips').rotation.y = -2.5
     this._getBone('neck').rotation.x = 0.4
     this._getBone('spine').rotation.x = 0.2
 
     // load default.json
     ;['left', 'right'].forEach(side => {
-      ;['ThumbDistal', 'ThumbIntermediate', 'ThumbProximal'].forEach(
+      ['ThumbDistal', 'ThumbIntermediate', 'ThumbProximal'].forEach(
         boneName => {
           this._getBone(side + boneName).setRotationFromQuaternion(
             new THREE.Quaternion().set(
@@ -184,7 +173,8 @@ export default class AvatarLoader {
   setDefaultAnimation() {
     this.animationMixer = new THREE.AnimationMixer(this.vrm.scene)
     this.animationMixer.timeScale = 0
-    this._setBreathAnimation()
+    //    this._setBreathAnimation()
+    console.log(this.vrm.humanoid)
   }
 
   _setBreathAnimation() {

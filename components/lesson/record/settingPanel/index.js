@@ -8,12 +8,12 @@ import AvatarTab from './avatarTab'
 import 'react-tabs/style/react-tabs.css'
 import { css } from '@emotion/core'
 
-export default function LessonRecordSettingPanel(props) {
+export default function LessonRecordSettingPanel({ isShow, setIsShow, bgImages, setBgImageURL, bgms, avatars, setAvatarConfig, setRecord }) {
   const [draggableBounds, setDraggableBounds] = useState({})
   const draggableRef = useRef(null)
 
   const bodyStyle = css({
-    display: `${props.isShow ? 'block' : 'none'}`,
+    display: `${isShow ? 'block' : 'none'}`,
     position: 'absolute',
     top: '10%',
     left: 'calc(50% - 250px)',
@@ -28,7 +28,7 @@ export default function LessonRecordSettingPanel(props) {
   })
 
   function handleClose() {
-    props.setIsShow(false)
+    setIsShow(false)
   }
 
   function calcDraggableBounds() {
@@ -40,9 +40,9 @@ export default function LessonRecordSettingPanel(props) {
   }
 
   useEffect(() => {
-    if (!props.isShow) return
+    if (!isShow) return
     setDraggableBounds(calcDraggableBounds())
-  }, [props.isShow])
+  }, [isShow])
 
   resetIdCounter()
 
@@ -62,15 +62,15 @@ export default function LessonRecordSettingPanel(props) {
           </TabList>
 
           <TabPanel>
-            <BgImageTab images={props.bgImages} setImageURL={props.setBgImageURL} setRecord={props.setRecord} />
+            <BgImageTab images={bgImages} setImageURL={setBgImageURL} setRecord={setRecord} />
           </TabPanel>
 
           <TabPanel>
-            <BGMTab bgms={props.bgms} setRecord={props.setRecord} />
+            <BGMTab bgms={bgms} setRecord={setRecord} />
           </TabPanel>
 
           <TabPanel>
-            <AvatarTab avatars={props.avatars} setAvatarConfig={props.setAvatarConfig} setRecord={props.setRecord} />
+            <AvatarTab avatars={avatars} setConfig={setAvatarConfig} setRecord={setRecord} />
           </TabPanel>
 
           <TabPanel>
