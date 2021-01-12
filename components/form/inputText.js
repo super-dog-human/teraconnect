@@ -11,8 +11,10 @@ const style = css({
   border: '1px solid var(--border-gray)'
 })
 
-const InputText = React.forwardRef((props, ref) => (
-  <input type="text" ref={ ref } css={ style } {...props} />
-))
+const InputText = React.forwardRef(function inputText(props, ref) {
+  return (
+    <input type="text" ref={ ref } css={ style } {...props} />
+  )
+})
 
 export default InputText

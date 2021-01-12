@@ -22,7 +22,7 @@
   font-weight: 100;
   font-display: auto;
 }
-@keyframes fade-in {
+@keyframes fadeIn {
   0% {
     display: none;
     opacity: 0;
@@ -32,24 +32,14 @@
     opacity: 1;
   }
 }
-@-moz-keyframes fade-in {
+@keyframes fadeOut {
   0% {
-    display: none;
-    opacity: 0;
-  }
-  100% {
     display: block;
     opacity: 1;
   }
-}
-@-webkit-keyframes fade-in {
-  0% {
+  100% {
     display: none;
     opacity: 0;
-  }
-  100% {
-    display: block;
-    opacity: 1;
   }
 }
 @keyframes rotation {
