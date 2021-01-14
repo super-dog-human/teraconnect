@@ -19,17 +19,17 @@ export default class AvatarLoader {
     this.camera
     this.scene = new THREE.Scene()
     this.renderer
-    this.bodySkin
-    this.moveDirection
     this.animationMixer
     this.light
   }
 
-  async render(avatarURL, container) {
+  async render(avatar, container) {
     const domSize = this._domSize(container)
 
     this._setupCamera(domSize)
-    await this._setupAvatar(avatarURL)
+    await this._setupAvatar(avatar)
+
+    this._setDefaultAnimation()
 
     return this._createDom(domSize)
   }
@@ -44,7 +44,7 @@ export default class AvatarLoader {
     }
   }
 
-  isMouseOver(x, y) {
+  isOverAvatar(x, y) {
     return this._intersectObjects(x, y).length > 0
   }
 
@@ -59,17 +59,12 @@ export default class AvatarLoader {
   }
 
   movePosition(x, y) {
-    this._intersectObjects(x, y) // 関数内でraycastの位置をセットしている
+    this._setRaycast(x, y)
 
     raycaster.ray.intersectPlane(plane, planeIntersect)
     this.vrm.scene.position.addVectors(planeIntersect, positionShift)
-  }
 
-  initAnimationPlaying() {
-    this.animationMixer._actions.forEach(action => {
-      action.paused = false
-      action.play() // animation is not start playing because already set timescale to 0.
-    })
+    this._getBone('hips').rotation.y = Math.PI - mousePosition.x * 0.7
   }
 
   animate(deltaTime) {
@@ -111,12 +106,32 @@ export default class AvatarLoader {
     })
   }
 
+  currentPosition() {
+    return this.vrm.scene.position
+  }
 
+  _domSize(container) {
+    let playerWidth, playerHeight
+    if (container.clientHeight / container.clientWidth > Const.RATIO_16_TO_9) {
+      playerWidth = container.clientWidth
+      playerHeight = Math.round(container.clientWidth * Const.RATIO_16_TO_9)
+    } else {
+      playerWidth = Math.round(container.clientHeight / Const.RATIO_16_TO_9)
+      playerHeight = container.clientHeight
+    }
 
-  _intersectObjects(x, y) {
+    domSize = { width: playerWidth, height: playerHeight }
+    return domSize
+  }
+
+  _setRaycast(x, y) {
     mousePosition.x = (x / domSize.width) * 2 - 1
     mousePosition.y = ((y / domSize.height) * 2 - 1) * -1
     raycaster.setFromCamera(mousePosition, this.camera)
+  }
+
+  _intersectObjects(x, y) {
+    this._setRaycast(x, y)
     return raycaster.intersectObjects(this.vrm.scene.children)
   }
 
@@ -131,110 +146,28 @@ export default class AvatarLoader {
     this.camera.position.set(0, 0, 155.0)
   }
 
-  async _setupAvatar(avatarURL) {
-    const vrm = await new Promise(resolve => {
+  async _setupAvatar(avatar) {
+    this.vrm = await new Promise(resolve => {
       const loader = new GLTFLoader()
-      loader.load(avatarURL, gltf => {
+      loader.load(avatar.url, gltf => {
         VRM.from(gltf).then(vrm => {
           resolve(vrm)
         })
       })
     })
 
-    this.vrm = vrm
+    this._setDefaultPose(avatar)
+
     this.scene.add(this.vrm.scene)
-    this.setDefaultPose()
-    this._getBone('hips').rotation.y = -2.7
   }
 
-  setDefaultPose(part = 'all') {
-    this._getBone('hips').rotation.y = -Math.PI
+  _setDefaultPose(avatar) {
+    this._getBone('hips').rotation.y = Math.PI // どのアバターも真後ろを向いているので反転
 
-    if (part === 'leftArm' || part === 'all') {
-      this._getBone('leftUpperArm').rotation.z = Const.RAD_70
-      this._getBone('leftLowerArm').rotation.set(0, 0, 0)
-      this._getBone('leftHand').rotation.set(0, 0, 0)
-    }
-
-    if (part === 'rightArm' || part === 'all') {
-      this._getBone('rightUpperArm').rotation.z = -Const.RAD_70
-      this._getBone('rightLowerArm').rotation.set(0, 0, 0)
-      this._getBone('rightHand').rotation.set(0, 0, 0)
-    }
-
-    if (part === 'all') {
-      this._getBone('neck').rotation.set(0, 0, 0)
-    }
-  }
-
-  setForLandscape() {
-    this._getBone('hips').rotation.y = Math.PI / 2
-    this._getBone('hips').rotation.y = -2.5
-    this._getBone('neck').rotation.x = 0.4
-    this._getBone('spine').rotation.x = 0.2
-
-    // load default.json
-    ;['left', 'right'].forEach(side => {
-      ['ThumbDistal', 'ThumbIntermediate', 'ThumbProximal'].forEach(
-        boneName => {
-          this._getBone(side + boneName).setRotationFromQuaternion(
-            new THREE.Quaternion().set(
-              0,
-              (side === 'left' ? 1 : -1) * 0.17327451000744837,
-              0,
-              0.9848735676124518
-            )
-          )
-        }
-      )
-      ;['IndexDistal', 'IndexIntermediate', 'IndexProximal'].forEach(
-        boneName => {
-          this._getBone(side + boneName).setRotationFromQuaternion(
-            new THREE.Quaternion().set(
-              0,
-              0,
-              (side === 'left' ? 1 : -1) * 0.2697967711570243,
-              0.9629172873477994
-            )
-          )
-        }
-      )
-      ;['MiddleDistal', 'MiddleIntermediate', 'MiddleProximal'].forEach(
-        boneName => {
-          this._getBone(side + boneName).setRotationFromQuaternion(
-            new THREE.Quaternion().set(
-              0,
-              0,
-              (side === 'left' ? 1 : -1) * 0.278007203863391,
-              0.9605789892559898
-            )
-          )
-        }
-      )
-      ;['RingDistal', 'RingIntermediate', 'RingProximal'].forEach(boneName => {
-        this._getBone(side + boneName).setRotationFromQuaternion(
-          new THREE.Quaternion().set(
-            0,
-            0,
-            (side === 'left' ? 1 : -1) * 0.28619737572634124,
-            0.9581706852786488
-          )
-        )
-      })
-      ;['LittleDistal', 'LittleIntermediate', 'LittleProximal'].forEach(
-        boneName => {
-          this._getBone(side + boneName).setRotationFromQuaternion(
-            new THREE.Quaternion().set(
-              0,
-              (side === 'left' ? 1 : -1) * 0.28619737572634124,
-              0.9581706852786488
-            )
-          )
-        }
-      )
-
-      this._getBone(side + 'Hand').rotation.z = (side === 'left' ? 1 : -1) * 0.3
-      this._getBone(side + 'UpperArm').rotation.x = -0.1
+    this.vrm.scene.scale.set(...[...Array(3)].map(() => avatar.config.scale))
+    this.vrm.scene.position.set(...avatar.config.positions)
+    avatar.config.initialPoses.forEach(p => {
+      this._getBone(p.boneName).rotation.set(...p.rotations)
     })
   }
 
@@ -254,10 +187,11 @@ export default class AvatarLoader {
     return this.renderer.domElement
   }
 
-  setDefaultAnimation() {
+  _setDefaultAnimation() {
     this.animationMixer = new THREE.AnimationMixer(this.vrm.scene)
     this.animationMixer.timeScale = 0
-    //    this._setBreathAnimation()
+    this._setBreathAnimation()
+    this._initAnimationPlaying()
   }
 
   _setBreathAnimation() {
@@ -274,7 +208,7 @@ export default class AvatarLoader {
     const finChestQuat = new THREE.Quaternion(0.0, 0.0, 0.0, 1.0)
     finChestQuat.setFromEuler(new THREE.Euler(0.01 * Math.PI, 0.0, 0.0))
     const chestTrack = new THREE.QuaternionKeyframeTrack(
-      this._getBone('upperChest').name + '.quaternion',
+      this._getBone('chest').name + '.quaternion',
       [0.0, 3.0, 6.0],
       [...initQuat.toArray(), ...finChestQuat.toArray(), ...initQuat.toArray()]
     )
@@ -283,18 +217,10 @@ export default class AvatarLoader {
     this.animationMixer.clipAction(clip)
   }
 
-
-  _domSize(container) {
-    let playerWidth, playerHeight
-    if (container.clientHeight / container.clientWidth > Const.RATIO_16_TO_9) {
-      playerWidth = container.clientWidth
-      playerHeight = Math.round(container.clientWidth * Const.RATIO_16_TO_9)
-    } else {
-      playerWidth = Math.round(container.clientHeight / Const.RATIO_16_TO_9)
-      playerHeight = container.clientHeight
-    }
-
-    domSize = { width: playerWidth, height: playerHeight }
-    return domSize
+  _initAnimationPlaying() {
+    this.animationMixer._actions.forEach(action => {
+      action.paused = false
+      action.play() // animation is not start playing because already set timescale to 0.
+    })
   }
 }

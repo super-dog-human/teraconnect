@@ -7,21 +7,14 @@ const avatar = new AvatarLoader()
 let startDraggingTime
 let isDragging = false
 
-export default function useLessonAvatar(setIsLoading, isTalking, hasResize) {
+export default function useLessonAvatar(setIsLoading, isTalking, hasResize, setRecord) {
   const [config, setConfig] = useState({})
   const containerRef = useRef(null)
-  //    ReactDOM.findDOMNode(containerRef).append(dom)
-
-  function animate() {
-    avatar.animate(clock.getDelta())
-    requestAnimationFrame(() => animate())
-  }
 
   function startDragging(e) {
     if (avatar.prepareMovePosition(e.nativeEvent.offsetX, e.nativeEvent.offsetY)) {
-      //      e.target.style.cursor = 'move'
       isDragging = true
-      //      startDraggingTime
+      startDraggingTime = new Date()
     }
   }
 
@@ -32,7 +25,7 @@ export default function useLessonAvatar(setIsLoading, isTalking, hasResize) {
       return
     }
 
-    if(avatar.isMouseOver(e.nativeEvent.offsetX, e.nativeEvent.offsetY)) {
+    if(avatar.isOverAvatar(e.nativeEvent.offsetX, e.nativeEvent.offsetY)) {
       e.target.style.cursor = 'move'
     } else {
       e.target.style.cursor = 'default'
@@ -40,16 +33,16 @@ export default function useLessonAvatar(setIsLoading, isTalking, hasResize) {
   }
 
   function endDragging() {
-    isDragging = false
+    if (isDragging) {
+      isDragging = false
+      setRecord({ 'avatarMoving': [new Date() - startDraggingTime, avatar.currentPosition()] })
+    }
   }
 
   async function changeAvatar() {
     setIsLoading(true)
 
-    // avatarごと渡してurlとかdefaultActionとかをclassないで見てもらう
-    const dom = await avatar.render(config.avatar.url, containerRef.current)
-    avatar.setDefaultAnimation()
-    avatar.initAnimationPlaying()
+    const dom = await avatar.render(config.avatar, containerRef.current)
     avatar.play()
     animate()
 
@@ -78,6 +71,10 @@ export default function useLessonAvatar(setIsLoading, isTalking, hasResize) {
     )).join('')
   }
 
+  function animate() {
+    avatar.animate(clock.getDelta())
+    requestAnimationFrame(() => animate())
+  }
 
   useEffect(() => {
     return () => {

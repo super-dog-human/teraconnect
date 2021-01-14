@@ -33,7 +33,7 @@ const Page = ({ token, lesson }) => {
   const { bgImages, avatars, bgms } = useRecordResource(token, setBgImageURL)
   const { lessonImage, setLessonImage, uploadLessonImage } = useLessonImage(lesson.id, token)
   const { isTalking, setVoiceRecorderConfig } = useVoiceRecorder(lesson.id, token, isRecording, setRecord)
-  const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useLessonAvatar(setIsLoading, isTalking, hasResize)
+  const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useLessonAvatar(setIsLoading, isTalking, hasResize, setRecord)
   const { undoDrawing, clearDrawing, drawingColor, setDrawingColor, drawingLineWidth, setDrawingLineWidth,
     startDrawing, inDrawing, endDrawing, drawingRef } = useLessonDrawing(setRecord, hasResize)
 
