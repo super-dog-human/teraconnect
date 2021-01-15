@@ -5,6 +5,7 @@ import { css } from '@emotion/core'
 export default function LessonDrawing(props) {
 
   const bodyStyle = css({
+    display: 'block',
     opacity: props.isHide ? '0' : '1',
     position: 'absolute',
     cursor: 'pointer',
