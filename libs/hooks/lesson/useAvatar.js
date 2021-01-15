@@ -61,8 +61,8 @@ export default function useLessonAvatar(setIsLoading, isTalking, hasResize, setR
   }
 
   function changeScreenSize() {
-    console.log('hasResize', hasResize)
-    //    avatar.updateSize(containerRef.current)
+    if (!hasResize) return
+    avatar.updateSize(containerRef.current)
   }
 
   function rgb2hex(rgb) {

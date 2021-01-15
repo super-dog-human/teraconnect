@@ -73,7 +73,9 @@ export default class AvatarLoader {
   }
 
   updateSize(container) {
-    if (!container) return // for resized before rendering completed.
+    if (!container) return // アバター表示要素がまだ存在しなければスキップ
+    if (!this.renderer) return // レンダラーの初期化前にリサイズが発生したらスキップ
+
     const size = this._domSize(container)
     this.renderer.setSize(size.width, size.height)
     this.renderer.render(this.scene, this.camera)
