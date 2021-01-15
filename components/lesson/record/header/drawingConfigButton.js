@@ -2,7 +2,7 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-export default function DrawingConfigButton({ isSelected, className, onClick, children }) {
+export default function DrawingConfigButton({ isSelected, className, disabled, onClick, children }) {
   const bodyStyle = css({
     ['> img']: {
       width: '20px',
@@ -16,9 +16,14 @@ export default function DrawingConfigButton({ isSelected, className, onClick, ch
     [':active']: {
       backgroundColor: isSelected ? 'var(--back-movie-black)' : 'var(--text-gray)',
     },
+    [':disabled']: {
+      opacity: '0.3',
+      cursor: 'default',
+      backgroundColor: 'var(--dark-gray)',
+    },
   })
 
   return (
-    <button css={bodyStyle} className={className} onClick={onClick}>{children}</button>
+    <button css={bodyStyle} className={className} disabled={disabled} onClick={onClick}>{children}</button>
   )
 }

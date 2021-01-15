@@ -14,6 +14,11 @@ export default function LessonRecordHeader({ isRecording, setIsRecording, setRec
     setIsRecording(!isRecording)
   }
 
+  function handleDrawingHide() {
+    setIsDrawingHide(!isDrawingHide)
+    setRecord({ drawingHide: !isDrawingHide })
+  }
+
   function handlePen() {
     if (isDrawingHide) {
       setIsDrawingHide(false)
@@ -25,16 +30,12 @@ export default function LessonRecordHeader({ isRecording, setIsRecording, setRec
 
   function handleDrawingUndo() {
     undoDrawing()
+    setRecord({ drawingUndo: true })
   }
 
   function handleDrawingClear() {
     clearDrawing()
     setRecord({ drawingClear: true })
-  }
-
-  function handleDrawingHide() {
-    setIsDrawingHide(!isDrawingHide)
-    setRecord({ drawingHide: !isDrawingHide })
   }
 
   function handleSettingPanel() {
@@ -69,8 +70,8 @@ export default function LessonRecordHeader({ isRecording, setIsRecording, setRec
           <DrawingConfigButton onClick={handleDrawingHide} isSelected={isDrawingHide}><img src="/img/icon/hide.svg" /></DrawingConfigButton>
           <DrawingConfigButton isSelected={!isDrawingHide && enablePen} onClick={handlePen}><img src="/img/icon/drawing.svg" /></DrawingConfigButton>
           <DrawingConfigPanel color={drawingColor} setColor={setDrawingColor} setLineWidth={setDrawingLineWidth} setEnablePen={setEnablePen} setIsDrawingHide={setIsDrawingHide} />
-          <DrawingConfigButton onClick={handleDrawingUndo}><img src="/img/icon/undo.svg" /></DrawingConfigButton>
-          <DrawingConfigButton onClick={handleDrawingClear}><img src="/img/icon/trash.svg" /></DrawingConfigButton>
+          <DrawingConfigButton disabled={isDrawingHide} onClick={handleDrawingUndo}><img src="/img/icon/undo.svg" /></DrawingConfigButton>
+          <DrawingConfigButton disabled={isDrawingHide} onClick={handleDrawingClear}><img src="/img/icon/trash.svg" /></DrawingConfigButton>
           <DrawingConfigButton css={settingButtonStyle} onClick={handleSettingPanel}><img src="/img/icon/settings.svg" /></DrawingConfigButton>
         </div>
       </div>

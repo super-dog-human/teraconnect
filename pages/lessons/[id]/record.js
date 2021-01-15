@@ -28,13 +28,12 @@ const Page = ({ token, lesson }) => {
   const [isRecording, setIsRecording] = useState(false)
   const [bgImageURL, setBgImageURL] = useState()
   const [isShowControlPanel, setIsShowControlPanel] = useState(false)
-  const [isDrawingHide, setIsDrawingHide] = useState(false)
   const { setRecord } = useRecorder(lesson.id, token, isRecording)
   const { bgImages, avatars, bgms } = useRecordResource(token, setBgImageURL)
   const { lessonImage, setLessonImage, uploadLessonImage } = useLessonImage(lesson.id, token)
   const { isTalking, setVoiceRecorderConfig } = useVoiceRecorder(lesson.id, token, isRecording, setRecord)
   const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useLessonAvatar(setIsLoading, isTalking, hasResize, setRecord)
-  const { enablePen, setEnablePen, undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth,
+  const { isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth,
     startDrawing, inDrawing, endDrawing, drawingRef } = useLessonDrawing(setRecord, hasResize, startDragging, inDragging, endDragging)
 
   useEffect(() => {

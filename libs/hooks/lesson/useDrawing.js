@@ -7,6 +7,7 @@ const histories = []
 
 export default function useLessonDrawing(setRecord, hasResize, startDragging, inDragging, endDragging) {
   const drawingRef = useRef(null)
+  const [isDrawingHide, setIsDrawingHide] = useState(false)
   const [enablePen, setEnablePen] = useState(false)
   const [color, setColor] = useState('#ff0000')
   const [lineWidth, setLineWidth] = useState(5)
@@ -19,7 +20,7 @@ export default function useLessonDrawing(setRecord, hasResize, startDragging, in
   }
 
   function startDrawing(e) {
-    if (enablePen) {
+    if (enablePen  && !isDrawingHide) {
       canvasContext.beginPath()
       isDrawing = true
 
@@ -32,7 +33,7 @@ export default function useLessonDrawing(setRecord, hasResize, startDragging, in
   }
 
   function inDrawing(e) {
-    if (enablePen) {
+    if (enablePen  && !isDrawingHide) {
       if (!isDrawing) return
 
       drawLine(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
@@ -43,7 +44,7 @@ export default function useLessonDrawing(setRecord, hasResize, startDragging, in
   }
 
   function endDrawing(e) {
-    if (enablePen) {
+    if (enablePen  && !isDrawingHide) {
       if (!isDrawing) return
 
       drawLine(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
@@ -175,7 +176,8 @@ export default function useLessonDrawing(setRecord, hasResize, startDragging, in
   }, [lineWidth])
 
   return {
-    enablePen, setEnablePen, undoDrawing, clearDrawing, drawingColor: color, setDrawingColor: setColor,
-    setDrawingLineWidth: setLineWidth, startDrawing, inDrawing, endDrawing, drawingRef
+    isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, undoDrawing, clearDrawing,
+    drawingColor: color, setDrawingColor: setColor, setDrawingLineWidth: setLineWidth,
+    startDrawing, inDrawing, endDrawing, drawingRef
   }
 }
