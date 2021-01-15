@@ -4,7 +4,7 @@ import { css } from '@emotion/core'
 import { HexColorInput } from 'react-colorful'
 import 'react-colorful/dist/index.css'
 
-export default function DrawingConfigPanel(props) {
+export default function DrawingConfigPanel({ color, setColor, setLineWidth, setEnablePen, setIsDrawingHide }) {
   const [showDrawingConfig, setShowDrawingConfig] = useState(false)
   const [panelPosition, setPanelposition] = useState({ top: 0, left: 0 })
 
@@ -14,16 +14,22 @@ export default function DrawingConfigPanel(props) {
   }
 
   function handleEraser() {
-    props.setColor('eraser')
+    setColor('eraser')
+    setEnablePen(true)
+    setIsDrawingHide(false)
   }
 
   function handleColorChange(e) {
     const color = (typeof e === 'string') ? e : e.target.dataset.color
-    props.setColor(color)
+    setColor(color)
+    setEnablePen(true)
+    setIsDrawingHide(false)
   }
 
   function handleWidthChange(e) {
-    props.setLineWidth(e.target.dataset.width)
+    setLineWidth(e.target.dataset.width)
+    setEnablePen(true)
+    setIsDrawingHide(false)
   }
 
   const backgroundStyle = css({
@@ -46,8 +52,6 @@ export default function DrawingConfigPanel(props) {
     backgroundColor: 'gray'
   })
 
-  // props.lineWidthを反映させる
-
   return (
     <>
       <button css={sortDownButtonStyle} onMouseDown={handleShowPanel}>
@@ -63,7 +67,7 @@ export default function DrawingConfigPanel(props) {
           <button onClick={handleColorChange} data-color='#ff0000'>red</button>
           <button onClick={handleColorChange} data-color='#00ff00'>green</button>
           <button onClick={handleColorChange} data-color='#000000'>black</button>
-          <HexColorInput color={props.color} onChange={handleColorChange} />
+          <HexColorInput color={color} onChange={handleColorChange} />
         </div>
       </div>
     </>

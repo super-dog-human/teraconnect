@@ -28,14 +28,14 @@ const Page = ({ token, lesson }) => {
   const [isRecording, setIsRecording] = useState(false)
   const [bgImageURL, setBgImageURL] = useState()
   const [isShowControlPanel, setIsShowControlPanel] = useState(false)
-  const [isDrawingHide, setIsDrawingHide] = useState(true)
+  const [isDrawingHide, setIsDrawingHide] = useState(false)
   const { setRecord } = useRecorder(lesson.id, token, isRecording)
   const { bgImages, avatars, bgms } = useRecordResource(token, setBgImageURL)
   const { lessonImage, setLessonImage, uploadLessonImage } = useLessonImage(lesson.id, token)
   const { isTalking, setVoiceRecorderConfig } = useVoiceRecorder(lesson.id, token, isRecording, setRecord)
   const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useLessonAvatar(setIsLoading, isTalking, hasResize, setRecord)
-  const { undoDrawing, clearDrawing, drawingColor, setDrawingColor, drawingLineWidth, setDrawingLineWidth,
-    startDrawing, inDrawing, endDrawing, drawingRef } = useLessonDrawing(setRecord, hasResize)
+  const { enablePen, setEnablePen, undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth,
+    startDrawing, inDrawing, endDrawing, drawingRef } = useLessonDrawing(setRecord, hasResize, startDragging, inDragging, endDragging)
 
   useEffect(() => {
     const resizeObserver = new ResizeObserver(e => {
@@ -65,11 +65,9 @@ const Page = ({ token, lesson }) => {
         <title>{lesson.title}の収録 - TERACONNECT</title>
       </Head>
       <LessonRecordHeader isRecording={isRecording} setIsRecording={setIsRecording} setRecord={setRecord}
-        isDrawingHide={isDrawingHide} setIsDrawingHide={setIsDrawingHide}
-        undoDrawing={undoDrawing} clearDrawing={clearDrawing}
-        drawingColor={drawingColor} setDrawingColor={setDrawingColor}
-        drawingLineWidth={drawingLineWidth} setDrawingLineWidth={setDrawingLineWidth}
-        setIsShowControlPanel={setIsShowControlPanel} />
+        isDrawingHide={isDrawingHide} setIsDrawingHide={setIsDrawingHide} enablePen={enablePen} setEnablePen={setEnablePen}
+        undoDrawing={undoDrawing} clearDrawing={clearDrawing} drawingColor={drawingColor} setDrawingColor={setDrawingColor}
+        setDrawingLineWidth={setDrawingLineWidth} setIsShowControlPanel={setIsShowControlPanel} />
       <main css={mainStyle}>
         <div css={bodyStyle} ref={containerRef}>
           <div css={loadingStyle} className="indicator-z">

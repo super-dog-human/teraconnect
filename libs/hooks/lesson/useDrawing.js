@@ -5,8 +5,9 @@ let startPosition = {}
 let isDrawing = false
 const histories = []
 
-export default function useLessonDrawing(setRecord, hasResize) {
+export default function useLessonDrawing(setRecord, hasResize, startDragging, inDragging, endDragging) {
   const drawingRef = useRef(null)
+  const [enablePen, setEnablePen] = useState(false)
   const [color, setColor] = useState('#ff0000')
   const [lineWidth, setLineWidth] = useState(5)
 
@@ -18,28 +19,40 @@ export default function useLessonDrawing(setRecord, hasResize) {
   }
 
   function startDrawing(e) {
-    canvasContext.beginPath()
-    isDrawing = true
+    if (enablePen) {
+      canvasContext.beginPath()
+      isDrawing = true
 
-    const position = { x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY }
-    startPosition = position
-    createNewHistory()
+      const position = { x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY }
+      startPosition = position
+      createNewHistory()
+    } else {
+      startDragging(e) // ペンが有効でない時はアバターを操作する
+    }1
   }
 
   function inDrawing(e) {
-    if (!isDrawing) return
+    if (enablePen) {
+      if (!isDrawing) return
 
-    drawLine(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
-    startPosition = { x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY }
+      drawLine(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
+      startPosition = { x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY }
+    } else {
+      inDragging(e) // ペンが有効でない時はアバターを操作する
+    }
   }
 
   function endDrawing(e) {
-    if (!isDrawing) return
+    if (enablePen) {
+      if (!isDrawing) return
 
-    drawLine(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
-    cleanHistory()
+      drawLine(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
+      cleanHistory()
 
-    isDrawing = false
+      isDrawing = false
+    } else {
+      endDragging(e) // ペンが有効でない時はアバターを操作する
+    }
   }
 
   function drawLine(x, y) {
@@ -162,7 +175,7 @@ export default function useLessonDrawing(setRecord, hasResize) {
   }, [lineWidth])
 
   return {
-    undoDrawing, clearDrawing, drawingColor: color, setDrawingColor: setColor,
-    drawingLineWidth: lineWidth, setDrawingLineWidth: setLineWidth, startDrawing, inDrawing, endDrawing, drawingRef
+    enablePen, setEnablePen, undoDrawing, clearDrawing, drawingColor: color, setDrawingColor: setColor,
+    setDrawingLineWidth: setLineWidth, startDrawing, inDrawing, endDrawing, drawingRef
   }
 }
