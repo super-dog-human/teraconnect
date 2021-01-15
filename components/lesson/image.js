@@ -3,12 +3,22 @@ import React from 'react'
 import { css } from '@emotion/core'
 
 export default function LessonImage(props) {
-  const bodyStyle = css({
-    display: props.loading ? 'none' : 'block',
-    objectFit: 'contain',
-  })
-
   return (
-    <img src={props.src} css={bodyStyle} />
+    <div css={bodyStyle} className="image-z">
+      <img src={props.src} css={imageStyle} />
+    </div>
   )
 }
+
+const bodyStyle = css({
+  position: 'absolute',
+  top: 0,
+  width: '100%',
+  height: '100%',
+})
+
+const imageStyle = css({
+  width: '90%',
+  height: 'auto',
+  objectFit: 'contain',
+})
