@@ -14,7 +14,7 @@ export default function LessonRecordRandomTips() {
     <div css={bodyStyle}>
       <div css={{ width: '70%', margin: 'auto' }}>
         <div>TIPS.</div>
-        <div>ステージ背景に合わせて環境光を設定すると、アバターが自然な表示になります。</div>
+        <div>背景に合わせて環境光の色合いを調節すると、アバターの表示が自然になります。</div>
       </div>
     </div>
 
