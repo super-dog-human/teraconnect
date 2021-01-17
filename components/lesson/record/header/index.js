@@ -45,8 +45,8 @@ export default function LessonRecordHeader({ isRecording, setIsRecording, setRec
             <a>
               <img
                 css={logoImageStyle}
-                src="/img/logo.png"
-                srcSet="/img/logo.png 1x, /img/logo@2x.png 2x"
+                src="/img/logo_white.png"
+                srcSet="/img/logo_white.png 1x, /img/logo_white@2x.png 2x"
               />
             </a>
           </Link>
