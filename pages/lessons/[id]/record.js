@@ -10,7 +10,7 @@ import useLessonAvatar from '../../../libs/hooks/lesson/useAvatar'
 import useVoiceRecorder from '../../../libs/hooks/lesson/record/useVoiceRecorder'
 import useLessonDrawing from '../../../libs/hooks/lesson/useDrawing'
 import LessonRecordHeader from '../../../components/lesson/record/header/'
-import LoadingIndicator from '../../../components/loadingIndicator'
+import LessonRecordLoadingIndicator from '../../../components/lesson/record/loadingIndicator'
 import LessonBackgroundImage from '../../../components/lesson/backgroundImage'
 import LessonAvatar from '../../../components/lesson/avatar'
 import LessonImage from '../../../components/lesson/image'
@@ -39,17 +39,6 @@ const Page = ({ token, lesson }) => {
   const { isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth,
     startDrawing, inDrawing, endDrawing, drawingRef } = useLessonDrawing(setRecord, hasResize, startDragging, inDragging, endDragging)
 
-  const loadingStyle = css({
-    display: isLoading ? 'block' : 'none',
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    width: '100%',
-    height: '100%',
-  })
-
   return (
     <>
       <Head>
@@ -61,9 +50,7 @@ const Page = ({ token, lesson }) => {
         setDrawingLineWidth={setDrawingLineWidth} setIsShowControlPanel={setIsShowControlPanel} />
       <main css={mainStyle} onDragOver={handleAreaDragOver} onDragLeave={handleAreaDragLeave} onDrop={handleAreaDrop}>
         <div css={bodyStyle} ref={containerRef}>
-          <div css={loadingStyle} className="indicator-z">
-            <LoadingIndicator />
-          </div>
+          <LessonRecordLoadingIndicator isLoading={isLoading} />
           <LessonBackgroundImage src={bgImageURL} />
           <LessonImage imageIndex={imageIndex} images={images} />
           <LessonAvatar ref={avatarRef} onMouseDown={startDragging} onMouseMove={inDragging} onMouseUp={endDragging} onMouseLeave={endDragging} />
