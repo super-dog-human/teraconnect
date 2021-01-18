@@ -1,8 +1,10 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import Head from 'next/head'
 import useRecordResource from '../../../libs/hooks/lesson/record/useRecordResource'
 import useRecorder from '../../../libs/hooks/lesson/record/useRecorder'
+import useResizeDetector from '../../../libs/hooks/useResizeDetector'
+import useDragOverDetector from '../../../libs/hooks/useDragOverDetector'
 import useUploadedImage from '../../../libs/hooks/lesson/record/useUploadedImage'
 import useLessonAvatar from '../../../libs/hooks/lesson/useAvatar'
 import useVoiceRecorder from '../../../libs/hooks/lesson/record/useVoiceRecorder'
@@ -23,44 +25,19 @@ import { css } from '@emotion/core'
 
 const Page = ({ token, lesson }) => {
   const containerRef = useRef(null)
-  const [hasResize, setHasResize] = useState()
   const [isLoading, setIsLoading] = useState(true)
   const [isRecording, setIsRecording] = useState(false)
-  const [hasImageDragOver, sethasImageDragOver] = useState(false)
   const [bgImageURL, setBgImageURL] = useState()
   const [isShowControlPanel, setIsShowControlPanel] = useState(false)
   const { setRecord } = useRecorder(lesson.id, token, isRecording)
+  const { hasResize } = useResizeDetector(containerRef)
+  const  { hasDragOver, handleAreaDragOver, handleAreaDragLeave, handleAreaDrop } = useDragOverDetector()
   const { bgImages, avatars, bgms } = useRecordResource(token, setBgImageURL)
   const { imageIndex, setImageIndex, images, uploadImages } = useUploadedImage(lesson.id, token, setRecord)
   const { isTalking, setVoiceRecorderConfig } = useVoiceRecorder(lesson.id, token, isRecording, setRecord)
   const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useLessonAvatar(setIsLoading, isTalking, hasResize, setRecord)
   const { isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth,
     startDrawing, inDrawing, endDrawing, drawingRef } = useLessonDrawing(setRecord, hasResize, startDragging, inDragging, endDragging)
-
-  function handleDragOver(e) {
-    sethasImageDragOver(true)
-    e.preventDefault()
-  }
-
-  function handleDragLeave() {
-    sethasImageDragOver(false)
-  }
-
-  function handleDrop(e) {
-    sethasImageDragOver(false)
-    e.preventDefault()
-  }
-
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver(e => {
-      setHasResize({ width: e[0].contentRect.width, height: e[0].contentRect.height })
-    })
-    resizeObserver.observe(containerRef.current)
-
-    return () => {
-      resizeObserver.disconnect()
-    }
-  }, [])
 
   const loadingStyle = css({
     display: isLoading ? 'block' : 'none',
@@ -82,7 +59,7 @@ const Page = ({ token, lesson }) => {
         isDrawingHide={isDrawingHide} setIsDrawingHide={setIsDrawingHide} enablePen={enablePen} setEnablePen={setEnablePen}
         undoDrawing={undoDrawing} clearDrawing={clearDrawing} drawingColor={drawingColor} setDrawingColor={setDrawingColor}
         setDrawingLineWidth={setDrawingLineWidth} setIsShowControlPanel={setIsShowControlPanel} />
-      <main css={mainStyle} onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
+      <main css={mainStyle} onDragOver={handleAreaDragOver} onDragLeave={handleAreaDragLeave} onDrop={handleAreaDrop}>
         <div css={bodyStyle} ref={containerRef}>
           <div css={loadingStyle} className="indicator-z">
             <LoadingIndicator />
@@ -94,7 +71,7 @@ const Page = ({ token, lesson }) => {
           <LessonRecordSettingPanel isShow={isShowControlPanel} setIsShow={setIsShowControlPanel} bgImages={bgImages} setBgImageURL={setBgImageURL}
             avatars={avatars} setAvatarConfig={setAvatarConfig} bgms={bgms} setVoiceRecorderConfig={setVoiceRecorderConfig} setRecord={setRecord} />
         </div>
-        <LessonRecordImageController setImageIndex={setImageIndex} images={images} uploadImages={uploadImages} hasDragOver={hasImageDragOver}/>
+        <LessonRecordImageController setImageIndex={setImageIndex} images={images} uploadImages={uploadImages} hasDragOver={hasDragOver} />
         <LessonRecordRandomTips />
       </main>
       <Footer />

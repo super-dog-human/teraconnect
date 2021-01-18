@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { post } from '../../../fetch'
 
 export default function useUploadedImage(id, token) {
+//  const [hasImageDragOver, setHasImageDragOver] = useState(false)
   const [imageIndex, setImageIndex] = useState()
   const [images, setImages] = useState([])
 
@@ -29,6 +30,22 @@ export default function useUploadedImage(id, token) {
     // upload to GCP
     // setLessonImages
   }
+
+  /*
+  function handleAreaDragOver(e) {
+    setHasImageDragOver(true)
+    e.preventDefault() // これは必要
+  }
+
+  function handleAreaDragLeave() {
+    setHasImageDragOver(false)
+  }
+
+  function handleAreaDrop(e) {
+    setHasImageDragOver(false)
+    e.preventDefault()
+  }
+  */
 
   return { imageIndex, setImageIndex, images, uploadImages }
 }

@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useRef, useEffect } from 'react'
+import React, { useRef } from 'react'
 import { css } from '@emotion/core'
 
 export default function LessonRecordImageController({ setImageIndex, images, uploadImages, hasDragOver }) {
@@ -15,6 +15,11 @@ export default function LessonRecordImageController({ setImageIndex, images, upl
 
   function handleDrop(e) {
     uploadImages(e.dataTransfer.files)
+  }
+
+  function handleChangeFile(e) {
+    uploadImages(e.target.files)
+    e.target.value = '' // ここでリセットしちゃって大丈夫？
   }
 
   function handleUploadButtonClick() {
@@ -34,7 +39,7 @@ export default function LessonRecordImageController({ setImageIndex, images, upl
     border: '2px var(--border-gray) dashed',
     borderStyle: 'dashed',
     [':hover']: {
-      'opacity': '0.7',
+      background: 'var(--dark-purple)',
     },
     ['>img']: {
       verticalAlign: 'middle',
@@ -47,18 +52,10 @@ export default function LessonRecordImageController({ setImageIndex, images, upl
     },
   })
 
-  useEffect(() => {
-    if (hasDragOver) {
-      //      console.log('dragover.')
-    } else {
-      //      console.log('out')
-    }
-  }, [hasDragOver])
-
   return (
     <div css={bodyStyle}>
       <div css={controllerStyle}>
-        <input type="file" accept="image/jpeg,image/png,image/gif,image/svg" multiple={true} onChange={uploadImages} css={inputFileStyle} ref={inputFileRef} />
+        <input type="file" accept="image/jpeg,image/png,image/gif,image/svg" multiple={true} onChange={handleChangeFile} css={inputFileStyle} ref={inputFileRef} />
         {
           images.length === 0 && <div css={wideUploadAreaStyle} onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
             <button css={wideUploadButtonStyle} onClick={handleUploadButtonClick}>
