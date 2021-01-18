@@ -5,7 +5,7 @@ import useRecordResource from '../../../libs/hooks/lesson/record/useRecordResour
 import useRecorder from '../../../libs/hooks/lesson/record/useRecorder'
 import useResizeDetector from '../../../libs/hooks/useResizeDetector'
 import useDragOverDetector from '../../../libs/hooks/useDragOverDetector'
-import useUploadedImage from '../../../libs/hooks/lesson/record/useUploadedImage'
+import useImageController from '../../../libs/hooks/lesson/record/useImageController'
 import useLessonAvatar from '../../../libs/hooks/lesson/useAvatar'
 import useVoiceRecorder from '../../../libs/hooks/lesson/record/useVoiceRecorder'
 import useLessonDrawing from '../../../libs/hooks/lesson/useDrawing'
@@ -16,7 +16,7 @@ import LessonAvatar from '../../../components/lesson/avatar'
 import LessonImage from '../../../components/lesson/image'
 import LessonDrawing from '../../../components/lesson/drawing'
 import LessonRecordSettingPanel from '../../../components/lesson/record/settingPanel/'
-import LessonRecordImageController from '../../../components/lesson/record/imageController'
+import LessonRecordImageController from '../../../components/lesson/record/imageController/'
 import LessonRecordRandomTips from '../../../components/lesson/record/randomTips'
 import Footer from '../../../components/footer'
 import requirePageAuth from '../../../components/requirePageAuth'
@@ -32,8 +32,8 @@ const Page = ({ token, lesson }) => {
   const { setRecord } = useRecorder(lesson.id, token, isRecording)
   const { hasResize } = useResizeDetector(containerRef)
   const  { hasDragOver, handleAreaDragOver, handleAreaDragLeave, handleAreaDrop } = useDragOverDetector()
+  const { setImageIndex, images, setImages, selectedImage, moveImage } = useImageController(setRecord)
   const { bgImages, avatars, bgms } = useRecordResource(token, setBgImageURL)
-  const { imageIndex, setImageIndex, images, uploadImages } = useUploadedImage(lesson.id, token, setRecord)
   const { isTalking, setVoiceRecorderConfig } = useVoiceRecorder(lesson.id, token, isRecording, setRecord)
   const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useLessonAvatar(setIsLoading, isTalking, hasResize, setRecord)
   const { isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth,
@@ -52,13 +52,14 @@ const Page = ({ token, lesson }) => {
         <div css={bodyStyle} ref={containerRef}>
           <LessonRecordLoadingIndicator isLoading={isLoading} />
           <LessonBackgroundImage src={bgImageURL} />
-          <LessonImage imageIndex={imageIndex} images={images} />
+          <LessonImage image={selectedImage} />
           <LessonAvatar ref={avatarRef} onMouseDown={startDragging} onMouseMove={inDragging} onMouseUp={endDragging} onMouseLeave={endDragging} />
           <LessonDrawing isHide={isDrawingHide} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing} drawingRef={drawingRef}  />
           <LessonRecordSettingPanel isShow={isShowControlPanel} setIsShow={setIsShowControlPanel} bgImages={bgImages} setBgImageURL={setBgImageURL}
             avatars={avatars} setAvatarConfig={setAvatarConfig} bgms={bgms} setVoiceRecorderConfig={setVoiceRecorderConfig} setRecord={setRecord} />
         </div>
-        <LessonRecordImageController setImageIndex={setImageIndex} images={images} uploadImages={uploadImages} hasDragOver={hasDragOver} />
+        <LessonRecordImageController id={lesson.id} token={token} images={images} setImages={setImages} setImageIndex={setImageIndex}
+          moveImage={moveImage} hasDragOver={hasDragOver} />
         <LessonRecordRandomTips />
       </main>
       <Footer />

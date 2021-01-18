@@ -2,10 +2,10 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-export default function LessonImage(props) {
+export default function LessonImage({ image }) {
   return (
     <div css={bodyStyle} className="image-z">
-      <img src={props.src} css={imageStyle} />
+      {image && <img src={image.src} css={imageStyle} />}
     </div>
   )
 }
@@ -15,10 +15,13 @@ const bodyStyle = css({
   top: 0,
   width: '100%',
   height: '100%',
+  display: 'flex',
+  justifyContent: 'center',
 })
 
 const imageStyle = css({
-  width: '90%',
-  height: 'auto',
+  margin: 'auto',
+  maxWidth: '90%',
+  maxHeight: '90%',
   objectFit: 'contain',
 })

@@ -2,11 +2,11 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-export default function LessonDrawing(props) {
+export default function LessonDrawing({ isHide, startDrawing, inDrawing, endDrawing, drawingRef }) {
 
   const bodyStyle = css({
     display: 'block',
-    opacity: props.isHide ? '0' : '1',
+    opacity: isHide ? '0' : '1',
     position: 'absolute',
     cursor: 'pointer',
     top: 0,
@@ -15,7 +15,7 @@ export default function LessonDrawing(props) {
   })
 
   return (
-    <canvas css={bodyStyle} className='drawing-z' onMouseDown={props.startDrawing}
-      onMouseMove={props.inDrawing} onMouseUp={props.endDrawing} onMouseLeave={props.endDrawing} ref={props.drawingRef} />
+    <canvas css={bodyStyle} className='drawing-z' onMouseDown={startDrawing}
+      onMouseMove={inDrawing} onMouseUp={endDrawing} onMouseLeave={endDrawing} ref={drawingRef} />
   )
 }
