@@ -6,26 +6,26 @@ export default function useImageController(setSelectedImage, setRecord) {
   const [images, setImages] = useState([])
 
   function setImageIndex(e) {
-    // indexが前と一緒ならhideとかそういう
-    const show = !isShow
-    setIsShow(show)
-    if (show) {
-      setRecord({ showImage: 'foo-image-id' })
-      setIndex(parseInt(e.target.dataset.index))
-    } else {
+    const newIndex = parseInt(e.target.dataset.index)
+    if (index === newIndex && isShow) {
       setRecord({ hideImage: 'foo-image-id' })
+      setIsShow(false)
       setIndex()
+    } else {
+      setRecord({ showImage: 'foo-image-id' })
+      setIsShow(true)
+      setIndex(newIndex)
     }
   }
 
   function moveImage(e) {
-    // dropされた画像
     console.log('画像をいれかえる？', e)
+    // imagesのarrayを入れ替える
   }
 
   useEffect(() => {
     setSelectedImage(images[index])
   }, [index])
 
-  return { setImageIndex, images, setImages, moveImage }
+  return { imageIndex: index, setImageIndex, images, setImages, moveImage }
 }

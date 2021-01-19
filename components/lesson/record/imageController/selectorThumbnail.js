@@ -1,14 +1,8 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState } from 'react'
+import React from 'react'
 import { css } from '@emotion/core'
 
-export default function SelectorThumbnail(props) {
-  const [isSelected, setIsSelected] = useState(false)
-
-  function handleClick(e) {
-    setIsSelected(!isSelected)
-    props.onClick(e)
-  }
+export default function SelectorThumbnail({ src, 'data-index': dataIndex, onClick, isSelected }) {
 
   const imageStyle = css({
     display: 'block',
@@ -19,9 +13,7 @@ export default function SelectorThumbnail(props) {
     border: isSelected ? '3px solid white' : 'none',
   })
 
-  console.log('render thumb.')
-
   return (
-    <img css={imageStyle} {...props} onClick={handleClick} />
+    <img css={imageStyle} src={src} data-index={dataIndex} onClick={onClick} />
   )
 }
