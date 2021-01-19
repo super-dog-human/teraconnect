@@ -1,63 +1,55 @@
-/** @jsxImportSource @emotion/react */
-import React, { useState } from 'react'
-import { css } from '@emotion/core'
+import React from 'react'
 
 let isDragging = false
-//let targetElement
+let currentIndex
 
 export default function DragSwappable({ children, className, onSwap }) {
-  const [targetIndex, setTargetIndex] = useState()
+//  const [targetIndex, setTargetIndex] = useState()
 
-  function handleMouseDown(e) {
+  function handleDragStart(e) {
     isDragging = true
-    setTargetIndex(parseInt(e.target.dataset.index))
-    //    e.target.style.display = 'none'
-    //    children.splice(targetIndex, 1)
-    // keyを取得してchildrenを保持する
-    //    targetElement = e.target
-    //    console.log('handleMouseDown')
-    // 自分をchildrenから消してプレースホルダを表示
+    currentIndex = parseInt(e.target.parentElement.dataset.index)
   }
 
-  function handleMouseMove(e)  {
-    if (!isDragging) return
-    // なんかでかいI棒を表示する？
-    //    console.log(targetElement)
-    //    console.log('handleMouseMove')
+  function handleDragOver(e) {
+    const targetIndex = parseInt(e.target.parentElement.dataset.index)
+
+    if (targetIndex === currentIndex) {
+      return // 自分自身へのドラッグでは何も反応させない
+    }
+
+    const isMoveLeft = e.target.clientWidth / 2 < e.nativeEvent.offsetX
+
+    if (currentIndex - 1 === targetIndex && isMoveLeft) {
+      return  // 左隣の要素の右半分では何も反応させない
+    }
+
+    if (currentIndex + 1 === targetIndex && !isMoveLeft) {
+      return // 右隣の要素の左半分では何も反応させない
+    }
+
+    onSwap(currentIndex, targetIndex)
+
+    currentIndex = targetIndex
   }
 
-  function handleMouseUp(e) {
+  function handleDragEnd() {
     if (!isDragging) return
-    console.log('mouseup')
     isDragging = false
-    setTargetIndex()
-    //     targetIndex へ
-    //    console.log('handleMouseUp')
-    // onSwap
   }
 
-  function handleDrop(e) {
+  function handleDrop() {
     if (!isDragging) return
-    console.log('ondrop')
-    console.log(e)
+    isDragging = false
   }
 
   return (
     <div className={className}>
-      {children.map((c, i) => {
-        // 見えないseparatorがいるとか。
-        return(
-          <div key={i} data-index={i} onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp} onDrop={handleDrop} css={i === targetIndex && selectedStyle}>
-            {c}
-          </div>
-        )
-      })}
+      {children.map((c, i) => (
+        <div key={i} data-index={i} onDragStart={handleDragStart} onDragEnd={handleDragEnd} onDragOver={handleDragOver} onDrop={handleDrop}>
+          {c}
+        </div>
+      ))}
     </div>
   )
 }
-
-const selectedStyle = css({
-  opacity: 0.5,
-})
-
-// user-drag: none;

@@ -3,7 +3,6 @@ import React from 'react'
 import { css } from '@emotion/core'
 
 export default function SelectorThumbnail({ src, 'data-index': dataIndex, onClick, isSelected }) {
-
   const imageStyle = css({
     display: 'block',
     maxWidth: '150px',
@@ -12,6 +11,8 @@ export default function SelectorThumbnail({ src, 'data-index': dataIndex, onClic
     cursor: 'pointer',
     border: isSelected ? '3px solid white' : 'none',
   })
+
+  // isUploadingならloading処理
 
   return (
     <img css={imageStyle} src={src} data-index={dataIndex} onClick={onClick} />

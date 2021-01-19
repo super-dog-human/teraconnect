@@ -2,30 +2,39 @@ import { useState, useEffect } from 'react'
 
 export default function useImageController(setSelectedImage, setRecord) {
   const [isShow, setIsShow] = useState(false)
-  const [index, setIndex] = useState()
+  const [imageID, setImageID] = useState()
   const [images, setImages] = useState([])
 
-  function setImageIndex(e) {
-    const newIndex = parseInt(e.target.dataset.index)
-    if (index === newIndex && isShow) {
+  function handleHover(e) {
+    // onAnimationEnd
+  }
+
+  function selectImage(e) {
+    const newImageID = parseInt(e.target.dataset.id)
+    if (imageID === newImageID && isShow) {
       setRecord({ hideImage: 'foo-image-id' })
       setIsShow(false)
-      setIndex()
+      setImageID()
     } else {
       setRecord({ showImage: 'foo-image-id' })
       setIsShow(true)
-      setIndex(newIndex)
+      setImageID(newImageID)
     }
   }
 
-  function moveImage(e) {
-    console.log('画像をいれかえる？', e)
-    // imagesのarrayを入れ替える
+  function moveImage(fromIndex, toIndex) {
+    if (fromIndex === toIndex) return
+
+    const newImages = [...images]
+    const target = newImages.splice(fromIndex, 1)[0]
+    newImages.splice(toIndex, 0, target)
+
+    setImages(newImages)
   }
 
   useEffect(() => {
-    setSelectedImage(images[index])
-  }, [index])
+    setSelectedImage(images.find(i => i.id === imageID))
+  }, [imageID])
 
-  return { imageIndex: index, setImageIndex, images, setImages, moveImage }
+  return { imageID, selectImage, images, setImages, moveImage }
 }
