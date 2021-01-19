@@ -5,7 +5,6 @@ import useRecordResource from '../../../libs/hooks/lesson/record/useRecordResour
 import useRecorder from '../../../libs/hooks/lesson/record/useRecorder'
 import useResizeDetector from '../../../libs/hooks/useResizeDetector'
 import useDragOverDetector from '../../../libs/hooks/useDragOverDetector'
-import useImageController from '../../../libs/hooks/lesson/record/useImageController'
 import useLessonAvatar from '../../../libs/hooks/lesson/useAvatar'
 import useVoiceRecorder from '../../../libs/hooks/lesson/record/useVoiceRecorder'
 import useLessonDrawing from '../../../libs/hooks/lesson/useDrawing'
@@ -28,11 +27,11 @@ const Page = ({ token, lesson }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isRecording, setIsRecording] = useState(false)
   const [bgImageURL, setBgImageURL] = useState()
+  const [selectedImage, setSelectedImage] = useState()
   const [isShowControlPanel, setIsShowControlPanel] = useState(false)
   const { setRecord } = useRecorder(lesson.id, token, isRecording)
   const { hasResize } = useResizeDetector(containerRef)
   const  { hasDragOver, handleAreaDragOver, handleAreaDragLeave, handleAreaDrop } = useDragOverDetector()
-  const { setImageIndex, images, setImages, selectedImage, moveImage } = useImageController(setRecord)
   const { bgImages, avatars, bgms } = useRecordResource(token, setBgImageURL)
   const { isTalking, setVoiceRecorderConfig } = useVoiceRecorder(lesson.id, token, isRecording, setRecord)
   const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useLessonAvatar(setIsLoading, isTalking, hasResize, setRecord)
@@ -58,8 +57,7 @@ const Page = ({ token, lesson }) => {
           <LessonRecordSettingPanel isShow={isShowControlPanel} setIsShow={setIsShowControlPanel} bgImages={bgImages} setBgImageURL={setBgImageURL}
             avatars={avatars} setAvatarConfig={setAvatarConfig} bgms={bgms} setVoiceRecorderConfig={setVoiceRecorderConfig} setRecord={setRecord} />
         </div>
-        <LessonRecordImageController id={lesson.id} token={token} images={images} setImages={setImages} setImageIndex={setImageIndex}
-          moveImage={moveImage} hasDragOver={hasDragOver} />
+        <LessonRecordImageController id={lesson.id} token={token} setSelectedImage={setSelectedImage} setRecord={setRecord} hasDragOver={hasDragOver} />
         <LessonRecordRandomTips />
       </main>
       <Footer />

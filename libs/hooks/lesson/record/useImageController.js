@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react'
 
-export default function useImageController(setRecord) {
+export default function useImageController(setSelectedImage, setRecord) {
   const [isShow, setIsShow] = useState(false)
   const [index, setIndex] = useState()
   const [images, setImages] = useState([])
-  const [selectedImage, setSelectedImage] = useState()
 
   function setImageIndex(e) {
     // indexが前と一緒ならhideとかそういう
@@ -28,5 +27,5 @@ export default function useImageController(setRecord) {
     setSelectedImage(images[index])
   }, [index])
 
-  return { setImageIndex, images, setImages, selectedImage, moveImage }
+  return { setImageIndex, images, setImages, moveImage }
 }
