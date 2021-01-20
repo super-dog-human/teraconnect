@@ -8,6 +8,7 @@ export default function ScrollArrow({ className, direction }) {
   }
 
   const iconStyle = css({
+    display: 'block',
     width: '33px',
     height: 'auto',
     opacity: '0.5',

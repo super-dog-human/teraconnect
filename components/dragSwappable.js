@@ -6,17 +6,17 @@ let currentIndex
 export default function DragSwappable({ children, className, onSwap }) {
   function handleDragStart(e) {
     isDragging = true
-    currentIndex = parseInt(e.target.parentElement.dataset.index)
+    currentIndex = parseInt(e.currentTarget.dataset.index)
   }
 
   function handleDragOver(e) {
-    const targetIndex = parseInt(e.target.parentElement.dataset.index)
+    const targetIndex = parseInt(e.currentTarget.dataset.index)
 
     if (targetIndex === currentIndex) {
       return // 自分自身へのドラッグでは何も反応させない
     }
 
-    const isMoveLeft = e.target.clientWidth / 2 < e.nativeEvent.offsetX
+    const isMoveLeft = e.currentTarget.clientWidth / 2 < e.nativeEvent.offsetX
 
     if (currentIndex - 1 === targetIndex && isMoveLeft) {
       return  // 左隣の要素の右半分では何も反応させない
@@ -44,7 +44,7 @@ export default function DragSwappable({ children, className, onSwap }) {
   return (
     <div className={className}>
       {children.map((c, i) => (
-        <div key={i} data-index={i} onDragStart={handleDragStart} onDragEnd={handleDragEnd} onDragOver={handleDragOver} onDrop={handleDrop} draggable>
+        <div key={i} data-index={i} onDragStart={handleDragStart} onDragEnd={handleDragEnd} onDragOver={handleDragOver} onDrop={handleDrop}>
           {c}
         </div>
       ))}

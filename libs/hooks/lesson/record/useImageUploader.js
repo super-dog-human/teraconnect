@@ -23,6 +23,7 @@ export default function useImageUploader(id, token, setImages, inputFileRef) {
       reader.readAsDataURL(file)
       reader.onload = (e => {
         setImages(images =>
+          // canvasでリサイズしたものを渡す
           [...images, { src: e.target.result, id: Math.random().toString(32).substring(2), isUploading: true }]
         )
       })

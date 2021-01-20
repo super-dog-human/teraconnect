@@ -6,7 +6,7 @@ import ImageUploadingIcon from './imageUploadingIcon'
 export default function ImageUploadingButton({ onClick }) {
   return (
     <button css={bodyStyle} onClick={onClick}>
-      <ImageUploadingIcon />
+      <ImageUploadingIcon css={imageStyle} />
     </button>
   )
 }
@@ -15,4 +15,8 @@ const bodyStyle = css({
   [':hover']: {
     opacity: 0.6,
   },
+})
+
+const imageStyle = css({
+  display: 'block',
 })

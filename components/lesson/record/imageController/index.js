@@ -35,11 +35,13 @@ export default function LessonRecordImageController({ id, token, setSelectedImag
                 <ScrollArrow direction="left"/>
               </Col>
               <Col sm={8}>
-                <DragSwappable onSwap={moveImage} css={colStyle}>
-                  {images.map((image, i) =>
-                    <SelectorThumbnail src={image.src} key={i} data-id={image.id} onClick={selectImage} isSelected={image.id === imageID} />
-                  )}
-                </DragSwappable>
+                <div css={selectImageBarStyle}>
+                  <DragSwappable onSwap={moveImage} css={colStyle}>
+                    {images.map((image, i) =>
+                      <SelectorThumbnail src={image.src} key={i} data-id={image.id} onClick={selectImage} isSelected={image.id === imageID} />
+                    )}
+                  </DragSwappable>
+                </div>
               </Col>
               <Col sm={1} css={colStyle}>
                 <ScrollArrow direction="right" />
@@ -77,4 +79,10 @@ const colStyle = css({
   justifyContent: 'center',
   alignItems: 'center',
   height: '120px',
+})
+
+
+const selectImageBarStyle =css({
+  width: '100%',
+  overflow: 'scroll',
 })

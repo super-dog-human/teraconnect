@@ -2,9 +2,9 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-export default function ImageUploadingIcon() {
+export default function ImageUploadingIcon({ className }) {
   return (
-    <img src="/img/icon/photo-upload.svg" css={bodyStyle} />
+    <img src="/img/icon/photo-upload.svg" css={bodyStyle} className={className} />
   )
 }
 
