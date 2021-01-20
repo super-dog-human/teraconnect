@@ -5,12 +5,12 @@ export default function useImageController(setSelectedImage, setRecord) {
   const [imageID, setImageID] = useState()
   const [images, setImages] = useState([])
 
-  function handleHover(e) {
+  function handleMouseOver(e) {
     // onAnimationEnd
   }
 
   function selectImage(e) {
-    const newImageID = parseInt(e.target.dataset.id)
+    const newImageID = e.target.dataset.id
     if (imageID === newImageID && isShow) {
       setRecord({ hideImage: 'foo-image-id' })
       setIsShow(false)

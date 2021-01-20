@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { useRef } from 'react'
 import { css } from '@emotion/core'
+import { Container, Row, Col } from 'react-grid-system'
 import useImageUploader from '../../../../libs/hooks/lesson/record/useImageUploader'
 import useImageController from '../../../../libs/hooks/lesson/record/useImageController'
 import ImageUploadingWideButton from './imageUploadingWideButton'
@@ -27,18 +28,27 @@ export default function LessonRecordImageController({ id, token, setSelectedImag
         )}
 
         {images.length > 0 && (
-          <div css={selectorBarStyle}>
-            <ScrollArrow direction="left" />
-            <div css={thumbnailsStyle}>
-              <DragSwappable onSwap={moveImage} css={selectorStyle}>
-                {images.map((image, i) =>
-                  <SelectorThumbnail src={image.src} key={i} data-id={image.id} onClick={selectImage} isSelected={image.id === imageID} />
-                )}
-              </DragSwappable>
-            </div>
-            <ScrollArrow direction="right" />
-            <ImageUploadingButton onClick={handleUploadButtonClick} />
-          </div>
+          <Container css={selectorBarStyle} fluid>
+            <Row>
+              <Col sm={1}></Col>
+              <Col sm={1}>
+                <ScrollArrow direction="left" />
+              </Col>
+              <Col sm={8}>
+                <DragSwappable onSwap={moveImage} css={selectorStyle}>
+                  {images.map((image, i) =>
+                    <SelectorThumbnail src={image.src} key={i} data-id={image.id} onClick={selectImage} isSelected={image.id === imageID} />
+                  )}
+                </DragSwappable>
+              </Col>
+              <Col sm={1}>
+                <ScrollArrow direction="right" />
+              </Col>
+              <Col sm={1}>
+                <ImageUploadingButton onClick={handleUploadButtonClick} />
+              </Col>
+            </Row>
+          </Container>
         )}
       </div>
     </div>
@@ -62,9 +72,6 @@ const inputFileStyle = css({
 })
 
 const selectorBarStyle = css({
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
   height: '100%',
 })
 

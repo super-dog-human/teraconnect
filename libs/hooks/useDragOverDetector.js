@@ -5,7 +5,7 @@ export default function useDragOverDetector() {
 
   function handleAreaDragOver(e) {
     setHasDragOver(true)
-    e.preventDefault() // これがないとonDrop時にブラウザがファイルドロップを受けて別ウィンドウで開いてしまう
+    e.preventDefault() // onDrop時にブラウザが別ウィンドウを開くのを防ぐ
   }
 
   function handleAreaDragLeave() {

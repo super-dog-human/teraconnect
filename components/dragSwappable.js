@@ -9,10 +9,12 @@ export default function DragSwappable({ children, className, onSwap }) {
   function handleDragStart(e) {
     isDragging = true
     currentIndex = parseInt(e.target.parentElement.dataset.index)
+    console.log('t: ', e.target)
   }
 
   function handleDragOver(e) {
     const targetIndex = parseInt(e.target.parentElement.dataset.index)
+    console.log('t: ', e.target)
 
     if (targetIndex === currentIndex) {
       return // 自分自身へのドラッグでは何も反応させない
@@ -46,7 +48,7 @@ export default function DragSwappable({ children, className, onSwap }) {
   return (
     <div className={className}>
       {children.map((c, i) => (
-        <div key={i} data-index={i} onDragStart={handleDragStart} onDragEnd={handleDragEnd} onDragOver={handleDragOver} onDrop={handleDrop}>
+        <div key={i} data-index={i} onDragStart={handleDragStart} onDragEnd={handleDragEnd} onDragOver={handleDragOver} onDrop={handleDrop} draggable>
           {c}
         </div>
       ))}
