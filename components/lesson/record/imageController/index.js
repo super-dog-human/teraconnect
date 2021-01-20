@@ -19,7 +19,7 @@ export default function LessonRecordImageController({ id, token, setSelectedImag
   return (
     <div css={bodyStyle}>
       <div css={controllerStyle}>
-        <input type="file" accept="image/jpeg,image/png,image/gif,image/svg" multiple={true}
+        <input type="file" accept="image/jpeg,image/png,image/gif,image/svg+xml" multiple={true}
           onChange={handleChangeFile} css={inputFileStyle} ref={inputFileRef} />
 
         {images.length === 0 && (
