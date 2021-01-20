@@ -28,23 +28,23 @@ export default function LessonRecordImageController({ id, token, setSelectedImag
         )}
 
         {images.length > 0 && (
-          <Container css={selectorBarStyle} fluid>
+          <Container fluid>
             <Row>
               <Col sm={1}></Col>
-              <Col sm={1}>
-                <ScrollArrow direction="left" />
+              <Col sm={1} css={colStyle}>
+                <ScrollArrow direction="left"/>
               </Col>
               <Col sm={8}>
-                <DragSwappable onSwap={moveImage} css={selectorStyle}>
+                <DragSwappable onSwap={moveImage} css={colStyle}>
                   {images.map((image, i) =>
                     <SelectorThumbnail src={image.src} key={i} data-id={image.id} onClick={selectImage} isSelected={image.id === imageID} />
                   )}
                 </DragSwappable>
               </Col>
-              <Col sm={1}>
+              <Col sm={1} css={colStyle}>
                 <ScrollArrow direction="right" />
               </Col>
-              <Col sm={1}>
+              <Col sm={1} css={colStyle}>
                 <ImageUploadingButton onClick={handleUploadButtonClick} />
               </Col>
             </Row>
@@ -71,18 +71,10 @@ const inputFileStyle = css({
   display: 'none',
 })
 
-const selectorBarStyle = css({
-  height: '100%',
-})
-
-const selectorStyle = css({
+const colStyle = css({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'center',
-})
-
-const thumbnailsStyle = css({
-//  display: 'fixed',
-//  height: '100%',
+  height: '120px',
 })

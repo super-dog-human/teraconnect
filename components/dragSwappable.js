@@ -4,17 +4,13 @@ let isDragging = false
 let currentIndex
 
 export default function DragSwappable({ children, className, onSwap }) {
-//  const [targetIndex, setTargetIndex] = useState()
-
   function handleDragStart(e) {
     isDragging = true
     currentIndex = parseInt(e.target.parentElement.dataset.index)
-    console.log('t: ', e.target)
   }
 
   function handleDragOver(e) {
     const targetIndex = parseInt(e.target.parentElement.dataset.index)
-    console.log('t: ', e.target)
 
     if (targetIndex === currentIndex) {
       return // 自分自身へのドラッグでは何も反応させない

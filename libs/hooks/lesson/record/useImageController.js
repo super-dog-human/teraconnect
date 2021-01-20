@@ -5,10 +5,6 @@ export default function useImageController(setSelectedImage, setRecord) {
   const [imageID, setImageID] = useState()
   const [images, setImages] = useState([])
 
-  function handleMouseOver(e) {
-    // onAnimationEnd
-  }
-
   function selectImage(e) {
     const newImageID = e.target.dataset.id
     if (imageID === newImageID && isShow) {
