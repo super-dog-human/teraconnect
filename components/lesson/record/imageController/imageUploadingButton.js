@@ -12,8 +12,9 @@ export default function ImageUploadingButton({ onClick }) {
 }
 
 const bodyStyle = css({
+  opacity: 0.7,
   [':hover']: {
-    opacity: 0.6,
+    opacity: 1,
   },
 })
 

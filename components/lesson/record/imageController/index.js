@@ -81,7 +81,6 @@ const colStyle = css({
   height: '120px',
 })
 
-
 const selectImageBarStyle =css({
   width: '100%',
   overflow: 'scroll',
