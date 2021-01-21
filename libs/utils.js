@@ -47,6 +47,17 @@ export function sendExceptionToGA(componentName, err, isFatal) {
   })
 }
 
+export function extentionNameTo3Chars(extention) {
+  switch(extention) {
+  case 'jpeg':
+    return 'jpg'
+  case 'svg+xml':
+    return 'svg'
+  default:
+    return extention.substring(0, 3)
+  }
+}
+
 /*
 
 export function showLoading(context, message = '') {

@@ -1,5 +1,7 @@
-import { post } from '../../../fetch'
+import { post, putFile } from '../../../fetch'
+import { extentionNameTo3Chars } from '../../../utils'
 
+const maxFileByteSize = 10485760 // 10MB
 const thumbnailMaxSize = { width: 150, height: 95 }
 
 export default function useImageUploader(id, token, setImages, inputFileRef) {
@@ -9,33 +11,57 @@ export default function useImageUploader(id, token, setImages, inputFileRef) {
 
   function handleChangeFile(e) {
     uploadImages(e.target.files)
-    e.target.value = '' // ここでリセットしちゃって大丈夫？
+    e.target.value = ''
   }
 
   function handleUploadButtonClick() {
     inputFileRef.current.click()
   }
 
-  function uploadImages(files) {
-    // filter enable image formats.
+  async function uploadImages(files) {
+    const validFiles = Array.from(files).filter(f => f.size <= maxFileByteSize)
 
-    Array.from(files).forEach((file, i) => {
+    const temporaryIDs = validFiles.map(() => Math.random().toString(32).substring(2))
+
+    let loadedCount = 0
+    validFiles.forEach((file, i) => {
       const reader = new FileReader()
       reader.readAsDataURL(file)
-      reader.onload = (e => {
-        resizedImageDataURL(e.target.result, (imageDataURL) => {
+      reader.onload = (async e => {
+        loadedCount += 1
+        resizedImageDataURL(e.target.result, (imageDataURL => {
           setImages(images =>
             [...images, {
               src: e.target.result,
               thumbnail: imageDataURL,
-              id: Math.random().toString(32).substring(2),
+              id: temporaryIDs[i],
               isUploading: true,
+              isError: false,
             }]
           )
-        })
-        uploadImage(e.target.result, i)
+        }))
+
+        if (loadedCount === validFiles.length) {
+          (await fetchSignedURLs(validFiles)).forEach((r, i) => {
+            uploadImage(validFiles[i], temporaryIDs[i], r.fileID, r.signedURL)
+          })
+        }
       })
     })
+  }
+
+  async function fetchSignedURLs(files) {
+    const requests = files.map(file => {
+      return {
+        entity: 'graphic',
+        extension: extentionNameTo3Chars(file.type.substr(6)),
+        contentType: file.type
+      }
+    })
+
+    const request = { fileRequests: requests }
+    const result = await post('/graphics', request, token)
+    return result.signedURLs
   }
 
   function resizedImageDataURL(original, callback) {
@@ -51,24 +77,43 @@ export default function useImageUploader(id, token, setImages, inputFileRef) {
 
       canvas.width = width
       canvas.height = height
+
       ctx.drawImage(image, 0, 0, width, height)
       callback(canvas.toDataURL())
     })
   }
 
-  function uploadImage(file, index) {
-    post(file).then(r => {
-      setImages(images => {
-        const newImages = [...images]
-        newImages[index].id = r.id
-        return newImages
-      })
-    }).catch(e => {
-      console.log(e)
-    })
+  function uploadImage(file, tmpID, imageID, url) {
+    putFile(url, file, file.type)
+      .then(() => {
+        setImages(images => {
+          const newImages = [...images]
+          const foundTarget = newImages.some(i => {
+            console.log(i.id, tmpID)
+            if (i.id != tmpID) return false
+            i.id = imageID
+            i.isUploading = false
+            return true
+          })
+          console.log('foundTarget ', foundTarget)
+          console.log('newImages ', newImages)
+          return foundTarget ? newImages : images
+        })
+      }).catch((e) => {
+        console.error(e)
 
-    // upload to GCP
-    // setLessonImages
+        setImages(images => {
+          const newImages = [...images]
+          const foundTarget = newImages.some(i => {
+            if (i.id != tmpID) return false
+            i.id = imageID
+            i.isUploading = false
+            i.isError = true
+            return true
+          })
+          return foundTarget ? newImages : images
+        })
+      })
   }
 
   return { handleDrop, handleChangeFile, handleUploadButtonClick }

@@ -17,14 +17,29 @@ export function fetchWithAuth(resource, token) {
   return fetch(resource, { headers: headerWithToken(token) })
 }
 
-export function post(resource, body, token) {
+export function post(resource, body, token, method='POST', header) {
   return fetch(resource, {
-    method: 'POST',
-    headers: headerWithToken(token),
+    method,
+    headers: header || headerWithToken(token),
     body: JSON.stringify(body)
   })
 }
 
+// Cloud Storageにファイルをアップロードする時のみに使用
+export async function putFile(url, body, contentType) {
+  const response = await isoFetch(url, {
+    method: 'PUT',
+    header: { 'Content-Type': contentType },
+    body: body,
+  })
+
+  if (response.ok) return response
+
+  const error = new Error(response.statusText)
+  error.response = response
+  throw error
+}
+
 function headerWithToken(token) {
-  return  { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
+  return { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
 }

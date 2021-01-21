@@ -14,8 +14,9 @@ export default function ImageUploadingWideButton({ hasDragOver, onDragOver,onDra
     color: 'white',
     border: '2px var(--border-gray) dashed',
     borderStyle: 'dashed',
+    opacity: hasDragOver ? 1 : 0.6,
     [':hover']: {
-      opacity: 0.6,
+      opacity: 1,
     },
     ['>img']: {
       verticalAlign: 'middle',
