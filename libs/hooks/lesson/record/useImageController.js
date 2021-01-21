@@ -8,11 +8,11 @@ export default function useImageController(setSelectedImage, setRecord) {
   function selectImage(e) {
     const newImageID = e.target.dataset.id
     if (imageID === newImageID && isShow) {
-      setRecord({ hideImage: 'foo-image-id' })
+      setRecord({ hideImage: newImageID })
       setIsShow(false)
       setImageID()
     } else {
-      setRecord({ showImage: 'foo-image-id' })
+      setRecord({ showImage: newImageID })
       setIsShow(true)
       setImageID(newImageID)
     }
