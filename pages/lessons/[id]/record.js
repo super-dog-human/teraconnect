@@ -49,7 +49,7 @@ const Page = ({ token, lesson }) => {
         setDrawingLineWidth={setDrawingLineWidth} setIsShowControlPanel={setIsShowControlPanel} />
       <main css={mainStyle} onDragOver={handleAreaDragOver} onDragLeave={handleAreaDragLeave} onDrop={handleAreaDrop}>
         <div css={bodyStyle} ref={containerRef}>
-          <LessonRecordLoadingIndicator isLoading={isLoading} />
+          <LessonRecordLoadingIndicator isLoading={isLoading} size={15} />
           <LessonBackgroundImage src={bgImageURL} />
           <LessonImage image={selectedImage} />
           <LessonAvatar ref={avatarRef} onMouseDown={startDragging} onMouseMove={inDragging} onMouseUp={endDragging} onMouseLeave={endDragging} />

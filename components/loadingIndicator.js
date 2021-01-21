@@ -2,25 +2,24 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-export default function LoadingIndicator() {
-  const bodyStyle = css({
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    backgroundColor: '#ffffff',
-    justifyContent: 'center',
-    alignItems: 'center',
-  })
-
+export default function LoadingIndicator({ className, size }) {
   const imageStyle = css({
-    width: '15%',
-    height: '15%',
-    animation: '5s linear infinite rotation',
+    width: `${size}%`,
+    height: `${size}%`,
+    animation: '2s linear infinite rotation',
   })
 
   return (
-    <div css={bodyStyle}>
-      <img src="/img/icon/loading.svg" css={imageStyle} />
+    <div css={bodyStyle} className={className, 'indicator-z'}>
+      <img src="/img/icon/loading.svg" css={imageStyle} draggable="false" />
     </div>
   )
 }
+
+const bodyStyle = css({
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+})

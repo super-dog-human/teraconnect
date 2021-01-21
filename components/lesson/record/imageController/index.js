@@ -38,7 +38,7 @@ export default function LessonRecordImageController({ id, token, setSelectedImag
                 <div css={selectImageBarStyle}>
                   <DragSwappable onSwap={moveImage} css={colStyle}>
                     {images.map((image, i) =>
-                      <SelectorThumbnail src={image.thumbnail} key={i} data-id={image.id} onClick={selectImage} isSelected={image.id === imageID} />
+                      <SelectorThumbnail image={image} key={i} onClick={selectImage} isSelected={image.id === imageID} />
                     )}
                   </DragSwappable>
                 </div>
