@@ -1,5 +1,6 @@
-import { useState } from 'react'
 import { post } from '../../../fetch'
+
+const thumbnailMaxSize = { width: 150, height: 95 }
 
 export default function useImageUploader(id, token, setImages, inputFileRef) {
   function handleDrop(e) {
@@ -18,17 +19,22 @@ export default function useImageUploader(id, token, setImages, inputFileRef) {
   function uploadImages(files) {
     // filter enable image formats.
 
-    Array.from(files).forEach(file => {
+    Array.from(files).forEach((file, i) => {
       const reader = new FileReader()
       reader.readAsDataURL(file)
       reader.onload = (e => {
         resizedImageDataURL(e.target.result, (imageDataURL) => {
           setImages(images =>
-            [...images, { src: e.target.result, thumbnail: imageDataURL, id: Math.random().toString(32).substring(2), isUploading: true }]
+            [...images, {
+              src: e.target.result,
+              thumbnail: imageDataURL,
+              id: Math.random().toString(32).substring(2),
+              isUploading: true,
+            }]
           )
         })
+        uploadImage(e.target.result, i)
       })
-      //      uploadImage(file, i)
     })
   }
 
@@ -36,7 +42,7 @@ export default function useImageUploader(id, token, setImages, inputFileRef) {
     const image = new Image()
     image.src = original
     image.onload = (() => {
-      const ratio = Math.min(150.0 / image.naturalWidth, 95.0 / image.naturalHeight) * window.devicePixelRatio
+      const ratio = Math.min(thumbnailMaxSize.width / image.naturalWidth, thumbnailMaxSize.height / image.naturalHeight) * window.devicePixelRatio
       const canvas = document.createElement('canvas')
       const ctx = canvas.getContext('2d')
 

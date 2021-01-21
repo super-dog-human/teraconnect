@@ -25,7 +25,6 @@ export default function SelectorThumbnail({ src, 'data-id': dataID, onClick, isS
 
 const bodyStyle = css({
   position: 'relative',
-  cursor: 'pointer',
   maxWidth: '150px',
   paddingLeft: '10px',
   paddingRight: '10px',
