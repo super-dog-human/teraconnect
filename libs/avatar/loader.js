@@ -133,6 +133,7 @@ export default class AvatarLoader {
   }
 
   _intersectObjects(x, y) {
+    if (!this.vrm) return []
     this._setRaycast(x, y)
     return raycaster.intersectObjects(this.vrm.scene.children)
   }
