@@ -4,7 +4,7 @@ import { extentionNameTo3Chars } from '../../../utils'
 const maxFileByteSize = 10485760 // 10MB
 const thumbnailMaxSize = { width: 150, height: 95 }
 
-export default function useImageUploader(id, token, setImages, inputFileRef) {
+export default function useImageUploader(token, setImages, inputFileRef) {
   function handleDrop(e) {
     uploadImages(e.dataTransfer.files)
   }
@@ -19,7 +19,9 @@ export default function useImageUploader(id, token, setImages, inputFileRef) {
   }
 
   async function uploadImages(files) {
-    const validFiles = Array.from(files).filter(f => f.size <= maxFileByteSize)
+    const validFiles = Array.from(files)
+      .filter(f => ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'].includes(f.type))
+      .filter(f => f.size <= maxFileByteSize)
 
     const temporaryIDs = validFiles.map(() => Math.random().toString(32).substring(2))
 
@@ -41,7 +43,7 @@ export default function useImageUploader(id, token, setImages, inputFileRef) {
           )
         }))
 
-        if (loadedCount === validFiles.length) {
+        if (loadedCount === validFiles.length) { // 画像を全て読み込んでサムネイルを表示した後、1回のリクエストで全枚数分の署名付きURLを取得
           (await fetchSignedURLs(validFiles)).forEach((r, i) => {
             uploadImage(validFiles[i], temporaryIDs[i], r.fileID, r.signedURL)
           })
@@ -89,7 +91,6 @@ export default function useImageUploader(id, token, setImages, inputFileRef) {
         setImages(images => {
           const newImages = [...images]
           const foundTarget = newImages.some(i => {
-            console.log(i.id, tmpID)
             if (i.id != tmpID) return false
             i.id = imageID
             i.isUploading = false
@@ -99,7 +100,7 @@ export default function useImageUploader(id, token, setImages, inputFileRef) {
           console.log('newImages ', newImages)
           return foundTarget ? newImages : images
         })
-      }).catch((e) => {
+      }).catch(e => {
         console.error(e)
 
         setImages(images => {
