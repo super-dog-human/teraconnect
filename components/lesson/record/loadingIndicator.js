@@ -21,7 +21,7 @@ export default function LessonRecordLoadinIndicator({ isLoading }) {
 
   return (
     <div css={bodyStyle}>
-      <LoadingIndicator css={indicatorStyle} />
+      <LoadingIndicator css={indicatorStyle} size={15} />
     </div>
   )
 }
