@@ -3,7 +3,7 @@ import React from 'react'
 let isDragging = false
 let currentIndex
 
-export default function DragSwappable({ children, className, onSwap }) {
+const DragSwappable = React.forwardRef(function dragSwappable({ children, className, onSwap }, ref) {
   function handleDragStart(e) {
     isDragging = true
     currentIndex = parseInt(e.currentTarget.dataset.index)
@@ -42,7 +42,7 @@ export default function DragSwappable({ children, className, onSwap }) {
   }
 
   return (
-    <div className={className}>
+    <div className={className} ref={ref}>
       {children.map((c, i) => (
         <div key={i} data-index={i} onDragStart={handleDragStart} onDragEnd={handleDragEnd} onDragOver={handleDragOver} onDrop={handleDrop}>
           {c}
@@ -50,4 +50,6 @@ export default function DragSwappable({ children, className, onSwap }) {
       ))}
     </div>
   )
-}
+})
+
+export default DragSwappable

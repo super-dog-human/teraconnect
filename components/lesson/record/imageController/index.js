@@ -12,6 +12,7 @@ import DragSwappable from '../../../dragSwappable'
 
 export default function LessonRecordImageController({ token, setSelectedImage, setRecord, hasDragOver }) {
   const inputFileRef = useRef(null)
+  const selectImageBarRef = useRef(null)
   const { imageID, selectImage, removeImage, images, setImages, moveImage } = useImageController(setSelectedImage, setRecord)
   const { handleDragOver, handleDragLeave, handleDrop, handleChangeFile, handleUploadButtonClick } =
     useImageUploader(token, setImages, inputFileRef)
@@ -31,22 +32,20 @@ export default function LessonRecordImageController({ token, setSelectedImage, s
           <Container fluid>
             <Row>
               <Col sm={1}></Col>
-              <Col sm={1} css={colStyle}>
-                <ScrollArrow direction="left"/>
+              <Col sm={1} css={centeringStyle}>
+                <ScrollArrow direction="left" targetRef={selectImageBarRef} />
               </Col>
               <Col sm={8}>
-                <div css={selectImageBarStyle}>
-                  <DragSwappable onSwap={moveImage} css={colStyle}>
-                    {images.map((image, i) =>
-                      <SelectorThumbnail image={image} key={i} onClick={selectImage} onRemoveClick={removeImage} isSelected={image.id === imageID} />
-                    )}
-                  </DragSwappable>
-                </div>
+                <DragSwappable onSwap={moveImage} css={selectImageBarStyle} ref={selectImageBarRef}>
+                  {images.map((image, i) =>
+                    <SelectorThumbnail image={image} key={i} onClick={selectImage} onRemoveClick={removeImage} isSelected={image.id === imageID} />
+                  )}
+                </DragSwappable>
               </Col>
-              <Col sm={1} css={colStyle}>
-                <ScrollArrow direction="right" />
+              <Col sm={1} css={centeringStyle}>
+                <ScrollArrow direction="right" targetRef={selectImageBarRef} />
               </Col>
-              <Col sm={1} css={colStyle}>
+              <Col sm={1} css={centeringStyle}>
                 <ImageUploadingButton onClick={handleUploadButtonClick} />
               </Col>
             </Row>
@@ -73,7 +72,7 @@ const inputFileStyle = css({
   display: 'none',
 })
 
-const colStyle = css({
+const centeringStyle = css({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',
@@ -82,6 +81,10 @@ const colStyle = css({
 })
 
 const selectImageBarStyle =css({
-  width: '100%',
-  overflow: 'scroll',
+  overflowX: 'scroll',
+  display: 'flex',
+  scrollBehavior: 'auto', // smoothにするとChromeでJSからのscrollが動かなくなる
+  flexDirection: 'row',
+  alignItems: 'center',
+  height: '120px',
 })
