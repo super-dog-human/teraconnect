@@ -18,6 +18,18 @@ export default function useImageController(setSelectedImage, setRecord) {
     }
   }
 
+  function removeImage (e) {
+    const targetImageID = e.currentTarget.dataset.id
+    if (imageID === targetImageID && isShow) {
+      setRecord({ hideImage: targetImageID })
+      setRecord({ removeImage: targetImageID })
+      setIsShow(false)
+      setImageID()
+    }
+
+    setImages(images.filter(i => i.id != targetImageID))
+  }
+
   function moveImage(fromIndex, toIndex) {
     if (fromIndex === toIndex) return
 
@@ -32,5 +44,5 @@ export default function useImageController(setSelectedImage, setRecord) {
     setSelectedImage(images.find(i => i.id === imageID))
   }, [imageID])
 
-  return { imageID, selectImage, images, setImages, moveImage }
+  return { imageID, selectImage, removeImage, images, setImages, moveImage }
 }

@@ -12,7 +12,7 @@ import DragSwappable from '../../../dragSwappable'
 
 export default function LessonRecordImageController({ token, setSelectedImage, setRecord, hasDragOver }) {
   const inputFileRef = useRef(null)
-  const { imageID, selectImage, images, setImages, moveImage } = useImageController(setSelectedImage, setRecord)
+  const { imageID, selectImage, removeImage, images, setImages, moveImage } = useImageController(setSelectedImage, setRecord)
   const { handleDragOver, handleDragLeave, handleDrop, handleChangeFile, handleUploadButtonClick } =
     useImageUploader(token, setImages, inputFileRef)
 
@@ -38,7 +38,7 @@ export default function LessonRecordImageController({ token, setSelectedImage, s
                 <div css={selectImageBarStyle}>
                   <DragSwappable onSwap={moveImage} css={colStyle}>
                     {images.map((image, i) =>
-                      <SelectorThumbnail image={image} key={i} onClick={selectImage} isSelected={image.id === imageID} />
+                      <SelectorThumbnail image={image} key={i} onClick={selectImage} onRemoveClick={removeImage} isSelected={image.id === imageID} />
                     )}
                   </DragSwappable>
                 </div>

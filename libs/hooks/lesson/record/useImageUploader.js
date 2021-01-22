@@ -96,8 +96,6 @@ export default function useImageUploader(token, setImages, inputFileRef) {
             i.isUploading = false
             return true
           })
-          console.log('foundTarget ', foundTarget)
-          console.log('newImages ', newImages)
           return foundTarget ? newImages : images
         })
       }).catch(e => {
