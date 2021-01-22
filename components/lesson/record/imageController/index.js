@@ -82,6 +82,10 @@ const centeringStyle = css({
 
 const selectImageBarStyle =css({
   overflowX: 'scroll',
+  ['&::-webkit-scrollbar']: {
+    display: 'none',
+  },
+  scrollbarWidth: 'none',
   display: 'flex',
   scrollBehavior: 'auto', // smoothにするとChromeでJSからのscrollが動かなくなる
   flexDirection: 'row',
