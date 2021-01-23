@@ -9,6 +9,7 @@ let offsetLeft
 let moveMaxX
 let maxFrameCount
 let frameCount
+let scrollDelayID
 
 function easeOutSine(x) {
   return Math.sin((x * Math.PI) / 2)
@@ -30,11 +31,12 @@ export default function ScrollArrow({ className, direction, targetRef }) {
     if (maxFrameCount <= frameUnit) maxFrameCount = frameUnit // 移動距離が短い時は20フレーム使う
     frameCount = 0
 
-    animate()
+    scrollDelayID = setTimeout(animate, 200)
   }
 
   function handleMouseLeave() {
     isHover = false
+    clearTimeout(scrollDelayID)
   }
 
   function animate() {
