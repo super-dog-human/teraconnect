@@ -29,7 +29,7 @@ export default function SelectorThumbnail({ image, onClick, onRemoveClick, isSel
     position: 'absolute',
     top: 0,
     right: 10,
-    width: '30px',
+    width: '10px',
     height: '30px',
     display: isHover ? 'flex' : 'none',
     justifyContent: 'center',
@@ -56,8 +56,8 @@ export default function SelectorThumbnail({ image, onClick, onRemoveClick, isSel
 const bodyStyle = css({
   position: 'relative',
   maxWidth: '150px',
-  paddingLeft: '10px',
-  paddingRight: '10px',
+  marginLeft: '10px',
+  marginRight: '10px',
 })
 
 const indicatorStyle = css({
