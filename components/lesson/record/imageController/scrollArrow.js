@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React from 'react'
+import React, { useEffect } from 'react'
 import { css } from '@emotion/core'
 
 const frameUnit = 25
@@ -20,7 +20,7 @@ export default function ScrollArrow({ className, direction, targetRef }) {
     if (direction === 'left') {
       moveMaxX = offsetLeft
     } else {
-      moveMaxX = targetRef.current.scrollWidth - targetRef.current.offsetWidth - offsetLeft - 1
+      moveMaxX = targetRef.current.scrollWidth - targetRef.current.offsetWidth - offsetLeft
     }
 
     maxFrameCount = parseInt(moveMaxX / 300 * frameUnit)      // 移動距離に応じて300px/25フレームの速さで移動
@@ -58,6 +58,10 @@ export default function ScrollArrow({ className, direction, targetRef }) {
     }
   }
 
+  function easeOutQuint(x) {
+    return 1 - Math.pow(1 - x, 5)
+  }
+
   const iconStyle = css({
     display: 'block',
     width: '33px',
@@ -67,9 +71,11 @@ export default function ScrollArrow({ className, direction, targetRef }) {
     transform: direction === 'left' ? 'rotate(180deg)' : 'none',
   })
 
-  function easeOutQuint(x) {
-    return 1 - Math.pow(1 - x, 5)
-  }
+  useEffect(() => {
+    targetRef.current.onwheel = (() => {
+      cancelAnimationFrame(animationID)
+    })
+  }, [])
 
   return (
     <button css={buttonStyle} className={className} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave}>
