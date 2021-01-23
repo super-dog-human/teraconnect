@@ -15,7 +15,7 @@ export default function LessonRecordImageController({ token, setSelectedImage, s
   const selectImageBarRef = useRef(null)
   const { imageID, selectImage, removeImage, images, setImages, moveImage } = useImageController(setSelectedImage, setRecord)
   const { handleDragOver, handleDragLeave, handleDrop, handleChangeFile, handleUploadButtonClick } =
-    useImageUploader(token, setImages, inputFileRef)
+    useImageUploader(token, images, setImages, inputFileRef, selectImageBarRef)
 
   return (
     <div css={bodyStyle}>

@@ -1,10 +1,12 @@
+import { useEffect } from 'react'
 import { post, putFile } from '../../../fetch'
 import { extentionNameTo3Chars } from '../../../utils'
 
 const maxFileByteSize = 10485760 // 10MB
 const thumbnailMaxSize = { width: 150, height: 95 }
+let imageCount = 0
 
-export default function useImageUploader(token, setImages, inputFileRef) {
+export default function useImageUploader(token, images, setImages, inputFileRef, selectImageBarRef) {
   function handleDrop(e) {
     uploadImages(e.dataTransfer.files)
   }
@@ -114,6 +116,13 @@ export default function useImageUploader(token, setImages, inputFileRef) {
         })
       })
   }
+
+  useEffect(() => {
+    if (imageCount < images.length) {
+      selectImageBarRef.current.scrollLeft = selectImageBarRef.current.scrollWidth - selectImageBarRef.current.clientWidth
+    }
+    imageCount = images.length
+  }, [images])
 
   return { handleDrop, handleChangeFile, handleUploadButtonClick }
 }
