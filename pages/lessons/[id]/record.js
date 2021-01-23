@@ -5,6 +5,7 @@ import useRecordResource from '../../../libs/hooks/lesson/record/useRecordResour
 import useRecorder from '../../../libs/hooks/lesson/record/useRecorder'
 import useResizeDetector from '../../../libs/hooks/useResizeDetector'
 import useDragOverDetector from '../../../libs/hooks/useDragOverDetector'
+import usePreventUnload from '../../../libs/hooks/usePreventUnload'
 import useLessonAvatar from '../../../libs/hooks/lesson/useAvatar'
 import useVoiceRecorder from '../../../libs/hooks/lesson/record/useVoiceRecorder'
 import useLessonDrawing from '../../../libs/hooks/lesson/useDrawing'
@@ -23,6 +24,7 @@ import { fetchWithAuth } from '../../../libs/fetch'
 import { css } from '@emotion/core'
 
 const Page = ({ token, lesson }) => {
+  usePreventUnload()
   const containerRef = useRef(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isRecording, setIsRecording] = useState(false)
