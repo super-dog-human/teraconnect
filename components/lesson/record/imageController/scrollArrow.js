@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react'
 import { css } from '@emotion/core'
 
-const frameUnit = 25
+const frameUnit = 20
 let isHover = false
 let animationID
 let offsetLeft
@@ -10,21 +10,24 @@ let moveMaxX
 let maxFrameCount
 let frameCount
 
+function easeOutSine(x) {
+  return Math.sin((x * Math.PI) / 2)
+}
+
 export default function ScrollArrow({ className, direction, targetRef }) {
   function handleMouseOver() {
     if (isHover) return
     isHover = true
-    cancelAnimationFrame(animationID)
 
     offsetLeft = targetRef.current.scrollLeft
     if (direction === 'left') {
       moveMaxX = offsetLeft
     } else {
-      moveMaxX = targetRef.current.scrollWidth - targetRef.current.offsetWidth - offsetLeft
+      moveMaxX = targetRef.current.scrollWidth - targetRef.current.offsetWidth - offsetLeft - 1
     }
 
-    maxFrameCount = parseInt(moveMaxX / 300 * frameUnit)      // 移動距離に応じて300px/25フレームの速さで移動
-    if (maxFrameCount <= frameUnit) maxFrameCount = frameUnit // 移動距離が短い時は25フレーム使う
+    maxFrameCount = parseInt(moveMaxX / 300 * frameUnit)      // 移動距離に応じて300px/20フレームの速さで移動
+    if (maxFrameCount <= frameUnit) maxFrameCount = frameUnit // 移動距離が短い時は20フレーム使う
     frameCount = 0
 
     animate()
@@ -32,21 +35,17 @@ export default function ScrollArrow({ className, direction, targetRef }) {
 
   function handleMouseLeave() {
     isHover = false
-    if (direction === 'left') {
-      moveMaxX = offsetLeft - targetRef.current.scrollLeft + 10
-      if (moveMaxX > offsetLeft) moveMaxX = offsetLeft
-    } else {
-      moveMaxX = Math.min(targetRef.current.scrollLeft + 10, moveMaxX)
-    }
-    maxFrameCount = frameCount + 15 // アイコンのポイントを離脱した時は、10px/15フレームの速さで移動して停止する
   }
 
   function animate() {
+    if (moveMaxX === 0) return
+    if (!isHover) return
+
     if (direction === 'left') {
-      const moveLeft = offsetLeft - moveMaxX * easeOutQuint(frameCount / maxFrameCount)
+      const moveLeft = offsetLeft - Math.floor(moveMaxX * easeOutSine(frameCount / maxFrameCount))
       targetRef.current.scrollLeft = moveLeft
     } else {
-      const moveRight = moveMaxX * easeOutQuint(frameCount / maxFrameCount) + offsetLeft
+      const moveRight = Math.floor(moveMaxX * easeOutSine(frameCount / maxFrameCount)) + offsetLeft
       targetRef.current.scrollLeft = moveRight
     }
 
@@ -56,10 +55,6 @@ export default function ScrollArrow({ className, direction, targetRef }) {
     } else {
       isHover = false
     }
-  }
-
-  function easeOutQuint(x) {
-    return 1 - Math.pow(1 - x, 5)
   }
 
   const iconStyle = css({
