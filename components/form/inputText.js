@@ -13,7 +13,7 @@ const style = css({
 
 const InputText = React.forwardRef(function inputText(props, ref) {
   return (
-    <input type="text" ref={ ref } css={ style } {...props} />
+    <input type="text" ref={ ref } css={ style } className={props.className} {...props} />
   )
 })
 
