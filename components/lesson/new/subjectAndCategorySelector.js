@@ -1,10 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
 import useCategoryBySubject from './useCategoryBySubject'
 import Select from '../../form/select'
 
-const SubjectAndCategorySelector = React.forwardRef((props, ref) => {
+const SubjectAndCategorySelector = React.forwardRef(function subjectAndCategorySelector(props, ref) {
   const { categoryDisabled, categories, handleSubjectChange } = useCategoryBySubject(props.setValue)
 
   return (
