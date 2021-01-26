@@ -24,7 +24,7 @@ export default function ScrollArrow({ className, direction, targetRef }) {
     if (direction === 'left') {
       moveMaxX = offsetLeft
     } else {
-      moveMaxX = targetRef.current.scrollWidth - targetRef.current.offsetWidth - offsetLeft - 1
+      moveMaxX = targetRef.current.scrollWidth - targetRef.current.offsetWidth - offsetLeft
     }
 
     maxFrameCount = parseInt(moveMaxX / 300 * frameUnit)      // 移動距離に応じて300px/20フレームの速さで移動

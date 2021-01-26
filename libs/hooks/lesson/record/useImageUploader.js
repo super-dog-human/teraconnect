@@ -119,7 +119,7 @@ export default function useImageUploader(token, images, setImages, inputFileRef,
 
   useEffect(() => {
     if (imageCount < images.length) {
-      selectImageBarRef.current.scrollLeft = selectImageBarRef.current.scrollWidth - selectImageBarRef.current.clientWidth - 1 //1pxの誤差が出るので差し引く
+      selectImageBarRef.current.scrollLeft = selectImageBarRef.current.scrollWidth - selectImageBarRef.current.clientWidth
     }
     imageCount = images.length
   }, [images])

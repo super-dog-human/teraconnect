@@ -1,14 +1,15 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useRef } from 'react'
-import Head from 'next/head'
+//import p5 from 'p5'
 import useRecordResource from '../../../libs/hooks/lesson/record/useRecordResource'
 import useRecorder from '../../../libs/hooks/lesson/record/useRecorder'
 import useResizeDetector from '../../../libs/hooks/useResizeDetector'
 import useDragOverDetector from '../../../libs/hooks/useDragOverDetector'
-import usePreventUnload from '../../../libs/hooks/usePreventUnload'
+import usePreventBack from '../../../libs/hooks/lesson/record/usePreventBack'
 import useLessonAvatar from '../../../libs/hooks/lesson/useAvatar'
 import useVoiceRecorder from '../../../libs/hooks/lesson/record/useVoiceRecorder'
 import useLessonDrawing from '../../../libs/hooks/lesson/useDrawing'
+import Head from 'next/head'
 import LessonRecordHeader from '../../../components/lesson/record/header/'
 import LessonRecordLoadingIndicator from '../../../components/lesson/record/loadingIndicator'
 import LessonBackgroundImage from '../../../components/lesson/backgroundImage'
@@ -24,13 +25,13 @@ import { fetchWithAuth } from '../../../libs/fetch'
 import { css } from '@emotion/core'
 
 const Page = ({ token, lesson }) => {
-  usePreventUnload()
   const containerRef = useRef(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isRecording, setIsRecording] = useState(false)
   const [bgImageURL, setBgImageURL] = useState()
   const [selectedImage, setSelectedImage] = useState()
   const [isShowControlPanel, setIsShowControlPanel] = useState(false)
+  usePreventBack()
   const { setRecord } = useRecorder(lesson.id, token, isRecording)
   const { hasResize } = useResizeDetector(containerRef)
   const  { hasDragOver, handleAreaDragOver, handleAreaDragLeave, handleAreaDrop } = useDragOverDetector()
@@ -49,8 +50,8 @@ const Page = ({ token, lesson }) => {
         isDrawingHide={isDrawingHide} setIsDrawingHide={setIsDrawingHide} enablePen={enablePen} setEnablePen={setEnablePen}
         undoDrawing={undoDrawing} clearDrawing={clearDrawing} drawingColor={drawingColor} setDrawingColor={setDrawingColor}
         setDrawingLineWidth={setDrawingLineWidth} setIsShowControlPanel={setIsShowControlPanel} />
-      <main css={mainStyle} onDragOver={handleAreaDragOver} onDragLeave={handleAreaDragLeave} onDrop={handleAreaDrop}>
-        <div css={bodyStyle} ref={containerRef}>
+      <main css={mainStyle} onDragOver={handleAreaDragOver} onDragLeave={handleAreaDragLeave} onDrop={handleAreaDrop} ref={containerRef}>
+        <div css={bodyStyle}>
           <LessonRecordLoadingIndicator isLoading={isLoading} size={15} />
           <LessonBackgroundImage src={bgImageURL} />
           <LessonImage image={selectedImage} />

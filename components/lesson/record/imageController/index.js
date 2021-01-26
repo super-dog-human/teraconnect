@@ -11,8 +11,8 @@ import SelectorThumbnail from './selectorThumbnail'
 import DragSwappable from '../../../dragSwappable'
 
 export default function LessonRecordImageController({ token, setSelectedImage, setRecord, hasDragOver }) {
-  const inputFileRef = useRef(null)
   const selectImageBarRef = useRef(null)
+  const inputFileRef = useRef(null)
   const { imageID, selectImage, removeImage, images, setImages, moveImage } = useImageController(setSelectedImage, setRecord)
   const { handleDragOver, handleDragLeave, handleDrop, handleChangeFile, handleUploadButtonClick } =
     useImageUploader(token, images, setImages, inputFileRef, selectImageBarRef)
