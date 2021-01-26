@@ -154,11 +154,14 @@ button.light {
 .header-z {
   z-index: 1000;
 }
-.modal-panel-z {
+.indicator-z {
   z-index: 900;
 }
-.indicator-z {
+.modal-panel-z {
   z-index: 800;
+}
+.overay-ui-z {
+  z-index: 700;
 }
 .subtitle-z {
   z-index: 600;

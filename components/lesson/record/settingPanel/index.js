@@ -1,23 +1,25 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useRef, useEffect } from 'react'
 import Draggable from 'react-draggable'
+import useDraggableBounds from '../../../../libs/hooks/useDraggableBounds'
 import { Tab, Tabs, TabList, TabPanel, resetIdCounter } from 'react-tabs'
 import BgImageTab from './bgImageTab'
 import BGMTab from './bgmTab'
 import AvatarTab from './avatarTab'
+import  VoiceRecorderTab from './voiceRecorderTab'
 import 'react-tabs/style/react-tabs.css'
 import { css } from '@emotion/core'
 
-export default function LessonRecordSettingPanel({ isShow, setIsShow, bgImages, setBgImageURL, bgms, avatars, setAvatarConfig, setRecord }) {
-  const [draggableBounds, setDraggableBounds] = useState({})
+export default function LessonRecordSettingPanel({ isShow, setIsShow, bgImages, setBgImageURL, avatars, setAvatarConfig,
+  bgms, setMicDeviceID, setSilenceThresholdSec, setRecord }) {
   const draggableRef = useRef(null)
+  const { bounds, setBounds } = useDraggableBounds()
 
   const bodyStyle = css({
     display: `${isShow ? 'block' : 'none'}`,
     position: 'absolute',
     top: '10%',
     left: 'calc(50% - 250px)',
-    cursor: 'pointer',
     backgroundColor: 'gray',
     width: '500px',
     height: '300px',
@@ -31,23 +33,15 @@ export default function LessonRecordSettingPanel({ isShow, setIsShow, bgImages, 
     setIsShow(false)
   }
 
-  function calcDraggableBounds() {
-    const left = draggableRef.current.offsetLeft * -1
-    const top = draggableRef.current.offsetTop * -1
-    const right = draggableRef.current.offsetParent.clientWidth - draggableRef.current.offsetLeft - draggableRef.current.offsetWidth
-    const bottom = draggableRef.current.offsetParent.clientHeight - draggableRef.current.offsetTop - draggableRef.current.offsetHeight
-    return { left ,top, right, bottom }
-  }
-
   useEffect(() => {
     if (!isShow) return
-    setDraggableBounds(calcDraggableBounds())
+    setBounds(draggableRef)
   }, [isShow])
 
   resetIdCounter()
 
   return (
-    <Draggable bounds={draggableBounds} handle=".drag-handle">
+    <Draggable bounds={bounds} handle=".drag-handle">
       <div css={bodyStyle} ref={draggableRef} className='modal-panel-z'>
         <div css={panelHeaderStyle} className='drag-handle'>
           <button onClick={handleClose}>x</button>
@@ -74,8 +68,7 @@ export default function LessonRecordSettingPanel({ isShow, setIsShow, bgImages, 
           </TabPanel>
 
           <TabPanel>
-            <div>使用マイク</div>
-            <div>無音閾値</div>
+            <VoiceRecorderTab setMicDeviceID={setMicDeviceID} setSilenceThresholdSec={setSilenceThresholdSec} />
           </TabPanel>
         </Tabs>
       </div>

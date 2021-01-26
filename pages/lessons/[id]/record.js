@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useRef } from 'react'
-//import p5 from 'p5'
 import useRecordResource from '../../../libs/hooks/lesson/record/useRecordResource'
 import useRecorder from '../../../libs/hooks/lesson/record/useRecorder'
 import useResizeDetector from '../../../libs/hooks/useResizeDetector'
@@ -12,6 +11,7 @@ import useLessonDrawing from '../../../libs/hooks/lesson/useDrawing'
 import Head from 'next/head'
 import LessonRecordHeader from '../../../components/lesson/record/header/'
 import LessonRecordLoadingIndicator from '../../../components/lesson/record/loadingIndicator'
+import LessonRecordVoiceSpectrum from '../../../components/lesson/record/voiceSpectrum'
 import LessonBackgroundImage from '../../../components/lesson/backgroundImage'
 import LessonAvatar from '../../../components/lesson/avatar'
 import LessonImage from '../../../components/lesson/image'
@@ -36,7 +36,7 @@ const Page = ({ token, lesson }) => {
   const { hasResize } = useResizeDetector(containerRef)
   const  { hasDragOver, handleAreaDragOver, handleAreaDragLeave, handleAreaDrop } = useDragOverDetector()
   const { bgImages, avatars, bgms } = useRecordResource(token, setBgImageURL)
-  const { isTalking, setVoiceRecorderConfig } = useVoiceRecorder(lesson.id, token, isRecording, setRecord)
+  const { isTalking, setMicDeviceID, setSilenceThresholdSec } = useVoiceRecorder(lesson.id, token, isRecording, setRecord)
   const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useLessonAvatar(setIsLoading, isTalking, hasResize, setRecord)
   const { isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth,
     startDrawing, inDrawing, endDrawing, drawingRef } = useLessonDrawing(setRecord, hasResize, startDragging, inDragging, endDragging)
@@ -53,12 +53,14 @@ const Page = ({ token, lesson }) => {
       <main css={mainStyle} onDragOver={handleAreaDragOver} onDragLeave={handleAreaDragLeave} onDrop={handleAreaDrop} ref={containerRef}>
         <div css={bodyStyle}>
           <LessonRecordLoadingIndicator isLoading={isLoading} size={15} />
+          <LessonRecordVoiceSpectrum />
           <LessonBackgroundImage src={bgImageURL} />
           <LessonImage image={selectedImage} />
           <LessonAvatar ref={avatarRef} onMouseDown={startDragging} onMouseMove={inDragging} onMouseUp={endDragging} onMouseLeave={endDragging} />
           <LessonDrawing isHide={isDrawingHide} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing} drawingRef={drawingRef}  />
           <LessonRecordSettingPanel isShow={isShowControlPanel} setIsShow={setIsShowControlPanel} bgImages={bgImages} setBgImageURL={setBgImageURL}
-            avatars={avatars} setAvatarConfig={setAvatarConfig} bgms={bgms} setVoiceRecorderConfig={setVoiceRecorderConfig} setRecord={setRecord} />
+            avatars={avatars} setAvatarConfig={setAvatarConfig} bgms={bgms} setMicDeviceID={setMicDeviceID} setSilenceThresholdSec={setSilenceThresholdSec}
+            setRecord={setRecord} />
         </div>
         <LessonRecordImageController token={token} setSelectedImage={setSelectedImage} setRecord={setRecord} hasDragOver={hasDragOver} />
         <LessonRecordRandomTips />

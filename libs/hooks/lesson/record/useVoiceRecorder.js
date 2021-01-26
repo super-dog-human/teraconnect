@@ -1,25 +1,20 @@
 import { useState, useEffect } from 'react'
+import useMicrophone from '../../useMicrophone'
 
-let micDeviceID
-let isReady = false
-let stream
-let audioCtx
-let micInput
 let recorder
 
 export default function useVoiceRecorder(id, token, isRecording, setRecord) {
   const [isTalking, setIsTalking] = useState(false)
-  const [config, setConfig] = useState({
-    silenceSecondThreshold: 0.6,
+  const [micDeviceID, setMicDeviceID] = useState()
+  const [silenceThresholdSec, setSilenceThresholdSec] = useState(0.6)
+  const { audioCtx, isMicReady, setNode } = useMicrophone(micDeviceID)
 
-  })
-
-  function start() {
-    if (isReady) {
-      recorder.port.postMessage({ isRecording: isRecording })
+  function switchMicRecording() {
+    if (isMicReady) {
+      recorder.port.postMessage({ isRecording })
     } else {
       setTimeout(() => {
-        start()
+        switchMicRecording()
       }, 1000)
     }
   }
@@ -56,30 +51,7 @@ export default function useVoiceRecorder(id, token, isRecording, setRecord) {
     */
   }
 
-  async function initMicInput() {
-    isReady = false
-
-    if (!audioCtx) await initAudioWorklet()
-
-    stream = await navigator.mediaDevices.getUserMedia({
-      audio: {
-        echoCancellation: true,
-        autoGainControl: true,
-        noiseSuppression: true,
-        deviceId: micDeviceID,
-      },
-      video: false
-    })
-
-    micInput = audioCtx.createMediaStreamSource(stream)
-    micInput.connect(recorder)
-    recorder.connect(audioCtx.destination)
-
-    isReady = true
-  }
-
   async function initAudioWorklet() {
-    audioCtx = typeof webkitAudioContext === 'undefined' ? new AudioContext() : new webkitAudioContext() // for safari
     await audioCtx.audioWorklet.addModule('/voiceRecorderProcessor.js')
     recorder = new AudioWorkletNode(audioCtx, 'recorder')
     recorder.port.onmessage = e => {
@@ -87,32 +59,24 @@ export default function useVoiceRecorder(id, token, isRecording, setRecord) {
     }
   }
 
-  function terminalMicInput() {
-    if (!stream) return
-
-    stream.getAudioTracks().forEach(track => track.stop())
-    micInput.disconnect()
-    micInput = null
-  }
+  useEffect(() => {
+    if (!audioCtx) return
+    initAudioWorklet()
+  }, [audioCtx])
 
   useEffect(() => {
-    return terminalMicInput
-  }, [])
-
+    if (!micDeviceID) return
+    setNode(recorder)
+  }, [micDeviceID])
 
   useEffect(() => {
-    start()
+    switchMicRecording()
   }, [isRecording])
 
   useEffect(() => {
-    if (config.micDeviceID) {
-      micDeviceID = config.micDeviceID
-      terminalMicInput()
-      initMicInput()
-    }
-
     // set volume threshold
-  }, [config])
+    // recorder.port.postMessage({ changeThreshold: silenceThresholdSec })
+  }, [silenceThresholdSec])
 
-  return { isTalking, setVoiceRecorderConfig: setConfig }
+  return { isTalking, setMicDeviceID, setSilenceThresholdSec }
 }
