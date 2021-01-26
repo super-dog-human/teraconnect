@@ -5,7 +5,7 @@ let canvasCtx
 let analyser
 
 export default function useAudioVisualizer(micDeviceID, canvasRef) {
-  const { audioCtx, setNode } = useMicrophone(micDeviceID)
+  const { setNode } = useMicrophone(micDeviceID)
 
   useEffect(() => {
     canvasCtx = canvasRef.current.getContext('2d')
@@ -15,12 +15,14 @@ export default function useAudioVisualizer(micDeviceID, canvasRef) {
   }, [])
 
   useEffect(() => {
-    if (!audioCtx) return
+    if (!micDeviceID) return
 
-    analyser = audioCtx.createAnalyser()
-    analyser.fftSize = 2048
+    setNode(analyser, (ctx => {
+      analyser = ctx.createAnalyser()
+      analyser.fftSize = 2048
 
-    requestAnimationFrame(drawVisual)
+      requestAnimationFrame(drawVisual)
+    }))
 
     function drawVisual() {
       requestAnimationFrame(drawVisual)
@@ -32,10 +34,5 @@ export default function useAudioVisualizer(micDeviceID, canvasRef) {
       canvasCtx.fillStyle = 'rgb(0, 0, 0)'
       canvasCtx.fillRect(0, 0, canvasRef.clientWidth, canvasRef.clientHeight)
     }
-  }, [audioCtx])
-
-  useEffect(() => {
-    if (!micDeviceID) return
-    setNode(analyser)
   }, [micDeviceID])
 }

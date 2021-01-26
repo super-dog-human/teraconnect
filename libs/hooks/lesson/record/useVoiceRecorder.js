@@ -7,7 +7,7 @@ export default function useVoiceRecorder(id, token, isRecording, setRecord) {
   const [isTalking, setIsTalking] = useState(false)
   const [micDeviceID, setMicDeviceID] = useState()
   const [silenceThresholdSec, setSilenceThresholdSec] = useState(0.6)
-  const { audioCtx, isMicReady, setNode } = useMicrophone(micDeviceID)
+  const { isMicReady, setNode } = useMicrophone(micDeviceID)
 
   function switchMicRecording() {
     if (isMicReady) {
@@ -51,22 +51,16 @@ export default function useVoiceRecorder(id, token, isRecording, setRecord) {
     */
   }
 
-  async function initAudioWorklet() {
-    await audioCtx.audioWorklet.addModule('/voiceRecorderProcessor.js')
-    recorder = new AudioWorkletNode(audioCtx, 'recorder')
-    recorder.port.onmessage = e => {
-      uploadVoice(e.data)
-    }
-  }
-
-  useEffect(() => {
-    if (!audioCtx) return
-    initAudioWorklet()
-  }, [audioCtx])
-
   useEffect(() => {
     if (!micDeviceID) return
-    setNode(recorder)
+
+    setNode(recorder, async (ctx) => {
+      await ctx.audioWorklet.addModule('/voiceRecorderProcessor.js')
+      recorder = new AudioWorkletNode(ctx, 'recorder')
+      recorder.port.onmessage = e => {
+        uploadVoice(e.data)
+      }
+    })
   }, [micDeviceID])
 
   useEffect(() => {

@@ -42,13 +42,15 @@ export default function useMicrophone(micDeviceID) {
     micInput = null
   }
 
-  async function setNode(node) {
+  async function setNode(node, callback) {
     terminalMicInput()
     await initMicInput()
 
     micInput = audioCtx.createMediaStreamSource(stream)
     micInput.connect(node)
     node.connect(audioCtx.destination)
+
+    await callback(audioCtx)
 
     isMicReady = true
   }
@@ -57,5 +59,5 @@ export default function useMicrophone(micDeviceID) {
     return terminalMicInput
   }, [])
 
-  return { audioCtx, isMicReady, setNode }
+  return { isMicReady, setNode }
 }
