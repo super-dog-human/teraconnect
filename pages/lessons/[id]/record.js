@@ -31,6 +31,7 @@ const Page = ({ token, lesson }) => {
   const [bgImageURL, setBgImageURL] = useState()
   const [selectedImage, setSelectedImage] = useState()
   const [isShowControlPanel, setIsShowControlPanel] = useState(false)
+  const [isShowVoiceSpectrum, setIsShowVoiceSpectrum] = useState(true)
   usePreventBack()
   const { setRecord } = useRecorder(lesson.id, token, isRecording)
   const { hasResize } = useResizeDetector(containerRef)
@@ -53,14 +54,14 @@ const Page = ({ token, lesson }) => {
       <main css={mainStyle} onDragOver={handleAreaDragOver} onDragLeave={handleAreaDragLeave} onDrop={handleAreaDrop} ref={containerRef}>
         <div css={bodyStyle}>
           <LessonRecordLoadingIndicator isLoading={isLoading} size={15} />
-          <LessonRecordVoiceSpectrum micDeviceID={micDeviceID} />
+          <LessonRecordVoiceSpectrum micDeviceID={micDeviceID} isShow={isShowVoiceSpectrum} setIsShow={setIsShowVoiceSpectrum} />
           <LessonBackgroundImage src={bgImageURL} />
           <LessonImage image={selectedImage} />
           <LessonAvatar ref={avatarRef} onMouseDown={startDragging} onMouseMove={inDragging} onMouseUp={endDragging} onMouseLeave={endDragging} />
           <LessonDrawing isHide={isDrawingHide} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing} drawingRef={drawingRef}  />
           <LessonRecordSettingPanel isShow={isShowControlPanel} setIsShow={setIsShowControlPanel} bgImages={bgImages} setBgImageURL={setBgImageURL}
             avatars={avatars} setAvatarConfig={setAvatarConfig} bgms={bgms} setMicDeviceID={setMicDeviceID} setSilenceThresholdSec={setSilenceThresholdSec}
-            setRecord={setRecord} />
+            isShowVoiceSpectrum={isShowVoiceSpectrum} setIsShowVoiceSpectrum={setIsShowVoiceSpectrum} setRecord={setRecord} />
         </div>
         <LessonRecordImageController token={token} setSelectedImage={setSelectedImage} setRecord={setRecord} hasDragOver={hasDragOver} />
         <LessonRecordRandomTips />

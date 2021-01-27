@@ -1,19 +1,19 @@
 /** @jsxImportSource @emotion/react */
-import React, { useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import useAudioVisualizer from '../../../libs/hooks/useAudioVisualizer'
 import { css } from '@emotion/core'
 import Draggable from 'react-draggable'
 import useDraggableBounds from '../../../libs/hooks/useDraggableBounds'
 
 export default function LessonRecordVoiceSpectrum({ micDeviceID, isShow, setIsShow }) {
-//  const [isShow, setIsShow] = useState(true)
+  const [isHover, setIsHover] = useState(false)
   const draggableRef = useRef(null)
   const canvasRef = useRef(null)
   const { bounds, setBounds } = useDraggableBounds()
   useAudioVisualizer(micDeviceID, canvasRef)
 
   const bodyStyle = css({
-    display: isShow ? 'block' : 'block',
+    display: isShow ? 'block' : 'none',
     position: 'absolute',
     top: 30,
     bottom: 0,
@@ -27,6 +27,26 @@ export default function LessonRecordVoiceSpectrum({ micDeviceID, isShow, setIsSh
     cursor: 'pointer',
   })
 
+  const closeButtonStyle = css({
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    opacity: isHover ? 1 : 0,
+    ['>img']: {
+      display: 'block',
+      width: '10px',
+      height: '10px',
+    },
+  })
+
+  function handleMouseEnter() {
+    setIsHover(true)
+  }
+
+  function handleMouseLeave() {
+    setIsHover(false)
+  }
+
 
   function handleCloseClick() {
     setIsShow(!isShow)
@@ -38,7 +58,7 @@ export default function LessonRecordVoiceSpectrum({ micDeviceID, isShow, setIsSh
 
   return (
     <Draggable bounds={bounds}>
-      <div ref={draggableRef} css={bodyStyle} className="overay-ui-z">
+      <div ref={draggableRef} css={bodyStyle} className="overay-ui-z" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         <canvas css={spectrumStyle} ref={canvasRef} />
         <button onClick={handleCloseClick} css={closeButtonStyle}>
           <img src="/img/icon/close.svg" draggable="false" />
@@ -47,17 +67,6 @@ export default function LessonRecordVoiceSpectrum({ micDeviceID, isShow, setIsSh
     </Draggable>
   )
 }
-
-const closeButtonStyle = css({
-  position: 'absolute',
-  top: 0,
-  right: 0,
-  ['>img']: {
-    display: 'block',
-    width: '10px',
-    height: '10px',
-  },
-})
 
 const spectrumStyle = css({
   position: 'relative',

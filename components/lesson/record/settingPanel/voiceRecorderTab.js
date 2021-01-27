@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import Select from '../../../form/select'
 import useMicInputDevices from '../../../../libs/hooks/useMicInputDevices'
 
-export default function VoiceRecorderTab({ setMicDeviceID, setSilenceThresholdSec }) {
+export default function VoiceRecorderTab({ setMicDeviceID, setSilenceThresholdSec, isShowVoiceSpectrum, setIsShowVoiceSpectrum }) {
   const { devices, requestMicPermission } = useMicInputDevices()
   const [selectOptions, setSelectOptions] = useState([])
 
@@ -13,6 +13,10 @@ export default function VoiceRecorderTab({ setMicDeviceID, setSilenceThresholdSe
 
   function hanldeMicChange(e) {
     setMicDeviceID(e.target.value)
+  }
+
+  function handleSpectrumShowChange() {
+    setIsShowVoiceSpectrum(v => !v)
   }
 
   useEffect(() => {
@@ -36,6 +40,9 @@ export default function VoiceRecorderTab({ setMicDeviceID, setSilenceThresholdSe
       <Select options={selectOptions} onChange={hanldeMicChange} topLabel={null} />
 
       <button onClick={requestMicPermission}>マイクの使用を許可する</button>
+
+      モニタリング表示
+      <input type="checkbox" checked={isShowVoiceSpectrum} onChange={handleSpectrumShowChange} />
     </>
   )
 }

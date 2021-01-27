@@ -11,12 +11,12 @@ import 'react-tabs/style/react-tabs.css'
 import { css } from '@emotion/core'
 
 export default function LessonRecordSettingPanel({ isShow, setIsShow, bgImages, setBgImageURL, avatars, setAvatarConfig,
-  bgms, setMicDeviceID, setSilenceThresholdSec, setRecord }) {
+  bgms, setMicDeviceID, setSilenceThresholdSec, isShowVoiceSpectrum, setIsShowVoiceSpectrum, setRecord }) {
   const draggableRef = useRef(null)
   const { bounds, setBounds } = useDraggableBounds()
 
   const bodyStyle = css({
-    display: `${isShow ? 'block' : 'none'}`,
+    display: isShow ? 'block' : 'none',
     position: 'absolute',
     top: '10%',
     left: 'calc(50% - 250px)',
@@ -68,7 +68,8 @@ export default function LessonRecordSettingPanel({ isShow, setIsShow, bgImages, 
           </TabPanel>
 
           <TabPanel>
-            <VoiceRecorderTab setMicDeviceID={setMicDeviceID} setSilenceThresholdSec={setSilenceThresholdSec} />
+            <VoiceRecorderTab setMicDeviceID={setMicDeviceID} setSilenceThresholdSec={setSilenceThresholdSec}
+              isShowVoiceSpectrum={isShowVoiceSpectrum} setIsShowVoiceSpectrum={setIsShowVoiceSpectrum} />
           </TabPanel>
         </Tabs>
       </div>
