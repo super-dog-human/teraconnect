@@ -1,14 +1,15 @@
 /** @jsxImportSource @emotion/react */
 import React, { useEffect, useState } from 'react'
+import { css } from '@emotion/core'
 import Select from '../../../form/select'
 import useMicInputDevices from '../../../../libs/hooks/useMicInputDevices'
 
-export default function VoiceRecorderTab({ setMicDeviceID, setSilenceThresholdSec, isShowVoiceSpectrum, setIsShowVoiceSpectrum }) {
+export default function VoiceRecorderTab({ setMicDeviceID, setSilenceThresholdSec, isShowVoiceSpectrum, silenceThresholdSec, setIsShowVoiceSpectrum }) {
   const { devices, requestMicPermission } = useMicInputDevices()
   const [selectOptions, setSelectOptions] = useState([])
 
   function handleThresholdChange(e) {
-    setSilenceThresholdSec(e.target.value)
+    setSilenceThresholdSec(parseFloat(e.target.value))
   }
 
   function hanldeMicChange(e) {
@@ -34,7 +35,8 @@ export default function VoiceRecorderTab({ setMicDeviceID, setSilenceThresholdSe
 
   return (
     <>
-      <input type="text" value="1.0" onChange={handleThresholdChange} />
+      <input type="range" min="0.1" max="1.0" step="0.1" value={silenceThresholdSec} onChange={handleThresholdChange} />
+      <div>無音検出：{silenceThresholdSec} 秒</div>
 
       使用マイク
       <Select options={selectOptions} onChange={hanldeMicChange} topLabel={null} />

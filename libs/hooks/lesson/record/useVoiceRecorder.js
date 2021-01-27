@@ -19,7 +19,10 @@ export default function useVoiceRecorder(id, token, isRecording, setRecord) {
     }
   }
 
-  function uploadVoice(result) {
+  function handleRecorderMessage(result) {
+    console.log('voice upload: ', result)
+
+
     /*
     const callback = (voice => {
       setRecord('voice', voice)
@@ -51,6 +54,11 @@ export default function useVoiceRecorder(id, token, isRecording, setRecord) {
     */
   }
 
+  function updateSilenceThresholdSec() {
+    if(!recorder) return
+    recorder.port.postMessage({ changeThreshold: silenceThresholdSec })
+  }
+
   useEffect(() => {
     if (!micDeviceID) return
 
@@ -59,9 +67,9 @@ export default function useVoiceRecorder(id, token, isRecording, setRecord) {
 
       recorder = new AudioWorkletNode(ctx, 'recorder')
       recorder.port.onmessage = e => {
-        uploadVoice(e.data)
+        handleRecorderMessage(e.data)
       }
-
+      updateSilenceThresholdSec()
       micInput.connect(recorder)
       recorder.connect(ctx.destination)
     })
@@ -72,9 +80,8 @@ export default function useVoiceRecorder(id, token, isRecording, setRecord) {
   }, [isRecording, isMicReady])
 
   useEffect(() => {
-    // set volume threshold
-    // recorder.port.postMessage({ changeThreshold: silenceThresholdSec })
+    updateSilenceThresholdSec()
   }, [silenceThresholdSec])
 
-  return { isTalking, micDeviceID, setMicDeviceID, setSilenceThresholdSec }
+  return { isTalking, micDeviceID, setMicDeviceID, silenceThresholdSec, setSilenceThresholdSec }
 }
