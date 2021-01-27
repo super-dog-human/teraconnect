@@ -36,7 +36,7 @@ const Page = ({ token, lesson }) => {
   const { hasResize } = useResizeDetector(containerRef)
   const  { hasDragOver, handleAreaDragOver, handleAreaDragLeave, handleAreaDrop } = useDragOverDetector()
   const { bgImages, avatars, bgms } = useRecordResource(token, setBgImageURL)
-  const { isTalking, setMicDeviceID, setSilenceThresholdSec } = useVoiceRecorder(lesson.id, token, isRecording, setRecord)
+  const { isTalking, micDeviceID, setMicDeviceID, setSilenceThresholdSec } = useVoiceRecorder(lesson.id, token, isRecording, setRecord)
   const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useLessonAvatar(setIsLoading, isTalking, hasResize, setRecord)
   const { isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth,
     startDrawing, inDrawing, endDrawing, drawingRef } = useLessonDrawing(setRecord, hasResize, startDragging, inDragging, endDragging)
@@ -53,7 +53,7 @@ const Page = ({ token, lesson }) => {
       <main css={mainStyle} onDragOver={handleAreaDragOver} onDragLeave={handleAreaDragLeave} onDrop={handleAreaDrop} ref={containerRef}>
         <div css={bodyStyle}>
           <LessonRecordLoadingIndicator isLoading={isLoading} size={15} />
-          <LessonRecordVoiceSpectrum />
+          <LessonRecordVoiceSpectrum micDeviceID={micDeviceID} />
           <LessonBackgroundImage src={bgImageURL} />
           <LessonImage image={selectedImage} />
           <LessonAvatar ref={avatarRef} onMouseDown={startDragging} onMouseMove={inDragging} onMouseUp={endDragging} onMouseLeave={endDragging} />

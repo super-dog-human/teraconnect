@@ -16,7 +16,6 @@ export default function VoiceRecorderTab({ setMicDeviceID, setSilenceThresholdSe
   }
 
   useEffect(() => {
-    console.log('run effect.')
     if (devices.length === 0 || selectOptions.length > 0) return
 
     setSelectOptions(devices.map(d => (
@@ -25,7 +24,7 @@ export default function VoiceRecorderTab({ setMicDeviceID, setSilenceThresholdSe
         label: d.label,
       }
     )))
-    setMicDeviceID(devices[0].deviceID)
+    setMicDeviceID(devices[0].deviceId)
   }, [devices])
 
 

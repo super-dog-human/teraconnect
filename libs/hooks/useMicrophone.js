@@ -1,23 +1,17 @@
 import { useState, useEffect } from 'react'
 
-let isMicReady = false
+let audioCtx
 let stream
 let micInput
 
-export default function useMicrophone(micDeviceID) {
-  const [audioCtx, setAudioCtx] = useState()
+export default function useMicrophone() {
+  const [isMicReady, setIsMicReady] = useState(false)
 
   async function initAudioContext() {
-    if (typeof webkitAudioContext === 'undefined') {
-      setAudioCtx(new AudioContext())
-    } else {
-      setAudioCtx(new webkitAudioContext()) // for safari
-    }
+    audioCtx= (typeof webkitAudioContext === 'undefined') ? new AudioContext() : new webkitAudioContext() // for safari
   }
 
-  async function initMicInput() {
-    isMicReady = false
-
+  async function initMicInput(micDeviceID) {
     stream = await navigator.mediaDevices.getUserMedia({
       audio: {
         echoCancellation: true,
@@ -29,8 +23,10 @@ export default function useMicrophone(micDeviceID) {
     })
 
     if (!audioCtx) {
-      initAudioContext() // getUserMediaの後に実行しないとChromeで警告が出る
+      await initAudioContext() // getUserMediaの後に実行しないとChromeで警告が出る
     }
+
+    micInput = audioCtx.createMediaStreamSource(stream)
   }
 
   function terminalMicInput() {
@@ -42,17 +38,14 @@ export default function useMicrophone(micDeviceID) {
     micInput = null
   }
 
-  async function setNode(node, callback) {
+  async function setNode(micDeviceID, callback) {
+    setIsMicReady(false)
+
     terminalMicInput()
-    await initMicInput()
+    await initMicInput(micDeviceID)
+    await callback(audioCtx, micInput)
 
-    micInput = audioCtx.createMediaStreamSource(stream)
-    micInput.connect(node)
-    node.connect(audioCtx.destination)
-
-    await callback(audioCtx)
-
-    isMicReady = true
+    setIsMicReady(true)
   }
 
   useEffect(() => {

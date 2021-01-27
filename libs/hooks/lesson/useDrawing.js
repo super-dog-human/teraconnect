@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 
-let canvasContext
+let canvasCtx
 let startPosition = {}
 let isDrawing = false
 const histories = []
@@ -13,15 +13,15 @@ export default function useLessonDrawing(setRecord, hasResize, startDragging, in
   const [lineWidth, setLineWidth] = useState(5)
 
   function resetCanvasSize() {
-    canvasContext.canvas.width = canvasContext.canvas.clientWidth
-    canvasContext.canvas.height = canvasContext.canvas.clientHeight
+    canvasCtx.canvas.width = canvasCtx.canvas.clientWidth
+    canvasCtx.canvas.height = canvasCtx.canvas.clientHeight
 
     redrawFromHistory()
   }
 
   function startDrawing(e) {
     if (enablePen  && !isDrawingHide) {
-      canvasContext.beginPath()
+      canvasCtx.beginPath()
       isDrawing = true
 
       const position = { x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY }
@@ -59,10 +59,10 @@ export default function useLessonDrawing(setRecord, hasResize, startDragging, in
   function drawLine(x, y) {
     if (isSamePosition(startPosition, { x, y })) return
 
-    canvasContext.globalCompositeOperation = isEraser() ? 'destination-out': 'source-over'
+    canvasCtx.globalCompositeOperation = isEraser() ? 'destination-out': 'source-over'
     // カーブの終点をマウスの動く前の座標に、頂点を動いた後の座標にすると滑らかな線が描画できる
-    canvasContext.quadraticCurveTo(startPosition.x, startPosition.y, x, y)
-    canvasContext.stroke()
+    canvasCtx.quadraticCurveTo(startPosition.x, startPosition.y, x, y)
+    canvasCtx.stroke()
 
     addHistory({ x, y })
   }
@@ -74,25 +74,25 @@ export default function useLessonDrawing(setRecord, hasResize, startDragging, in
       if (h.clear) {
         clearCanvas()
       } else {
-        canvasContext.strokeStyle = h.color
-        canvasContext.lineWidth = h.lineWidth
-        canvasContext.globalCompositeOperation = h.eraser ? 'destination-out': 'source-over'
-        const coef = { x: canvasContext.canvas.clientWidth / h.width, y: canvasContext.canvas.clientHeight / h.height }
+        canvasCtx.strokeStyle = h.color
+        canvasCtx.lineWidth = h.lineWidth
+        canvasCtx.globalCompositeOperation = h.eraser ? 'destination-out': 'source-over'
+        const coef = { x: canvasCtx.canvas.clientWidth / h.width, y: canvasCtx.canvas.clientHeight / h.height }
 
-        canvasContext.beginPath()
+        canvasCtx.beginPath()
         h.drawings.slice(1).forEach((d, i) => {
-          canvasContext.quadraticCurveTo(...calcResizePosition(coef, h.drawings[i], d))
-          canvasContext.stroke()
+          canvasCtx.quadraticCurveTo(...calcResizePosition(coef, h.drawings[i], d))
+          canvasCtx.stroke()
         })
       }
     })
 
-    canvasContext.strokeStyle = color
-    canvasContext.lineWidth = lineWidth
+    canvasCtx.strokeStyle = color
+    canvasCtx.lineWidth = lineWidth
   }
 
   function clearCanvas() {
-    canvasContext.clearRect(0, 0, canvasContext.canvas.clientWidth, canvasContext.canvas.clientHeight)
+    canvasCtx.clearRect(0, 0, canvasCtx.canvas.clientWidth, canvasCtx.canvas.clientHeight)
   }
 
   function calcResizePosition(coefficient, originalPosition, newPosition) {
@@ -108,8 +108,8 @@ export default function useLessonDrawing(setRecord, hasResize, startDragging, in
   function createNewHistory() {
     histories.push({
       clear: false,
-      width: canvasContext.canvas.clientWidth,
-      height: canvasContext.canvas.clientHeight,
+      width: canvasCtx.canvas.clientWidth,
+      height: canvasCtx.canvas.clientHeight,
       color: color,
       eraser: isEraser(),
       lineWidth: lineWidth,
@@ -154,7 +154,7 @@ export default function useLessonDrawing(setRecord, hasResize, startDragging, in
   }
 
   useEffect(() => {
-    canvasContext = drawingRef.current.getContext('2d')
+    canvasCtx = drawingRef.current.getContext('2d')
   }, [])
 
   useEffect(() => {
@@ -164,15 +164,15 @@ export default function useLessonDrawing(setRecord, hasResize, startDragging, in
 
   useEffect(() => {
     if (isEraser()) {
-      canvasContext.globalCompositeOperation = 'destination-out'
+      canvasCtx.globalCompositeOperation = 'destination-out'
     } else {
-      canvasContext.globalCompositeOperation = 'source-over'
-      canvasContext.strokeStyle = color
+      canvasCtx.globalCompositeOperation = 'source-over'
+      canvasCtx.strokeStyle = color
     }
   }, [color])
 
   useEffect(() => {
-    canvasContext.lineWidth = lineWidth
+    canvasCtx.lineWidth = lineWidth
   }, [lineWidth])
 
   return {
