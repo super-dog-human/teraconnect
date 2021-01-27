@@ -6,7 +6,7 @@ import RecordIcon from './recordIcon'
 import DrawingConfigPanel from './drawingConfigPanel'
 import DrawingConfigButton from './drawingConfigButton'
 
-export default function LessonRecordHeader({ isRecording, setIsRecording, setRecord,
+export default function LessonRecordHeader({ isMicReady, isRecording, setIsRecording, setRecord,
   isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, undoDrawing, clearDrawing,
   drawingColor, setDrawingColor, setDrawingLineWidth, setIsShowControlPanel }) {
 
@@ -52,7 +52,7 @@ export default function LessonRecordHeader({ isRecording, setIsRecording, setRec
           </Link>
         </div>
         <div css={flexItemStyle}>
-          <button onClick={handleRecording} css={recordingButtonStyle}>
+          <button onClick={handleRecording} css={recordingButtonStyle} disabled={!isMicReady}>
             <div css={recordingIconStyle}>
               <RecordIcon recording={isRecording} />
             </div>
@@ -112,7 +112,10 @@ const recordingButtonStyle = css({
   },
   [':hover']: {
     backgroundColor: 'var(--text-gray)',
-  }
+  },
+  [':disabled']: {
+    opacity: 0.3,
+  },
 })
 
 const recordingStatusStyle = css({

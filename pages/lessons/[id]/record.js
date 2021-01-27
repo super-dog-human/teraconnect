@@ -37,7 +37,7 @@ const Page = ({ token, lesson }) => {
   const { hasResize } = useResizeDetector(containerRef)
   const  { hasDragOver, handleAreaDragOver, handleAreaDragLeave, handleAreaDrop } = useDragOverDetector()
   const { bgImages, avatars, bgms } = useRecordResource(token, setBgImageURL)
-  const { isTalking, micDeviceID, setMicDeviceID, silenceThresholdSec, setSilenceThresholdSec } = useVoiceRecorder(lesson.id, token, isRecording, setRecord)
+  const { isMicReady, isTalking, micDeviceID, setMicDeviceID, silenceThresholdSec, setSilenceThresholdSec } = useVoiceRecorder(lesson.id, token, isRecording, setRecord)
   const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useLessonAvatar(setIsLoading, isTalking, hasResize, setRecord)
   const { isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth,
     startDrawing, inDrawing, endDrawing, drawingRef } = useLessonDrawing(setRecord, hasResize, startDragging, inDragging, endDragging)
@@ -47,7 +47,7 @@ const Page = ({ token, lesson }) => {
       <Head>
         <title>{lesson.title}の収録 - TERACONNECT</title>
       </Head>
-      <LessonRecordHeader isRecording={isRecording} setIsRecording={setIsRecording} setRecord={setRecord}
+      <LessonRecordHeader isMicReady={isMicReady} isRecording={isRecording} setIsRecording={setIsRecording} setRecord={setRecord}
         isDrawingHide={isDrawingHide} setIsDrawingHide={setIsDrawingHide} enablePen={enablePen} setEnablePen={setEnablePen}
         undoDrawing={undoDrawing} clearDrawing={clearDrawing} drawingColor={drawingColor} setDrawingColor={setDrawingColor}
         setDrawingLineWidth={setDrawingLineWidth} setIsShowControlPanel={setIsShowControlPanel} />

@@ -9,14 +9,14 @@ export default function useVoiceRecorder(id, token, isRecording, setRecord) {
   const [silenceThresholdSec, setSilenceThresholdSec] = useState(0.6)
   const { isMicReady, setNode } = useMicrophone()
 
-  function switchMicRecording() {
-    if (isMicReady) {
-      recorder.port.postMessage({ isRecording })
-    } else {
-      setTimeout(() => {
-        switchMicRecording()
-      }, 1000)
-    }
+  function switchRecording() {
+    if (!recorder) return
+    recorder.port.postMessage({ isRecording })
+  }
+
+  function terminalCurrentRecorder() {
+    // processでいまのworkerはreturn falseするようpostMessageする
+    recorder.port.postMessage({ isTerminal: true })
   }
 
   function handleRecorderMessage(result) {
@@ -62,6 +62,8 @@ export default function useVoiceRecorder(id, token, isRecording, setRecord) {
   useEffect(() => {
     if (!micDeviceID) return
 
+    if (recorder) terminalCurrentRecorder()
+
     setNode(micDeviceID, async(ctx, micInput) => {
       await ctx.audioWorklet.addModule('/voiceRecorderProcessor.js')
 
@@ -76,12 +78,12 @@ export default function useVoiceRecorder(id, token, isRecording, setRecord) {
   }, [micDeviceID])
 
   useEffect(() => {
-    switchMicRecording()
-  }, [isRecording, isMicReady])
+    switchRecording()
+  }, [isRecording])
 
   useEffect(() => {
     updateSilenceThresholdSec()
   }, [silenceThresholdSec])
 
-  return { isTalking, micDeviceID, setMicDeviceID, silenceThresholdSec, setSilenceThresholdSec }
+  return { isMicReady, isTalking, micDeviceID, setMicDeviceID, silenceThresholdSec, setSilenceThresholdSec }
 }

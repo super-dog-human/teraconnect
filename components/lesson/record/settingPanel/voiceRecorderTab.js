@@ -2,10 +2,10 @@
 import React, { useEffect, useState } from 'react'
 import { css } from '@emotion/core'
 import Select from '../../../form/select'
-import useMicInputDevices from '../../../../libs/hooks/useMicInputDevices'
+import useAudioInputDevices from '../../../../libs/hooks/useAudioInputDevices'
 
 export default function VoiceRecorderTab({ setMicDeviceID, setSilenceThresholdSec, isShowVoiceSpectrum, silenceThresholdSec, setIsShowVoiceSpectrum }) {
-  const { devices, requestMicPermission } = useMicInputDevices()
+  const { devices, requestMicPermission } = useAudioInputDevices()
   const [selectOptions, setSelectOptions] = useState([])
 
   function handleThresholdChange(e) {

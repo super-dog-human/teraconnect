@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-export default function useMicInputDevices() {
+export default function useAudioInputDevices() {
   const [devices, setDevices] = useState([])
 
   function requestMicPermission() {

@@ -4,6 +4,7 @@ class Recorder extends AudioWorkletProcessor {
 
     this.isRecording = false
     this.isSpeaking = false
+    this.isTerminal = false
     this.silenceSecondThreshold
     this.durationSecondThreshold = 2.0
     this.silenceVolumeThreshold = 0.05
@@ -18,7 +19,6 @@ class Recorder extends AudioWorkletProcessor {
 
     this.port.onmessage = event => {
       if (event.data.isRecording) {
-        console.log('voice swithc')
         this.isRecording = event.data.isRecording
         if (this.isRecording) {
           this.recordingStartSecond = currentTime
@@ -32,6 +32,10 @@ class Recorder extends AudioWorkletProcessor {
 
       if (event.data.changeThreshold) {
         this.silenceSecondThreshold = event.data.changeThreshold
+      }
+
+      if (event.data.isTerminal) {
+        this.isTerminal = true
       }
     }
   }
@@ -69,7 +73,7 @@ class Recorder extends AudioWorkletProcessor {
       }
     }
 
-    return true
+    return !this.isTerminal
   }
 
   _elapsedSecondFromStart() {
