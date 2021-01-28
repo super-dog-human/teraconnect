@@ -7,7 +7,7 @@ const avatar = new AvatarLoader()
 let startDraggingTime
 let isDragging = false
 
-export default function useLessonAvatar(setIsLoading, isTalking, hasResize, setRecord) {
+export default function useLessonAvatar(setIsLoading, isSpeaking, hasResize, setRecord) {
   const [config, setConfig] = useState({})
   const containerRef = useRef(null)
 
@@ -57,7 +57,7 @@ export default function useLessonAvatar(setIsLoading, isTalking, hasResize, setR
   }
 
   function changeSpeakMotion() {
-    console.log(isTalking)
+    avatar.switchSpeaking(isSpeaking)
   }
 
   function changeScreenSize() {
@@ -97,8 +97,7 @@ export default function useLessonAvatar(setIsLoading, isTalking, hasResize, setR
 
   useEffect(() => {
     changeSpeakMotion()
-    // start speech motion.
-  }, [isTalking])
+  }, [isSpeaking])
 
   useEffect(() => {
     changeScreenSize()

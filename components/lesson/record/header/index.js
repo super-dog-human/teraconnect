@@ -62,12 +62,23 @@ export default function LessonRecordHeader({ isMicReady, isRecording, setIsRecor
           </button>
         </div>
         <div css={flexItemStyle}>
-          <DrawingConfigButton onClick={handleDrawingHide} isSelected={isDrawingHide}><img src="/img/icon/hide.svg" /></DrawingConfigButton>
-          <DrawingConfigButton disabled={isDrawingHide} isSelected={!isDrawingHide && enablePen} onClick={handlePen}><img src="/img/icon/drawing.svg" /></DrawingConfigButton>
-          <DrawingConfigPanel disabled={isDrawingHide} color={drawingColor} setColor={setDrawingColor} setLineWidth={setDrawingLineWidth} setEnablePen={setEnablePen} setIsDrawingHide={setIsDrawingHide} />
-          <DrawingConfigButton disabled={isDrawingHide} onClick={handleDrawingUndo}><img src="/img/icon/undo.svg" /></DrawingConfigButton>
-          <DrawingConfigButton disabled={isDrawingHide} onClick={handleDrawingClear}><img src="/img/icon/trash.svg" /></DrawingConfigButton>
-          <DrawingConfigButton css={settingButtonStyle} onClick={handleSettingPanel}><img src="/img/icon/settings.svg" /></DrawingConfigButton>
+          <DrawingConfigButton onClick={handleDrawingHide} isSelected={isDrawingHide}>
+            <img src="/img/icon/hide.svg" />
+          </DrawingConfigButton>
+          <DrawingConfigButton disabled={isDrawingHide} isSelected={!isDrawingHide && enablePen} onClick={handlePen}>
+            <img src="/img/icon/drawing.svg" />
+          </DrawingConfigButton>
+          <DrawingConfigPanel disabled={isDrawingHide} color={drawingColor} setColor={setDrawingColor} setLineWidth={setDrawingLineWidth}
+            setEnablePen={setEnablePen} setIsDrawingHide={setIsDrawingHide} />
+          <DrawingConfigButton disabled={isDrawingHide} onClick={handleDrawingUndo}>
+            <img src="/img/icon/undo.svg" />
+          </DrawingConfigButton>
+          <DrawingConfigButton disabled={isDrawingHide} onClick={handleDrawingClear}>
+            <img src="/img/icon/trash.svg" />
+          </DrawingConfigButton>
+          <DrawingConfigButton css={settingButtonStyle} onClick={handleSettingPanel}>
+            <img src="/img/icon/settings.svg" />
+          </DrawingConfigButton>
         </div>
       </div>
     </header>

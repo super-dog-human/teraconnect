@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { GLTFLoader } from './GLTFLoader'
-import { VRM } from '@pixiv/three-vrm'
+import { VRM, VRMSchema } from '@pixiv/three-vrm'
 import * as Const from '../constants'
 
 let domSize = {}
@@ -20,6 +20,7 @@ export default class AvatarLoader {
     this.scene = new THREE.Scene()
     this.renderer
     this.animationMixer
+    this.animationClip ={}
     this.light
   }
 
@@ -67,7 +68,18 @@ export default class AvatarLoader {
     this._getBone('hips').rotation.y = Math.PI - mousePosition.x * 0.7
   }
 
+  switchSpeaking(isSpeaking) {
+    if (!this.animationClip.speaking) return
+
+    if (isSpeaking) {
+      this.animationClip.speaking.play()
+    } else {
+      this.animationClip.speaking.stop()
+    }
+  }
+
   animate(deltaTime) {
+    this.vrm.update(deltaTime)
     this.animationMixer.update(deltaTime)
     this.renderer.render(this.scene, this.camera)
   }
@@ -194,6 +206,7 @@ export default class AvatarLoader {
     this.animationMixer = new THREE.AnimationMixer(this.vrm.scene)
     this.animationMixer.timeScale = 0
     this._setBreathAnimation()
+    this._setMouthAnimation()
     this._initAnimationPlaying()
   }
 
@@ -217,13 +230,24 @@ export default class AvatarLoader {
     )
 
     const clip = new THREE.AnimationClip('breath', 6.0, [headTrack, chestTrack])
-    this.animationMixer.clipAction(clip)
+    this.animationClip.initial = this.animationMixer.clipAction(clip)
+  }
+
+  _setMouthAnimation() {
+    const clip = THREE.AnimationClip.parse({
+      name: 'speaking',
+      tracks: [{
+        name: this.vrm.blendShapeProxy.getBlendShapeTrackName(VRMSchema.BlendShapePresetName.A),
+        type: 'number',
+        times: [0, 0.2, 0.5],
+        values: [0, 1.0, 0],
+      }],
+    })
+    this.animationClip.speaking = this.animationMixer.clipAction(clip)
   }
 
   _initAnimationPlaying() {
-    this.animationMixer._actions.forEach(action => {
-      action.paused = false
-      action.play() // animation is not start playing because already set timescale to 0.
-    })
+    this.animationClip.initial.paused = false
+    this.animationClip.initial.play() // playを実行しても、mixerのtimescaleが0ならアニメーションは開始されない
   }
 }

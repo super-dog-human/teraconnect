@@ -8,7 +8,7 @@ export default function useMicrophone() {
   const [isMicReady, setIsMicReady] = useState(false)
 
   async function initAudioContext() {
-    audioCtx= (typeof webkitAudioContext === 'undefined') ? new AudioContext() : new webkitAudioContext() // for safari
+    audioCtx= new AudioContext() || new webkitAudioContext() // for safari
   }
 
   async function initMicInput(micDeviceID) {
@@ -29,19 +29,29 @@ export default function useMicrophone() {
     micInput = audioCtx.createMediaStreamSource(stream)
   }
 
-  function terminalMicInput() {
-    if (!stream) return
-    stream.getAudioTracks().forEach(track => track.stop())
+  async function terminalMicInput() {
+    if (stream) {
+      stream.getAudioTracks().forEach(track => track.stop())
+    }
 
-    if (!micInput) return
-    micInput.disconnect()
-    micInput = null
+    if (micInput) {
+      micInput.disconnect()
+      micInput = null
+    }
+
+    if (audioCtx && audioCtx.state != 'closed') {
+      await audioCtx.close()
+    }
+
+    if (audioCtx) {
+      audioCtx = null
+    }
   }
 
   async function setNode(micDeviceID, callback) {
     setIsMicReady(false)
 
-    terminalMicInput()
+    await terminalMicInput()
     await initMicInput(micDeviceID)
     await callback(audioCtx, micInput)
 

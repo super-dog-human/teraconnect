@@ -17,46 +17,52 @@ class Recorder extends AudioWorkletProcessor {
     this.silenceBeginSecond = 0
     this.voiceBeginSecond = 0
 
-    this.port.onmessage = event => {
-      if (event.data.isRecording) {
-        this.isRecording = event.data.isRecording
-        if (this.isRecording) {
-          this.recordingStartSecond = currentTime
-        } else if (this.buffers.length > 0) {
-          this._saveRecord()
+    this.port.onmessage = e => {
+      Object.keys(e.data).forEach(k => {
+        switch(k) {
+        case 'isRecording':
+          this.isRecording = e.data[k]
+          if (this.isRecording) {
+            this.recordingStartSecond = currentTime
+            return
+          }
+
+          if (this.buffers.length > 0) this._saveRecord()
           this.recordingStopSecond += this._elapsedSecondFromStart()
-        } else {
-          this.recordingStopSecond += this._elapsedSecondFromStart()
+          return
+        case 'changeThreshold':
+          this.silenceSecondThreshold = e.data[k]
+          return
+        case 'isTerminal':
+          this.isTerminal = e.data[k]
+          return
         }
-      }
-
-      if (event.data.changeThreshold) {
-        this.silenceSecondThreshold = event.data.changeThreshold
-      }
-
-      if (event.data.isTerminal) {
-        this.isTerminal = true
-      }
+      })
     }
   }
 
   process(allInputs) {
-    // 音声検出に使うからreturnしたくない
-    if (!this.isRecording) return true
+    const inputs = allInputs[0][0] // モノラル録音
+    const isSilence = this._isSilence(inputs)
 
-    const inputs = allInputs[0][0] // recording monoral only
+    //    this.port.postMessage({ isSpeaking: !isSilence })
 
-    if (this._isSilence(inputs)) {
-      if (this._shouldStopLipSync()) {
+    if (!this.isRecording){
+      return !this.isTerminal
+    }
+
+    if (isSilence) {
+      if (this.isSpeaking && this._shouldStopLipSync()) {
         this.isSpeaking = false
+        //        this.port.postMessage({ isSpeaking: false })
       }
 
       if (this._shouldSaveRecording()) {
         this._saveRecord()
-        return true
+        return !this.isTerminal
       }
 
-      if (this.silenceBeginSecond == 0) {
+      if (this.silenceBeginSecond === 0) {
         this.silenceBeginSecond = this._elapsedSecondFromStart()
       }
       if (this.buffers.length > 0) {
@@ -68,8 +74,10 @@ class Recorder extends AudioWorkletProcessor {
       this.silenceBeginSecond = 0
       this._recordQuietInput()
       this._recordInput(inputs)
+
       if (!this.isSpeaking) {
         this.isSpeaking = true
+        this.port.postMessage({ isSpeaking: true })
       }
     }
 
@@ -77,9 +85,7 @@ class Recorder extends AudioWorkletProcessor {
   }
 
   _elapsedSecondFromStart() {
-    return (
-      this.recordingStopSecond + currentTime - this.recordingStartSecond
-    )
+    return this.recordingStopSecond + currentTime - this.recordingStartSecond
   }
 
   _durationSecond() {
@@ -87,10 +93,8 @@ class Recorder extends AudioWorkletProcessor {
   }
 
   _shouldStopLipSync() {
-    if (!this.isSpeaking) return false
     return (
-      this._elapsedSecondFromStart() - this.silenceBeginSecond >
-        this.silenceSecondThreshold
+      this._elapsedSecondFromStart() - this.silenceBeginSecond > this.silenceSecondThreshold
     )
   }
 
@@ -106,10 +110,12 @@ class Recorder extends AudioWorkletProcessor {
 
   _saveRecord() {
     this.port.postMessage({
-      speechedAt: this.voiceBeginSecond,
-      durationSec: this._durationSecond(),
-      buffers: this.buffers,
-      bufferLength: this.bufferLength
+      saveRecord: {
+        speechedAt: this.voiceBeginSecond,
+        durationSec: this._durationSecond(),
+        buffers: this.buffers,
+        bufferLength: this.bufferLength
+      }
     })
     this._clearRecord()
   }
@@ -136,7 +142,7 @@ class Recorder extends AudioWorkletProcessor {
   }
 
   _recordInput(inputs) {
-    if (this.voiceBeginSecond == 0) {
+    if (this.voiceBeginSecond === 0) {
       this.voiceBeginSecond = this._elapsedSecondFromStart()
     }
 
