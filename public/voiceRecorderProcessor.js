@@ -5,6 +5,7 @@ class Recorder extends AudioWorkletProcessor {
     this.isRecording = false
     this.isSpeaking = false
     this.isTerminal = false
+    this.silenceLipSyncThreshold = 0.2
     this.silenceSecondThreshold
     this.durationSecondThreshold = 2.0
     this.silenceVolumeThreshold = 0.05
@@ -15,6 +16,7 @@ class Recorder extends AudioWorkletProcessor {
     this.recordingStartSecond = 0
     this.recordingStopSecond = 0
     this.silenceBeginSecond = 0
+    this.speakingEndSecond = 0
     this.voiceBeginSecond = 0
 
     this.port.onmessage = e => {
@@ -45,18 +47,24 @@ class Recorder extends AudioWorkletProcessor {
     const inputs = allInputs[0][0] // モノラル録音
     const isSilence = this._isSilence(inputs)
 
-    //    this.port.postMessage({ isSpeaking: !isSilence })
+    if (isSilence && this.speakingEndSecond === 0) {
+      this.speakingEndSecond = currentTime
+    }
+
+    if (isSilence && this.isSpeaking && this._shouldStopLipSync()) {
+      this.isSpeaking = false
+      this.port.postMessage({ isSpeaking: false })
+    } else if (!isSilence && !this.isSpeaking) {
+      this.isSpeaking = true
+      this.port.postMessage({ isSpeaking: true })
+      this.speakingEndSecond = 0
+    }
 
     if (!this.isRecording){
       return !this.isTerminal
     }
 
     if (isSilence) {
-      if (this.isSpeaking && this._shouldStopLipSync()) {
-        this.isSpeaking = false
-        //        this.port.postMessage({ isSpeaking: false })
-      }
-
       if (this._shouldSaveRecording()) {
         this._saveRecord()
         return !this.isTerminal
@@ -74,11 +82,6 @@ class Recorder extends AudioWorkletProcessor {
       this.silenceBeginSecond = 0
       this._recordQuietInput()
       this._recordInput(inputs)
-
-      if (!this.isSpeaking) {
-        this.isSpeaking = true
-        this.port.postMessage({ isSpeaking: true })
-      }
     }
 
     return !this.isTerminal
@@ -93,9 +96,7 @@ class Recorder extends AudioWorkletProcessor {
   }
 
   _shouldStopLipSync() {
-    return (
-      this._elapsedSecondFromStart() - this.silenceBeginSecond > this.silenceSecondThreshold
-    )
+    return currentTime - this.speakingEndSecond > this.silenceLipSyncThreshold
   }
 
   _shouldSaveRecording() {
