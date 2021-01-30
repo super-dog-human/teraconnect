@@ -7,12 +7,12 @@ let micInput
 export default function useMicrophone() {
   const [isMicReady, setIsMicReady] = useState(false)
 
-  async function initAudioContext() {
+  function initAudioContext() {
     audioCtx = typeof webkitAudioContext === 'undefined' ? new AudioContext() : new webkitAudioContext() // for safari
   }
 
   async function initMicInput(micDeviceID) {
-    if (!audioCtx) await initAudioContext()
+    if (!audioCtx) initAudioContext()
 
     stream = await navigator.mediaDevices.getUserMedia({
       audio: {
