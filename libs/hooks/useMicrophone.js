@@ -8,10 +8,12 @@ export default function useMicrophone() {
   const [isMicReady, setIsMicReady] = useState(false)
 
   async function initAudioContext() {
-    audioCtx= new AudioContext() || new webkitAudioContext() // for safari
+    audioCtx = typeof webkitAudioContext === 'undefined' ? new AudioContext() : new webkitAudioContext() // for safari
   }
 
   async function initMicInput(micDeviceID) {
+    if (!audioCtx) await initAudioContext()
+
     stream = await navigator.mediaDevices.getUserMedia({
       audio: {
         echoCancellation: true,
@@ -19,12 +21,8 @@ export default function useMicrophone() {
         noiseSuppression: true,
         deviceId: micDeviceID,
       },
-      video: false
+      video: false,
     })
-
-    if (!audioCtx) {
-      await initAudioContext() // getUserMediaの後に実行しないとChromeで警告が出る
-    }
 
     micInput = audioCtx.createMediaStreamSource(stream)
   }
