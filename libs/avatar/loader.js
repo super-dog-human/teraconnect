@@ -192,8 +192,8 @@ export default class AvatarLoader {
 
   _createDom(domSize) {
     this.renderer = new THREE.WebGLRenderer({
-      alpha: true
-      //      antialias: true
+      alpha: true,
+      antialias: true,
     })
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setSize(domSize.width, domSize.height)
@@ -206,7 +206,7 @@ export default class AvatarLoader {
     this.animationMixer = new THREE.AnimationMixer(this.vrm.scene)
     this.animationMixer.timeScale = 0
     this._setBreathAnimation()
-    this._setMouthAnimation()
+    this._setSpeakingAnimation()
     this._initAnimationPlaying()
   }
 
@@ -233,7 +233,7 @@ export default class AvatarLoader {
     this.animationClip.initial = this.animationMixer.clipAction(clip)
   }
 
-  _setMouthAnimation() {
+  _setSpeakingAnimation() {
     const clip = THREE.AnimationClip.parse({
       name: 'speaking',
       tracks: [{
