@@ -112,10 +112,10 @@ class Recorder extends AudioWorkletProcessor {
   _saveRecord() {
     this.port.postMessage({
       saveRecord: {
-        speechedAt: this.voiceBeginSecond,
+        time: this.voiceBeginSecond,
         durationSec: this._durationSecond(),
         buffers: this.buffers,
-        bufferLength: this.bufferLength
+        bufferLength: this.bufferLength,
       }
     })
     this._clearRecord()
@@ -147,7 +147,10 @@ class Recorder extends AudioWorkletProcessor {
       this.voiceBeginSecond = this._elapsedSecondFromStart()
     }
 
-    this.buffers.push(inputs)
+    const copyInputs = new Float32Array(inputs.length)
+    copyInputs.set(inputs)
+
+    this.buffers.push(copyInputs)
     this.bufferLength += inputs.length
   }
 
@@ -158,9 +161,12 @@ class Recorder extends AudioWorkletProcessor {
       return q.time >= time - this.quietHistoryDurationSec
     })
 
+    const copyInputs = new Float32Array(inputs.length)
+    copyInputs.set(inputs)
+
     this.quietBuffers.push({
       time: time,
-      inputs: inputs
+      inputs: copyInputs
     })
   }
 
