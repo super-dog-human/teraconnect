@@ -1,6 +1,7 @@
 importScripts('/lame.min.js')
 
 const numChannels = 1
+const wavSampleRate = 44100
 let mp3Encoder
 const kbps = 128
 const encodeBlockSize = 1152
@@ -8,25 +9,29 @@ const encodeBlockSize = 1152
 onmessage = async function(e) {
   Object.keys(e.data).forEach(k => {
     switch(k) {
-    case 'newVoice':
+    case 'newVoice': {
+      let completedMp3 = false
+      let completedWav = false
+
       createMP3(e.data.buffers, e.data.bufferLength, e.data.sampleRate)
         .then(file => {
           self.postMessage(file)
-          e.data.buffers = null
+          completedMp3 = true
+          if (completedWav) e.data.buffers = null
         })
-      /*
-      createWAV(e.data.buffers, e.data.sampleRate)
-        .then(file => {
-          self.postMessage(file)
-        })
-      */
+
+      const wavFile = createWAV(e.data.buffers, e.data.sampleRate)
+      self.postMessage(wavFile)
+      completedWav = true
+      if (completedMp3) e.data.buffers = null
+
       return
+    }
     case 'terminate':
       if (mp3Encoder) mp3Encoder.close()
       close()
       return
     }
-
   })
 
   /*
@@ -104,20 +109,20 @@ async function createMP3(rawData, bufferLength, sampleRate) {
 }
 
 function createWAV(buffers, recordSampleRate) {
-  const mergedBuffers = mergeBuffers(buffers, recordSampleRate)
-  const dataview = encodeWAV(mergedBuffers, recordSampleRate)
-  const audioBlob = new Blob([dataview], { type: 'audio/wav' })
+  const mergedBuffers = mergeBuffers(buffers, recordSampleRate),
+    dataview = encodeWAV(mergedBuffers),
+    audioBlob = new Blob([dataview], { type: 'audio/wav' })
   return audioBlob
 
   function mergeBuffers(buffers, recordSampleRate) {
     const resampledResult = []
     let resampledLength = 0
     buffers.forEach(buffer => {
-      //            const resampledBuffer = downSampling(buffer, recordSampleRate);
-      //            resampledResult.push(resampledBuffer);
-      resampledResult.push(buffer)
-      //            resampledLength += resampledBuffer.length;
-      resampledLength += buffer.length
+      const resampledBuffer = downSampling(buffer, recordSampleRate)
+      resampledResult.push(resampledBuffer)
+      //      resampledResult.push(buffer)
+      resampledLength += resampledBuffer.length
+      //resampledLength += buffer.length
     })
 
     const result = new Float32Array(resampledLength)
@@ -130,7 +135,7 @@ function createWAV(buffers, recordSampleRate) {
     return result
   }
 
-  function encodeWAV(buffers, recordSampleRate) {
+  function encodeWAV(buffers) {
     const buffer = new ArrayBuffer(44 + buffers.length * 2)
     let view = new DataView(buffer)
 
@@ -141,8 +146,8 @@ function createWAV(buffers, recordSampleRate) {
     view.setUint32(16, 16, true)
     view.setUint16(20, 1, true)
     view.setUint16(22, numChannels, true)
-    view.setUint32(24, recordSampleRate, true)
-    view.setUint32(28, recordSampleRate * numChannels * 2, true)
+    view.setUint32(24, wavSampleRate, true)
+    view.setUint32(28, wavSampleRate * numChannels * 2, true)
     view.setUint16(32, numChannels * 2, true)
     view.setUint16(34, 16, true)
     writeString(view, 36, 'data')
@@ -158,21 +163,19 @@ function createWAV(buffers, recordSampleRate) {
     }
   }
 
-  /*
-    function downSampling(buffer, recordSampleRate) {
-        const compression = recordSampleRate / 16000;
-        const resampledLength = parseInt(buffer.length / compression);
-        const resampledBuffer = new Float32Array(resampledLength);
+  function downSampling(buffer, recordSampleRate) {
+    const compression = recordSampleRate / wavSampleRate
+    const resampledLength = parseInt(buffer.length / compression)
+    const resampledBuffer = new Float32Array(resampledLength)
 
-        let loopIndex = 0;
-        while (loopIndex < resampledLength) {
-            const bufferIndex = Math.round(loopIndex * compression);
-            if (!buffer[bufferIndex]) { console.error('empty audio buffer!'); }
-            resampledBuffer[loopIndex] = buffer[bufferIndex];
-            loopIndex ++;
-        }
-
-        return resampledBuffer;
+    let loopIndex = 0
+    while (loopIndex < resampledLength) {
+      const bufferIndex = Math.round(loopIndex * compression)
+      if (!buffer[bufferIndex]) { console.error('empty audio buffer!') }
+      resampledBuffer[loopIndex] = buffer[bufferIndex]
+      loopIndex ++
     }
-*/
+
+    return resampledBuffer
+  }
 }
