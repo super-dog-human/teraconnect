@@ -18,6 +18,11 @@ export default function useVoiceRecorder(id, token, isRecording, setRecord) {
   function terminalCurrentRecorder() {
     if (!recorder) return
     recorder.port.postMessage({ isTerminal: true })
+    // 向こうでcloseするとよさそう
+  }
+
+  function terminalUploader() {
+    uploader.postMessage({ 'terminate': true })
   }
 
   function handleRecorderMessage(command) {
@@ -27,16 +32,12 @@ export default function useVoiceRecorder(id, token, isRecording, setRecord) {
         setIsSpeaking(command[k])
         return
       case 'saveRecord':
-        /*
         uploader.postMessage({
-          url: Const.RAW_VOICE_API_URL,
+          newVoice: true,
+          ...command[k],
           lessonID: id,
-          time: result.speechedAt,
-          buffers: result.buffers,
-          bufferLength: result.bufferLength,
-          currentSampleRate: this._audioCtx.sampleRate
+          sampleRate: recorder.context.sampleRate,
         })
-      */
         return
       }
     })
@@ -60,6 +61,16 @@ export default function useVoiceRecorder(id, token, isRecording, setRecord) {
         uploader.terminate()
     })
     */
+    uploader.onmessage = (e => {
+      const file = new FileReader()
+      file.onload = function(e) {
+        const a = document.createElement('a')
+        a.href = e.target.result
+        a.download = 'audio'
+        a.dispatchEvent(new MouseEvent('click'))
+      }
+      file.readAsDataURL(e.data)
+    })
   }
 
   function updateSilenceThresholdSec() {
@@ -69,9 +80,10 @@ export default function useVoiceRecorder(id, token, isRecording, setRecord) {
 
   useEffect(() => {
     uploader = new Worker('/voiceUploader.js')
+
     return () => {
-      // uploaderもreturn falseさせる)
       terminalCurrentRecorder()
+      terminalUploader()
     }
   }, [])
 
@@ -82,7 +94,6 @@ export default function useVoiceRecorder(id, token, isRecording, setRecord) {
 
     setNode(micDeviceID, async(ctx, micInput) => {
       await ctx.audioWorklet.addModule('/voiceRecorderProcessor.js')
-
       recorder = new AudioWorkletNode(ctx, 'recorder')
       recorder.port.onmessage = e => {
         handleRecorderMessage(e.data)

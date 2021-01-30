@@ -6,22 +6,28 @@ const kbps = 128
 const encodeBlockSize = 1152
 
 onmessage = async function(e) {
-  let createdCount = 0
-  createMP3(e.data.buffers, e.data.bufferLength, e.data.sampleRate)
-    .then(file => {
-      self.postMessage(file)
-      createdCount += 1
-      if (createdCount) e.data.buffers = null
-    })
+  Object.keys(e.data).forEach(k => {
+    switch(k) {
+    case 'newVoice':
+      createMP3(e.data.buffers, e.data.bufferLength, e.data.sampleRate)
+        .then(file => {
+          self.postMessage(file)
+          e.data.buffers = null
+        })
+      /*
+      createWAV(e.data.buffers, e.data.sampleRate)
+        .then(file => {
+          self.postMessage(file)
+        })
+      */
+      return
+    case 'terminate':
+      if (mp3Encoder) mp3Encoder.close()
+      close()
+      return
+    }
 
-  /*
-  createWAV(e.data.buffers, e.data.sampleRate)
-    .then(file => {
-      self.postMessage(file)
-      createdCount += 1
-      if (createdCount) e.data.buffers = null
-    })
-  */
+  })
 
   /*
   const axios = require('axios')
@@ -60,9 +66,6 @@ onmessage = async function(e) {
       self.postMessage(voice)
     })
     */
-
-// close()
-// encoder.close()
 }
 
 function floatTo16BitPCM(output, offset, input) {
