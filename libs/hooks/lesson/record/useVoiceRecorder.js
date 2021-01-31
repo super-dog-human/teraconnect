@@ -18,11 +18,10 @@ export default function useVoiceRecorder(id, token, isRecording, setRecord) {
   function terminalCurrentRecorder() {
     if (!recorder) return
     recorder.port.postMessage({ isTerminal: true })
-    // 向こうでcloseするとよさそう
   }
 
   function terminalUploader() {
-    uploader.postMessage({ 'terminate': true })
+    uploader.postMessage({ isTerminal: true })
   }
 
   function handleRecorderMessage(command) {
@@ -32,44 +31,10 @@ export default function useVoiceRecorder(id, token, isRecording, setRecord) {
         setIsSpeaking(command[k])
         return
       case 'saveRecord':
-        uploader.postMessage({
-          newVoice: true,
-          ...command[k],
-          lessonID: id,
-          sampleRate: recorder.context.sampleRate,
-        })
+        // データコピーが発生するが、AudioWorkletから直接Dedicated Workerを扱えないのでここから受け渡しをする
+        uploader.postMessage({ newVoice: command[k] })
         return
       }
-    })
-
-    /*
-    const callback = (voice => {
-      setRecord('voice', voice)
-    }, talking => {
-      setIsSpeaking(talking)
-    )
-
-    const voice = {
-      timeSec: result.speechedAt,
-      durationSec: result.durationSec
-    }
-    callback(voice)
-
-    uploader.onmessage = (event => {
-        voice.fileID = event.data.fileID
-        callback(voice)
-        uploader.terminate()
-    })
-    */
-    uploader.onmessage = (e => {
-      const file = new FileReader()
-      file.onload = function(e) {
-        const a = document.createElement('a')
-        a.href = e.target.result
-        a.download = 'audio'
-        a.dispatchEvent(new MouseEvent('click'))
-      }
-      file.readAsDataURL(e.data)
     })
   }
 
@@ -80,6 +45,7 @@ export default function useVoiceRecorder(id, token, isRecording, setRecord) {
 
   useEffect(() => {
     uploader = new Worker('/voiceUploader.js')
+    uploader.postMessage({ initialize: { lessonID: id, token } }) // tokenをリフレッシュする場合は？
 
     return () => {
       terminalCurrentRecorder()

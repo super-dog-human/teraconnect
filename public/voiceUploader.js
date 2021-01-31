@@ -1,76 +1,49 @@
 importScripts('/lame.min.js')
+//import { post, putFile } from '../../../fetch'
 
 const numChannels = 1
 const wavSampleRate = 44100
-let mp3Encoder
 const kbps = 128
 const encodeBlockSize = 1152
+let mp3Encoder
+let uploadingCount = 0
+let lessonID
+let token
 
 onmessage = async function(e) {
   Object.keys(e.data).forEach(k => {
     switch(k) {
+    case 'initialize': {
+      lessonID = e.data.initialize.lessonID
+      token = e.data.initialize.token
+      return
+    }
     case 'newVoice': {
+      uploadingCount += 1
       let completedMp3 = false
       let completedWav = false
 
-      createMP3(e.data.buffers, e.data.bufferLength, e.data.sampleRate)
+      createMP3(e.data.newVoice.buffers, e.data.newVoice.bufferLength, e.data.newVoice.sampleRate)
         .then(file => {
-          self.postMessage(file)
+          uploadFile('voice', file)
           completedMp3 = true
-          if (completedWav) e.data.buffers = null
+          completeUploading(completedMp3, completedWav, e.data)
         })
 
-      const wavFile = createWAV(e.data.buffers, e.data.sampleRate)
-      self.postMessage(wavFile)
-      completedWav = true
-      if (completedMp3) e.data.buffers = null
+      createWAV(e.data.newVoice.buffers, e.data.newVoice.sampleRate)
+        .then(file => {
+          uploadFile('stt', file)
+          completedWav = true
+          completeUploading(completedMp3, completedWav, e.data)
+        })
 
       return
     }
-    case 'terminate':
-      if (mp3Encoder) mp3Encoder.close()
-      close()
+    case 'isTerminal':
+      terminate()
       return
     }
   })
-
-  /*
-  const axios = require('axios')
-
-  const voice = event.data
-  const params = { lesson_id: voice.lessonID }
-  axios
-    .post(voice.url, params)
-    .then(response => {
-      return response.data
-    })
-    .then(response => {
-      const fileID = response.file_id
-      voice.fileID = fileID
-      const putURL = response.signed_url
-
-      const recordSampleRate = voice.currentSampleRate
-      const audioBuffer = createWAVFile(voice.buffers, recordSampleRate)
-
-      const instance = axios.create({
-        transformRequest: [
-          (data, header) => {
-            header.put['Content-Type'] = 'audio/wav'
-            return data
-          }
-        ]
-      })
-
-      return instance.put(putURL, audioBuffer)
-    })
-    .catch(error => {
-      console.error(error)
-      voice.error = error
-    })
-    .then(() => {
-      self.postMessage(voice)
-    })
-    */
 }
 
 function floatTo16BitPCM(output, offset, input) {
@@ -109,10 +82,12 @@ async function createMP3(rawData, bufferLength, sampleRate) {
 }
 
 function createWAV(buffers, recordSampleRate) {
-  const mergedBuffers = mergeBuffers(buffers, recordSampleRate),
-    dataview = encodeWAV(mergedBuffers),
-    audioBlob = new Blob([dataview], { type: 'audio/wav' })
-  return audioBlob
+  return new Promise(resolve => {
+    const mergedBuffers = mergeBuffers(buffers, recordSampleRate)
+    const dataview = encodeWAV(mergedBuffers)
+    const audioBlob = new Blob([dataview], { type: 'audio/wav' })
+    resolve(audioBlob)
+  })
 
   function mergeBuffers(buffers, recordSampleRate) {
     const resampledResult = []
@@ -120,9 +95,7 @@ function createWAV(buffers, recordSampleRate) {
     buffers.forEach(buffer => {
       const resampledBuffer = downSampling(buffer, recordSampleRate)
       resampledResult.push(resampledBuffer)
-      //      resampledResult.push(buffer)
       resampledLength += resampledBuffer.length
-      //resampledLength += buffer.length
     })
 
     const result = new Float32Array(resampledLength)
@@ -177,5 +150,46 @@ function createWAV(buffers, recordSampleRate) {
     }
 
     return resampledBuffer
+  }
+}
+
+async function uploadFile(type, file) {
+  switch(type) {
+  case 'voice': {
+    const contentType = 'audio/mpeg'
+    const file = {
+      entity: 'voice',
+      extension: 'mp3',
+      contentType,
+    }
+    /*
+    const request = { fileRequests: [file] }
+    const result = await post('/graphics', request, token)
+    const signedURL = result.signedURLs
+    //    uploade(validFiles[i], temporaryIDs[i], r.fileID, r.signedURL)
+
+    putFile(signedURL, file, contentType)
+    */
+    return
+  }
+  case 'stt': {
+    // audio/wav
+    return
+  }
+  }
+}
+
+function completeUploading(completedMp3, completedWav, data) {
+  if (!completedWav || !completedMp3) return
+  data = null // メモリ解放
+  uploadingCount -= 1
+}
+
+function terminate(tryCount=0) {
+  if (uploadingCount === 0 || tryCount >= 12) {
+    if (mp3Encoder) mp3Encoder.close()
+    close()
+  } else {
+    setTimeout(() => {terminate(tryCount + 1)}, 5000)
   }
 }
