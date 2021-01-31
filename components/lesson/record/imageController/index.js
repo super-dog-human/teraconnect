@@ -10,12 +10,12 @@ import ScrollArrow from './scrollArrow'
 import SelectorThumbnail from './selectorThumbnail'
 import DragSwappable from '../../../dragSwappable'
 
-export default function LessonRecordImageController({ token, setSelectedImage, setRecord, hasDragOver }) {
+export default function LessonRecordImageController({ id, token, setSelectedImage, setRecord, hasDragOver }) {
   const selectImageBarRef = useRef(null)
   const inputFileRef = useRef(null)
   const { imageID, selectImage, removeImage, images, setImages, moveImage } = useImageController(setSelectedImage, setRecord)
   const { handleDragOver, handleDragLeave, handleDrop, handleChangeFile, handleUploadButtonClick } =
-    useImageUploader(token, images, setImages, inputFileRef, selectImageBarRef)
+    useImageUploader(id, token, images, setImages, inputFileRef, selectImageBarRef)
 
   return (
     <div css={bodyStyle}>

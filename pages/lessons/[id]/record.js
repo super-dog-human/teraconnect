@@ -64,7 +64,7 @@ const Page = ({ token, lesson }) => {
             setSilenceThresholdSec={setSilenceThresholdSec} isShowVoiceSpectrum={isShowVoiceSpectrum} setIsShowVoiceSpectrum={setIsShowVoiceSpectrum}
             setRecord={setRecord} />
         </div>
-        <LessonRecordImageController token={token} setSelectedImage={setSelectedImage} setRecord={setRecord} hasDragOver={hasDragOver} />
+        <LessonRecordImageController id={lesson.id} token={token} setSelectedImage={setSelectedImage} setRecord={setRecord} hasDragOver={hasDragOver} />
         <LessonRecordRandomTips />
       </main>
       <Footer />
