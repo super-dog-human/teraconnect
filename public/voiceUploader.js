@@ -1,8 +1,8 @@
 importScripts('/lame.min.js', '/unfetch.js')
 
 const numChannels = 1
-const wavSampleRate = 44100
-const kbps = 128
+const sampleRate = 44100
+const bitRate = 128
 const encodeBlockSize = 1152
 let mp3Encoder
 let uploadingCount = 0
@@ -23,7 +23,7 @@ onmessage = async function(e) {
       uploadingCount += 1
 
       const result = await fetchSignedURL(e.data.newVoice.time, e.data.newVoice.durationSec)
-      const file = await createMP3(e.data.newVoice.buffers, e.data.newVoice.sampleRate)
+      const file = await createMP3(e.data.newVoice.buffers)
       await uploadFile(result.signedURL, file)
       e.data = null
 
@@ -50,9 +50,9 @@ function floatTo16BitPCM(output, offset, input) {
   }
 }
 
-async function createMP3(rawData, sampleRate) {
+async function createMP3(rawData) {
   if (!mp3Encoder) {
-    mp3Encoder = new lamejs.Mp3Encoder(numChannels, sampleRate, kbps)
+    mp3Encoder = new lamejs.Mp3Encoder(numChannels, sampleRate, bitRate)
   }
 
   const mp3Data = []

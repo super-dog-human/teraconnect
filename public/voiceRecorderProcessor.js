@@ -114,7 +114,6 @@ class Recorder extends AudioWorkletProcessor {
         time: this.voiceBeginSecond,
         durationSec: this._durationSecond(),
         buffers: this.buffers,
-        sampleRate: sampleRate,
       }
     })
 
