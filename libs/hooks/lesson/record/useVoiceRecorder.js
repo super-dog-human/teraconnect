@@ -31,7 +31,7 @@ export default function useVoiceRecorder(id, token, isRecording, setRecord) {
         setIsSpeaking(command[k])
         return
       case 'saveRecord':
-        // データコピーが発生するが、AudioWorkletから直接Dedicated Workerを扱えないのでここから受け渡しをする
+        // データコピーが発生するが、AudioWorklet内でDedicated Workerを扱えないのでここから受け渡しをする
         uploader.postMessage({ newVoice: command[k] })
         return
       }
@@ -45,7 +45,8 @@ export default function useVoiceRecorder(id, token, isRecording, setRecord) {
 
   useEffect(() => {
     uploader = new Worker('/voiceUploader.js')
-    uploader.postMessage({ initialize: { lessonID: id, token } }) // tokenをリフレッシュする場合は？
+    // tokenをリフレッシュする場合は？
+    uploader.postMessage({ initialize: { lessonID: id, token, apiURL: process.env.TERACONNECT_API_URL } })
 
     return () => {
       terminalCurrentRecorder()

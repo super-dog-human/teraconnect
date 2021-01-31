@@ -12,7 +12,6 @@ class Recorder extends AudioWorkletProcessor {
     this.quietHistoryDurationSec = 0.2
     this.quietBuffers = []
     this.buffers = []
-    this.bufferLength = 0
     this.recordingStartSecond = 0
     this.recordingStopSecond = 0
     this.silenceBeginSecond = 0
@@ -115,7 +114,6 @@ class Recorder extends AudioWorkletProcessor {
         time: this.voiceBeginSecond,
         durationSec: this._durationSecond(),
         buffers: this.buffers,
-        bufferLength: this.bufferLength,
         sampleRate: sampleRate,
       }
     })
@@ -139,7 +137,6 @@ class Recorder extends AudioWorkletProcessor {
   _recordQuietInput() {
     this.quietBuffers.forEach(qBuffer => {
       this.buffers.push(qBuffer.inputs)
-      this.bufferLength += qBuffer.inputs.length
     })
     this.quietBuffers = []
   }
@@ -153,7 +150,6 @@ class Recorder extends AudioWorkletProcessor {
     copyInputs.set(inputs)
 
     this.buffers.push(copyInputs)
-    this.bufferLength += inputs.length
   }
 
   _heapQuietInput(inputs) {
@@ -174,7 +170,6 @@ class Recorder extends AudioWorkletProcessor {
 
   _clearRecord() {
     this.buffers = []
-    this.bufferLength = 0
     this.voiceBeginSecond = 0
     this.silenceBeginSecond = 0
   }
