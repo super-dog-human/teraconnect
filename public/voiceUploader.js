@@ -76,8 +76,8 @@ async function createMP3(rawData) {
 async function fetchSignedURL(speeched, durationSec) {
   const url = apiURL + '/voice'
   const body = {
-    speeched,
-    durationSec,
+    speeched: parseFloat(speeched.toFixed(3)),
+    durationSec: parseFloat(durationSec.toFixed(3)),
     lessonID,
   }
   const option = {
