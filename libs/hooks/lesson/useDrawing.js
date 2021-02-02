@@ -21,11 +21,15 @@ export default function useLessonDrawing(setRecord, hasResize, startDragging, in
 
   function startDrawing(e) {
     if (enablePen  && !isDrawingHide) {
+      const x = e.nativeEvent.offsetX
+      const y = e.nativeEvent.offsetY
+
+      drawEdgeCircle(x, y)
+
       canvasCtx.beginPath()
       isDrawing = true
 
-      const position = { x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY }
-      startPosition = position
+      startPosition = { x, y }
       createNewHistory()
     } else {
       startDragging(e) // ペンが有効でない時はアバターを操作する
@@ -47,13 +51,24 @@ export default function useLessonDrawing(setRecord, hasResize, startDragging, in
     if (enablePen  && !isDrawingHide) {
       if (!isDrawing) return
 
-      drawLine(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
-      cleanHistory()
+      const x = e.nativeEvent.offsetX
+      const y = e.nativeEvent.offsetY
+
+      drawEdgeCircle(x, y)
+      drawLine(x, y)
 
       isDrawing = false
     } else {
       endDragging(e) // ペンが有効でない時はアバターを操作する
     }
+  }
+
+  function drawEdgeCircle(x, y) {
+    canvasCtx.beginPath()
+    canvasCtx.arc(x, y, canvasCtx.lineWidth / 2, 0, Math.PI * 2)
+    canvasCtx.fillStyle = color
+    canvasCtx.fill()
+    canvasCtx.closePath()
   }
 
   function drawLine(x, y) {
@@ -79,11 +94,16 @@ export default function useLessonDrawing(setRecord, hasResize, startDragging, in
         canvasCtx.globalCompositeOperation = h.eraser ? 'destination-out': 'source-over'
         const coef = { x: canvasCtx.canvas.clientWidth / h.width, y: canvasCtx.canvas.clientHeight / h.height }
 
+        const circlePositions = calcResizePosition(coef, h.drawings[0], h.drawings[h.drawings.length - 1])
+        drawEdgeCircle(circlePositions[0], circlePositions[1])
+
         canvasCtx.beginPath()
         h.drawings.slice(1).forEach((d, i) => {
           canvasCtx.quadraticCurveTo(...calcResizePosition(coef, h.drawings[i], d))
           canvasCtx.stroke()
         })
+
+        drawEdgeCircle(circlePositions[2], circlePositions[3])
       }
     })
 
@@ -95,8 +115,8 @@ export default function useLessonDrawing(setRecord, hasResize, startDragging, in
     canvasCtx.clearRect(0, 0, canvasCtx.canvas.clientWidth, canvasCtx.canvas.clientHeight)
   }
 
-  function calcResizePosition(coefficient, originalPosition, newPosition) {
-    return [coefficient.x * originalPosition.x, coefficient.y * originalPosition.y, coefficient.x * newPosition.x, coefficient.y * newPosition.y].map(f => (
+  function calcResizePosition(coefficient, fromPosition, toPosition) {
+    return [coefficient.x * fromPosition.x, coefficient.y * fromPosition.y, coefficient.x * toPosition.x, coefficient.y * toPosition.y].map(f => (
       Math.round(f)
     ))
   }
@@ -115,13 +135,6 @@ export default function useLessonDrawing(setRecord, hasResize, startDragging, in
       lineWidth: lineWidth,
       drawings: [startPosition],
     })
-    // setRecord
-  }
-
-  function cleanHistory() {
-    if (histories[histories.length - 1].drawings.length === 1) {
-      histories.pop()
-    }
     // setRecord
   }
 
