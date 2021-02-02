@@ -35,7 +35,7 @@ export default function VoiceRecorderTab({ setMicDeviceID, setSilenceThresholdSe
 
   return (
     <>
-      <input type="range" min="0.1" max="1.0" step="0.1" value={silenceThresholdSec} onChange={handleThresholdChange} />
+      <input type="range" min="0.1" max="2.0" step="0.1" value={silenceThresholdSec} onChange={handleThresholdChange} />
       <div>無音検出：{silenceThresholdSec} 秒</div>
 
       使用マイク

@@ -4,19 +4,18 @@ class Recorder extends AudioWorkletProcessor {
 
     this.isRecording = false
     this.isSpeaking = false
-    this.isTerminal = false
+    this.isRunnning = true
     this.silenceLipSyncThreshold = 0.2
-    this.silenceSecondThreshold
+    this.silenceSecondThreshold // changeThresholdメッセージで外部から設定される
     this.durationSecondThreshold = 2.0
     this.silenceVolumeThreshold = 0.05
     this.quietHistoryDurationSec = 0.2
     this.quietBuffers = []
     this.buffers = []
-    this.recordingStartSecond = 0
-    this.recordingStopSecond = 0
-    this.silenceBeginSecond = 0
-    this.speakingEndSecond = 0
-    this.voiceBeginSecond = 0
+    this.elapsedSeconds = 0           // 録音開始から停止までの累計時間
+    this.recordingStartTime = 0       // 直近の録音開始操作を行なった時刻
+    this.beginningSilenceTime = 0     // 直近の静寂が始まった時刻
+    this.beginningBufferingTime = 0   // 直近の録音データの記録開始時刻
 
     this.port.onmessage = e => {
       Object.keys(e.data).forEach(k => {
@@ -24,18 +23,20 @@ class Recorder extends AudioWorkletProcessor {
         case 'isRecording':
           this.isRecording = e.data[k]
           if (this.isRecording) {
-            this.recordingStartSecond = currentTime
-            return
+            this.recordingStartTime = currentTime
+          } else {
+            if (this.buffers.length > 0) this._saveRecord()
+            this.elapsedSeconds += currentTime - this.recordingStartTime
           }
-
-          if (this.buffers.length > 0) this._saveRecord()
-          this.recordingStopSecond += this._elapsedSecondFromStart()
           return
         case 'changeThreshold':
           this.silenceSecondThreshold = e.data[k]
           return
         case 'isTerminal':
-          this.isTerminal = e.data[k]
+          if (this.buffers.length > 0) {
+            this._saveRecord()
+          }
+          this.isRunnning = false
           return
         }
       })
@@ -46,8 +47,12 @@ class Recorder extends AudioWorkletProcessor {
     const inputs = allInputs[0][0] // モノラル録音
     const isSilence = this._isSilence(inputs)
 
-    if (isSilence && this.speakingEndSecond === 0) {
-      this.speakingEndSecond = currentTime
+    if (isSilence && this.beginningSilenceTime === 0) {
+      this.beginningSilenceTime = currentTime
+    }
+
+    if (!isSilence && this.beginningSilenceTime != 0) {
+      this.beginningSilenceTime = 0
     }
 
     if (isSilence && this.isSpeaking && this._shouldStopLipSync()) {
@@ -56,68 +61,68 @@ class Recorder extends AudioWorkletProcessor {
     } else if (!isSilence && !this.isSpeaking) {
       this.isSpeaking = true
       this.port.postMessage({ isSpeaking: true })
-      this.speakingEndSecond = 0
     }
 
-    if (!this.isRecording){
-      return !this.isTerminal
+    if (!this.isRecording) {
+      return this.isRunnning
     }
 
     if (isSilence) {
       if (this._shouldSaveRecording()) {
         this._saveRecord()
-        return !this.isTerminal
-      }
-
-      if (this.silenceBeginSecond === 0) {
-        this.silenceBeginSecond = this._elapsedSecondFromStart()
-      }
-      if (this.buffers.length > 0) {
-        this._recordInput(inputs)
-      } else {
         this._heapQuietInput(inputs)
+      } else {
+        if (this.buffers.length > 0) {
+          this._recordInput(inputs)    // 発声中の一瞬の静寂なら通常のバッファに音声を記録
+        } else {
+          this._heapQuietInput(inputs) // 静寂が続いているなら静寂用バッファに音声を記録
+        }
       }
     } else {
-      this.silenceBeginSecond = 0
       this._recordQuietInput()
       this._recordInput(inputs)
     }
 
-    return !this.isTerminal
+    return this.isRunnning
   }
 
-  _elapsedSecondFromStart() {
-    return this.recordingStopSecond + currentTime - this.recordingStartSecond
-  }
-
-  _durationSecond() {
-    return this._elapsedSecondFromStart() - this.voiceBeginSecond
+  _elapsedSeconds(nowTime) {
+    return this.elapsedSeconds + nowTime - this.recordingStartTime
   }
 
   _shouldStopLipSync() {
-    return currentTime - this.speakingEndSecond > this.silenceLipSyncThreshold
+    return currentTime - this.beginningSilenceTime > this.silenceLipSyncThreshold
   }
 
   _shouldSaveRecording() {
-    const hasSilenceTime = this.silenceBeginSecond > 0
-    const hasEnoughSilenceTime = this._elapsedSecondFromStart() - this.silenceBeginSecond > this.silenceSecondThreshold
-    const hasEnoughRecordingTime = this._durationSecond() > this.durationSecondThreshold
+    const nowTime = currentTime
+
+    const hasSilenceTime = this.beginningSilenceTime > 0
+    if (!hasSilenceTime) return false
+
+    const hasEnoughSilenceTime = nowTime - this.beginningSilenceTime > this.silenceSecondThreshold
+    if (!hasEnoughSilenceTime) return false
+
+    const hasEnoughRecordingTime = this._elapsedSeconds(nowTime) > this.durationSecondThreshold
+    if (!hasEnoughRecordingTime) return false
+
     const hasRecordBuffer = this.buffers.length > 0
-    return (
-      hasSilenceTime && hasEnoughSilenceTime && hasEnoughRecordingTime && hasRecordBuffer
-    )
+    if (!hasRecordBuffer) return false
+
+    return true
   }
 
   _saveRecord() {
     this.port.postMessage({
       saveRecord: {
-        time: this.voiceBeginSecond,
-        durationSec: this._durationSecond(),
+        speeched: this._elapsedSeconds(this.beginningBufferingTime),
+        durationSec: currentTime - this.beginningBufferingTime,
         buffers: this.buffers,
       }
     })
 
-    this._clearRecord()
+    this.buffers = []
+    this.beginningBufferingTime = 0
   }
 
   _isSilence(inputs) {
@@ -133,30 +138,16 @@ class Recorder extends AudioWorkletProcessor {
     return Math.sqrt(sum / inputs.length)
   }
 
-  _recordQuietInput() {
-    this.quietBuffers.forEach(qBuffer => {
-      this.buffers.push(qBuffer.inputs)
-    })
-    this.quietBuffers = []
-  }
-
-  _recordInput(inputs) {
-    if (this.voiceBeginSecond === 0) {
-      this.voiceBeginSecond = this._elapsedSecondFromStart()
-    }
-
-    const copyInputs = new Float32Array(inputs.length)
-    copyInputs.set(inputs)
-
-    this.buffers.push(copyInputs)
-  }
-
   _heapQuietInput(inputs) {
     const time = currentTime
 
-    this.quietBuffers = this.quietBuffers.filter(q => {
-      return q.time >= time - this.quietHistoryDurationSec
-    })
+    this.quietBuffers = this.quietBuffers.filter(q => (
+      q.time >= time - this.quietHistoryDurationSec
+    ))
+
+    if (this.quietBuffers.length > 0) {
+      this.beginningBufferingTime = this.quietBuffers[0].time
+    }
 
     const copyInputs = new Float32Array(inputs.length)
     copyInputs.set(inputs)
@@ -167,10 +158,22 @@ class Recorder extends AudioWorkletProcessor {
     })
   }
 
-  _clearRecord() {
-    this.buffers = []
-    this.voiceBeginSecond = 0
-    this.silenceBeginSecond = 0
+  _recordQuietInput() {
+    this.quietBuffers.forEach(qBuffer => {
+      this.buffers.push(qBuffer.inputs)
+    })
+    this.quietBuffers = []
+  }
+
+  _recordInput(inputs) {
+    if (this.beginningBufferingTime === 0) {
+      this.beginningBufferingTime = currentTime
+    }
+
+    const copyInputs = new Float32Array(inputs.length)
+    copyInputs.set(inputs)
+
+    this.buffers.push(copyInputs)
   }
 }
 

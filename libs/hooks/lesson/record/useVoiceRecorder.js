@@ -7,7 +7,7 @@ let uploader
 export default function useVoiceRecorder(id, token, isRecording, setRecord) {
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [micDeviceID, setMicDeviceID] = useState()
-  const [silenceThresholdSec, setSilenceThresholdSec] = useState(0.6)
+  const [silenceThresholdSec, setSilenceThresholdSec] = useState(1.0)
   const { isMicReady, setNode } = useMicrophone()
 
   function switchRecording() {

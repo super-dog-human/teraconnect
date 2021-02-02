@@ -22,7 +22,7 @@ onmessage = async function(e) {
     case 'newVoice': {
       uploadingCount += 1
 
-      const result = await fetchSignedURL(e.data.newVoice.time, e.data.newVoice.durationSec)
+      const result = await fetchSignedURL(e.data.newVoice.speeched, e.data.newVoice.durationSec)
       const file = await createMP3(e.data.newVoice.buffers)
       await uploadFile(result.signedURL, file)
       e.data = null
