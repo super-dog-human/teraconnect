@@ -6,16 +6,16 @@ class Recorder extends AudioWorkletProcessor {
     this.isSpeaking = false
     this.isRunnning = true
     this.silenceLipSyncThreshold = 0.2
-    this.silenceSecondThreshold // changeThresholdメッセージで外部から設定される
+    this.silenceSecondThreshold     // changeThresholdメッセージで外部から設定される
     this.durationSecondThreshold = 2.0
     this.silenceVolumeThreshold = 0.05
     this.quietHistoryDurationSec = 0.2
     this.quietBuffers = []
     this.buffers = []
-    this.elapsedSeconds = 0           // 録音開始から停止までの累計時間
-    this.recordingStartTime = 0       // 直近の録音開始操作を行なった時刻
-    this.beginningSilenceTime = 0     // 直近の静寂が始まった時刻
-    this.beginningBufferingTime = 0   // 直近の録音データの記録開始時刻
+    this.elapsedSeconds = 0         // 直近の録音停止までの収録時間累計
+    this.recordingStartTime = 0     // 直近の録音開始操作を行なった時間
+    this.beginningSilenceTime = 0   // 直近の静寂が始まった時間
+    this.beginningBufferingTime = 0 // 直近の録音データの記録開始時間
 
     this.port.onmessage = e => {
       Object.keys(e.data).forEach(k => {
