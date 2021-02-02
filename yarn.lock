@@ -351,10 +351,10 @@
   resolved "https://registry.yarnpkg.com/@panva/asn1.js/-/asn1.js-1.0.0.tgz#dd55ae7b8129e02049f009408b97c61ccf9032f6"
   integrity sha512-UdkG3mLEqXgnlKsWanWcgb6dOjUzJ+XC5f+aWw30qrtjxeNUSfKX1cd5FBzOaXQumoe9nIqeZUvrRJS03HCCtw==
 
-"@pixiv/three-vrm@^0.5.6":
-  version "0.5.6"
-  resolved "https://registry.yarnpkg.com/@pixiv/three-vrm/-/three-vrm-0.5.6.tgz#84aa56841387c842d2ab70fdf9fba70255eeba00"
-  integrity sha512-0DGCE9jZYKG/1ZT7shSWuBzf+1W3vTSsDot9vi2lYSbPL6+ZKmrYdqAt8MNhfLkyhZq2x3crfHs103vMSAOBiA==
+"@pixiv/three-vrm@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@pixiv/three-vrm/-/three-vrm-0.6.0.tgz#7ec6a0a25b067f36de1496fcbca0a3f3a95f14be"
+  integrity sha512-DfZw8yb10qkYH41BLZjprqYWblSiU6ToVJxbylvwhcv6Fu3KeKX4epd84RdeVfXfCmpEwVaAuX2KXobarsNReg==
 
 "@sqltools/formatter@1.2.2":
   version "1.2.2"
