@@ -13,14 +13,19 @@ export default function ElapsedTime({ isRecording, elapsedSeconds }) {
 
   return (
     <div css={bodyStyle}>
-      <span>{isRecording ? displayTime : '停止中'}</span>
+      <span css={textStyle}>{isRecording ? displayTime : '停止中'}</span>
     </div>
   )
 }
 
 const bodyStyle = css({
   position: 'absolute',
-  height: '77px',
   top: 0,
-  left: 50,
+  left: 60,
+})
+
+const textStyle = css({
+  fontSize: '13px',
+  lineHeight: '40px',
+  color: 'lightGray',
 })
