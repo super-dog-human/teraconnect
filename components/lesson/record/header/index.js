@@ -2,7 +2,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { css } from '@emotion/core'
-import RecordIcon from './recordIcon'
+import RecordingButton from './recordingButton'
 import DrawingConfigPanel from './drawingConfigPanel'
 import DrawingConfigButton from './drawingConfigButton'
 
@@ -10,9 +10,6 @@ export default function LessonRecordHeader({ isMicReady, isRecording, setIsRecor
   isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, undoDrawing, clearDrawing,
   drawingColor, setDrawingColor, setDrawingLineWidth, setIsShowControlPanel }) {
 
-  function handleRecording() {
-    setIsRecording(!isRecording)
-  }
 
   function handleDrawingHide() {
     setIsDrawingHide(!isDrawingHide)
@@ -52,14 +49,7 @@ export default function LessonRecordHeader({ isMicReady, isRecording, setIsRecor
           </Link>
         </div>
         <div css={flexItemStyle}>
-          <button onClick={handleRecording} css={recordingButtonStyle} disabled={!isMicReady}>
-            <div css={recordingIconStyle}>
-              <RecordIcon recording={isRecording} />
-            </div>
-            <div css={recordingStatusStyle}>
-              <span>{isRecording ? '' : ''}</span>
-            </div>
-          </button>
+          <RecordingButton isMicReady={isMicReady} isRecording={isRecording} setIsRecording={setIsRecording} />
         </div>
         <div css={flexItemStyle}>
           <DrawingConfigButton onClick={handleDrawingHide} isSelected={isDrawingHide}>
@@ -112,33 +102,6 @@ const logoImageStyle = css({
 const flexItemStyle = css({
   width: '100%',
   textAlign: 'center',
-})
-
-const recordingButtonStyle = css({
-  position: 'relative',
-  ['img']: {
-    width: '26px',
-    height: 'auto',
-    verticalAlign: 'middle',
-  },
-  [':hover']: {
-    backgroundColor: 'var(--text-gray)',
-  },
-  [':disabled']: {
-    opacity: 0.3,
-  },
-})
-
-const recordingStatusStyle = css({
-  position: 'absolute',
-  height: '77px',
-  top: 0,
-  left: 50,
-})
-
-const recordingIconStyle = css({
-  width: '26px',
-  height: '26px',
 })
 
 const settingButtonStyle = css({

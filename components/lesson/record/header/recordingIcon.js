@@ -2,7 +2,7 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-export default function RecordIcon(props) {
+export default function RecordingIcon(props) {
   const recordingStyle = css({
     animation: 'gradation 1s ease-in infinite alternate',
     ['@keyframes gradation']:  {
