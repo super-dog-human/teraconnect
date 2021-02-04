@@ -29,6 +29,9 @@ class Recorder extends AudioWorkletProcessor {
             this.elapsedSeconds += currentTime - this.recordingStartTime
           }
           return
+        case 'setElapsedTime':
+          this.elapsedSeconds = e.data[k] // 収録開始後にマイクを切り替えた場合、Workletも作り直されるので経過時間を再セットする
+          return
         case 'changeThreshold':
           this.silenceSecondThreshold = e.data[k]
           return

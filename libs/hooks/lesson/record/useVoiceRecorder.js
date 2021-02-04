@@ -10,7 +10,7 @@ export default function useVoiceRecorder(id, token) {
   const [micDeviceID, setMicDeviceID] = useState()
   const [silenceThresholdSec, setSilenceThresholdSec] = useState(1.0)
   const { isMicReady, setNode } = useMicrophone()
-  const { isRecording } = useLessonRecorderContext()
+  const { isRecording, realElapsedTime } = useLessonRecorderContext()
 
   function switchRecording() {
     if (!recorder) return
@@ -64,6 +64,7 @@ export default function useVoiceRecorder(id, token) {
     setNode(micDeviceID, async(ctx, micInput) => {
       await ctx.audioWorklet.addModule('/voiceRecorderProcessor.js')
       recorder = new AudioWorkletNode(ctx, 'recorder')
+      recorder.port.postMessage({ setElapsedTime: realElapsedTime() })
       recorder.port.onmessage = e => {
         handleRecorderMessage(e.data)
       }

@@ -22,7 +22,7 @@ const LessonRecorderProvider = ({ children }) => {
   //  const { setRecord } = useRecorder(lesson.id, token, isRecording)
 
   return (
-    <LessonRecorderContext.Provider value={{ isRecording, setIsRecording, elapsedSeconds, setRecord, switchCounter }}>
+    <LessonRecorderContext.Provider value={{ isRecording, setIsRecording, elapsedSeconds, realElapsedTime, setRecord, switchCounter }}>
       {children}
     </LessonRecorderContext.Provider>
   )
