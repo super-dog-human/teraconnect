@@ -6,14 +6,10 @@ import RecordingButton from './recordingButton'
 import DrawingConfigPanel from './drawingConfigPanel'
 import DrawingConfigButton from './drawingConfigButton'
 
-export default function LessonRecordHeader({ isMicReady, isRecording, setIsRecording, setRecord,
-  isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, undoDrawing, clearDrawing,
-  drawingColor, setDrawingColor, setDrawingLineWidth, setIsShowControlPanel }) {
-
-
+export default function LessonRecordHeader({ isMicReady, isDrawingHide, setIsDrawingHide, enablePen, setEnablePen,
+  undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth, setIsShowControlPanel }) {
   function handleDrawingHide() {
     setIsDrawingHide(!isDrawingHide)
-    setRecord({ drawingHide: !isDrawingHide })
   }
 
   function handlePen() {
@@ -22,12 +18,10 @@ export default function LessonRecordHeader({ isMicReady, isRecording, setIsRecor
 
   function handleDrawingUndo() {
     undoDrawing()
-    setRecord({ drawingUndo: true })
   }
 
   function handleDrawingClear() {
     clearDrawing()
-    setRecord({ drawingClear: true })
   }
 
   function handleSettingPanel() {
@@ -49,7 +43,7 @@ export default function LessonRecordHeader({ isMicReady, isRecording, setIsRecor
           </Link>
         </div>
         <div css={flexItemStyle}>
-          <RecordingButton isMicReady={isMicReady} isRecording={isRecording} setIsRecording={setIsRecording} />
+          <RecordingButton isMicReady={isMicReady} />
         </div>
         <div css={flexItemStyle}>
           <DrawingConfigButton onClick={handleDrawingHide} isSelected={isDrawingHide}>
@@ -59,7 +53,7 @@ export default function LessonRecordHeader({ isMicReady, isRecording, setIsRecor
             <img src="/img/icon/drawing.svg" />
           </DrawingConfigButton>
           <DrawingConfigPanel disabled={isDrawingHide} color={drawingColor} setColor={setDrawingColor} setLineWidth={setDrawingLineWidth}
-            setEnablePen={setEnablePen} setIsDrawingHide={setIsDrawingHide} />
+            setEnablePen={setEnablePen} />
           <DrawingConfigButton disabled={isDrawingHide} onClick={handleDrawingUndo}>
             <img src="/img/icon/undo.svg" />
           </DrawingConfigButton>

@@ -1,11 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useRef, useEffect } from 'react'
-import useAudioVisualizer from '../../../libs/hooks/useAudioVisualizer'
+import useAudioVisualizer from '../libs/hooks/useAudioVisualizer'
 import { css } from '@emotion/core'
 import Draggable from 'react-draggable'
-import useDraggableBounds from '../../../libs/hooks/useDraggableBounds'
+import useDraggableBounds from '../libs/hooks/useDraggableBounds'
 
-export default function LessonRecordVoiceSpectrum({ micDeviceID, isShow, setIsShow }) {
+export default function VoiceSpectrum({ micDeviceID, isShow, setIsShow }) {
   const [isHover, setIsHover] = useState(false)
   const draggableRef = useRef(null)
   const canvasRef = useRef(null)

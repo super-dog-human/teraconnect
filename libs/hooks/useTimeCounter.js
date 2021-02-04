@@ -2,11 +2,22 @@ import { useState, useEffect } from 'react'
 import * as THREE from 'three'
 
 let clock
-let realElapsedTime = 0
+let realTime = 0
 let isStart = false
 
 export default function useTimeCounter() {
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
+
+  function animate() {
+    if (isStart) {
+      requestAnimationFrame(animate)
+    }
+
+    realTime += clock.getDelta()
+    if (realTime - elapsedSeconds > 1.0) {
+      setElapsedSeconds(Math.floor(realTime))
+    }
+  }
 
   function switchCounter(status) {
     isStart = status
@@ -18,20 +29,13 @@ export default function useTimeCounter() {
     }
   }
 
-  function animate() {
-    if (isStart) {
-      requestAnimationFrame(animate)
-    }
-
-    realElapsedTime += clock.getDelta()
-    if (realElapsedTime - elapsedSeconds > 1.0) {
-      setElapsedSeconds(Math.floor(realElapsedTime))
-    }
+  function realElapsedTime() {
+    return realTime
   }
 
   useEffect(() => {
     clock = new THREE.Clock()
   }, [])
 
-  return { elapsedSeconds, switchCounter }
+  return { elapsedSeconds, realElapsedTime, switchCounter }
 }

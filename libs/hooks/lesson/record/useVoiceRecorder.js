@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react'
 import useMicrophone from '../../useMicrophone'
+import { useLessonRecorderContext } from '../../../contexts/lessonRecorderContext'
 
 let recorder
 let uploader
 
-export default function useVoiceRecorder(id, token, isRecording, setRecord) {
+export default function useVoiceRecorder(id, token) {
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [micDeviceID, setMicDeviceID] = useState()
   const [silenceThresholdSec, setSilenceThresholdSec] = useState(1.0)
   const { isMicReady, setNode } = useMicrophone()
+  const { isRecording } = useLessonRecorderContext()
 
   function switchRecording() {
     if (!recorder) return

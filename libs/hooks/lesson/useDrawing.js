@@ -1,16 +1,18 @@
 import { useRef, useState, useEffect } from 'react'
+import { useLessonRecorderContext } from '../../contexts/lessonRecorderContext'
 
 let canvasCtx
 let startPosition = {}
 let isDrawing = false
 const histories = []
 
-export default function useLessonDrawing(setRecord, hasResize, startDragging, inDragging, endDragging) {
+export default function useLessonDrawing(hasResize, startDragging, inDragging, endDragging) {
   const drawingRef = useRef(null)
   const [isDrawingHide, setIsDrawingHide] = useState(false)
   const [enablePen, setEnablePen] = useState(false)
   const [color, setColor] = useState('#ff0000')
   const [lineWidth, setLineWidth] = useState(5)
+  const { setRecord } = useLessonRecorderContext()
 
   function resetCanvasSize() {
     canvasCtx.canvas.width = canvasCtx.canvas.clientWidth
@@ -56,6 +58,7 @@ export default function useLessonDrawing(setRecord, hasResize, startDragging, in
 
       drawEdgeCircle(x, y)
       drawLine(x, y)
+      setRecord({ drawing: histories[histories.length - 1] })
 
       isDrawing = false
     } else {
@@ -135,18 +138,15 @@ export default function useLessonDrawing(setRecord, hasResize, startDragging, in
       lineWidth: lineWidth,
       drawings: [startPosition],
     })
-    // setRecord
   }
 
   function addHistory(drawing) {
     histories[histories.length - 1].drawings.push(drawing)
-    // setRecord
   }
 
   function addClearHistory() {
     if (histories.length === 0) return
     histories.push({ clear: true })
-    // setRecord
   }
 
   function undoDrawing() {
@@ -154,16 +154,22 @@ export default function useLessonDrawing(setRecord, hasResize, startDragging, in
 
     histories.pop()
     redrawFromHistory()
-    // setRecord
+    setRecord({ drawing: 'undo' })
   }
 
   function clearDrawing() {
     addClearHistory()
     clearCanvas()
+    setRecord({ drawing: 'clear' })
   }
 
   function isEraser() {
     return color === 'eraser'
+  }
+
+  function hideDrawing(isHide) {
+    setRecord({ drawing: isHide ? 'isHide': 'isShow' })
+    setIsDrawingHide(isHide)
   }
 
   useEffect(() => {
@@ -189,7 +195,7 @@ export default function useLessonDrawing(setRecord, hasResize, startDragging, in
   }, [lineWidth])
 
   return {
-    isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, undoDrawing, clearDrawing,
+    isDrawingHide, setIsDrawingHide: hideDrawing, enablePen, setEnablePen, undoDrawing, clearDrawing,
     drawingColor: color, setDrawingColor: setColor, setDrawingLineWidth: setLineWidth,
     startDrawing, inDrawing, endDrawing, drawingRef
   }

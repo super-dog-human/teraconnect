@@ -1,10 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from 'react'
 import Select from '../../../form/select'
+import { useLessonRecorderContext } from '../../../../libs/contexts/lessonRecorderContext'
 
 export default function BGMTab(props) {
   const [audio, setAudio] = useState()
   const [options, setOptions] = useState([])
+  const { setRecord } = useLessonRecorderContext()
 
   function handleClick(e) {
     audio.pause()
@@ -17,7 +19,7 @@ export default function BGMTab(props) {
       audio.play()
     }
 
-    props.setRecord({ bgmID: id })
+    setRecord({ bgmID: id })
   }
 
   useEffect(() => {

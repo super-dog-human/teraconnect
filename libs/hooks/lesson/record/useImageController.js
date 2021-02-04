@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
+import { useLessonRecorderContext } from '../../../contexts/lessonRecorderContext'
 
-export default function useImageController(setSelectedImage, setRecord) {
+export default function useImageController(setSelectedImage) {
   const [isShow, setIsShow] = useState(false)
   const [imageID, setImageID] = useState()
   const [images, setImages] = useState([])
+  const { setRecord } = useLessonRecorderContext()
 
   function selectImage(e) {
     const newImageID = e.target.dataset.id

@@ -3,10 +3,12 @@ import React, { useState, useEffect } from 'react'
 import Select from '../../../form/select'
 import { RgbaColorPicker } from 'react-colorful'
 import 'react-colorful/dist/index.css'
+import { useLessonRecorderContext } from '../../../../libs/contexts/lessonRecorderContext'
 
-export default function AvatarTab({ avatars, setConfig, setRecord }) {
+export default function AvatarTab({ avatars, setConfig }) {
   const [selectOptions, setSelectOptions] = useState([])
   const [lightColor, setLightColor] = useState({ r: 255, g: 255, b: 255, a: 0.5 })
+  const { setRecord } = useLessonRecorderContext()
 
   function handleAvatarChange (e) {
     const id = parseInt(e.target.value)

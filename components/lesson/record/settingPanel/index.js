@@ -1,17 +1,17 @@
 /** @jsxImportSource @emotion/react */
 import React, { useRef, useEffect } from 'react'
 import Draggable from 'react-draggable'
-import useDraggableBounds from '../../../../libs/hooks/useDraggableBounds'
 import { Tab, Tabs, TabList, TabPanel, resetIdCounter } from 'react-tabs'
+import useDraggableBounds from '../../../../libs/hooks/useDraggableBounds'
 import BgImageTab from './bgImageTab'
 import BGMTab from './bgmTab'
 import AvatarTab from './avatarTab'
-import  VoiceRecorderTab from './voiceRecorderTab'
+import VoiceRecorderTab from './voiceRecorderTab'
 import 'react-tabs/style/react-tabs.css'
 import { css } from '@emotion/core'
 
 export default function LessonRecordSettingPanel({ isShow, setIsShow, bgImages, setBgImageURL, avatars, setAvatarConfig,
-  bgms, setMicDeviceID, setSilenceThresholdSec, isShowVoiceSpectrum, silenceThresholdSec, setIsShowVoiceSpectrum, setRecord }) {
+  bgms, setMicDeviceID, setSilenceThresholdSec, isShowVoiceSpectrum, silenceThresholdSec, setIsShowVoiceSpectrum }) {
   const draggableRef = useRef(null)
   const { bounds, setBounds } = useDraggableBounds()
 
@@ -56,15 +56,15 @@ export default function LessonRecordSettingPanel({ isShow, setIsShow, bgImages, 
           </TabList>
 
           <TabPanel>
-            <BgImageTab images={bgImages} setImageURL={setBgImageURL} setRecord={setRecord} />
+            <BgImageTab images={bgImages} setImageURL={setBgImageURL} />
           </TabPanel>
 
           <TabPanel>
-            <BGMTab bgms={bgms} setRecord={setRecord} />
+            <BGMTab bgms={bgms} />
           </TabPanel>
 
           <TabPanel>
-            <AvatarTab avatars={avatars} setConfig={setAvatarConfig} setRecord={setRecord} />
+            <AvatarTab avatars={avatars} setConfig={setAvatarConfig} />
           </TabPanel>
 
           <TabPanel>

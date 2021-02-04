@@ -1,15 +1,15 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/core'
+import { useLessonRecorderContext } from '../../../../libs/contexts/lessonRecorderContext'
 import RecordingIcon from './recordingIcon'
 import ElapsedTime from './elapsedTime'
-import useTimeCounter from '../../../../libs/hooks/useTimeCounter'
 
 const maxRecordableSeconds = 600
 
-export default function RecordingButton({ isMicReady, isRecording, setIsRecording }) {
+export default function RecordingButton({ isMicReady }) {
   const [isRecordable, setIsRecordable] = useState(false)
-  const { elapsedSeconds, switchCounter } = useTimeCounter()
+  const { isRecording, setIsRecording, elapsedSeconds, switchCounter } = useLessonRecorderContext()
 
   function handleRecording() {
     switchCounter(!isRecording)

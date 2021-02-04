@@ -1,15 +1,17 @@
 import { useRef, useState, useEffect } from 'react'
-import AvatarLoader from '../../avatar/loader'
 import { Clock } from 'three'
+import AvatarLoader from '../../avatar/loader'
+import { useLessonRecorderContext } from '../../contexts/lessonRecorderContext'
 
 const clock = new Clock()
 const avatar = new AvatarLoader()
 let startDraggingTime
 let isDragging = false
 
-export default function useLessonAvatar(setIsLoading, isSpeaking, hasResize, setRecord) {
+export default function useLessonAvatar(setIsLoading, isSpeaking, hasResize) {
   const [config, setConfig] = useState({})
   const containerRef = useRef(null)
+  const { setRecord } = useLessonRecorderContext()
 
   function startDragging(e) {
     if (avatar.prepareMovePosition(e.nativeEvent.offsetX, e.nativeEvent.offsetY)) {
@@ -35,7 +37,7 @@ export default function useLessonAvatar(setIsLoading, isSpeaking, hasResize, set
   function endDragging() {
     if (isDragging) {
       isDragging = false
-      setRecord({ 'avatarMoving': [new Date() - startDraggingTime, avatar.currentPosition()] })
+      setRecord({ avatarMoving: [new Date() - startDraggingTime, avatar.currentPosition()] })
     }
   }
 

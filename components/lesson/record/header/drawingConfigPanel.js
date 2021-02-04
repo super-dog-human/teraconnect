@@ -5,7 +5,7 @@ import { HexColorInput } from 'react-colorful'
 import DrawingConfigButton from './drawingConfigButton'
 import 'react-colorful/dist/index.css'
 
-export default function DrawingConfigPanel({ disabled, color, setColor, setLineWidth, setEnablePen, setIsDrawingHide }) {
+export default function DrawingConfigPanel({ disabled, color, setColor, setLineWidth, setEnablePen }) {
   const [showDrawingConfig, setShowDrawingConfig] = useState(false)
   const [panelPosition, setPanelposition] = useState({ top: 0, left: 0 })
 
@@ -17,20 +17,17 @@ export default function DrawingConfigPanel({ disabled, color, setColor, setLineW
   function handleEraser() {
     setColor('eraser')
     setEnablePen(true)
-    setIsDrawingHide(false)
   }
 
   function handleColorChange(e) {
     const color = (typeof e === 'string') ? e : e.target.dataset.color
     setColor(color)
     setEnablePen(true)
-    setIsDrawingHide(false)
   }
 
   function handleWidthChange(e) {
     setLineWidth(e.target.dataset.width)
     setEnablePen(true)
-    setIsDrawingHide(false)
   }
 
   const backgroundStyle = css({

@@ -2,7 +2,7 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-export default function LessonRecordRandomTips() {
+export default function LessonRandomTips() {
   const bodyStyle = css({
     width: '100%',
     height: '160px',
