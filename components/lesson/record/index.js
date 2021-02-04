@@ -31,11 +31,11 @@ const LessonRecord = React.forwardRef(function lessonRecord({ token, lesson, has
     startDrawing, inDrawing, endDrawing, drawingRef } = useLessonDrawing(hasResize, startDragging, inDragging, endDragging)
 
   return (
-    <div ref={ref}>
+    <>
       <LessonRecordHeader isMicReady={isMicReady} isDrawingHide={isDrawingHide} setIsDrawingHide={setIsDrawingHide} enablePen={enablePen} setEnablePen={setEnablePen}
         undoDrawing={undoDrawing} clearDrawing={clearDrawing} drawingColor={drawingColor} setDrawingColor={setDrawingColor}
         setDrawingLineWidth={setDrawingLineWidth} setIsShowControlPanel={setIsShowControlPanel} />
-      <main css={mainStyle} onDragOver={handleAreaDragOver} onDragLeave={handleAreaDragLeave} onDrop={handleAreaDrop}>
+      <main css={mainStyle} onDragOver={handleAreaDragOver} onDragLeave={handleAreaDragLeave} onDrop={handleAreaDrop} ref={ref}>
         <div css={bodyStyle}>
           <LessonRecordLoadingIndicator isLoading={isLoading} size={15} />
           <VoiceSpectrum micDeviceID={micDeviceID} isShow={isShowVoiceSpectrum} setIsShow={setIsShowVoiceSpectrum} />
@@ -50,7 +50,7 @@ const LessonRecord = React.forwardRef(function lessonRecord({ token, lesson, has
         <LessonRecordImageController id={lesson.id} token={token} setSelectedImage={setSelectedImage} hasDragOver={hasDragOver} />
         <LessonRandomTips />
       </main>
-    </div>
+    </>
   )
 })
 
