@@ -4,7 +4,6 @@ import { css } from '@emotion/core'
 
 export default function DrawingConfigButton({ isSelected, className, disabled, onMouseDown, onClick, children }) {
   const bodyStyle = css({
-    padding: '6px 8px',
     ['> img']: {
       width: '18px',
       height: 'auto',
