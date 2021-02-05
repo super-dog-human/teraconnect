@@ -40,9 +40,9 @@ export default function RecordingButton({ isMicReady }) {
   }, [isMicReady, elapsedSeconds])
 
   const finishRecordingStyle = css({
-    opacity: hasRecordingStarted ? 0.3 : 0,
+    opacity: !isRecording && hasRecordingStarted ? 0.3 : 0,
     [':hover']: {
-      opacity: hasRecordingStarted ? 1 : 0,
+      opacity: !isRecording && hasRecordingStarted ? 1 : 0,
     },
     ['> img']: {
       width: '22px',
@@ -55,7 +55,7 @@ export default function RecordingButton({ isMicReady }) {
     <div css={bodyStyle}>
       <div css={sideRecordingButtonStyle} onClick={handleFinishRecordingClick}>
         <div css={finishRecordingStyle}>
-          <button css={buttonStyle} disabled={!hasRecordingStarted}>
+          <button css={buttonStyle} disabled={isRecording || !hasRecordingStarted}>
             <div css={recordingIconStyle}>
               <img src="/img/icon/tick.svg" />
             </div>
