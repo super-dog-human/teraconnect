@@ -13,6 +13,7 @@ export default function RecordingButton({ isMicReady }) {
   const { isRecording, setIsRecording, elapsedSeconds, switchCounter, finishRecording } = useLessonRecorderContext()
 
   function handleSwitchRecordingClick() {
+    if (!isRecordable) return
     if (isRecording) setHasRecordingStarted(true) // 初めての録画停止操作でtrueにする
 
     switchCounter(!isRecording)
@@ -34,6 +35,7 @@ export default function RecordingButton({ isMicReady }) {
     }
 
     if (reachedMaxRecordingSeconds) {
+      switchCounter(false)
       setIsRecording(false)
     }
 
