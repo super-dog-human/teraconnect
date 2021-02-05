@@ -10,11 +10,11 @@ export default function useImageController(setSelectedImage) {
   function selectImage(e) {
     const newImageID = e.target.dataset.id
     if (imageID === newImageID && isShow) {
-      setRecord({ hideImage: newImageID })
+      setRecord({ kind: 'image', action: 'hide', value: newImageID })
       setIsShow(false)
       setImageID()
     } else {
-      setRecord({ showImage: newImageID })
+      setRecord({ kind: 'image', action: 'show', value: newImageID })
       setIsShow(true)
       setImageID(newImageID)
     }
@@ -23,8 +23,7 @@ export default function useImageController(setSelectedImage) {
   function removeImage (e) {
     const targetImageID = e.currentTarget.dataset.id
     if (imageID === targetImageID && isShow) {
-      setRecord({ hideImage: targetImageID })
-      setRecord({ removeImage: targetImageID })
+      setRecord({ kind: 'image', action: 'hide', value: targetImageID })
       setIsShow(false)
       setImageID()
     }

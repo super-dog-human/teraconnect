@@ -3,7 +3,9 @@ import { useLessonRecorderContext } from '../../contexts/lessonRecorderContext'
 
 let canvasCtx
 let startPosition = {}
+let startDrawingTime
 let isDrawing = false
+let isCleared = true
 const histories = []
 
 export default function useLessonDrawing(hasResize, startDragging, inDragging, endDragging) {
@@ -23,6 +25,9 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
 
   function startDrawing(e) {
     if (enablePen  && !isDrawingHide) {
+      isCleared = false
+      startDrawingTime = new Date()
+
       const x = e.nativeEvent.offsetX
       const y = e.nativeEvent.offsetY
 
@@ -58,7 +63,12 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
 
       drawEdgeCircle(x, y)
       drawLine(x, y)
-      setRecord({ drawing: histories[histories.length - 1] })
+      setRecord({
+        kind: 'drawing',
+        action: 'draw',
+        duration: new Date() - startDrawingTime,
+        value: histories[histories.length - 1],
+      })
 
       isDrawing = false
     } else {
@@ -154,13 +164,17 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
 
     histories.pop()
     redrawFromHistory()
-    setRecord({ drawing: 'undo' })
+    setRecord({ kind: 'drawing', action: 'undo' })
+    isCleared = false
   }
 
   function clearDrawing() {
+    if (isCleared) return
+
     addClearHistory()
     clearCanvas()
-    setRecord({ drawing: 'clear' })
+    setRecord({ kind: 'drawing', action: 'clear' })
+    isCleared = true
   }
 
   function isEraser() {
@@ -168,7 +182,7 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
   }
 
   function hideDrawing(isHide) {
-    setRecord({ drawing: isHide ? 'isHide': 'isShow' })
+    setRecord({ kind: 'drawing', action: isHide ? 'hide': 'show' })
     setIsDrawingHide(isHide)
   }
 

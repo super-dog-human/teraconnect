@@ -13,13 +13,13 @@ export default function AvatarTab({ avatars, setConfig }) {
   function handleAvatarChange (e) {
     const id = parseInt(e.target.value)
     setConfig({ avatar: avatars.find(a => a.id === id) })
-    setRecord({ avatarID: id })
+    setRecord({ kind: 'avatarID', value: id })
   }
 
   function handleColorChange(color) {
     setLightColor(color)
     setConfig({ lightColor: color })
-    setRecord({ avatarLightColor: color })
+    setRecord({ kind: 'avatarLightColor', value: color })
   }
 
   useEffect(() => {
@@ -36,8 +36,8 @@ export default function AvatarTab({ avatars, setConfig }) {
       )))
 
       setConfig({ avatar: avatars[0] })
-      setRecord({ avatarID: avatars[0].id })
-      setRecord({ avatarLightColor: lightColor })
+      setRecord({ kind: 'avatarID', value: avatars[0].id })
+      setRecord({ kind: 'avatarLightColor', value: lightColor })
     }
   }, [avatars])
 

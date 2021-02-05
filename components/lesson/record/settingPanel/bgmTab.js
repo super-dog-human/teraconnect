@@ -19,7 +19,7 @@ export default function BGMTab(props) {
       audio.play()
     }
 
-    setRecord({ bgmID: id })
+    setRecord({ kind: 'backgroundMusicID', value: id })
   }
 
   useEffect(() => {

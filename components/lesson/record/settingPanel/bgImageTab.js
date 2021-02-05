@@ -10,7 +10,7 @@ export default function BgImageTab(props) {
   function handleChange (e) {
     const id = parseInt(e.target.value)
     props.setImageURL(props.images.find(b => b.id === id).url)
-    setRecord({ bgImageID: id })
+    setRecord({ kind: 'backgroundImageID', value: id })
   }
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export default function BgImageTab(props) {
         }
       )))
 
-      setRecord({ bgImageID: props.images[0].id })
+      setRecord({ kind: 'backgroundImageID', value: props.images[0].id })
     }
   }, [props.images])
 
