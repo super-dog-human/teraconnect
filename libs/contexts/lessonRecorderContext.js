@@ -109,10 +109,11 @@ const LessonRecorderProvider = ({ children }) => {
     if (lessonInStopping.image) {
       const lastImage = lesson.images[lesson.images.length - 1]
 
-      if (lessonInStopping.image.id === lastImage.id && lessonInStopping.action != lastImage.action) {
+      if (!lastImage) {
         lesson.images.push(lessonInStopping.image)
-      }
-      if (lessonInStopping.image.id != lastImage.id && lessonInStopping.action === 'show') {
+      } else if (lessonInStopping.image.id === lastImage.id && lessonInStopping.action != lastImage.action) {
+        lesson.images.push(lessonInStopping.image)
+      } else if (lessonInStopping.image.id != lastImage.id && lessonInStopping.action === 'show') {
         lesson.images.push(lessonInStopping.image)
       }
 
