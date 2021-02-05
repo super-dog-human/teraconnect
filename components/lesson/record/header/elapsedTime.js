@@ -19,7 +19,8 @@ export default function ElapsedTime({ elapsedSeconds, className }) {
 }
 
 const textStyle = css({
-  fontSize: '13px',
+  fontSize: '15px',
   lineHeight: '40px',
+  letterSpacing: '1px',
   color: 'lightGray',
 })

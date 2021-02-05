@@ -14,7 +14,7 @@ export default function RecordingButton({ isMicReady }) {
 
   function handleSwitchRecordingClick() {
     if (!isRecordable) return
-    if (isRecording) setHasRecordingStarted(true) // 初めての録画停止操作でtrueにする
+    if (isRecording) setHasRecordingStarted(true) // 収録を停止したタイミングで収録済みフラグを立てる
 
     switchCounter(!isRecording)
     setIsRecording(!isRecording)
@@ -37,6 +37,7 @@ export default function RecordingButton({ isMicReady }) {
     if (reachedMaxRecordingSeconds) {
       switchCounter(false)
       setIsRecording(false)
+      setHasRecordingStarted(true)
     }
 
   }, [isMicReady, elapsedSeconds])
