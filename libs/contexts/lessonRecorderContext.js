@@ -9,21 +9,22 @@ const LessonRecorderContext = React.createContext({
   switchCounter: () => {},
 })
 
+const lessonInStopping = {
+  avatarMoving: null,
+  image: null,
+  drawings: [],
+}
+const lesson = {
+  avatarID: null,
+  avatarLightColor: null,
+  backgroundImageID: null,
+  backgroundMusicID: null,
+  avatarMovings: [],
+  images: [],
+  drawings: [],
+}
+
 const LessonRecorderProvider = ({ children }) => {
-  const lessonInStopping = {
-    avatarMoving: null,
-    image: null,
-    drawings: [],
-  }
-  const lesson = {
-    avatarID: null,
-    avatarLightColor: null,
-    backgroundImageID: null,
-    backgroundMusicID: null,
-    avatarMovings: [],
-    images: [],
-    drawings: [],
-  }
   const [isRecording, setIsRecording] = useState(false)
   const { elapsedSeconds, realElapsedTime, switchCounter } = useTimeCounter()
 
@@ -31,6 +32,7 @@ const LessonRecorderProvider = ({ children }) => {
     switch (record.kind) {
     case 'avatarID':
       lesson.avatarID = record.value
+      console.log(lesson.avatarID)
       return
     case 'avatarLightColor':
       lesson.avatarLightColor = record.value
@@ -93,7 +95,6 @@ const LessonRecorderProvider = ({ children }) => {
   }
 
   function finishRecording() {
-    setIsRecording(false)
     console.log('finish.', lesson)
   }
 
