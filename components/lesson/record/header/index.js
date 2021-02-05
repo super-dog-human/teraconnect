@@ -42,6 +42,7 @@ export default function LessonRecordHeader({ isMicReady, isDrawingHide, setIsDra
             </a>
           </Link>
         </div>
+        <div css={flexItemStyle}></div>
         <div css={flexItemStyle}>
           <RecordingButton isMicReady={isMicReady} />
         </div>
@@ -60,6 +61,8 @@ export default function LessonRecordHeader({ isMicReady, isDrawingHide, setIsDra
           <DrawingConfigButton disabled={isDrawingHide} onClick={handleDrawingClear}>
             <img src="/img/icon/trash.svg" />
           </DrawingConfigButton>
+        </div>
+        <div css={flexItemStyle}>
           <DrawingConfigButton css={settingButtonStyle} onClick={handleSettingPanel}>
             <img src="/img/icon/settings.svg" />
           </DrawingConfigButton>

@@ -92,6 +92,11 @@ const LessonRecorderProvider = ({ children }) => {
     }
   }
 
+  function finishRecording() {
+    setIsRecording(false)
+    console.log('finish.', lesson)
+  }
+
   useEffect(() => {
     if (!isRecording) return
 
@@ -122,7 +127,7 @@ const LessonRecorderProvider = ({ children }) => {
   //  const { setRecord } = useRecorder(lesson.id, token, isRecording)
 
   return (
-    <LessonRecorderContext.Provider value={{ isRecording, setIsRecording, elapsedSeconds, realElapsedTime, setRecord, switchCounter }}>
+    <LessonRecorderContext.Provider value={{ isRecording, setIsRecording, elapsedSeconds, realElapsedTime, setRecord, switchCounter, finishRecording }}>
       {children}
     </LessonRecorderContext.Provider>
   )

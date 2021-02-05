@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/core'
 
-export default function ElapsedTime({ isRecording, elapsedSeconds }) {
+export default function ElapsedTime({ elapsedSeconds, className }) {
   const [displayTime, setDisplayTime] = useState('')
 
   useEffect(() => {
@@ -12,17 +12,11 @@ export default function ElapsedTime({ isRecording, elapsedSeconds }) {
   }, [elapsedSeconds])
 
   return (
-    <div css={bodyStyle}>
-      <span css={textStyle}>{isRecording ? displayTime : '停止中'}</span>
-    </div>
+    <span className={className}>
+      <span css={textStyle}>{displayTime}</span>
+    </span>
   )
 }
-
-const bodyStyle = css({
-  position: 'absolute',
-  top: 0,
-  left: 60,
-})
 
 const textStyle = css({
   fontSize: '13px',
