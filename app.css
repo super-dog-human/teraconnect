@@ -151,6 +151,9 @@ button.light {
   width: 18px !important;
   height: 18px !important;
 }
+.fullscreen-dialog-z {
+  z-index: 10000;
+}
 .header-z {
   z-index: 1000;
 }
