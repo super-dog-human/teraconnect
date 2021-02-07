@@ -5,10 +5,10 @@ import { useClientErrorDialogContext } from '../libs/contexts/clientErrorDialogC
 
 export default function ClientErrorDialog({ children }) {
   const [isDisplay, setIsDisplay] = useState(false)
-  const { clientError, setClientError  } = useClientErrorDialogContext()
+  const { clientError, setClientError } = useClientErrorDialogContext()
 
   useEffect(() => {
-    if (clientError === {}) {
+    if (Object.keys(clientError).length === 0) {
       setIsDisplay(false)
     } else {
       setIsDisplay(true)
@@ -21,17 +21,18 @@ export default function ClientErrorDialog({ children }) {
     height: '100%',
     position: 'absolute',
     left: 0,
+    backdropFilter: 'blur(10px)',
     backgroundColor: 'white',
-    opacity: 0.5,
+    opacity: 0.9,
   })
 
   return (
     <>
-      { children }
       <div css={backgroundStyle} className="fullscreen-dialog-z">
         <div>{clientError.title}</div>
         <div>{clientError.message}</div>
       </div>
+      { children }
     </>
   )
 }
