@@ -86,6 +86,7 @@ main {
   --text-gray: #8c8e98;
   --border-gray: #c1c1c1;
   --back-movie-black: #141414;
+  --error-red: #dc143c;
 }
 .color-text-gray {
   color: var(--text-gray);
