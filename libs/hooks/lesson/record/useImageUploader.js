@@ -64,19 +64,17 @@ export default function useImageUploader(id, token, images, setImages, inputFile
 
         uploadImage(validFiles[i], tmpID, r.fileID, r.signedURL).catch(e => {
           showError({
-            side: 'client',
             message: `ファイル「${validFiles[i].name}」のアップロードに失敗しました。`,
             original: e,
             canDismiss: true,
             dismissCallback: () => { setImages(images => images.filter(i => i.id != tmpID)) },
-            callback: () => { uploadImage(validFiles[i], temporaryIDs[i], r.fileID, r.signedURL) },
+            callback: () => { uploadImage(validFiles[i], tmpID, r.fileID, r.signedURL) },
           })
           console.error(e)
         })
       })
     }).catch(e => {
       showError({
-        side: 'client',
         message: '画像アップロードの準備に失敗しました。',
         original: e,
         canDismiss: true,

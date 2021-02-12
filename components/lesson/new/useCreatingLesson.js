@@ -32,7 +32,6 @@ export default function useCreatingLesson(token) {
         }
 
         showError({
-          side: 'client',
           message: '授業の作成に失敗しました。再度実行しても失敗する場合は、運営者にご連絡ください。',
           original: e,
           canDismiss: true,

@@ -22,8 +22,8 @@ export default function ErrorDialog({ children }) {
         <div css={backgroundStyle} className="fullscreen-dialog-z">
           <div css={dialogStyle}>
             <div css={headerStyle}>
-              <img src={error.side === 'client' ? '/img/icon/error.svg' : '/img/icon/server-error.svg'} />
-              <span>{error.side === 'client' ? 'クライアントエラー' : 'サーバーエラー'}</span>
+              <img src={error.side === 'server' ? '/img/icon/server-error.svg' : '/img/icon/error.svg'} />
+              <span>{error.side === 'server' ? 'サーバーエラー' : 'クライアントエラー' }</span>
             </div>
             <div css={bodyStyle}>
               <div css={errorMessageStyle}>

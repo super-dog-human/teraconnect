@@ -14,7 +14,6 @@ export default function useAudioInputDevices() {
       setDevices(allDevices.filter(d => d.kind === 'audioinput'))
     }).catch(e => {
       showError({
-        side: 'client',
         message: 'マイクの検出に失敗しました。マイクの接続を確認してください。',
         original: e,
         canDismiss: true,
