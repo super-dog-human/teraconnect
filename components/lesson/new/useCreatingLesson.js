@@ -8,7 +8,7 @@ export default function useCreatingLesson(token) {
   const router = useRouter()
   const { occurError } = useErrorDialogContext()
 
-  async function onSubmit(form) {
+  function onSubmit(form) {
     setIsCreating(true)
 
     const body = {
@@ -17,7 +17,7 @@ export default function useCreatingLesson(token) {
       title: form.title,
     }
 
-    await post('/lessons', body, 'token')
+    post('/lessons', body, token)
       .then(response => {
         if (body.createMethod === 'useVoice') {
           router.push(`/lessons/${response.id}/record`)
@@ -26,7 +26,7 @@ export default function useCreatingLesson(token) {
         }
       })
       .catch(e => {
-        if (e.responseCode === '401') {
+        if (e.response?.status === 401) {
           router.push('/login')
           return
         }
@@ -35,8 +35,12 @@ export default function useCreatingLesson(token) {
           side: 'client',
           message: '授業の作成に失敗しました。再度実行しても失敗する場合は、運営者にご連絡ください。',
           original: e,
+          canDismiss: true,
+          callback: () => { onSubmit(form) },
+          callbackName: '再試行',
         })
         console.error(e)
+
         setIsCreating(false)
       })
   }

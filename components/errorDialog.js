@@ -1,10 +1,15 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { css } from '@emotion/core'
 import { useErrorDialogContext } from '../libs/contexts/errorDialogContext'
 
 export default function ErrorDialog({ children }) {
   const { error, resolveError } = useErrorDialogContext()
+
+  function callback() {
+    resolveError()
+    error.callback()
+  }
 
   return (
     <>
@@ -25,7 +30,7 @@ export default function ErrorDialog({ children }) {
             </div>
             <div css={footerStyle}>
               {error.canDismiss && <button className="light" onClick={resolveError}>キャンセル</button>}
-              {<button className="dark" onClick={error.callback}>{error.callbackName}</button>}
+              {error.callback && <button className="dark" onClick={callback}>{error.callbackName}</button>}
             </div>
           </div>
         </div>

@@ -15,7 +15,7 @@ export default function useAudioInputDevices() {
     }).catch(e => {
       occurError({
         side: 'client',
-        message: 'マイクの検出に失敗しました。有効なマイクの接続を確認してください。',
+        message: 'マイクの検出に失敗しました。マイクの接続を確認してください。',
         original: e,
         canDismiss: true,
         callback: requestMicPermission,
