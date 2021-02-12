@@ -32,17 +32,14 @@ export default Page
 export async function getServerSideProps(context) {
   const authProps = await requirePageAuth(context)
   const id = context.query.id
-
-  const lesson = await fetchWithAuth(`/lessons/${id}?for_authoring=true`, authProps.props.token)
-    .then(r => r)
-    .catch(e => {
-      if (e.responseCode === '401') {
-        context.res.writeHead(307, { Location: '/login' })
-        context.res.end()
-      } else {
-        throw e
-      }
-    })
+  const lesson = await fetchWithAuth(`/lessons/${id}?for_authoring=true`, authProps.props.token).catch(e => {
+    if (e.response.status === '401') {
+      context.res.writeHead(307, { Location: '/login' })
+      context.res.end()
+    } else {
+      throw e
+    }
+  })
 
   return { props: {
     ...authProps.props,
