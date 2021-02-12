@@ -1,5 +1,7 @@
 import React from 'react'
 import ErrorDialog from './index'
+import { event } from '../../libs/gtag'
+
 
 export default class GlobalErrorDialog extends React.Component {
   constructor(props) {
@@ -13,22 +15,22 @@ export default class GlobalErrorDialog extends React.Component {
       message: '予期せぬエラーが発生しました。',
       original: error,
       canDismiss: false,
-      callback: () => { console.log('try reload'); window.location.reload() },
+      callback: () => { /* 実際にはhandleCallbackが実行される */ },
       callbackName: '再読込',
     }
+
+    event('error', 'unknown', error.message, 1)
 
     return { error: catchedError }
   }
 
-  componentDidCatch(error, errorInfo) {
-    console.error('error: ', error)
-    console.error('errorInfo', errorInfo.componentStack)
-    // gtag
+  handleCallback() {
+    window.location.reload()
   }
 
   render() {
     if (this.state.error) {
-      return <ErrorDialog error={this.state.error} />
+      return <><ErrorDialog error={this.state.error} handleCallback={this.handleCallback} />{this.props.children}</>
     }
 
     return this.props.children

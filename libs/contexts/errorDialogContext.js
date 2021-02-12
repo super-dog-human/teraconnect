@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react'
+import { event } from '../gtag'
 
 const ErrorDialogContext = React.createContext({
   error: {},
@@ -14,7 +15,7 @@ const ErrorDialogProvider = ({ children }) => {
   function showError(err) {
     errors.push(err)
     setError(errors[0])
-    // gtag
+    event('error', 'expected', err.message, 1)
   }
 
   function resolveError() {
