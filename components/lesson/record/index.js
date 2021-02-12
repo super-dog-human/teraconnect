@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState } from 'react'
 import { css } from '@emotion/core'
+import useLessonRecordChangeTabDetector from '../../../libs/hooks/lesson/record/useChangeTabDetector'
 import useRecordResource from '../../../libs/hooks/lesson/record/useRecordResource'
 import useDragOverDetector from '../../../libs/hooks/useDragOverDetector'
 import useLessonAvatar from '../../../libs/hooks/lesson/useAvatar'
@@ -23,7 +24,8 @@ const LessonRecord = React.forwardRef(function lessonRecord({ token, lesson, has
   const [selectedImage, setSelectedImage] = useState()
   const [isShowControlPanel, setIsShowControlPanel] = useState(false)
   const [isShowVoiceSpectrum, setIsShowVoiceSpectrum] = useState(true)
-  const  { hasDragOver, handleAreaDragOver, handleAreaDragLeave, handleAreaDrop } = useDragOverDetector()
+  useLessonRecordChangeTabDetector()
+  const { hasDragOver, handleAreaDragOver, handleAreaDragLeave, handleAreaDrop } = useDragOverDetector()
   const { bgImages, avatars, bgms } = useRecordResource(token, setBgImageURL)
   const { isMicReady, isSpeaking, micDeviceID, setMicDeviceID, silenceThresholdSec, setSilenceThresholdSec } = useVoiceRecorder(lesson.id, token)
   const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useLessonAvatar(setIsLoading, isSpeaking, hasResize)
