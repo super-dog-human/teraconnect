@@ -3,15 +3,18 @@ import React, { useState, useContext } from 'react'
 const ErrorDialogContext = React.createContext({
   error: {},
   setError: () => {},
+  resolveError: () => {},
 })
 
+const errors = []
+
 const ErrorDialogProvider = ({ children }) => {
-  const errors = []
   const [error, setError] = useState()
 
   function showError(err) {
     errors.push(err)
     setError(errors[0])
+    // gtag
   }
 
   function resolveError() {

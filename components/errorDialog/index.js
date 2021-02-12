@@ -1,29 +1,16 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
 import { css } from '@emotion/core'
-import { useErrorDialogContext } from '../libs/contexts/errorDialogContext'
 
-export default function ErrorDialog({ children }) {
-  const { error, resolveError } = useErrorDialogContext()
-
-  function handleDismiss() {
-    if (error.dismissCallback) error.dismissCallback()
-    resolveError()
-  }
-
-  function handleCallback() {
-    resolveError()
-    error.callback()
-  }
-
+export default function ErrorDialog({ error, handleDismiss, handleCallback }) {
   return (
     <>
       {error &&
         <div css={backgroundStyle} className="fullscreen-dialog-z">
           <div css={dialogStyle}>
             <div css={headerStyle}>
-              <img src={error.side === 'server' ? '/img/icon/server-error.svg' : '/img/icon/error.svg'} />
-              <span>{error.side === 'server' ? 'サーバーエラー' : 'クライアントエラー' }</span>
+              <img src={error.side === 'global' ? '/img/icon/server-error.svg' : '/img/icon/error.svg'} />
+              <span>{error.side === 'global' ? '不明なエラー' : '処理エラー' }</span>
             </div>
             <div css={bodyStyle}>
               <div css={errorMessageStyle}>
@@ -34,13 +21,12 @@ export default function ErrorDialog({ children }) {
               </div>
             </div>
             <div css={footerStyle}>
-              {error.canDismiss && <button className="light" onClick={handleDismiss}>キャンセル</button>}
+              {error.canDismiss && <button className="light" onClick={handleDismiss}>{error.dismissName || 'キャンセル' }</button>}
               {error.callback && <button className="dark" onClick={handleCallback}>{error.callbackName || '再試行'}</button>}
             </div>
           </div>
         </div>
       }
-      {children}
     </>
   )
 }

@@ -1,5 +1,3 @@
 export const RATIO_16_TO_9 = 0.5625
 export const RATIO_9_TO_16 = 1.77777777778
-export const RAD_70 = 1.2217304763960306
-export const RAD_90 = 1.5707963267948966
 export const GA_TRACKING_ID = 'UA-120790122-1'

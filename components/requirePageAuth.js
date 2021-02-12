@@ -23,13 +23,13 @@ export default async function requirePageAuth(context) {
     .then(user => (
       { props: { user, token } }
     ))
-    .catch(error => {
-      if (error.response?.status === 404) {
+    .catch(e => {
+      if (e.response?.status === 404) {
         context.res.writeHead(307, { Location: '/users/new' })
         context.res.end()
         return { props: {} }
       } else {
-        throw error
+        throw e
       }
     })
 }
