@@ -29,7 +29,7 @@ export default function LessonRecordHeader({ isMicReady, isDrawingHide, setIsDra
   }
 
   return (
-    <header css={headerStyle} className='header-z'>
+    <header css={headerStyle} className="header-z">
       <div css={bodyStyle}>
         <div css={flexItemStyle}>
           <Link href="/">

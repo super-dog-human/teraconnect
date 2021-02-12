@@ -8,7 +8,7 @@ export default function Header() {
   const [ session, loading ] = useSession()
 
   return (
-    <header css={headerStyle} className='header-z'>
+    <header css={headerStyle} className="header-z">
       <div css={headerBodyStyle}>
         <Link href="/">
           <a>

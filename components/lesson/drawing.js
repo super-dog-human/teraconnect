@@ -15,7 +15,7 @@ export default function LessonDrawing({ isHide, startDrawing, inDrawing, endDraw
   })
 
   return (
-    <canvas css={bodyStyle} className='drawing-z' onMouseDown={startDrawing}
+    <canvas css={bodyStyle} className="drawing-z" onMouseDown={startDrawing}
       onMouseMove={inDrawing} onMouseUp={endDrawing} onMouseLeave={endDrawing} ref={drawingRef} />
   )
 }

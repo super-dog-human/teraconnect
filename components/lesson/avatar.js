@@ -4,7 +4,7 @@ import { css } from '@emotion/core'
 
 const LessonAvatar = React.forwardRef(function lessonAvatar(props, ref) {
   return(
-    <div css={bodyStyle} className='avatar-z' ref={ref} {...props} />
+    <div css={bodyStyle} className="avatar-z" ref={ref} {...props} />
   )
 })
 

@@ -42,8 +42,8 @@ export default function LessonRecordSettingPanel({ isShow, setIsShow, bgImages, 
 
   return (
     <Draggable bounds={bounds} handle=".drag-handle">
-      <div css={bodyStyle} ref={draggableRef} className='modal-panel-z'>
-        <div css={panelHeaderStyle} className='drag-handle'>
+      <div css={bodyStyle} ref={draggableRef} className="modal-panel-z">
+        <div css={panelHeaderStyle} className="drag-handle">
           <button onClick={handleClose}>x</button>
         </div>
 

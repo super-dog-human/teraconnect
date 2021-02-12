@@ -57,14 +57,14 @@ export default function DrawingConfigPanel({ disabled, color, setColor, setLineW
       </DrawingConfigButton>
       <div css={backgroundStyle} onClick={handleShowPanel}>
         <div css={contextMenuStyle}>
-          <button onClick={handleWidthChange} data-width='5'>細</button>
-          <button onClick={handleWidthChange} data-width='10'>中</button>
-          <button onClick={handleWidthChange} data-width='20'>太</button>
+          <button onClick={handleWidthChange} data-width="5">細</button>
+          <button onClick={handleWidthChange} data-width="10">中</button>
+          <button onClick={handleWidthChange} data-width="20">太</button>
 
           <button onClick={handleEraser}>Eraser</button>
-          <button onClick={handleColorChange} data-color='#ff0000'>red</button>
-          <button onClick={handleColorChange} data-color='#00ff00'>green</button>
-          <button onClick={handleColorChange} data-color='#000000'>black</button>
+          <button onClick={handleColorChange} data-color="#ff0000">red</button>
+          <button onClick={handleColorChange} data-color="#00ff00">green</button>
+          <button onClick={handleColorChange} data-color="#000000">black</button>
           <HexColorInput color={color} onChange={handleColorChange} />
         </div>
       </div>
