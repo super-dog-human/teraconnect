@@ -9,7 +9,7 @@ const ErrorDialogProvider = ({ children }) => {
   const errors = []
   const [error, setError] = useState()
 
-  function occurError(err) {
+  function showError(err) {
     errors.push(err)
     setError(errors[0])
   }
@@ -20,7 +20,7 @@ const ErrorDialogProvider = ({ children }) => {
   }
 
   return (
-    <ErrorDialogContext.Provider value={{ error, occurError, resolveError }}>
+    <ErrorDialogContext.Provider value={{ error, showError, resolveError }}>
       {children}
     </ErrorDialogContext.Provider>
   )

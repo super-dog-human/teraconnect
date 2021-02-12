@@ -6,7 +6,12 @@ import { useErrorDialogContext } from '../libs/contexts/errorDialogContext'
 export default function ErrorDialog({ children }) {
   const { error, resolveError } = useErrorDialogContext()
 
-  function callback() {
+  function handleDismiss() {
+    if (error.dismissCallback) error.dismissCallback()
+    resolveError()
+  }
+
+  function handleCallback() {
     resolveError()
     error.callback()
   }
@@ -29,8 +34,8 @@ export default function ErrorDialog({ children }) {
               </div>
             </div>
             <div css={footerStyle}>
-              {error.canDismiss && <button className="light" onClick={resolveError}>キャンセル</button>}
-              {error.callback && <button className="dark" onClick={callback}>{error.callbackName}</button>}
+              {error.canDismiss && <button className="light" onClick={handleDismiss}>キャンセル</button>}
+              {error.callback && <button className="dark" onClick={handleCallback}>{error.callbackName || '再試行'}</button>}
             </div>
           </div>
         </div>

@@ -3,7 +3,7 @@ import { useErrorDialogContext } from '../contexts/errorDialogContext'
 
 export default function useAudioInputDevices() {
   const [devices, setDevices] = useState([])
-  const { occurError } = useErrorDialogContext()
+  const { showError } = useErrorDialogContext()
 
   function requestMicPermission() {
     navigator.mediaDevices.getUserMedia({
@@ -13,13 +13,12 @@ export default function useAudioInputDevices() {
       const allDevices = await navigator.mediaDevices.enumerateDevices()
       setDevices(allDevices.filter(d => d.kind === 'audioinput'))
     }).catch(e => {
-      occurError({
+      showError({
         side: 'client',
         message: 'マイクの検出に失敗しました。マイクの接続を確認してください。',
         original: e,
         canDismiss: true,
         callback: requestMicPermission,
-        callbackName: '再試行',
       })
       console.error(e)
     })
