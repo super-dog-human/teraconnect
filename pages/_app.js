@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { Provider } from 'next-auth/client'
-import { ErrorDialogProvider } from '../libs/contexts/errorDialogContext'
-import ClientErrorDialog from '../components/errorDialog/clientError'
-import GlobalErrorDialog from '../components/errorDialog/globalError'
+import { ErrorDialogContext, ErrorDialogProvider } from '../libs/contexts/errorDialogContext'
+import ErrorBoundary from '../components/errorBoundary'
+import ErrorDialog from '../components/errorDialog'
+import Dialog from '../components/dialog/'
 import * as gtag from '../libs/gtag'
 import whyDidYouRender from '@welldone-software/why-did-you-render'
 import '../app.css'
@@ -25,13 +26,18 @@ export default function App ({ Component, pageProps }) {
   }, [router.events])
 
   return (
-    <GlobalErrorDialog>
-      <Provider session={pageProps.session}>
-        <ErrorDialogProvider>
-          <ClientErrorDialog />
-          <Component {...pageProps} />
-        </ErrorDialogProvider>
-      </Provider>
-    </GlobalErrorDialog>
+    <Provider session={pageProps.session}>
+      <ErrorDialogProvider>
+        <ErrorDialogContext.Consumer>
+          {({ showError }) => (
+            <ErrorBoundary showError={showError}>
+              <ErrorDialog />
+              <Dialog />
+              <Component {...pageProps} />
+            </ErrorBoundary>
+          )}
+        </ErrorDialogContext.Consumer>
+      </ErrorDialogProvider>
+    </Provider>
   )
 }

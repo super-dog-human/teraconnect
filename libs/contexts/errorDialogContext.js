@@ -18,7 +18,9 @@ const ErrorDialogProvider = ({ children }) => {
     event('error', 'expected', err.message, 1)
   }
 
-  function resolveError() {
+  function resolveError(callback) {
+    if (callback) callback()
+
     errors.shift()
     setError(errors[0])
   }
@@ -32,4 +34,4 @@ const ErrorDialogProvider = ({ children }) => {
 
 const useErrorDialogContext = () => useContext(ErrorDialogContext)
 
-export { ErrorDialogProvider, useErrorDialogContext }
+export { ErrorDialogContext, ErrorDialogProvider, useErrorDialogContext }

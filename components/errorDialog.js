@@ -1,8 +1,19 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
 import { css } from '@emotion/core'
+import { useErrorDialogContext } from '../libs/contexts/errorDialogContext'
 
-export default function ErrorDialog({ error, handleDismiss, handleCallback }) {
+export default function ErrorDialog() {
+  const { error, resolveError } = useErrorDialogContext()
+
+  function handleDismiss() {
+    resolveError(error.dismissCallback)
+  }
+
+  function handleCallback() {
+    resolveError(error.callback)
+  }
+
   return (
     <>
       {error &&
