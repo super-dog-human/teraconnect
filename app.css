@@ -121,13 +121,21 @@ button:focus-visible {
   outline: 2px dotted gray;
 }
 button.dark {
-  background-color: var(--dark-purple);
+  background-color: var(--dark-gray);
+  color: white;
+}
+button.dark:hover {
+  background-color: var(--text-gray);
   color: white;
 }
 button.light {
-  border-color: var(--dark-purple);
+  border-color: var(--border-gray);
   background-color: white;
   color: var(--dark-purple);
+}
+button.light:hover {
+  background-color: var(--text-gray);
+  color: white;
 }
 .text-align-center {
   text-align: center;

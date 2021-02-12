@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
+import { useErrorDialogContext } from '../../../libs/contexts/errorDialogContext'
 import { post } from '../../../libs/fetch'
 
 export default function useCreatingLesson(token) {
-  const [error, setError] = useState()
   const [isCreating, setIsCreating] = useState(false)
   const router = useRouter()
+  const { occurError } = useErrorDialogContext()
 
   async function onSubmit(form) {
     setIsCreating(true)
@@ -24,14 +25,21 @@ export default function useCreatingLesson(token) {
           router.push(`/lessons/${response.id}/edit`)
         }
       })
-      .catch(error => {
-        // TODO redirect login page when status 401
+      .catch(e => {
+        if (e.responseCode === '401') {
+          router.push('/login')
+          return
+        }
 
+        occurError({
+          side: 'client',
+          message: '授業の作成に失敗しました。再度実行しても失敗する場合は、運営者にご連絡ください。',
+          original: e,
+        })
+        console.error(e)
         setIsCreating(false)
-        setError('授業の作成に失敗しました。')
-        throw error
       })
   }
 
-  return { onSubmit, isCreating, creatingError: error }
+  return { onSubmit, isCreating }
 }

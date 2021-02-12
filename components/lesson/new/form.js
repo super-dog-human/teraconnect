@@ -13,7 +13,7 @@ const bodyStyle = css({
 
 export default function LessonNewForm(props) {
   const { register, errors, handleSubmit, setValue } = useForm()
-  const { onSubmit, isCreating, creatingError } = useCreatingLesson(props.token)
+  const { onSubmit, isCreating } = useCreatingLesson(props.token)
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} css={bodyStyle}>
@@ -42,7 +42,6 @@ export default function LessonNewForm(props) {
       { errors.title && '入力してください' }
 
       <input type="submit" disabled={isCreating}/>
-      {creatingError}
     </form>
   )
 }

@@ -1,21 +1,26 @@
 import { useState, useEffect } from 'react'
+import { useErrorDialogContext } from '../contexts/errorDialogContext'
 
 export default function useAudioInputDevices() {
   const [devices, setDevices] = useState([])
+  const { occurError } = useErrorDialogContext()
 
   function requestMicPermission() {
     navigator.mediaDevices.getUserMedia({
       audio: true,
       video: false
-    }).then(() => {
-      navigator.mediaDevices.enumerateDevices()
-        .then(allDevices => {
-          setDevices(allDevices.filter(d => d.kind === 'audioinput'))
-        })
-        .catch((e) => console.error(e))
+    }).then(async() => {
+      const allDevices = await navigator.mediaDevices.enumerateDevices()
+      setDevices(allDevices.filter(d => d.kind === 'audioinput'))
     }).catch(e => {
-      // マイクの使用が制限されているか、見つかりませんでした。
-      // useContextでエラーダイアログ出す
+      occurError({
+        side: 'client',
+        message: 'マイクの検出に失敗しました。有効なマイクの接続を確認してください。',
+        original: e,
+        canDismiss: true,
+        callback: requestMicPermission,
+        callbackName: '再試行',
+      })
       console.error(e)
     })
   }

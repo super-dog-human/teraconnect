@@ -6,9 +6,21 @@ const ErrorDialogContext = React.createContext({
 })
 
 const ErrorDialogProvider = ({ children }) => {
-  const [error, setError] = useState({})
+  const errors = []
+  const [error, setError] = useState()
+
+  function occurError(err) {
+    errors.push(err)
+    setError(errors[0])
+  }
+
+  function resolveError() {
+    errors.shift()
+    setError(errors[0])
+  }
+
   return (
-    <ErrorDialogContext.Provider value={{ error, setError }}>
+    <ErrorDialogContext.Provider value={{ error, occurError, resolveError }}>
       {children}
     </ErrorDialogContext.Provider>
   )
