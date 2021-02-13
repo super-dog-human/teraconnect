@@ -2,10 +2,13 @@
 import React from 'react'
 import { css } from '@emotion/core'
 import LoadingIndicator from '../../../components/loadingIndicator'
+import { useLessonRecorderContext } from '../../../libs/contexts/lessonRecorderContext'
 
 export default function LessonRecordLoadinIndicator({ isLoading }) {
+  const { isFinishing } = useLessonRecorderContext()
+
   const bodyStyle = css({
-    display: isLoading ? 'block' : 'none',
+    display: isLoading || isFinishing ? 'block' : 'none',
     position: 'absolute',
     top: 0,
     bottom: 0,

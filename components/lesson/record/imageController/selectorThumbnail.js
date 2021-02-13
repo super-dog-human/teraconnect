@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react'
 import { css } from '@emotion/core'
 import LoadingIndicator from '../../../loadingIndicator'
 
-export default function SelectorThumbnail({ image, onClick, onRemoveClick, isSelected }) {
+export default function SelectorThumbnail({ image, onClick, onRemoveClick, isSelected, isFinishing }) {
   const imageRef = useRef()
   const [isHover, setIsHover] = useState(false)
 
@@ -15,14 +15,20 @@ export default function SelectorThumbnail({ image, onClick, onRemoveClick, isSel
     setIsHover(false)
   }
 
+  function handleMouseClick(e) {
+    if (isFinishing) return
+    onClick(e)
+  }
+
   const imageStyle = css({
     display: 'block',
     marginTop: isSelected ? '-20px' : 'auto',
-    cursor: 'pointer',
+    cursor: isFinishing ? 'default' : 'pointer',
     maxWidth: '150px',
     maxHeight: '95px',
     height: 'auto',
     filter: isSelected ? 'drop-shadow(7px 10px 5px #ddd)' : 'brightness(0.9) grayscale(20%)',
+    opacity: isFinishing ? 0.3 : 1,
   })
 
   const removeButtonStyle = css({
@@ -31,7 +37,7 @@ export default function SelectorThumbnail({ image, onClick, onRemoveClick, isSel
     right: 10,
     width: '10px',
     height: '30px',
-    display: isHover ? 'flex' : 'none',
+    display: isHover && !isFinishing ? 'flex' : 'none',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 0,
@@ -44,7 +50,7 @@ export default function SelectorThumbnail({ image, onClick, onRemoveClick, isSel
 
   return (
     <div css={bodyStyle} onMouseEnter={handleMouseEnter} onMouseLeave={hanldeMouseLeave} draggable="false">
-      <img css={imageStyle} src={image.thumbnail} data-id={image.id} ref={imageRef} onClick={onClick} draggable="true" />
+      <img css={imageStyle} src={image.thumbnail} data-id={image.id} ref={imageRef} onClick={handleMouseClick} draggable="true" />
       <button css={removeButtonStyle} data-id={image.id} onClick={onRemoveClick}>
         <img src="/img/icon/close.svg" css={closeIconStyle} draggable="false" />
       </button>

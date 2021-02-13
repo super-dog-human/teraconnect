@@ -10,10 +10,11 @@ const maxRecordableSeconds = 600
 export default function RecordingButton({ token, lessonID, isMicReady }) {
   const [isRecordable, setIsRecordable] = useState(false)
   const [hasRecordingStarted, setHasRecordingStarted] = useState(false)
-  const { isRecording, setIsRecording, elapsedSeconds, switchCounter, finishRecording } = useLessonRecorderContext()
+  const { isRecording, setIsRecording, isFinishing, elapsedSeconds, switchCounter, finishRecording } = useLessonRecorderContext()
 
   function handleSwitchRecordingClick() {
     if (!isRecordable) return
+    if (isFinishing) return
     if (isRecording) setHasRecordingStarted(true) // 収録を停止したタイミングで収録済みフラグを立てる
 
     switchCounter(!isRecording)
@@ -22,6 +23,7 @@ export default function RecordingButton({ token, lessonID, isMicReady }) {
 
   function handleFinishRecordingClick() {
     if (!hasRecordingStarted) return
+    if (isFinishing) return
     finishRecording(token, lessonID)
   }
 
@@ -45,7 +47,7 @@ export default function RecordingButton({ token, lessonID, isMicReady }) {
   const finishRecordingStyle = css({
     opacity: !isRecording && hasRecordingStarted ? 0.3 : 0,
     [':hover']: {
-      opacity: !isRecording && hasRecordingStarted ? 1 : 0,
+      opacity: isFinishing ? 0.3 : !isRecording && hasRecordingStarted ? 1 : 0,
     },
     ['> img']: {
       width: '22px',
@@ -53,12 +55,18 @@ export default function RecordingButton({ token, lessonID, isMicReady }) {
     }
   })
 
+  const sideRecordingButtonStyle = css({
+    flexShrink: 0,
+    cursor: isFinishing ? 'default' : 'pointer',
+    textAlign: 'left',
+    width: '140px',
+  })
 
   return (
     <div css={bodyStyle}>
       <div css={sideRecordingButtonStyle} onClick={handleFinishRecordingClick}>
         <div css={finishRecordingStyle}>
-          <button css={buttonStyle} disabled={isRecording || !hasRecordingStarted}>
+          <button css={buttonStyle} disabled={isRecording || !hasRecordingStarted || isFinishing}>
             <div css={recordingIconStyle}>
               <img src="/img/icon/tick.svg" />
             </div>
@@ -67,7 +75,7 @@ export default function RecordingButton({ token, lessonID, isMicReady }) {
         </div>
       </div>
       <div onClick={handleSwitchRecordingClick}>
-        <button css={buttonStyle} disabled={!isRecordable}>
+        <button css={buttonStyle} disabled={!isRecordable || isFinishing}>
           <div css={recordingIconStyle}>
             <RecordingIcon recording={isRecording} />
           </div>
@@ -85,13 +93,6 @@ const bodyStyle = css({
   justifyContent: 'center',
 })
 
-const sideRecordingButtonStyle = css({
-  flexShrink: 0,
-  cursor: 'pointer',
-  textAlign: 'left',
-  width: '140px',
-})
-
 const buttonStyle = css({
   ['img']: {
     width: '26px',
@@ -103,6 +104,8 @@ const buttonStyle = css({
   },
   [':disabled']: {
     opacity: 0.3,
+    cursor: 'default',
+    backgroundColor: 'var(--dark-gray)',
   },
 })
 

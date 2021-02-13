@@ -4,6 +4,7 @@ import { css } from '@emotion/core'
 import { Container, Row, Col } from 'react-grid-system'
 import useImageUploader from '../../../../libs/hooks/lesson/record/useImageUploader'
 import useImageController from '../../../../libs/hooks/lesson/record/useImageController'
+import { useLessonRecorderContext } from '../../../../libs/contexts/lessonRecorderContext'
 import ImageUploadingWideButton from './imageUploadingWideButton'
 import ImageUploadingButton from './imageUploadingButton'
 import ScrollArrow from './scrollArrow'
@@ -16,6 +17,7 @@ export default function LessonRecordImageController({ id, token, setSelectedImag
   const { imageID, selectImage, removeImage, images, setImages, moveImage } = useImageController(setSelectedImage)
   const { handleDragOver, handleDragLeave, handleDrop, handleChangeFile, handleUploadButtonClick } =
     useImageUploader(id, token, images, setImages, inputFileRef, selectImageBarRef)
+  const { isFinishing } = useLessonRecorderContext()
 
   return (
     <div css={bodyStyle}>
@@ -25,7 +27,7 @@ export default function LessonRecordImageController({ id, token, setSelectedImag
 
         {images.length === 0 && (
           <ImageUploadingWideButton hasDragOver={hasDragOver} onDragOver={handleDragOver} onDragLeave={handleDragLeave}
-            onDrop={handleDrop} onClick={handleUploadButtonClick} />
+            onDrop={handleDrop} onClick={handleUploadButtonClick} disabled={isFinishing} />
         )}
 
         {images.length > 0 && (
@@ -38,7 +40,7 @@ export default function LessonRecordImageController({ id, token, setSelectedImag
               <Col sm={8}>
                 <DragSwappable onSwap={moveImage} css={selectImageBarStyle} ref={selectImageBarRef}>
                   {images.map((image, i) =>
-                    <SelectorThumbnail image={image} key={i} onClick={selectImage} onRemoveClick={removeImage} isSelected={image.id === imageID} />
+                    <SelectorThumbnail image={image} key={i} onClick={selectImage} onRemoveClick={removeImage} isSelected={image.id === imageID} isFinishing={isFinishing} />
                   )}
                 </DragSwappable>
               </Col>
@@ -46,7 +48,7 @@ export default function LessonRecordImageController({ id, token, setSelectedImag
                 <ScrollArrow direction="right" targetRef={selectImageBarRef} />
               </Col>
               <Col sm={1} css={centeringStyle}>
-                <ImageUploadingButton onClick={handleUploadButtonClick} />
+                <ImageUploadingButton onClick={handleUploadButtonClick} disabled={isFinishing} />
               </Col>
             </Row>
           </Container>

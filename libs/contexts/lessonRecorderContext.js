@@ -8,7 +8,7 @@ import { post } from '../fetch'
 const LessonRecorderContext = React.createContext({
   isRecording: false,
   setIsRecording: () => {},
-  isFinising: false,
+  isFinishing: false,
   elapsedSeconds: 0,
   setRecord: () => {},
   switchCounter: () => {},
@@ -32,7 +32,7 @@ const lesson = {
 const LessonRecorderProvider = ({ children }) => {
   const router = useRouter()
   const [isRecording, setIsRecording] = useState(false)
-  const [isFinising, setIsFinising] = useState(false)
+  const [isFinishing, setIsFinishing] = useState(false)
   const { elapsedSeconds, realElapsedTime, switchCounter } = useTimeCounter()
   const { showDialog } = useDialogContext()
   const { showError } = useErrorDialogContext()
@@ -117,14 +117,14 @@ const LessonRecorderProvider = ({ children }) => {
   }
 
   async function uploadLesson(token, lessonID) {
-    setIsFinising(true)
+    setIsFinishing(true)
 
     post(`/lessons/${lessonID}/materials`, lesson, token, 'PUT')
       .then(() => {
-        setIsFinising(false)
+        setIsFinishing(false)
         router.push(`/lessons/${lessonID}/edit`)
       }).catch(e => {
-        setIsFinising(false)
+        setIsFinishing(false)
         showError({
           message: '収録した授業のアップロードに失敗しました。',
           original: e,
@@ -165,7 +165,7 @@ const LessonRecorderProvider = ({ children }) => {
   }, [isRecording])
 
   return (
-    <LessonRecorderContext.Provider value={{ isRecording, setIsRecording, isFinising, elapsedSeconds, realElapsedTime, setRecord, switchCounter, finishRecording }}>
+    <LessonRecorderContext.Provider value={{ isRecording, setIsRecording, isFinishing, elapsedSeconds, realElapsedTime, setRecord, switchCounter, finishRecording }}>
       {children}
     </LessonRecorderContext.Provider>
   )

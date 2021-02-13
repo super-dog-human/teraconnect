@@ -3,7 +3,7 @@ import React from 'react'
 import { css } from '@emotion/core'
 import ImageUploadingIcon from './imageUploadingIcon'
 
-export default function ImageUploadingWideButton({ hasDragOver, onDragOver,onDragLeave, onDrop, onClick }) {
+export default function ImageUploadingWideButton({ hasDragOver, onDragOver,onDragLeave, onDrop, onClick, disabled }) {
   const buttonStyle = css({
     display: 'block',
     width: '600px',
@@ -18,6 +18,10 @@ export default function ImageUploadingWideButton({ hasDragOver, onDragOver,onDra
     [':hover']: {
       opacity: 1,
     },
+    [':disabled']: {
+      opacity: 0.3,
+      cursor: 'default',
+    },
     ['>img']: {
       verticalAlign: 'middle',
       marginRight: '30px',
@@ -31,7 +35,7 @@ export default function ImageUploadingWideButton({ hasDragOver, onDragOver,onDra
 
   return (
     <div css={bodyStyle}>
-      <button css={buttonStyle} onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop} onClick={onClick}>
+      <button css={buttonStyle} onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop} onClick={onClick} disabled={disabled}>
         <ImageUploadingIcon />
         <span>画像をアップロードして、授業内で表示できます。</span>
       </button>

@@ -5,9 +5,12 @@ import { css } from '@emotion/core'
 import RecordingButton from './recordingButton'
 import DrawingConfigPanel from './drawingConfigPanel'
 import DrawingConfigButton from './drawingConfigButton'
+import { useLessonRecorderContext } from '../../../../libs/contexts/lessonRecorderContext'
 
 export default function LessonRecordHeader({ token, lessonID, isMicReady, isDrawingHide, setIsDrawingHide, enablePen, setEnablePen,
   undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth, setIsShowControlPanel }) {
+  const { isFinishing } = useLessonRecorderContext()
+
   function handleDrawingHide() {
     setIsDrawingHide(!isDrawingHide)
   }
@@ -47,23 +50,23 @@ export default function LessonRecordHeader({ token, lessonID, isMicReady, isDraw
           <RecordingButton token={token} lessonID={lessonID} isMicReady={isMicReady} />
         </div>
         <div css={flexItemStyle}>
-          <DrawingConfigButton onClick={handleDrawingHide} isSelected={isDrawingHide}>
+          <DrawingConfigButton disabled={isFinishing} onClick={handleDrawingHide} isSelected={isDrawingHide}>
             <img src="/img/icon/hide.svg" />
           </DrawingConfigButton>
-          <DrawingConfigButton disabled={isDrawingHide} isSelected={!isDrawingHide && enablePen} onClick={handlePen}>
+          <DrawingConfigButton disabled={isDrawingHide || isFinishing} isSelected={!isDrawingHide && enablePen} onClick={handlePen}>
             <img src="/img/icon/drawing.svg" />
           </DrawingConfigButton>
-          <DrawingConfigPanel disabled={isDrawingHide} color={drawingColor} setColor={setDrawingColor} setLineWidth={setDrawingLineWidth}
+          <DrawingConfigPanel disabled={isDrawingHide || isFinishing} color={drawingColor} setColor={setDrawingColor} setLineWidth={setDrawingLineWidth}
             setEnablePen={setEnablePen} />
-          <DrawingConfigButton disabled={isDrawingHide} onClick={handleDrawingUndo}>
+          <DrawingConfigButton disabled={isDrawingHide || isFinishing} onClick={handleDrawingUndo}>
             <img src="/img/icon/undo.svg" />
           </DrawingConfigButton>
-          <DrawingConfigButton disabled={isDrawingHide} onClick={handleDrawingClear}>
+          <DrawingConfigButton disabled={isDrawingHide || isFinishing} onClick={handleDrawingClear}>
             <img src="/img/icon/trash.svg" />
           </DrawingConfigButton>
         </div>
         <div css={settingButtonStyle}>
-          <DrawingConfigButton onClick={handleSettingPanel}>
+          <DrawingConfigButton  disabled={isFinishing} onClick={handleSettingPanel}>
             <img src="/img/icon/settings.svg" />
           </DrawingConfigButton>
         </div>
@@ -78,6 +81,7 @@ const headerStyle = css({
   position: 'fixed',
   top: 0,
   left: 0,
+  userSelect: 'none',
 })
 
 const bodyStyle = css({
