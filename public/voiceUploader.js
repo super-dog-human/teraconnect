@@ -102,7 +102,6 @@ async function uploadFile(url, file) {
 
 function terminate(tryCount=0) {
   if (uploadingCount === 0 || tryCount >= 12) {
-    if (mp3Encoder) mp3Encoder.close()
     close()
   } else {
     setTimeout(() => {terminate(tryCount + 1)}, 5000)
