@@ -6,7 +6,7 @@ import RecordingButton from './recordingButton'
 import DrawingConfigPanel from './drawingConfigPanel'
 import DrawingConfigButton from './drawingConfigButton'
 
-export default function LessonRecordHeader({ isMicReady, isDrawingHide, setIsDrawingHide, enablePen, setEnablePen,
+export default function LessonRecordHeader({ token, lessonID, setIsLoading, isMicReady, isDrawingHide, setIsDrawingHide, enablePen, setEnablePen,
   undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth, setIsShowControlPanel }) {
   function handleDrawingHide() {
     setIsDrawingHide(!isDrawingHide)
@@ -44,7 +44,7 @@ export default function LessonRecordHeader({ isMicReady, isDrawingHide, setIsDra
         </div>
         <div css={flexItemStyle}></div>
         <div css={flexItemStyle}>
-          <RecordingButton isMicReady={isMicReady} />
+          <RecordingButton token={token} lessonID={lessonID} setIsLoading={setIsLoading} isMicReady={isMicReady} />
         </div>
         <div css={flexItemStyle}>
           <DrawingConfigButton onClick={handleDrawingHide} isSelected={isDrawingHide}>
@@ -62,8 +62,8 @@ export default function LessonRecordHeader({ isMicReady, isDrawingHide, setIsDra
             <img src="/img/icon/trash.svg" />
           </DrawingConfigButton>
         </div>
-        <div css={flexItemStyle}>
-          <DrawingConfigButton css={settingButtonStyle} onClick={handleSettingPanel}>
+        <div css={settingButtonStyle}>
+          <DrawingConfigButton onClick={handleSettingPanel}>
             <img src="/img/icon/settings.svg" />
           </DrawingConfigButton>
         </div>
@@ -102,5 +102,9 @@ const flexItemStyle = css({
 })
 
 const settingButtonStyle = css({
-  marginLeft: '150px',
+  width: '100%',
+  textAlign: 'right',
+  ['> button']: {
+    marginRight: '20px',
+  }
 })
