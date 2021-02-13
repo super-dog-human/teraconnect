@@ -4,6 +4,7 @@ import { Provider } from 'next-auth/client'
 import { ErrorDialogContext, ErrorDialogProvider } from '../libs/contexts/errorDialogContext'
 import ErrorBoundary from '../components/errorBoundary'
 import ErrorDialog from '../components/errorDialog'
+import { DialogProvider } from '../libs/contexts/dialogContext'
 import Dialog from '../components/dialog'
 import * as gtag from '../libs/gtag'
 import whyDidYouRender from '@welldone-software/why-did-you-render'
@@ -28,15 +29,17 @@ export default function App ({ Component, pageProps }) {
   return (
     <Provider session={pageProps.session}>
       <ErrorDialogProvider>
-        <ErrorDialogContext.Consumer>
-          {({ showError }) => (
-            <ErrorBoundary showError={showError}>
-              <ErrorDialog />
-              <Dialog />
-              <Component {...pageProps} />
-            </ErrorBoundary>
-          )}
-        </ErrorDialogContext.Consumer>
+        <DialogProvider>
+          <ErrorDialogContext.Consumer>
+            {({ showError }) => (
+              <ErrorBoundary showError={showError}>
+                <ErrorDialog />
+                <Dialog />
+                <Component {...pageProps} />
+              </ErrorBoundary>
+            )}
+          </ErrorDialogContext.Consumer>
+        </DialogProvider>
       </ErrorDialogProvider>
     </Provider>
   )
