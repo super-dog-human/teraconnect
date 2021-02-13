@@ -50,7 +50,7 @@ const dialogStyle = ({
   width: '70%',
   maxWidth: '500px',
   height: '30%',
-  maxHeight: '400px',
+  maxHeight: '300px',
   margin: 'auto',
   marginTop: '5%',
 })
@@ -78,7 +78,7 @@ const bodyStyle = css({
   width: '80%',
   maxWidth: '650px',
   height: '80%',
-  maxHeight: '280px',
+  maxHeight: '130px',
   margin: 'auto',
   marginTop: '10%',
 })
