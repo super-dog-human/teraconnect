@@ -9,13 +9,13 @@ const DialogContext = React.createContext({
 const DialogProvider = ({ children }) => {
   const [dialog, setDialog] = useState()
 
-  function showDialog(body) {
-    setDialog(body)
+  function showDialog(dialog) {
+    setDialog(dialog)
   }
 
   function dismissDialog(callback) {
-    if (callback) callback()
     setDialog()
+    if (callback) callback()
   }
 
   return (
