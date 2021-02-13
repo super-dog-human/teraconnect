@@ -6,7 +6,7 @@ import RecordingButton from './recordingButton'
 import DrawingConfigPanel from './drawingConfigPanel'
 import DrawingConfigButton from './drawingConfigButton'
 
-export default function LessonRecordHeader({ token, lessonID, setIsLoading, isMicReady, isDrawingHide, setIsDrawingHide, enablePen, setEnablePen,
+export default function LessonRecordHeader({ token, lessonID, isMicReady, isDrawingHide, setIsDrawingHide, enablePen, setEnablePen,
   undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth, setIsShowControlPanel }) {
   function handleDrawingHide() {
     setIsDrawingHide(!isDrawingHide)
@@ -44,7 +44,7 @@ export default function LessonRecordHeader({ token, lessonID, setIsLoading, isMi
         </div>
         <div css={flexItemStyle}></div>
         <div css={flexItemStyle}>
-          <RecordingButton token={token} lessonID={lessonID} setIsLoading={setIsLoading} isMicReady={isMicReady} />
+          <RecordingButton token={token} lessonID={lessonID} isMicReady={isMicReady} />
         </div>
         <div css={flexItemStyle}>
           <DrawingConfigButton onClick={handleDrawingHide} isSelected={isDrawingHide}>

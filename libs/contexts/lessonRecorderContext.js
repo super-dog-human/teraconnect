@@ -1,9 +1,14 @@
 import React, { useState, useContext, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import useTimeCounter from '../hooks/useTimeCounter'
+import { useDialogContext } from './dialogContext'
+import { useErrorDialogContext } from './errorDialogContext'
+import { post } from '../fetch'
 
 const LessonRecorderContext = React.createContext({
   isRecording: false,
   setIsRecording: () => {},
+  isFinising: false,
   elapsedSeconds: 0,
   setRecord: () => {},
   switchCounter: () => {},
@@ -25,8 +30,12 @@ const lesson = {
 }
 
 const LessonRecorderProvider = ({ children }) => {
+  const router = useRouter()
   const [isRecording, setIsRecording] = useState(false)
+  const [isFinising, setIsFinising] = useState(false)
   const { elapsedSeconds, realElapsedTime, switchCounter } = useTimeCounter()
+  const { showDialog } = useDialogContext()
+  const { showError } = useErrorDialogContext()
 
   function setRecord(record) {
     switch (record.kind) {
@@ -94,8 +103,37 @@ const LessonRecorderProvider = ({ children }) => {
     }
   }
 
-  function finishRecording() {
-    console.log('finish.', lesson)
+  function finishRecording(token, lessonID) {
+    showDialog({
+      title: '収録の完了',
+      message: '収録を完了します。よろしいですか？',
+      canDismiss: true,
+      dismissName: 'キャンセル',
+      callbackName: '確定',
+      callback: () => {
+        uploadLesson(token, lessonID)
+      },
+    })
+  }
+
+  async function uploadLesson(token, lessonID) {
+    setIsFinising(true)
+
+    post(`/lessons/${lessonID}/materials`, lesson, token, 'PUT')
+      .then(() => {
+        setIsFinising(false)
+        router.push(`/lessons/${lessonID}/edit`)
+      }).catch(e => {
+        setIsFinising(false)
+        showError({
+          message: '収録した授業のアップロードに失敗しました。',
+          original: e,
+          canDismiss: true,
+          dismissName: '閉じる',
+          callback: () => { uploadLesson(token, lessonID) },
+        })
+        console.error(e)
+      })
   }
 
   useEffect(() => {
@@ -126,10 +164,8 @@ const LessonRecorderProvider = ({ children }) => {
     }
   }, [isRecording])
 
-  //  const { setRecord } = useRecorder(lesson.id, token, isRecording)
-
   return (
-    <LessonRecorderContext.Provider value={{ isRecording, setIsRecording, elapsedSeconds, realElapsedTime, setRecord, switchCounter, finishRecording }}>
+    <LessonRecorderContext.Provider value={{ isRecording, setIsRecording, isFinising, elapsedSeconds, realElapsedTime, setRecord, switchCounter, finishRecording }}>
       {children}
     </LessonRecorderContext.Provider>
   )
