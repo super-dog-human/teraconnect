@@ -27,7 +27,7 @@ export default function Dialog() {
               {dialog.message}
             </div>
             <div css={footerStyle}>
-              {dialog.canDismiss && <button className="dark" onClick={handleDismiss}>{dialog.dismissName || '閉じる' }</button>}
+              {dialog.canDismiss && <button className="light" onClick={handleDismiss}>{dialog.dismissName || '閉じる' }</button>}
               {dialog.callback && <button className="dark" onClick={handleCallback}>{dialog.callbackName || '実行'}</button>}
             </div>
           </div>
@@ -46,11 +46,12 @@ const backgroundStyle = css({
 
 const dialogStyle = ({
   backgroundColor: 'white',
+  borderRadius: '5px',
   filter: 'drop-shadow(2px 2px 5px gray)',
   width: '70%',
   maxWidth: '500px',
-  height: '30%',
-  maxHeight: '300px',
+  minHeight: '300px',
+  maxheight: '80%',
   margin: 'auto',
   marginTop: '5%',
 })
@@ -77,8 +78,8 @@ const headerStyle = ({
 const bodyStyle = css({
   width: '80%',
   maxWidth: '650px',
-  height: '80%',
-  maxHeight: '130px',
+  minHeight: '130px',
+  maxHeight: '200px',
   margin: 'auto',
   marginTop: '10%',
 })
