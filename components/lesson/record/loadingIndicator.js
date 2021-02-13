@@ -13,15 +13,12 @@ export default function LessonRecordLoadinIndicator({ isLoading }) {
     right: 0,
     width: '100%',
     height: '100%',
-  })
-
-  const indicatorStyle = css({
-    backgroundColor: '#ffffff',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
   })
 
   return (
-    <div css={bodyStyle}>
-      <LoadingIndicator css={indicatorStyle} size={15} />
+    <div css={bodyStyle} className="indicator-z">
+      <LoadingIndicator size={15} />
     </div>
   )
 }

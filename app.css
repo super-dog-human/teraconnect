@@ -163,10 +163,10 @@ button.light:hover {
 .fullscreen-dialog-z {
   z-index: 10000;
 }
-.header-z {
+.indicator-z {
   z-index: 1000;
 }
-.indicator-z {
+.header-z {
   z-index: 900;
 }
 .modal-panel-z {
