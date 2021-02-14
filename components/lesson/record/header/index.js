@@ -37,11 +37,7 @@ export default function LessonRecordHeader({ token, lessonID, isMicReady, isDraw
         <div css={flexItemStyle}>
           <Link href="/">
             <a>
-              <img
-                css={logoImageStyle}
-                src="/img/logo_white.png"
-                srcSet="/img/logo_white.png 1x, /img/logo_white@2x.png 2x"
-              />
+              <img css={logoImageStyle} src="/img/logo_white.png" srcSet="/img/logo_white.png 1x, /img/logo_white@2x.png 2x" />
             </a>
           </Link>
         </div>
