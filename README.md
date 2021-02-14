@@ -15,6 +15,6 @@ $ yarn -s run jose findkey -p -j dev.jwk | yarn -s run pem-jwk | openssl rsa -RS
 $ gcloud config set project teraconnect-staging
 $ gcloud config set project teraconnect-209509
 
-$ yarn build && gcloud app deploy
+$ yarn build && gcloud app deploy --appyaml=app.staging.yaml
 $ gcloud app browse
 ```
