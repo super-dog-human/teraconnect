@@ -1,7 +1,7 @@
 import { default as isoFetch } from 'isomorphic-unfetch'
 
 export async function fetch(resource, option) {
-  const url = process.env.TERACONNECT_API_URL + resource
+  const url = process.env.NEXT_PUBLIC_TERACONNECT_API_URL + resource
   const response = await isoFetch(url, option)
 
   if (response.ok) {

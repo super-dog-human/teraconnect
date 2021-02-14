@@ -7,10 +7,10 @@ import ErrorDialog from '../components/errorDialog'
 import { DialogProvider } from '../libs/contexts/dialogContext'
 import Dialog from '../components/dialog'
 import * as gtag from '../libs/gtag'
-import whyDidYouRender from '@welldone-software/why-did-you-render'
 import '../app.css'
 
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+  const whyDidYouRender = require('@welldone-software/why-did-you-render')
   whyDidYouRender(React)
 }
 

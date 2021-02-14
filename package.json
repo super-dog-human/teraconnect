@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "node server.js",
-    "build": "next build",
-    "start": "next start"
+    "build": "rm -rf ./build && NODE_ENV=production next build && cp -r ./public/* ./build/static/",
+    "start": "next start -p $PORT"
   },
   "dependencies": {
     "@emotion/core": "^10.0.27",
@@ -28,7 +28,6 @@
   },
   "devDependencies": {
     "@welldone-software/why-did-you-render": "^4.3.2",
-    "dotenv": "^8.2.0",
     "eslint": "^7.16.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-import": "^2.20.0",

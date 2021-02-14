@@ -48,7 +48,7 @@ export default function useVoiceRecorder(id, token) {
   useEffect(() => {
     uploader = new Worker('/voiceUploader.js')
     // tokenをリフレッシュする場合は？
-    uploader.postMessage({ initialize: { lessonID: id, token, apiURL: process.env.TERACONNECT_API_URL } })
+    uploader.postMessage({ initialize: { lessonID: id, token, apiURL: process.env.NEXT_PUBLIC_TERACONNECT_API_URL } })
 
     return () => {
       terminalCurrentRecorder()
