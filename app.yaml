@@ -1,5 +1,7 @@
 runtime: nodejs12
 service: default
+env_variables:
+  NEXTAUTH_URL: "https://teraconnect-api-dot-teraconnect-staging.an.r.appspot.com/"
 handlers:
 - url: /.*
   secure: always
