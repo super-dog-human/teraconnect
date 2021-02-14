@@ -9,7 +9,7 @@ import Dialog from '../components/dialog'
 import * as gtag from '../libs/gtag'
 import '../app.css'
 
-if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development') {
   const whyDidYouRender = require('@welldone-software/why-did-you-render')
   whyDidYouRender(React)
 }

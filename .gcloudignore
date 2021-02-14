@@ -1,0 +1,6 @@
+*
+!package.json
+!next.config.js
+!/.next/**
+!/public/**
+.DS_Store

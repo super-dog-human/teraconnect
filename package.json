@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "node server.js",
-    "build": "rm -rf ./build && NODE_ENV=production next build && cp -r ./public/* ./build/static/",
+    "build": "rm -rf .next && NODE_ENV=production next build",
     "start": "next start -p $PORT"
   },
   "dependencies": {
@@ -12,12 +12,13 @@
     "@emotion/react": "^11.1.4",
     "@emotion/styled": "^10.0.27",
     "@pixiv/three-vrm": "^0.6.2",
+    "@welldone-software/why-did-you-render": "^6.0.5",
     "next": "~10",
     "next-auth": "^3.4.1",
-    "react": "~17.0.1",
+    "react": "^17.0.1",
     "react-colorful": "^4.4.4",
     "react-device-detect": "^1.14",
-    "react-dom": "~16.14",
+    "react-dom": "^17.0.1",
     "react-draggable": "^4.4.3",
     "react-ga": "^3.3.0",
     "react-grid-system": "^7.1.1",
@@ -27,7 +28,6 @@
     "three": "^0.122"
   },
   "devDependencies": {
-    "@welldone-software/why-did-you-render": "^4.3.2",
     "eslint": "^7.16.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-import": "^2.20.0",
