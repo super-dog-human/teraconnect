@@ -47,7 +47,7 @@ const options = {
   // Events are useful for logging
   // https://next-auth.js.org/configuration/events
   events: { },
-  debug: process.env.IS_DEBUG,
+  debug: true,
 }
 
 export default (req, res) => NextAuth(req, res, options)

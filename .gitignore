@@ -23,3 +23,7 @@ yarn-error.log*
 .yarnclean
 /certificates
 .vscode
+
+# secret
+app.staging.yaml
+app.production.yaml

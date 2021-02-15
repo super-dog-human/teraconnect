@@ -1,9 +1,0 @@
-runtime: nodejs12
-service: default
-env_variables:
-  NEXTAUTH_URL: "https://teraconnect-api-dot-teraconnect-staging.an.r.appspot.com/"
-handlers:
-- url: /.*
-  secure: always
-  redirect_http_response_code: 301
-  script: auto

@@ -3,7 +3,11 @@ service: default
 automatic_scaling:
   min_instances: 1
 env_variables:
-  NEXTAUTH_URL: "https://api.teraconnect.org/"
+  NEXTAUTH_URL: ""
+  TWITTER_CLIENT_ID: ""
+  TWITTER_CLIENT_SECRET: ""
+  AUTH_SECRET: ""
+  JWT_SIGNING_PRIVATE_KEY: ""
 handlers:
 - url: /.*
   secure: always
