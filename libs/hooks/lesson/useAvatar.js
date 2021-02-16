@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { Clock } from 'three'
 import AvatarLoader from '../../avatar/loader'
+import { switchSwipable, mouseOrTouchPositions } from '../../utils'
 import { useLessonRecorderContext } from '../../contexts/lessonRecorderContext'
 
 const clock = new Clock()
@@ -14,20 +15,24 @@ export default function useLessonAvatar(setIsLoading, isSpeaking, hasResize) {
   const { setRecord } = useLessonRecorderContext()
 
   function startDragging(e) {
-    if (avatar.prepareMovePosition(e.nativeEvent.offsetX, e.nativeEvent.offsetY)) {
+    const positions = mouseOrTouchPositions(e, ['touchstart'])
+    if (avatar.prepareMovePosition(...positions)) {
+      switchSwipable(false)
       isDragging = true
       startDraggingTime = new Date()
     }
   }
 
   function inDragging(e) {
+    const positions = mouseOrTouchPositions(e, ['touchmove'])
+
     if (isDragging) {
       e.target.style.cursor = 'move'
-      avatar.movePosition(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
+      avatar.movePosition(...positions)
       return
     }
 
-    if(avatar.isOverAvatar(e.nativeEvent.offsetX, e.nativeEvent.offsetY)) {
+    if(avatar.isOverAvatar(...positions)) {
       e.target.style.cursor = 'move'
     } else {
       e.target.style.cursor = 'default'
@@ -36,6 +41,7 @@ export default function useLessonAvatar(setIsLoading, isSpeaking, hasResize) {
 
   function endDragging() {
     if (isDragging) {
+      switchSwipable(true)
       isDragging = false
       setRecord({
         kind: 'avatarMoving',
