@@ -3,6 +3,7 @@ import { useLessonRecorderContext } from '../../contexts/lessonRecorderContext'
 import { switchSwipable, mouseOrTouchPositions } from '../../utils'
 
 let canvasCtx
+let isMobileDevice
 let startPosition = {}
 let startDrawingTime
 let isDrawing = false
@@ -25,16 +26,17 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
   }
 
   function startDrawing(e) {
-    if (enablePen  && !isDrawingHide) {
+    if (isMobileDevice && e.type === 'mousedown') return // モバイルではtouchstart後にmousedownが呼ばれるのでスキップ
+    if (enablePen && !isDrawingHide) {
       switchSwipable(false)
       isCleared = false
+      isDrawing = true
       startDrawingTime = new Date()
 
       const [x, y] = mouseOrTouchPositions(e, ['touchstart'])
       drawEdgeCircle(x, y)
 
       canvasCtx.beginPath()
-      isDrawing = true
 
       startPosition = { x, y }
       createNewHistory()
@@ -44,7 +46,7 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
   }
 
   function inDrawing(e) {
-    if (enablePen  && !isDrawingHide) {
+    if (enablePen && !isDrawingHide) {
       if (!isDrawing) return
 
       const [x, y] = mouseOrTouchPositions(e, ['touchmove'])
@@ -56,7 +58,8 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
   }
 
   function endDrawing(e) {
-    if (enablePen  && !isDrawingHide) {
+    if (isMobileDevice && e.type === 'mouseup') return // モバイルではtouchend後にmouseupが呼ばれるのでスキップ
+    if (enablePen && !isDrawingHide) {
       if (!isDrawing) return
       switchSwipable(true)
 
@@ -188,6 +191,7 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
   }
 
   useEffect(() => {
+    isMobileDevice = window.ontouchstart !== undefined
     canvasCtx = drawingRef.current.getContext('2d')
   }, [])
 
