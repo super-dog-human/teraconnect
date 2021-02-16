@@ -28,9 +28,7 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
       isCleared = false
       startDrawingTime = new Date()
 
-      const x = e.nativeEvent.offsetX
-      const y = e.nativeEvent.offsetY
-
+      const [x, y] = calcPosition(e, ['touchstart'])
       drawEdgeCircle(x, y)
 
       canvasCtx.beginPath()
@@ -40,15 +38,16 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
       createNewHistory()
     } else {
       startDragging(e) // ペンが有効でない時はアバターを操作する
-    }1
+    }
   }
 
   function inDrawing(e) {
     if (enablePen  && !isDrawingHide) {
       if (!isDrawing) return
 
-      drawLine(e.nativeEvent.offsetX, e.nativeEvent.offsetY)
-      startPosition = { x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY }
+      const [x, y] = calcPosition(e, ['touchmove'])
+      drawLine(x, y)
+      startPosition = { x, y }
     } else {
       inDragging(e) // ペンが有効でない時はアバターを操作する
     }
@@ -58,11 +57,10 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
     if (enablePen  && !isDrawingHide) {
       if (!isDrawing) return
 
-      const x = e.nativeEvent.offsetX
-      const y = e.nativeEvent.offsetY
-
-      drawEdgeCircle(x, y)
+      const [x, y] = calcPosition(e, ['touchend', 'touchcancel'])
       drawLine(x, y)
+      drawEdgeCircle(x, y)
+
       setRecord({
         kind: 'drawing',
         action: 'draw',
@@ -73,6 +71,17 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
       isDrawing = false
     } else {
       endDragging(e) // ペンが有効でない時はアバターを操作する
+    }
+  }
+
+  function calcPosition(e, eventNames) {
+    if (eventNames.includes(e.type)) {
+      const targetRect = e.target.getBoundingClientRect()
+      const x = e.changedTouches[0].pageX - targetRect.x - window.pageXOffset
+      const y = e.changedTouches[0].pageY - targetRect.y - window.pageYOffset
+      return [x, y]
+    } else {
+      return [e.nativeEvent.offsetX, e.nativeEvent.offsetY]
     }
   }
 
