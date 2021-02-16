@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/core'
+import { useScreenClass } from 'react-grid-system'
 import { useLessonRecorderContext } from '../../../../libs/contexts/lessonRecorderContext'
 import RecordingIcon from './recordingIcon'
 import ElapsedTime from './elapsedTime'
@@ -11,6 +12,7 @@ export default function RecordingButton({ token, lessonID, isMicReady }) {
   const [isRecordable, setIsRecordable] = useState(false)
   const [hasRecordingStarted, setHasRecordingStarted] = useState(false)
   const { isRecording, setIsRecording, isFinishing, elapsedSeconds, switchCounter, finishRecording } = useLessonRecorderContext()
+  const screenClass = useScreenClass()
 
   function handleSwitchRecordingClick() {
     if (!isRecordable) return
@@ -45,6 +47,7 @@ export default function RecordingButton({ token, lessonID, isMicReady }) {
   }, [isMicReady, elapsedSeconds])
 
   const finishRecordingStyle = css({
+    width: '140px',
     opacity: !isRecording && hasRecordingStarted ? 0.3 : 0,
     [':hover']: {
       opacity: isFinishing ? 0.3 : !isRecording && hasRecordingStarted ? 1 : 0,
@@ -59,7 +62,13 @@ export default function RecordingButton({ token, lessonID, isMicReady }) {
     flexShrink: 0,
     cursor: isFinishing ? 'default' : 'pointer',
     textAlign: 'left',
-    width: '140px',
+  })
+
+  const elapsedTimeStyle = css({
+    width: '100px',
+    flexShrink: 0,
+    cursor: isFinishing ? 'default' : 'pointer',
+    textAlign: 'left',
   })
 
   return (
@@ -81,7 +90,7 @@ export default function RecordingButton({ token, lessonID, isMicReady }) {
           </div>
         </button>
       </div>
-      <div css={sideRecordingButtonStyle} onClick={handleSwitchRecordingClick}>
+      <div css={elapsedTimeStyle} onClick={handleSwitchRecordingClick}>
         <ElapsedTime elapsedSeconds={elapsedSeconds} />
       </div>
     </div>

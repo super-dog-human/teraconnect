@@ -2,6 +2,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { css } from '@emotion/core'
+import { Visible, useScreenClass } from 'react-grid-system'
 import RecordingButton from './recordingButton'
 import DrawingConfigPanel from './drawingConfigPanel'
 import DrawingConfigButton from './drawingConfigButton'
@@ -10,6 +11,7 @@ import { useLessonRecorderContext } from '../../../../libs/contexts/lessonRecord
 export default function LessonRecordHeader({ token, lessonID, isMicReady, isDrawingHide, setIsDrawingHide, enablePen, setEnablePen,
   undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth, setIsShowControlPanel }) {
   const { isFinishing } = useLessonRecorderContext()
+  const screenClass = useScreenClass()
 
   function handleDrawingHide() {
     setIsDrawingHide(!isDrawingHide)
@@ -31,21 +33,24 @@ export default function LessonRecordHeader({ token, lessonID, isMicReady, isDraw
     setIsShowControlPanel(state => !state)
   }
 
+  const settingButtonStyle = css({
+    textAlign: 'right',
+  })
+
   return (
     <header css={headerStyle} className="header-z">
       <div css={bodyStyle}>
-        <div css={flexItemStyle}>
+        <div css={logoItemStyle}>
           <Link href="/">
             <a>
               <img css={logoImageStyle} src="/img/logo_white.png" srcSet="/img/logo_white.png 1x, /img/logo_white@2x.png 2x" />
             </a>
           </Link>
         </div>
-        <div css={flexItemStyle}></div>
         <div css={flexItemStyle}>
           <RecordingButton token={token} lessonID={lessonID} isMicReady={isMicReady} />
         </div>
-        <div css={flexItemStyle}>
+        <div css={drawingButtonsLineStyle}>
           <DrawingConfigButton disabled={isFinishing} onClick={handleDrawingHide} isSelected={isDrawingHide}>
             <img src="/img/icon/hide.svg" />
           </DrawingConfigButton>
@@ -90,10 +95,16 @@ const bodyStyle = css({
   marginRight: 'auto',
 })
 
+const logoItemStyle = css({
+  width: '100%',
+  textAlign: 'left1',
+})
+
 const logoImageStyle = css({
   width: '181px',
   height: '25px',
   verticalAlign: 'middle',
+  marginLeft: '20px',
 })
 
 const flexItemStyle = css({
@@ -101,10 +112,8 @@ const flexItemStyle = css({
   textAlign: 'center',
 })
 
-const settingButtonStyle = css({
+const drawingButtonsLineStyle = css({
   width: '100%',
-  textAlign: 'right',
-  ['> button']: {
-    marginRight: '20px',
-  }
+  textAlign: 'center',
+  whiteSpace: 'nowrap',
 })
