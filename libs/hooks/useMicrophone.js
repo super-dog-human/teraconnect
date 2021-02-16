@@ -9,8 +9,7 @@ export default function useMicrophone() {
 
   function initAudioContext() {
     audioCtx = typeof webkitAudioContext === 'undefined' ?
-      new AudioContext({ sampleRate: 44100 }) :
-      new webkitAudioContext({ sampleRate: 44100 }) // for safari
+      new AudioContext() : new webkitAudioContext() // for safari
   }
 
   async function initMicInput(micDeviceID) {

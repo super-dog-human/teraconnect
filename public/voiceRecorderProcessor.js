@@ -121,6 +121,7 @@ class Recorder extends AudioWorkletProcessor {
         speeched: this._elapsedSeconds(this.beginningBufferingTime),
         durationSec: currentTime - this.beginningBufferingTime,
         buffers: this.buffers,
+        sampleRate,
       }
     })
 
