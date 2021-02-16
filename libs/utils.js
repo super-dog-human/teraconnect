@@ -23,27 +23,15 @@ export function stringToUpperCamel(str) {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
-export function stringToMinutesFormat(currentSecWithFloat) {
-  const currentSec = Math.floor(currentSecWithFloat)
-  const minutes = Math.floor(currentSec / 60).toString()
-  const seconds = (currentSec - minutes * 60).toString()
-  return `${minutes.padStart(2, '0')}:${seconds.padStart(2, '0')}`
+export function floatSecondsToMinutesFormat(elapsedSeconds) {
+  const minutes = Math.floor(elapsedSeconds / 60) % 60
+  const seconds = Math.floor(elapsedSeconds - minutes * 60)
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
 }
 
 export function arrayToUniq(arr) {
   return arr.filter((x, i, self) => {
     return self.indexOf(x) === i
-  })
-}
-
-export function sendExceptionToGA(componentName, err, isFatal) {
-//  if (!isProduction()) return
-
-  ReactGA.exception({
-    category: componentName,
-    action: err.message,
-    description: `${err.stack.replace(/(@)(http|https):\/\//g, '(at)$2:')}`,
-    fatal: isFatal
   })
 }
 
@@ -58,20 +46,25 @@ export function extentionNameTo3Chars(extention) {
   }
 }
 
-export function switchSwipable(isSwipable) {
-  (isSwipable) ? removeEvent() : addEvent()
-  function addEvent() {
-    window.addEventListener('touchmove', preventSwipe, { passive: false })
-  }
+export function addPreventSwipeEvent() {
+  window.addEventListener('touchmove', preventSwipe, { passive: false })
+}
 
-  function removeEvent() {
-    window.removeEventListener('touchmove', preventSwipe)
-  }
+export function removePreventSwipeEvent() {
+  window.removeEventListener('touchmove', preventSwipe)
+}
+
+let isSwipable = true
+export function switchSwipable(status) {
+  isSwipable = status
 }
 
 function preventSwipe(e) {
-  e.preventDefault()
-  e.stopImmediatePropagation()
+  if (!e.cancelable) return
+  if (!isSwipable) {
+    e.preventDefault()
+    e.stopImmediatePropagation()
+  }
 }
 
 export function mouseOrTouchPositions(e, touchEventNames) {

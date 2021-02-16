@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/core'
 import useLessonRecordChangeTabDetector from '../../../libs/hooks/lesson/record/useChangeTabDetector'
 import useRecordResource from '../../../libs/hooks/lesson/record/useRecordResource'
@@ -17,6 +17,7 @@ import LessonImage from '../image'
 import LessonDrawing from '../drawing'
 import LessonRandomTips from '../randomTips'
 import VoiceSpectrum from '../../voiceSpectrum'
+import { addPreventSwipeEvent, removePreventSwipeEvent } from '../../../libs/utils'
 
 const LessonRecord = React.forwardRef(function lessonRecord({ token, lesson, hasResize }, ref) {
   const [isLoading, setIsLoading] = useState(true)
@@ -31,6 +32,13 @@ const LessonRecord = React.forwardRef(function lessonRecord({ token, lesson, has
   const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useLessonAvatar(setIsLoading, isSpeaking, hasResize)
   const { isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth,
     startDrawing, inDrawing, endDrawing, drawingRef } = useLessonDrawing(hasResize, startDragging, inDragging, endDragging)
+
+  useEffect(() => {
+    addPreventSwipeEvent()
+    return () => {
+      removePreventSwipeEvent()
+    }
+  }, [])
 
   return (
     <>
