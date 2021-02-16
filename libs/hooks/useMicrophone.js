@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useDialogContext } from '../contexts/dialogContext'
 
 let audioCtx
 let stream
@@ -6,6 +7,7 @@ let micInput
 
 export default function useMicrophone() {
   const [isMicReady, setIsMicReady] = useState(false)
+  const { showDialog } = useDialogContext()
 
   function initAudioContext() {
     audioCtx = typeof webkitAudioContext === 'undefined' ?
@@ -15,6 +17,27 @@ export default function useMicrophone() {
   async function initMicInput(micDeviceID) {
     if (!audioCtx) initAudioContext()
 
+    if (audioCtx.state === 'running') {
+      await connectMic(micDeviceID)
+    } else {
+      return new Promise(resolve => {
+        showDialog({
+          title: 'マイク使用の確認',
+          message: 'この画面では端末のマイクを使用します。よろしいですか？',
+          canDismiss: true,
+          dismissName: 'キャンセル',
+          callbackName: '許可',
+          callback: async () => {
+            await audioCtx.resume()
+            await connectMic(micDeviceID)
+            resolve()
+          },
+        })
+      })
+    }
+  }
+
+  async function connectMic(micDeviceID) {
     stream = await navigator.mediaDevices.getUserMedia({
       audio: {
         echoCancellation: true,
