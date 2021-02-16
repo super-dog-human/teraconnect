@@ -58,23 +58,29 @@ export function extentionNameTo3Chars(extention) {
   }
 }
 
-/*
+export function switchSwipable(isSwipable) {
+  (isSwipable) ? removeEvent() : addEvent()
+  function addEvent() {
+    window.addEventListener('touchmove', preventSwipe, { passive: false })
+  }
 
-export function showLoading(context, message = '') {
-  context.setLoading(true)
-  context.setMessage(message)
+  function removeEvent() {
+    window.removeEventListener('touchmove', preventSwipe)
+  }
 }
 
-export function hideLoading(context) {
-  context.setLoading(false)
-  context.setMessage('')
+function preventSwipe(e) {
+  e.preventDefault()
+  e.stopImmediatePropagation()
 }
 
-export function openModal(context, option) {
-  context.setModalState({ isOpen: true, ...option })
+export function mouseOrTouchPositions(e, touchEventNames) {
+  if (touchEventNames.includes(e.type)) {
+    const targetRect = e.target.getBoundingClientRect()
+    const x = e.changedTouches[0].pageX - targetRect.x - window.pageXOffset
+    const y = e.changedTouches[0].pageY - targetRect.y - window.pageYOffset
+    return [x, y]
+  } else {
+    return [e.nativeEvent.offsetX, e.nativeEvent.offsetY]
+  }
 }
-
-export function closeModal(context) {
-  context.setModalState({ isOpen: false })
-}
-*/

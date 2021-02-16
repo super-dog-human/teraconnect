@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 import { useLessonRecorderContext } from '../../contexts/lessonRecorderContext'
+import { switchSwipable, mouseOrTouchPositions } from '../../utils'
 
 let canvasCtx
 let startPosition = {}
@@ -25,10 +26,11 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
 
   function startDrawing(e) {
     if (enablePen  && !isDrawingHide) {
+      switchSwipable(false)
       isCleared = false
       startDrawingTime = new Date()
 
-      const [x, y] = calcPosition(e, ['touchstart'])
+      const [x, y] = mouseOrTouchPositions(e, ['touchstart'])
       drawEdgeCircle(x, y)
 
       canvasCtx.beginPath()
@@ -45,7 +47,7 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
     if (enablePen  && !isDrawingHide) {
       if (!isDrawing) return
 
-      const [x, y] = calcPosition(e, ['touchmove'])
+      const [x, y] = mouseOrTouchPositions(e, ['touchmove'])
       drawLine(x, y)
       startPosition = { x, y }
     } else {
@@ -56,8 +58,9 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
   function endDrawing(e) {
     if (enablePen  && !isDrawingHide) {
       if (!isDrawing) return
+      switchSwipable(true)
 
-      const [x, y] = calcPosition(e, ['touchend', 'touchcancel'])
+      const [x, y] = mouseOrTouchPositions(e, ['touchend', 'touchcancel'])
       drawLine(x, y)
       drawEdgeCircle(x, y)
 
@@ -71,17 +74,6 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
       isDrawing = false
     } else {
       endDragging(e) // ペンが有効でない時はアバターを操作する
-    }
-  }
-
-  function calcPosition(e, eventNames) {
-    if (eventNames.includes(e.type)) {
-      const targetRect = e.target.getBoundingClientRect()
-      const x = e.changedTouches[0].pageX - targetRect.x - window.pageXOffset
-      const y = e.changedTouches[0].pageY - targetRect.y - window.pageYOffset
-      return [x, y]
-    } else {
-      return [e.nativeEvent.offsetX, e.nativeEvent.offsetY]
     }
   }
 
