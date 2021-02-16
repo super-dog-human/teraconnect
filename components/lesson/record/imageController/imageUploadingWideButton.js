@@ -6,8 +6,9 @@ import ImageUploadingIcon from './imageUploadingIcon'
 export default function ImageUploadingWideButton({ hasDragOver, onDragOver,onDragLeave, onDrop, onClick, disabled }) {
   const buttonStyle = css({
     display: 'block',
-    width: '600px',
-    height: '60px',
+    width: '80%',
+    maxWidth: '600px',
+    minHeight: '60px',
     backgroundColor: hasDragOver ? 'var(--dark-purple)' : 'inherited',
     margin: 'auto',
     cursor: 'pointer',
@@ -27,6 +28,7 @@ export default function ImageUploadingWideButton({ hasDragOver, onDragOver,onDra
       marginRight: '30px',
     },
     ['>span']: {
+      whiteSpace: 'normal',
       fontSize: '15px',
       lineHeight: '15px',
       verticalAlign: 'middle',
