@@ -12,7 +12,6 @@ export default class MyDocument extends Document {
     return (
       <Html lang="ja-JP">
         <Head>
-          <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0" />
           <script
             async
             src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}

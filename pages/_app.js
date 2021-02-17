@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { Provider } from 'next-auth/client'
 import { ErrorDialogContext, ErrorDialogProvider } from '../libs/contexts/errorDialogContext'
@@ -27,20 +28,25 @@ export default function App ({ Component, pageProps }) {
   }, [router.events])
 
   return (
-    <Provider session={pageProps.session}>
-      <ErrorDialogProvider>
-        <DialogProvider>
-          <ErrorDialogContext.Consumer>
-            {({ showError }) => (
-              <ErrorBoundary showError={showError}>
-                <ErrorDialog />
-                <Dialog />
-                <Component {...pageProps} />
-              </ErrorBoundary>
-            )}
-          </ErrorDialogContext.Consumer>
-        </DialogProvider>
-      </ErrorDialogProvider>
-    </Provider>
+    <>
+      <Head>
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0" />
+      </Head>
+      <Provider session={pageProps.session}>
+        <ErrorDialogProvider>
+          <DialogProvider>
+            <ErrorDialogContext.Consumer>
+              {({ showError }) => (
+                <ErrorBoundary showError={showError}>
+                  <ErrorDialog />
+                  <Dialog />
+                  <Component {...pageProps} />
+                </ErrorBoundary>
+              )}
+            </ErrorDialogContext.Consumer>
+          </DialogProvider>
+        </ErrorDialogProvider>
+      </Provider>
+    </>
   )
 }
