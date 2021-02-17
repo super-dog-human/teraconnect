@@ -77,8 +77,8 @@ const mainStyle = css({
 
 const bodyStyle = css({
   position: 'relative',
-  marginLeft: 'auto',
-  marginRight: 'auto',
+  margin: 'auto',
   maxWidth: '1280px',
   maxHeight: '720px',
+  fontSize: 0, // next/imageで出力されるトップレベルの要素がinline-blockなので余白をなくすために指定
 })
