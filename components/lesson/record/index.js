@@ -80,5 +80,4 @@ const bodyStyle = css({
   margin: 'auto',
   maxWidth: '1280px',
   maxHeight: '720px',
-  fontSize: 0, // next/imageで出力されるトップレベルの要素がinline-blockなので余白をなくすために指定
 })
