@@ -111,12 +111,12 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
         canvasCtx.globalCompositeOperation = h.eraser ? 'destination-out': 'source-over'
         const coef = { x: canvasCtx.canvas.clientWidth / h.width, y: canvasCtx.canvas.clientHeight / h.height }
 
-        const circlePositions = calcResizePosition(coef, h.drawings[0], h.drawings[h.drawings.length - 1])
+        const circlePositions = calcResizePosition(coef, h.positions[0], h.positions[h.positions.length - 1])
         drawEdgeCircle(circlePositions[0], circlePositions[1])
 
         canvasCtx.beginPath()
-        h.drawings.slice(1).forEach((d, i) => {
-          canvasCtx.quadraticCurveTo(...calcResizePosition(coef, h.drawings[i], d))
+        h.positions.slice(1).forEach((d, i) => {
+          canvasCtx.quadraticCurveTo(...calcResizePosition(coef, h.positions[i], d))
           canvasCtx.stroke()
         })
 
@@ -150,12 +150,12 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
       color: color,
       eraser: isEraser(),
       lineWidth: lineWidth,
-      drawings: [startPosition],
+      positions: [startPosition],
     })
   }
 
   function addHistory(drawing) {
-    histories[histories.length - 1].drawings.push(drawing)
+    histories[histories.length - 1].positions.push(drawing)
   }
 
   function addClearHistory() {

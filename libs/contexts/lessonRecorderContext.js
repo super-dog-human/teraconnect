@@ -20,6 +20,7 @@ const lessonInStopping = {
   drawings: [],
 }
 const lesson = {
+  duration: 0,
   avatarID: null,
   avatarLightColor: null,
   backgroundImageID: null,
@@ -53,9 +54,9 @@ const LessonRecorderProvider = ({ children }) => {
       return
     case 'avatarMoving': {
       const avatarMoving = {
-        elapsedtime: parseFloat(realElapsedTime().toFixed(3)),
+        elapsedtime: elapsedFloatTime(),
         duration: parseFloat((record.duration * 0.001).toFixed(3)),
-        value: record.value,
+        position: record.value,
       }
 
       if (isRecording) {
@@ -68,9 +69,9 @@ const LessonRecorderProvider = ({ children }) => {
     }
     case 'graphic': {
       const graphic = {
-        elapsedtime: parseFloat(realElapsedTime().toFixed(3)),
+        graphicID: parseInt(record.value),
+        elapsedtime: elapsedFloatTime(),
         action: record.action,
-        id: record.value
       }
 
       if (isRecording) {
@@ -82,13 +83,13 @@ const LessonRecorderProvider = ({ children }) => {
     }
     case 'drawing': {
       const newDrawing = {
-        elapsedtime: realElapsedTime().toFixed(3),
+        elapsedtime: elapsedFloatTime(),
         duration: parseFloat((record.duration * 0.001).toFixed(3)),
         action: record.action,
       }
 
       if (record.action === 'draw') {
-        newDrawing.value = record.value
+        newDrawing.strokes = record.value
       }
 
       if (isRecording) {
@@ -100,6 +101,10 @@ const LessonRecorderProvider = ({ children }) => {
       return
     }
     }
+  }
+
+  function elapsedFloatTime() {
+    return parseFloat(realElapsedTime().toFixed(3))
   }
 
   function finishRecording(token, lessonID) {
@@ -117,6 +122,7 @@ const LessonRecorderProvider = ({ children }) => {
 
   async function uploadLesson(token, lessonID) {
     setIsFinishing(true)
+    lesson.duration = elapsedFloatTime()
 
     post(`/lessons/${lessonID}/materials`, lesson, token, 'PUT')
       .then(() => {
