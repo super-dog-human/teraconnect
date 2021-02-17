@@ -2,7 +2,6 @@
 import React from 'react'
 import Link from 'next/link'
 import { css } from '@emotion/core'
-import { Visible, useScreenClass } from 'react-grid-system'
 import RecordingButton from './recordingButton'
 import DrawingConfigPanel from './drawingConfigPanel'
 import DrawingConfigButton from './drawingConfigButton'
@@ -11,7 +10,6 @@ import { useLessonRecorderContext } from '../../../../libs/contexts/lessonRecord
 export default function LessonRecordHeader({ token, lessonID, isMicReady, isDrawingHide, setIsDrawingHide, enablePen, setEnablePen,
   undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth, setIsShowControlPanel }) {
   const { isFinishing } = useLessonRecorderContext()
-  const screenClass = useScreenClass()
 
   function handleDrawingHide() {
     setIsDrawingHide(!isDrawingHide)

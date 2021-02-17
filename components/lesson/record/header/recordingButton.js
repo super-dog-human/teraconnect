@@ -1,7 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/core'
-import { useScreenClass } from 'react-grid-system'
 import { useLessonRecorderContext } from '../../../../libs/contexts/lessonRecorderContext'
 import RecordingIcon from './recordingIcon'
 import ElapsedTime from './elapsedTime'
@@ -12,7 +11,6 @@ export default function RecordingButton({ token, lessonID, isMicReady }) {
   const [isRecordable, setIsRecordable] = useState(false)
   const [hasRecordingStarted, setHasRecordingStarted] = useState(false)
   const { isRecording, setIsRecording, isFinishing, elapsedSeconds, switchCounter, finishRecording } = useLessonRecorderContext()
-  const screenClass = useScreenClass()
 
   function handleSwitchRecordingClick() {
     if (!isRecordable) return
