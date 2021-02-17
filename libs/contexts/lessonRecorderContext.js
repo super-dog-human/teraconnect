@@ -41,10 +41,9 @@ const LessonRecorderProvider = ({ children }) => {
     switch (record.kind) {
     case 'avatarID':
       lesson.avatarID = record.value
-      console.log(lesson.avatarID)
       return
     case 'avatarLightColor':
-      lesson.avatarLightColor = record.value
+      lesson.avatarLightColor = Object.values(record.value).join(',')
       return
     case 'backgroundImageID':
       lesson.backgroundImageID = record.value

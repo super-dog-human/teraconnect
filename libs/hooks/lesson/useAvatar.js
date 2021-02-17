@@ -46,7 +46,7 @@ export default function useLessonAvatar(setIsLoading, isSpeaking, hasResize) {
       setRecord({
         kind: 'avatarMoving',
         duration: new Date() - startDraggingTime,
-        value: avatar.currentPosition(),
+        value: { ...avatar.currentPosition() },
       })
     }
   }
