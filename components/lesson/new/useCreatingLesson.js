@@ -19,7 +19,7 @@ export default function useCreatingLesson(token) {
 
     post('/lessons', body, token)
       .then(response => {
-        if (body.createMethod === 'useVoice') {
+        if (form.createMethod === 'useVoice') {
           router.push(`/lessons/${response.id}/record`)
         } else {
           router.push(`/lessons/${response.id}/edit`)

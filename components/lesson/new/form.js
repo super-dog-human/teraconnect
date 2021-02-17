@@ -41,7 +41,7 @@ export default function LessonNewForm(props) {
       <InputText name="title" maxLength="100" ref={register({ required: true })} />
       { errors.title && '入力してください' }
 
-      <input type="submit" disabled={isCreating}/>
+      <input type="submit" disabled={isCreating} />
     </form>
   )
 }
