@@ -1,9 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
 import { css } from '@emotion/core'
-import ImageUploadingIcon from './imageUploadingIcon'
+import ImageUploadingIcon from './uploadingIcon'
 
-export default function ImageUploadingWideButton({ hasDragOver, onDragOver,onDragLeave, onDrop, onClick, disabled }) {
+export default function uploadingWideButton({ hasDragOver, onDragOver,onDragLeave, onDrop, onClick, disabled }) {
   const buttonStyle = css({
     display: 'block',
     width: '80%',

@@ -1,9 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
 import { css } from '@emotion/core'
-import ImageUploadingIcon from './imageUploadingIcon'
+import ImageUploadingIcon from './uploadingIcon'
 
-export default function ImageUploadingButton({ onClick, disabled }) {
+export default function uploadingButton({ onClick, disabled }) {
   return (
     <button css={bodyStyle} onClick={onClick} disabled={disabled}>
       <ImageUploadingIcon css={imageStyle} />

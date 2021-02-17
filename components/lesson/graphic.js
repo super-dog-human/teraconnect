@@ -2,10 +2,10 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-export default function LessonImage({ image }) {
+export default function LessonGraphic({ graphic }) {
   return (
     <div css={bodyStyle} className="image-z">
-      {image && <img src={image.src} css={imageStyle} />}
+      {graphic && <img src={graphic.src} css={imageStyle} />}
     </div>
   )
 }

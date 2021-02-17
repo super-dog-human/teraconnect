@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useLessonRecorderContext } from '../../../contexts/lessonRecorderContext'
 
-export default function useImageController(setSelectedImage) {
+export default function useImageController(setSelectedGraphic) {
   const [isShow, setIsShow] = useState(false)
   const [imageID, setImageID] = useState()
   const [images, setImages] = useState([])
@@ -10,11 +10,11 @@ export default function useImageController(setSelectedImage) {
   function selectImage(e) {
     const newImageID = e.target.dataset.id
     if (imageID === newImageID && isShow) {
-      setRecord({ kind: 'image', action: 'hide', value: newImageID })
+      setRecord({ kind: 'graphic', action: 'hide', value: newImageID })
       setIsShow(false)
       setImageID()
     } else {
-      setRecord({ kind: 'image', action: 'show', value: newImageID })
+      setRecord({ kind: 'graphic', action: 'show', value: newImageID })
       setIsShow(true)
       setImageID(newImageID)
     }
@@ -23,7 +23,7 @@ export default function useImageController(setSelectedImage) {
   function removeImage (e) {
     const targetImageID = e.currentTarget.dataset.id
     if (imageID === targetImageID && isShow) {
-      setRecord({ kind: 'image', action: 'hide', value: targetImageID })
+      setRecord({ kind: 'graphic', action: 'hide', value: targetImageID })
       setIsShow(false)
       setImageID()
     }
@@ -42,7 +42,7 @@ export default function useImageController(setSelectedImage) {
   }
 
   useEffect(() => {
-    setSelectedImage(images.find(i => i.id === imageID))
+    setSelectedGraphic(images.find(i => i.id === imageID))
   }, [imageID])
 
   return { imageID, selectImage, removeImage, images, setImages, moveImage }

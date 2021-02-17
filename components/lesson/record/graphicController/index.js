@@ -5,16 +5,16 @@ import { Container, Row, Col } from 'react-grid-system'
 import useImageUploader from '../../../../libs/hooks/lesson/record/useImageUploader'
 import useImageController from '../../../../libs/hooks/lesson/record/useImageController'
 import { useLessonRecorderContext } from '../../../../libs/contexts/lessonRecorderContext'
-import ImageUploadingWideButton from './imageUploadingWideButton'
-import ImageUploadingButton from './imageUploadingButton'
+import UploadingWideButton from './uploadingWideButton'
+import UploadingButton from './uploadingButton'
 import ScrollArrow from './scrollArrow'
 import SelectorThumbnail from './selectorThumbnail'
 import DragSwappable from '../../../dragSwappable'
 
-export default function LessonRecordImageController({ id, token, setSelectedImage, hasDragOver }) {
+export default function LessonRecordGraphicController({ id, token, setSelectedGraphic, hasDragOver }) {
   const selectImageBarRef = useRef(null)
   const inputFileRef = useRef(null)
-  const { imageID, selectImage, removeImage, images, setImages, moveImage } = useImageController(setSelectedImage)
+  const { imageID, selectImage, removeImage, images, setImages, moveImage } = useImageController(setSelectedGraphic)
   const { handleDragOver, handleDragLeave, handleDrop, handleChangeFile, handleUploadButtonClick } =
     useImageUploader(id, token, images, setImages, inputFileRef, selectImageBarRef)
   const { isFinishing } = useLessonRecorderContext()
@@ -26,7 +26,7 @@ export default function LessonRecordImageController({ id, token, setSelectedImag
           onChange={handleChangeFile} css={inputFileStyle} ref={inputFileRef} />
 
         {images.length === 0 && (
-          <ImageUploadingWideButton hasDragOver={hasDragOver} onDragOver={handleDragOver} onDragLeave={handleDragLeave}
+          <UploadingWideButton hasDragOver={hasDragOver} onDragOver={handleDragOver} onDragLeave={handleDragLeave}
             onDrop={handleDrop} onClick={handleUploadButtonClick} disabled={isFinishing} />
         )}
 
@@ -48,7 +48,7 @@ export default function LessonRecordImageController({ id, token, setSelectedImag
                 <ScrollArrow direction="right" targetRef={selectImageBarRef} />
               </Col>
               <Col sm={1} css={centeringStyle}>
-                <ImageUploadingButton onClick={handleUploadButtonClick} disabled={isFinishing} />
+                <UploadingButton onClick={handleUploadButtonClick} disabled={isFinishing} />
               </Col>
             </Row>
           </Container>

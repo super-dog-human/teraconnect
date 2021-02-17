@@ -16,7 +16,7 @@ const LessonRecorderContext = React.createContext({
 
 const lessonInStopping = {
   avatarMoving: null,
-  image: null,
+  graphic: null,
   drawings: [],
 }
 const lesson = {
@@ -25,7 +25,7 @@ const lesson = {
   backgroundImageID: null,
   backgroundMusicID: null,
   avatarMovings: [],
-  images: [],
+  graphics: [],
   drawings: [],
 }
 
@@ -66,17 +66,17 @@ const LessonRecorderProvider = ({ children }) => {
       }
       return
     }
-    case  'image': {
-      const image = {
+    case 'graphic': {
+      const graphic = {
         elapsedtime: parseFloat(realElapsedTime().toFixed(3)),
         action: record.action,
         id: record.value
       }
 
       if (isRecording) {
-        lesson.images.push(image)
+        lesson.graphics.push(graphic)
       } else {
-        lessonInStopping.image = image // 停止中に何回画像を切り替えても、直近の操作しか意味を持たない
+        lessonInStopping.graphic = graphic // 停止中に何回画像を切り替えても、直近の操作しか意味を持たない
       }
       return
     }
@@ -143,18 +143,18 @@ const LessonRecorderProvider = ({ children }) => {
       lessonInStopping.avatarMoving = null
     }
 
-    if (lessonInStopping.image) {
-      const lastImage = lesson.images[lesson.images.length - 1]
+    if (lessonInStopping.graphic) {
+      const lastGraphic = lesson.graphics[lesson.graphics.length - 1]
 
-      if (!lastImage) {
-        lesson.images.push(lessonInStopping.image)
-      } else if (lessonInStopping.image.id === lastImage.id && lessonInStopping.action != lastImage.action) {
-        lesson.images.push(lessonInStopping.image)
-      } else if (lessonInStopping.image.id != lastImage.id && lessonInStopping.action === 'show') {
-        lesson.images.push(lessonInStopping.image)
+      if (!lastGraphic) {
+        lesson.graphics.push(lessonInStopping.graphic)
+      } else if (lessonInStopping.graphic.id === lastGraphic.id && lessonInStopping.action != lastGraphic.action) {
+        lesson.graphics.push(lessonInStopping.graphic)
+      } else if (lessonInStopping.graphic.id != lastGraphic.id && lessonInStopping.action === 'show') {
+        lesson.graphics.push(lessonInStopping.graphic)
       }
 
-      lessonInStopping.image = null
+      lessonInStopping.graphic = null
     }
 
     if (lessonInStopping.drawings.length > 0) {

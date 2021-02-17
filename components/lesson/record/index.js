@@ -10,10 +10,10 @@ import useVoiceRecorder from '../../../libs/hooks/lesson/record/useVoiceRecorder
 import LessonRecordHeader from './header'
 import LessonRecordLoadingIndicator from './loadingIndicator'
 import LessonRecordSettingPanel from './settingPanel'
-import LessonRecordImageController from './imageController'
+import LessonRecordGraphicController from './graphicController'
 import LessonBackgroundImage from '../backgroundImage'
 import LessonAvatar from '../avatar'
-import LessonImage from '../image'
+import LessonGraphic from '../graphic'
 import LessonDrawing from '../drawing'
 import LessonRandomTips from '../randomTips'
 import VoiceSpectrum from '../../voiceSpectrum'
@@ -22,7 +22,7 @@ import { addPreventSwipeEvent, removePreventSwipeEvent } from '../../../libs/uti
 const LessonRecord = React.forwardRef(function lessonRecord({ token, lesson, hasResize }, ref) {
   const [isLoading, setIsLoading] = useState(true)
   const [bgImageURL, setBgImageURL] = useState()
-  const [selectedImage, setSelectedImage] = useState()
+  const [selectedGraphic, setSelectedGraphic] = useState()
   const [isShowControlPanel, setIsShowControlPanel] = useState(false)
   const [isShowVoiceSpectrum, setIsShowVoiceSpectrum] = useState(true)
   useLessonRecordChangeTabDetector()
@@ -50,7 +50,7 @@ const LessonRecord = React.forwardRef(function lessonRecord({ token, lesson, has
           <LessonRecordLoadingIndicator isLoading={isLoading} size={15} />
           <VoiceSpectrum micDeviceID={micDeviceID} isShow={isShowVoiceSpectrum} setIsShow={setIsShowVoiceSpectrum} />
           <LessonBackgroundImage src={bgImageURL} />
-          <LessonImage image={selectedImage} />
+          <LessonGraphic graphic={selectedGraphic} />
           <LessonAvatar ref={avatarRef} onMouseDown={startDragging} onMouseMove={inDragging} onMouseUp={endDragging} onMouseLeave={endDragging}
             onTouchStart={startDragging} onTouchMove={inDragging} onTouchEnd={endDragging} onTouchCancel={endDragging} />
           <LessonDrawing isHide={isDrawingHide} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing} drawingRef={drawingRef} />
@@ -58,7 +58,7 @@ const LessonRecord = React.forwardRef(function lessonRecord({ token, lesson, has
             avatars={avatars} setAvatarConfig={setAvatarConfig} bgms={bgms} setMicDeviceID={setMicDeviceID} silenceThresholdSec={silenceThresholdSec}
             setSilenceThresholdSec={setSilenceThresholdSec} isShowVoiceSpectrum={isShowVoiceSpectrum} setIsShowVoiceSpectrum={setIsShowVoiceSpectrum} />
         </div>
-        <LessonRecordImageController id={lesson.id} token={token} setSelectedImage={setSelectedImage} hasDragOver={hasDragOver} />
+        <LessonRecordGraphicController id={lesson.id} token={token} setSelectedGraphic={setSelectedGraphic} hasDragOver={hasDragOver} />
         <LessonRandomTips />
       </main>
     </>
