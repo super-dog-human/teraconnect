@@ -6,8 +6,8 @@ import usePreventBack from '../../../libs/hooks/lesson/record/usePreventBack'
 import useResizeDetector from '../../../libs/hooks/useResizeDetector'
 import LessonRecord from '../../../components/lesson/record/'
 import Footer from '../../../components/footer'
-import requirePageAuth from '../../../components/requirePageAuth'
-import { fetchWithAuth } from '../../../libs/fetch'
+import requirePageAuth from '../../../libs/requirePageAuth'
+import fetchLessonAsProps from '../../../libs/fetchLessonAsProps'
 
 const Page = ({ token, lesson }) => {
   usePreventBack()
@@ -31,18 +31,5 @@ export default Page
 
 export async function getServerSideProps(context) {
   const authProps = await requirePageAuth(context)
-  const id = context.query.id
-  const lesson = await fetchWithAuth(`/lessons/${id}?for_authoring=true`, authProps.props.token).catch(e => {
-    if (e.response.status === '401') {
-      context.res.writeHead(307, { Location: '/login' })
-      context.res.end()
-    } else {
-      throw e
-    }
-  })
-
-  return { props: {
-    ...authProps.props,
-    lesson,
-  } }
+  return fetchLessonAsProps(context, authProps.props)
 }

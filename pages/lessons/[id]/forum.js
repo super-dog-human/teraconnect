@@ -2,7 +2,7 @@ import React from 'react'
 import Head from 'next/head'
 import Layout from '../../../components/layout'
 import { withRouter } from 'next/router'
-import requirePageAuth from '../../../components/requirePageAuth'
+import requirePageAuth from '../../../libs/requirePageAuth'
 
 const Page = withRouter(({ router }) => (
   <>

@@ -1,6 +1,6 @@
 import { getSession } from 'next-auth/client'
 import jwt from 'next-auth/jwt'
-import { fetchWithAuth } from '../libs/fetch'
+import { fetchWithAuth } from './fetch'
 
 export default async function requirePageAuth(context) {
   const req = context.req
@@ -19,10 +19,8 @@ export default async function requirePageAuth(context) {
     return { props: { token } }
   }
 
-  return await fetchWithAuth('/users/me', token)
-    .then(user => (
-      { props: { user, token } }
-    ))
+  return fetchWithAuth('/users/me', token)
+    .then(user => ({ props: { user, token } }))
     .catch(e => {
       if (e.response?.status === 404) {
         context.res.writeHead(307, { Location: '/users/new' })
