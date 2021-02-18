@@ -20,7 +20,7 @@ const lessonInStopping = {
   drawings: [],
 }
 const lesson = {
-  duration: 0,
+  durationSec: 0,
   avatarID: null,
   avatarLightColor: null,
   backgroundImageID: null,
@@ -53,16 +53,17 @@ const LessonRecorderProvider = ({ children }) => {
       lesson.backgroundMusicID = record.value
       return
     case 'avatarMoving': {
+      const durationSec = record.durationMillisec * 0.001
       const avatarMoving = {
-        elapsedtime: elapsedFloatTime(),
-        duration: parseFloat((record.duration * 0.001).toFixed(3)),
+        elapsedtime: elapsedFloatTimeFromDuration(durationSec),
+        durationSec: parseFloat(durationSec.toFixed(3)),
         position: record.value,
       }
 
       if (isRecording) {
         lesson.avatarMovings.push(avatarMoving)
       } else {
-        avatarMoving.duration = 0
+        avatarMoving.durationSec = 0
         lessonInStopping.avatarMoving = avatarMoving // 停止中に複数回移動しても、直近の操作しか意味を持たない
       }
       return
@@ -82,9 +83,10 @@ const LessonRecorderProvider = ({ children }) => {
       return
     }
     case 'drawing': {
+      const durationSec = record.durationMillisec * 0.001
       const newDrawing = {
-        elapsedtime: elapsedFloatTime(),
-        duration: parseFloat((record.duration * 0.001).toFixed(3)),
+        elapsedtime: elapsedFloatTimeFromDuration(durationSec),
+        durationSec: parseFloat((record.durationMillisec * 0.001).toFixed(3)),
         action: record.action,
       }
 
@@ -95,12 +97,16 @@ const LessonRecorderProvider = ({ children }) => {
       if (isRecording) {
         lesson.drawings.push(newDrawing)
       } else {
-        newDrawing.duration = 0
+        newDrawing.durationSec = 0
         lessonInStopping.drawings.push(newDrawing)
       }
       return
     }
     }
+  }
+
+  function elapsedFloatTimeFromDuration(durationSec) {
+    return parseFloat((realElapsedTime() - durationSec).toFixed(3))
   }
 
   function elapsedFloatTime() {
@@ -122,7 +128,8 @@ const LessonRecorderProvider = ({ children }) => {
 
   async function uploadLesson(token, lessonID) {
     setIsFinishing(true)
-    lesson.duration = elapsedFloatTime()
+
+    lesson.durationSec = elapsedFloatTime()
 
     post(`/lessons/${lessonID}/materials`, lesson, token, 'PUT')
       .then(() => {

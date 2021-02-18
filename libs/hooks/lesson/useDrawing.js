@@ -70,7 +70,7 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
       setRecord({
         kind: 'drawing',
         action: 'draw',
-        duration: new Date() - startDrawingTime,
+        durationMillisec: new Date() - startDrawingTime,
         value: histories[histories.length - 1],
       })
 
