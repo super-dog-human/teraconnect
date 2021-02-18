@@ -133,7 +133,6 @@ const LessonRecorderProvider = ({ children }) => {
 
     post(`/lessons/${lessonID}/materials`, lesson, token, 'PUT')
       .then(() => {
-        setIsFinishing(false)
         router.push(`/lessons/${lessonID}/edit`)
       }).catch(e => {
         setIsFinishing(false)
