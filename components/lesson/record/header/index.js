@@ -1,11 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import Link from 'next/link'
 import { css } from '@emotion/core'
+import { useLessonRecorderContext } from '../../../../libs/contexts/lessonRecorderContext'
+import TopLogoLink from '../../../topLogoLink'
 import RecordingButton from './recordingButton'
 import DrawingConfigPanel from './drawingConfigPanel'
 import DrawingConfigButton from './drawingConfigButton'
-import { useLessonRecorderContext } from '../../../../libs/contexts/lessonRecorderContext'
 
 export default function LessonRecordHeader({ token, lessonID, isMicReady, isDrawingHide, setIsDrawingHide, enablePen, setEnablePen,
   undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth, setIsShowControlPanel }) {
@@ -38,13 +38,7 @@ export default function LessonRecordHeader({ token, lessonID, isMicReady, isDraw
   return (
     <header css={headerStyle} className="header-z">
       <div css={bodyStyle}>
-        <div css={logoItemStyle}>
-          <Link href="/">
-            <a>
-              <img css={logoImageStyle} src="/img/logo_white.png" srcSet="/img/logo_white.png 1x, /img/logo_white@2x.png 2x" />
-            </a>
-          </Link>
-        </div>
+        <TopLogoLink color="white" />
         <div css={flexItemStyle}>
           <RecordingButton token={token} lessonID={lessonID} isMicReady={isMicReady} />
         </div>
@@ -95,7 +89,7 @@ const bodyStyle = css({
 
 const logoItemStyle = css({
   width: '100%',
-  textAlign: 'left1',
+  textAlign: 'left',
 })
 
 const logoImageStyle = css({
