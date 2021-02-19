@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { useErrorDialogContext } from '../../../libs/contexts/errorDialogContext'
 import { post } from '../../../libs/fetch'
 
-export default function useCreatingLesson(token) {
+export default function useCreatingLesson() {
   const [isCreating, setIsCreating] = useState(false)
   const router = useRouter()
   const { showError } = useErrorDialogContext()
@@ -17,7 +17,7 @@ export default function useCreatingLesson(token) {
       title: form.title,
     }
 
-    post('/lessons', body, token)
+    post('/lessons', body)
       .then(response => {
         if (form.createMethod === 'useVoice') {
           router.push(`/lessons/${response.id}/record`)

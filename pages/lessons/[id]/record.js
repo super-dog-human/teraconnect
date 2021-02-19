@@ -9,7 +9,7 @@ import Footer from '../../../components/footer'
 import requirePageAuth from '../../../libs/requirePageAuth'
 import fetchLessonAsProps from '../../../libs/fetchLessonAsProps'
 
-const Page = ({ token, lesson }) => {
+const Page = ({ lesson }) => {
   usePreventBack()
   const containerRef = useRef(null)
   const { hasResize } = useResizeDetector(containerRef)
@@ -20,7 +20,7 @@ const Page = ({ token, lesson }) => {
         <title>{lesson.title}の収録 - TERACONNECT</title>
       </Head>
       <LessonRecorderProvider>
-        <LessonRecord token={token} lesson={lesson} ref={containerRef} hasResize={hasResize} />
+        <LessonRecord lesson={lesson} ref={containerRef} hasResize={hasResize} />
       </LessonRecorderProvider>
       <Footer />
     </>

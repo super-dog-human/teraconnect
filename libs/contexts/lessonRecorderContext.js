@@ -113,7 +113,7 @@ const LessonRecorderProvider = ({ children }) => {
     return parseFloat(realElapsedTime().toFixed(3))
   }
 
-  function finishRecording(token, lessonID) {
+  function finishRecording(lessonID) {
     showDialog({
       title: '収録の完了',
       message: '収録を完了します。よろしいですか？',
@@ -121,17 +121,17 @@ const LessonRecorderProvider = ({ children }) => {
       dismissName: 'キャンセル',
       callbackName: '確定',
       callback: () => {
-        uploadLesson(token, lessonID)
+        uploadLesson(lessonID)
       },
     })
   }
 
-  async function uploadLesson(token, lessonID) {
+  async function uploadLesson(lessonID) {
     setIsFinishing(true)
 
     lesson.durationSec = elapsedFloatTime()
 
-    post(`/lessons/${lessonID}/materials`, lesson, token, 'PUT')
+    post(`/lessons/${lessonID}/materials`, lesson, 'PUT')
       .then(() => {
         router.push(`/lessons/${lessonID}/edit`)
       }).catch(e => {
@@ -141,7 +141,7 @@ const LessonRecorderProvider = ({ children }) => {
           original: e,
           canDismiss: true,
           dismissName: '閉じる',
-          callback: () => { uploadLesson(token, lessonID) },
+          callback: () => { uploadLesson(lessonID) },
         })
         console.error(e)
       })

@@ -7,7 +7,7 @@ const maxFileByteSize = 10485760 // 10MB
 const thumbnailMaxSize = { width: 150, height: 95 }
 let imageCount = 0
 
-export default function useImageUploader(id, token, images, setImages, inputFileRef, selectImageBarRef) {
+export default function useImageUploader(id, images, setImages, inputFileRef, selectImageBarRef) {
   const { showError } = useErrorDialogContext()
 
   function handleDrop(e) {
@@ -95,7 +95,7 @@ export default function useImageUploader(id, token, images, setImages, inputFile
     })
 
     const request = { lessonID: id, fileRequests: requests }
-    const result = await post('/graphics', request, token)
+    const result = await post('/graphics', request)
     return result.signedURLs
   }
 

@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
 import useMicrophone from '../../useMicrophone'
 import { useLessonRecorderContext } from '../../../contexts/lessonRecorderContext'
+import { fetchToken } from '../../../fetch'
 
 let recorder
 let uploader
 
-export default function useVoiceRecorder(id, token) {
+export default function useVoiceRecorder(id) {
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [micDeviceID, setMicDeviceID] = useState()
   const [silenceThresholdSec, setSilenceThresholdSec] = useState(1.0)
@@ -47,8 +48,9 @@ export default function useVoiceRecorder(id, token) {
 
   useEffect(() => {
     uploader = new Worker('/voiceUploader.js')
-    // tokenをリフレッシュする場合は？
-    uploader.postMessage({ initialize: { lessonID: id, token, apiURL: process.env.NEXT_PUBLIC_TERACONNECT_API_URL } })
+    fetchToken().then(token => {
+      uploader.postMessage({ initialize: { lessonID: id, token, apiURL: process.env.NEXT_PUBLIC_TERACONNECT_API_URL } })
+    })
 
     return () => {
       terminalCurrentRecorder()

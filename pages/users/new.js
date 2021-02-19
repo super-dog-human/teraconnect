@@ -17,7 +17,7 @@ const Page = () => (
 export default Page
 
 export async function getServerSideProps(context) {
-  //  fetchWithAuth('/users/me', token)
+  //  fetchWithAuth('/users/me')
   // 404でなければeditへ遷移
   return await requirePageAuth(context)
 }

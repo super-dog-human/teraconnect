@@ -7,7 +7,7 @@ import ElapsedTime from './elapsedTime'
 
 const maxRecordableSeconds = 600
 
-export default function RecordingButton({ token, lessonID, isMicReady }) {
+export default function RecordingButton({ lessonID, isMicReady }) {
   const [isRecordable, setIsRecordable] = useState(false)
   const [hasRecordingStarted, setHasRecordingStarted] = useState(false)
   const { isRecording, setIsRecording, isFinishing, elapsedSeconds, switchCounter, finishRecording } = useLessonRecorderContext()
@@ -24,7 +24,7 @@ export default function RecordingButton({ token, lessonID, isMicReady }) {
   function handleFinishRecordingClick() {
     if (!hasRecordingStarted) return
     if (isFinishing) return
-    finishRecording(token, lessonID)
+    finishRecording(lessonID)
   }
 
   useEffect(() => {

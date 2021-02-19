@@ -19,7 +19,7 @@ import LessonRandomTips from '../randomTips'
 import VoiceSpectrum from '../../voiceSpectrum'
 import { addPreventSwipeEvent, removePreventSwipeEvent } from '../../../libs/utils'
 
-const LessonRecord = React.forwardRef(function lessonRecord({ token, lesson, hasResize }, ref) {
+const LessonRecord = React.forwardRef(function lessonRecord({ lesson, hasResize }, ref) {
   const [isLoading, setIsLoading] = useState(true)
   const [bgImageURL, setBgImageURL] = useState()
   const [selectedGraphic, setSelectedGraphic] = useState()
@@ -27,8 +27,8 @@ const LessonRecord = React.forwardRef(function lessonRecord({ token, lesson, has
   const [isShowVoiceSpectrum, setIsShowVoiceSpectrum] = useState(true)
   useLessonRecordChangeTabDetector()
   const { hasDragOver, handleAreaDragOver, handleAreaDragLeave, handleAreaDrop } = useDragOverDetector()
-  const { bgImages, avatars, bgms } = useRecordResource(token, setBgImageURL)
-  const { isMicReady, isSpeaking, micDeviceID, setMicDeviceID, silenceThresholdSec, setSilenceThresholdSec } = useVoiceRecorder(lesson.id, token)
+  const { bgImages, avatars, bgms } = useRecordResource(setBgImageURL)
+  const { isMicReady, isSpeaking, micDeviceID, setMicDeviceID, silenceThresholdSec, setSilenceThresholdSec } = useVoiceRecorder(lesson.id)
   const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useLessonAvatar(setIsLoading, isSpeaking, hasResize)
   const { isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth,
     startDrawing, inDrawing, endDrawing, drawingRef } = useLessonDrawing(hasResize, startDragging, inDragging, endDragging)
@@ -42,7 +42,7 @@ const LessonRecord = React.forwardRef(function lessonRecord({ token, lesson, has
 
   return (
     <>
-      <LessonRecordHeader token={token} lessonID={lesson.id} isMicReady={isMicReady} isDrawingHide={isDrawingHide} setIsDrawingHide={setIsDrawingHide}
+      <LessonRecordHeader lessonID={lesson.id} isMicReady={isMicReady} isDrawingHide={isDrawingHide} setIsDrawingHide={setIsDrawingHide}
         enablePen={enablePen} setEnablePen={setEnablePen} undoDrawing={undoDrawing} clearDrawing={clearDrawing} drawingColor={drawingColor} setDrawingColor={setDrawingColor}
         setDrawingLineWidth={setDrawingLineWidth} setIsShowControlPanel={setIsShowControlPanel} />
       <main css={mainStyle} onDragOver={handleAreaDragOver} onDragLeave={handleAreaDragLeave} onDrop={handleAreaDrop} ref={ref}>
@@ -58,7 +58,7 @@ const LessonRecord = React.forwardRef(function lessonRecord({ token, lesson, has
             avatars={avatars} setAvatarConfig={setAvatarConfig} bgms={bgms} setMicDeviceID={setMicDeviceID} silenceThresholdSec={silenceThresholdSec}
             setSilenceThresholdSec={setSilenceThresholdSec} isShowVoiceSpectrum={isShowVoiceSpectrum} setIsShowVoiceSpectrum={setIsShowVoiceSpectrum} />
         </div>
-        <LessonRecordGraphicController id={lesson.id} token={token} setSelectedGraphic={setSelectedGraphic} hasDragOver={hasDragOver} />
+        <LessonRecordGraphicController id={lesson.id} setSelectedGraphic={setSelectedGraphic} hasDragOver={hasDragOver} />
         <LessonRandomTips />
       </main>
     </>

@@ -7,7 +7,7 @@ import RecordingButton from './recordingButton'
 import DrawingConfigPanel from './drawingConfigPanel'
 import DrawingConfigButton from './drawingConfigButton'
 
-export default function LessonRecordHeader({ token, lessonID, isMicReady, isDrawingHide, setIsDrawingHide, enablePen, setEnablePen,
+export default function LessonRecordHeader({ lessonID, isMicReady, isDrawingHide, setIsDrawingHide, enablePen, setEnablePen,
   undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth, setIsShowControlPanel }) {
   const { isFinishing } = useLessonRecorderContext()
 
@@ -40,7 +40,7 @@ export default function LessonRecordHeader({ token, lessonID, isMicReady, isDraw
       <div css={bodyStyle}>
         <TopLogoLink color="white" />
         <div css={flexItemStyle}>
-          <RecordingButton token={token} lessonID={lessonID} isMicReady={isMicReady} />
+          <RecordingButton lessonID={lessonID} isMicReady={isMicReady} />
         </div>
         <div css={drawingButtonsLineStyle}>
           <DrawingConfigButton disabled={isFinishing} onClick={handleDrawingHide} isSelected={isDrawingHide}>

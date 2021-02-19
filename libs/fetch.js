@@ -14,11 +14,28 @@ export async function fetch(resource, option) {
   throw error
 }
 
-export function fetchWithAuth(resource, token) {
+export async function fetchToken() {
+  const url = process.env.NEXT_PUBLIC_TERACONNECT_FRONT_URL + '/api/auth/token'
+  const response = await isoFetch(url, { credentials: 'include' })
+
+  if (response.ok) {
+    const body = await response.json()
+    return body.token
+  }
+
+  const error = new Error(response.statusText)
+  error.response = response
+
+  throw error
+}
+
+export async function fetchWithAuth(resource, token) {
+  if (!token) token = await fetchToken()
   return fetch(resource, { headers: headerWithToken(token) })
 }
 
-export function post(resource, body, token, method='POST', header) {
+export async function post(resource, body, method='POST', header) {
+  const token = await fetchToken()
   return fetch(resource, {
     method,
     headers: header || headerWithToken(token),

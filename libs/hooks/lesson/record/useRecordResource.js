@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 import { fetch, fetchWithAuth } from '../../../fetch'
 
-export default function useRecordResource(token, setBgImageURL) {
+export default function useRecordResource(setBgImageURL) {
   const { showError } = useErrorDialogContext()
   const [bgImages, setBgImages] = useState([])
   const [avatars, setAvatars] = useState([])
@@ -24,7 +24,7 @@ export default function useRecordResource(token, setBgImageURL) {
   }
 
   function loadAvatars() {
-    fetchWithAuth('/avatars', token).then(r => {
+    fetchWithAuth('/avatars').then(r => {
       setAvatars(r)
     }).catch(e => {
       showError({
