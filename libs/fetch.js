@@ -1,4 +1,5 @@
 import { default as isoFetch } from 'isomorphic-unfetch'
+import { getSession } from 'next-auth/client'
 
 export async function fetch(resource, option) {
   const url = process.env.NEXT_PUBLIC_TERACONNECT_API_URL + resource
@@ -15,6 +16,8 @@ export async function fetch(resource, option) {
 }
 
 export async function fetchToken() {
+  getSession() // これによりtokenのexpireが更新される
+
   const url = process.env.NEXT_PUBLIC_TERACONNECT_FRONT_URL + '/api/auth/token'
   const response = await isoFetch(url, { credentials: 'include' })
 
