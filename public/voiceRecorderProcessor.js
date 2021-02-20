@@ -118,7 +118,7 @@ class Recorder extends AudioWorkletProcessor {
   _saveRecord() {
     this.port.postMessage({
       saveRecord: {
-        speeched: this._elapsedSeconds(this.beginningBufferingTime),
+        elapsedtime: this._elapsedSeconds(this.beginningBufferingTime),
         durationSec: currentTime - this.beginningBufferingTime,
         buffers: this.buffers,
         sampleRate,

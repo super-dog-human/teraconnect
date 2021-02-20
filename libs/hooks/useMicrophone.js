@@ -11,7 +11,7 @@ export default function useMicrophone() {
 
   function initAudioContext() {
     audioCtx = typeof webkitAudioContext === 'undefined' ?
-      new AudioContext() : new webkitAudioContext() // for safari
+      new AudioContext({ latencyHint: 'balanced' }) : new webkitAudioContext() // for safari
   }
 
   async function initMicInput(micDeviceID) {

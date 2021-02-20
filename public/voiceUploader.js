@@ -21,7 +21,7 @@ onmessage = async function(e) {
     case 'newVoice': {
       uploadingCount += 1
 
-      const result = await fetchSignedURL(e.data.newVoice.speeched, e.data.newVoice.durationSec)
+      const result = await fetchSignedURL(e.data.newVoice.elapsedtime, e.data.newVoice.durationSec)
       const file = await createMP3(e.data.newVoice.buffers, e.data.newVoice.sampleRate)
       await uploadFile(result.signedURL, file)
       e.data = null
@@ -72,10 +72,10 @@ async function createMP3(rawData, sampleRate) {
   return new Blob(mp3Data, { type: 'audio/mpeg' })
 }
 
-async function fetchSignedURL(speeched, durationSec) {
+async function fetchSignedURL(elapsedtime, durationSec) {
   const url = apiURL + '/voice'
   const body = {
-    speeched: parseFloat(speeched.toFixed(3)),
+    elapsedtime: parseFloat(elapsedtime.toFixed(3)),
     durationSec: parseFloat(durationSec.toFixed(3)),
     lessonID,
   }
