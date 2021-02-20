@@ -19,7 +19,7 @@ const options = {
   secret: process.env.AUTH_SECRET,
   session: {
     jwt: true,
-    maxAge: 1 * 24 * 60 * 60, // 1 day
+    maxAge: 24 * 60 * 60, // 1 day
   },
   jwt: {
     signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,

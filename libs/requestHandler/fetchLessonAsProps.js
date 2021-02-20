@@ -1,4 +1,4 @@
-import { fetchWithAuth } from './fetch'
+import { fetchWithAuth } from '../fetch'
 
 export default async function fetchLessonAsProps(context, props) {
   const id = context.query.id

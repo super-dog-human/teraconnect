@@ -2,7 +2,7 @@ import React from 'react'
 import Head from 'next/head'
 import Layout from '../../components/layout'
 import LessonNewForm from '../../components/lesson/new/form'
-import requirePageAuth from '../../libs/requirePageAuth'
+import requirePageAuth from '../../libs/requestHandler/requirePageAuth'
 import { fetch } from '../../libs/fetch'
 
 const Page = (props) => (

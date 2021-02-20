@@ -6,8 +6,8 @@ import usePreventBack from '../../../libs/hooks/lesson/record/usePreventBack'
 import useResizeDetector from '../../../libs/hooks/useResizeDetector'
 import LessonRecord from '../../../components/lesson/record/'
 import Footer from '../../../components/footer'
-import requirePageAuth from '../../../libs/requirePageAuth'
-import fetchLessonAsProps from '../../../libs/fetchLessonAsProps'
+import requirePageAuth from '../../../libs/requestHandler/requirePageAuth'
+import fetchLessonAsProps from '../../../libs/requestHandler/fetchLessonAsProps'
 
 const Page = ({ lesson }) => {
   usePreventBack()

@@ -1,6 +1,6 @@
 import { getSession } from 'next-auth/client'
 import jwt from 'next-auth/jwt'
-import { fetchWithAuth } from './fetch'
+import { fetchWithAuth } from '../fetch'
 
 export default async function requirePageAuth(context) {
   const req = context.req
