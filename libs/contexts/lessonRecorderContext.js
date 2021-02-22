@@ -25,7 +25,7 @@ const lesson = {
   avatarLightColor: null,
   backgroundImageID: null,
   backgroundMusicID: null,
-  avatarMovings: [],
+  avatars: [],
   graphics: [],
   drawings: [],
 }
@@ -54,17 +54,17 @@ const LessonRecorderProvider = ({ children }) => {
       return
     case 'avatarMoving': {
       const durationSec = record.durationMillisec * 0.001
-      const avatarMoving = {
+      const avatar = {
         elapsedtime: elapsedFloatTimeFromDuration(durationSec),
         durationSec: parseFloat(durationSec.toFixed(3)),
-        position: record.value,
+        moving: record.value,
       }
 
       if (isRecording) {
-        lesson.avatarMovings.push(avatarMoving)
+        lesson.avatars.push(avatar) // 配列中にオブジェクトを一つ持つフォーマットにしている
       } else {
-        avatarMoving.durationSec = 0
-        lessonInStopping.avatarMoving = avatarMoving // 停止中に複数回移動しても、直近の操作しか意味を持たない
+        avatar.durationSec = 0
+        lessonInStopping.avatarMoving = avatar // 停止中に複数回移動しても、直近の操作しか意味を持たない
       }
       return
     }
@@ -131,7 +131,7 @@ const LessonRecorderProvider = ({ children }) => {
 
     lesson.durationSec = elapsedFloatTime()
 
-    post(`/lessons/${lessonID}/materials`, lesson, 'PUT')
+    post(`/lessons/${lessonID}/materials`, lesson, 'POST')
       .then(() => {
         router.push(`/lessons/${lessonID}/edit`)
       }).catch(e => {
@@ -151,7 +151,9 @@ const LessonRecorderProvider = ({ children }) => {
     if (!isRecording) return
 
     if (lessonInStopping.avatarMoving) {
-      lesson.avatarMovings.push(lessonInStopping.avatarMoving)
+      lessonInStopping.avatarMoving.durationSec = 0 // 停止中に移動したので移動に要した時間は0になる
+      lessonInStopping.avatarMoving.elapsedtime = elapsedFloatTime()
+      lesson.avatars.push(lessonInStopping.avatarMoving)
       lessonInStopping.avatarMoving = null
     }
 
