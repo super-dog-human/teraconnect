@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import useSWR from 'swr'
-import { fetch } from '../../../libs/fetch'
+import { fetch } from '../../../fetch'
 
 export default function useCategoryBySubject(setValue) {
   const [subjectID, setSubjectID] = useState()

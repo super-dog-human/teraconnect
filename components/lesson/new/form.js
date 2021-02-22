@@ -4,7 +4,7 @@ import { css } from '@emotion/core'
 import { useForm } from 'react-hook-form'
 import SubjectAndCategorySelector from './subjectAndCategorySelector'
 import InputText from '../../form/inputText'
-import useCreatingLesson from './useCreatingLesson'
+import useCreatingLesson from '../../../libs/hooks/lesson/new/useCreatingLesson'
 
 const bodyStyle = css({
   minHeight: '100%',

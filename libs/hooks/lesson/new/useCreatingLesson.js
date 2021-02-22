@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { useErrorDialogContext } from '../../../libs/contexts/errorDialogContext'
-import { post } from '../../../libs/fetch'
+import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
+import { post } from '../../../fetch'
 
 export default function useCreatingLesson() {
   const [isCreating, setIsCreating] = useState(false)
@@ -12,6 +12,8 @@ export default function useCreatingLesson() {
     setIsCreating(true)
 
     const body = {
+      needsRecording: form.createMethod === 'useVoice',
+      isIntroduction: false,
       subjectID: parseInt(form.subjectID),
       japaneseCategoryID: parseInt(form.categoryID),
       title: form.title,

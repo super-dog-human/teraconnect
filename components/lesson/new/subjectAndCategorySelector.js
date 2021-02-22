@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import useCategoryBySubject from './useCategoryBySubject'
+import useCategoryBySubject from '../../../libs/hooks/lesson/new/useCategoryBySubject'
 import Select from '../../form/select'
 
 const SubjectAndCategorySelector = React.forwardRef(function subjectAndCategorySelector(props, ref) {
