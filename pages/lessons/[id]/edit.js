@@ -1,25 +1,18 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Head from 'next/head'
-import Layout from '../../../components/layout'
-import useLessonEditor from '../../../libs/hooks/lesson/edit/useLessonEditor'
-import requirePageAuth from '../../../libs/requirePageAuth'
-import fetchLessonAsProps from '../../../libs/fetchLessonAsProps'
+import LessonEdit from '../../../components/lesson/edit/'
+import requirePageAuth from '../../../libs/requestHandler/requirePageAuth'
+import fetchLessonAsProps from '../../../libs/requestHandler/fetchLessonAsProps'
+import Footer from '../../../components/footer'
 
-const Page = ({ token, lesson }) => {
-  useLessonEditor(lesson.id, token)
-
-  useEffect(() => {
-
-  }, [])
-
+const Page = ({ lesson }) => {
   return (
     <>
       <Head>
-        <title>TERACONNECT</title>
+        <title>{lesson.title}の編集 - TERACONNECT</title>
       </Head>
-      <Layout>
-        <div>edit lesson page.</div>
-      </Layout>
+      <LessonEdit lesson={lesson} />
+      <Footer />
     </>
   )
 }
