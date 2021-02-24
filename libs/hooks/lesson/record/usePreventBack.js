@@ -10,7 +10,7 @@ export default function usePreventBack() {
     function handleWheel(e) {
       if (e.deltaX >= 0) return
       if (hasLeftScrollElementAndParents(e.target)) return
-      e.preventDefault()
+      e.preventDefault() // 斜め方向のスワイプもキャンセルされてしまうので上下スクロールができない場合がある？
     }
 
     function hasLeftScrollElementAndParents(elm) {

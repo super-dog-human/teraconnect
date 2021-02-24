@@ -77,3 +77,15 @@ export function mouseOrTouchPositions(e, touchEventNames) {
     return [e.nativeEvent.offsetX, e.nativeEvent.offsetY]
   }
 }
+
+export function findNextElement(origin, tagName, callback) {
+  let next = origin.nextElementSibling
+  while(next) {
+    let nexts = next.getElementsByTagName(tagName)
+    if (nexts.length > 0) {
+      callback(nexts)
+      break
+    }
+    next = next.nextElementSibling
+  }
+}

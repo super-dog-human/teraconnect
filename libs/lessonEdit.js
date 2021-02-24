@@ -1,32 +1,32 @@
 import { fetchWithAuth } from './fetch'
 
-export async function fetchMaterial({ lesson, setGraphics, setDrawings, setSpeeches, setTimeline }) {
+export async function fetchMaterial({ lesson, setGraphics, setDrawings, setSpeeches }) {
   const material = await fetchWithAuth(`/lessons/${lesson.id}/materials`)
   setGraphics(material.graphics)
   setDrawings(material.drawings)
   setSpeeches(material.speeches)
-  await setNewTimelines()
+  return createNewTimelines()
 
-  async function setNewTimelines() {
+  function createNewTimelines() {
     const timeline = {};
     ['avatar', 'graphic', 'drawing', 'speech'].forEach(kind => {
       if (!material[kind + 's']) return
 
       material[kind + 's'].forEach(m => {
         if (!timeline[m.elapsedtime]) timeline[m.elapsedtime] = {}
-        timeline[m.elapsedtime][kind] =  m
+        timeline[m.elapsedtime][kind] = m
       })
     })
 
     const conditions = [!material.speeches, lesson.needsRecording, material.version === 1, material.created === material.updated]
     if (conditions.every(v => v)) {
-      await setTimelineWithVoices(timeline)
+      return timelineWithVoices(timeline)
     } else {
-      updateTimeline(timeline)
+      return timeline
     }
   }
 
-  async function setTimelineWithVoices(timeline) {
+  async function timelineWithVoices(timeline) {
     const voices = await fetchWithAuth(`/voices?lesson_id=${lesson.id}`)
     voices.forEach(v => {
       if (!timeline[v.elapsedtime]) timeline[v.elapsedtime] = {}
@@ -37,17 +37,10 @@ export async function fetchMaterial({ lesson, setGraphics, setDrawings, setSpeec
         durationSec: v.durationSec,
         subtitle: v.text,
         caption: '',
+        url: v.url,
       }
     })
 
-    updateTimeline(timeline, setTimeout)
-  }
-
-  function updateTimeline(timeline) {
-    const line = {} // Objectのソートはブラウザの実装依存なのでここで作り直す
-    Object.keys(timeline).sort((a, b) => a - b).forEach(t => {
-      line[t] = timeline[t]
-    })
-    setTimeline(line)
+    return timeline
   }
 }

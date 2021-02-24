@@ -1,8 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
 import { css } from '@emotion/core'
-import LessonEditSpeechLine from './speechLine'
-import LessonEditKindIcon from './kindIcon'
+import LessonEditLine from './line/'
 import { floatSecondsToMinutesFormat } from '../../../libs/utils'
 
 export default function LessonEditTimeline({ timeline }) {
@@ -13,12 +12,7 @@ export default function LessonEditTimeline({ timeline }) {
           <div key={elapsedtime} draggable={true} css={lineStyle}>
             <div css={elapsedTimeStyle}>{floatSecondsToMinutesFormat(elapsedtime)}</div>
             {Object.keys(timeline[elapsedtime]).map(kind =>
-              <div key={kind} css={lineBodyStyle}>
-                <LessonEditKindIcon kind={kind} status={'on'} css={lineKindStyle} />
-                <div css={lineTextStyle}>
-                  {kind === 'speech' && <LessonEditSpeechLine value={timeline[elapsedtime].speech.subtitle} />}
-                </div>
-              </div>
+              <LessonEditLine key={elapsedtime + kind} kind={kind} body={timeline[elapsedtime][kind]} />
             )}
           </div>
           {Object.keys(timeline).length -1 > i && <hr css={hrStyle} />}
@@ -47,25 +41,8 @@ const elapsedTimeStyle = css({
   paddingLeft: '10px',
 })
 
-const lineBodyStyle = css({
-  display: 'flex',
-  width: '100%',
-})
-
-const lineKindStyle = css({
-  display: 'flex',
-  justifyContent: 'center',
-  marginLeft: '20px',
-  marginRight: '10px',
-})
-
-const lineTextStyle = css({
-  width: '100%',
-  height: '55px',
-})
-
 const hrStyle = css({
-  color: '#dedede',
+  backgroundColor: '#dedede',
   width: 'calc(100% - 70px)',
   height: '1px',
   marginLeft: '65px',

@@ -11,8 +11,13 @@ export default function useLessonEditor(lesson) {
   const { showError } = useErrorDialogContext()
 
   async function fetchResources() {
-    fetchMaterial({ lesson, setGraphics, setDrawings, setSpeeches, setTimeline })
-      .then(() => {
+    fetchMaterial({ lesson, setGraphics, setDrawings, setSpeeches })
+      .then(newTimeline => {
+        const line = {} // Objectのソートはブラウザの実装依存なのでここで作り直す
+        Object.keys(newTimeline).sort((a, b) => a - b).forEach(t => {
+          line[t] = newTimeline[t]
+        })
+        setTimeline(line)
         setIsLoading(false)
       }).catch(e => {
         if (e.response?.status === 404) return
@@ -28,8 +33,15 @@ export default function useLessonEditor(lesson) {
       })
   }
 
-  function addLine(e) {
+  function addLine(lineIndex, kind, value) {
     // 自身のelapsedtimeが600.0より下なら行を追加。直前のdurationSecを足した値にするが、0なら+1秒で追加する
+  }
+
+  function updateLine(lineIndex, kind, value) {
+    const newTimeline = { ...timeline }
+    const elapsedTime = Object.keys(newTimeline)[lineIndex]
+    newTimeline[elapsedTime][kind] = value
+    setTimeline(line)
   }
 
   function moveLine() {
