@@ -18,9 +18,11 @@ export default function LessonEditTimeline({ timeline }) {
         <div key={i} data-line-index={i} onClick={handleLineClick} css={focusedIndex === i && focusedStyle}>
           <div key={elapsedtime} draggable={true} css={lineStyle} >
             <div css={elapsedTimeStyle}>{floatSecondsToMinutesFormat(elapsedtime)}</div>
-            {Object.keys(timeline[elapsedtime]).map(kind =>
-              <LessonEditLine key={elapsedtime + kind} kind={kind} lines={timeline[elapsedtime][kind]} />
-            )}
+            <div css={lineBodyStyle}>
+              {Object.keys(timeline[elapsedtime]).map(kind =>
+                <LessonEditLine key={elapsedtime + kind} kind={kind} lines={timeline[elapsedtime][kind]} />
+              )}
+            </div>
           </div>
           {Object.keys(timeline).length -1 > i && <hr css={hrStyle} />}
         </div>
@@ -52,6 +54,10 @@ const elapsedTimeStyle = css({
   lineHeight: '55px',
   letterSpacing: '1px',
   paddingLeft: '10px',
+})
+
+const lineBodyStyle = css({
+  width: '100%',
 })
 
 const hrStyle = css({
