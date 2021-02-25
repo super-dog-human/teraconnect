@@ -1,6 +1,4 @@
-/** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from 'react'
-import { css } from '@emotion/core'
 import LessonEditSpeechButton from './speechButton'
 import LessonEditSpeechInputText from './speechInputText'
 import { findNextElement } from '../../../../libs/utils'
@@ -9,13 +7,12 @@ export default function LessonEditLineSpeech({ speech }) {
   const [isLoading, setIsLoading] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [audio, setAudio] = useState()
-  //  let synthesisURL
 
   function handleClick() {
     if (!audio && !speech.url && speech.text) {
       setIsLoading(true)
-      // 自動合成音声を取得してurlにする
-      // createAudio(synthesisURL)
+      const synthesisURL = '' // 自動合成音声を取得してurlにする
+      createAudio(synthesisURL)
       setIsLoading(false)
     }
 

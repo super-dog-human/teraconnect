@@ -12,12 +12,8 @@ export default function useLessonEditor(lesson) {
 
   async function fetchResources() {
     fetchMaterial({ lesson, setGraphics, setDrawings, setSpeeches })
-      .then(newTimeline => {
-        const line = {} // Objectのソートはブラウザの実装依存なのでここで作り直す
-        Object.keys(newTimeline).sort((a, b) => a - b).forEach(t => {
-          line[t] = newTimeline[t]
-        })
-        setTimeline(line)
+      .then(timeline => {
+        setTimeline(timeline)
         setIsLoading(false)
       }).catch(e => {
         if (e.response?.status === 404) return

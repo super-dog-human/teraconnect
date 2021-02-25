@@ -12,6 +12,6 @@ export default function LessonEditSpeechButton({ isPlaying, onClick }) {
   })
 
   return (
-    <LessonEditKindIcon kind="speech" status="on" css={bodyStyle} onClick={onClick} />
+    <LessonEditKindIcon kind="speech" css={bodyStyle} onClick={onClick} />
   )
 }

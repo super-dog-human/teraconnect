@@ -7,12 +7,12 @@ import { floatSecondsToMinutesFormat } from '../../../libs/utils'
 export default function LessonEditTimeline({ timeline }) {
   return(
     <div css={bodyStyle} >
-      {Object.keys(timeline).map((elapsedtime, i) => (
+      {Object.keys(timeline).sort((a, b) => a - b).map((elapsedtime, i) => (
         <div key={i}>
           <div key={elapsedtime} draggable={true} css={lineStyle}>
             <div css={elapsedTimeStyle}>{floatSecondsToMinutesFormat(elapsedtime)}</div>
             {Object.keys(timeline[elapsedtime]).map(kind =>
-              <LessonEditLine key={elapsedtime + kind} kind={kind} body={timeline[elapsedtime][kind]} />
+              <LessonEditLine key={elapsedtime + kind} kind={kind} lines={timeline[elapsedtime][kind]} />
             )}
           </div>
           {Object.keys(timeline).length -1 > i && <hr css={hrStyle} />}

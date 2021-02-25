@@ -24,10 +24,10 @@ const lesson = {
   avatarID: null,
   avatarLightColor: null,
   backgroundImageID: null,
-  backgroundMusicID: null,
   avatars: [],
   graphics: [],
   drawings: [],
+  musics: [],
 }
 
 const LessonRecorderProvider = ({ children }) => {
@@ -50,7 +50,11 @@ const LessonRecorderProvider = ({ children }) => {
       lesson.backgroundImageID = record.value
       return
     case 'backgroundMusicID':
-      lesson.backgroundMusicID = record.value
+      lesson.musics = [{
+        elapsedtime: 0,
+        action: 'start',
+        backgroundMusicID: record.value
+      }]
       return
     case 'avatarMoving': {
       const durationSec = record.durationMillisec * 0.001
@@ -83,15 +87,15 @@ const LessonRecorderProvider = ({ children }) => {
       return
     }
     case 'drawing': {
-      const durationSec = record.durationMillisec * 0.001
-      const newDrawing = {
-        elapsedtime: elapsedFloatTimeFromDuration(durationSec),
-        durationSec: parseFloat((record.durationMillisec * 0.001).toFixed(3)),
-        action: record.action,
-      }
+      const newDrawing = { action: record.action }
 
       if (record.action === 'draw') {
-        newDrawing.strokes = record.value
+        const durationSec = record.durationMillisec * 0.001
+        newDrawing.elapsedtime = isRecording ? realElapsedTime() - durationSec : realElapsedTime()
+        newDrawing.durationSec = isRecording ? durationSec : 0
+        newDrawing.stroke = record.value
+      } else {
+        newDrawing.elapsedtime = elapsedFloatTime()
       }
 
       if (isRecording) {
@@ -101,8 +105,7 @@ const LessonRecorderProvider = ({ children }) => {
         lessonInStopping.drawings.push(newDrawing)
       }
       return
-    }
-    }
+    }}
   }
 
   function elapsedFloatTimeFromDuration(durationSec) {
@@ -129,7 +132,7 @@ const LessonRecorderProvider = ({ children }) => {
   async function uploadLesson(lessonID) {
     setIsFinishing(true)
 
-    lesson.durationSec = elapsedFloatTime()
+    updateLessonBody()
 
     post(`/lessons/${lessonID}/materials`, lesson, 'POST')
       .then(() => {
@@ -145,6 +148,55 @@ const LessonRecorderProvider = ({ children }) => {
         })
         console.error(e)
       })
+  }
+
+  function updateLessonBody() {
+    lesson.durationSec = elapsedFloatTime()
+
+    let preAction
+    const drawings = []
+    lesson.drawings.forEach(d => {
+      if (['clear', 'show', 'hide'].includes(d.action)) { // クリア/表示/非表示の操作はまとめる必要がない
+        drawings.push(d)
+      } else if (['draw', 'undo'].includes(preAction)) {  // 線の描写で他の操作をまたがないものはunitsにまとめる
+        const lastDrawing = drawings[drawings.length - 1]
+        lastDrawing.durationSec = d.elapsedtime + d.durationSec - lastDrawing.elapsedtime
+        lastDrawing.units.push({
+          action: d.action,
+          elapsedtime: d.elapsedtime,
+          durationSec: d.durationSec,
+          stroke: d.stroke,
+        })
+      } else {
+        drawings.push({
+          action: d.action,
+          elapsedtime: d.elapsedtime,
+          durationSec: d.durationSec,
+          units: [
+            {
+              action: d.action,
+              elapsedtime: d.elapsedtime,
+              durationSec: d.durationSec,
+              stroke: d.stroke,
+            }
+          ]
+        })
+      }
+
+      preAction = d.action
+    })
+
+    // 計算が終わってから不要な桁を丸める
+    drawings.filter(d => d.action === 'draw').forEach(d => {
+      d.elapsedtime = parseFloat(d.elapsedtime.toFixed(3))
+      d.durationSec = parseFloat((d.durationSec || 0).toFixed(3))
+      d.units.forEach(u => {
+        u.elapsedtime = parseFloat(u.elapsedtime.toFixed(3))
+        u.durationSec = parseFloat((u.durationSec || 0).toFixed(3))
+      })
+    })
+
+    lesson.drawings = drawings
   }
 
   useEffect(() => {

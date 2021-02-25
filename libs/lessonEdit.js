@@ -13,8 +13,14 @@ export async function fetchMaterial({ lesson, setGraphics, setDrawings, setSpeec
       if (!material[kind + 's']) return
 
       material[kind + 's'].forEach(m => {
-        if (!timeline[m.elapsedtime]) timeline[m.elapsedtime] = {}
-        timeline[m.elapsedtime][kind] = m
+        if (!timeline[m.elapsedtime]) {
+          timeline[m.elapsedtime] = {}
+        }
+        if (timeline[m.elapsedtime][kind]) {
+          timeline[m.elapsedtime][kind].push(m)
+        } else {
+          timeline[m.elapsedtime][kind] = [m]
+        }
       })
     })
 
@@ -28,17 +34,22 @@ export async function fetchMaterial({ lesson, setGraphics, setDrawings, setSpeec
 
   async function timelineWithVoices(timeline) {
     const voices = await fetchWithAuth(`/voices?lesson_id=${lesson.id}`)
+      .catch(e => {
+        if (e.response?.status === 404) return []
+        throw e
+      })
+
     voices.forEach(v => {
       if (!timeline[v.elapsedtime]) timeline[v.elapsedtime] = {}
 
-      timeline[v.elapsedtime].speech = {
+      timeline[v.elapsedtime].speech = [{
         voiceID : v.id,
         elapsedtime: v.elapsedtime,
         durationSec: v.durationSec,
         subtitle: v.text,
         caption: '',
         url: v.url,
-      }
+      }]
     })
 
     return timeline

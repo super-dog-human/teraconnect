@@ -3,9 +3,9 @@ import React from 'react'
 import Image from 'next/image'
 import { css } from '@emotion/core'
 
-export default function LessonEditKindIcon({ kind, status, className, onClick }) {
+export default function LessonEditKindIcon({ kind, status=true, className, onClick }) {
   const imageStyle = css({
-    filter: status === 'on' ? 'grayscale(0)' : 'grayscale(1)',
+    filter: status ? 'grayscale(0)' : 'grayscale(1) brightness(130%)',
   })
 
   return(
