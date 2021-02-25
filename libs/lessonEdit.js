@@ -9,7 +9,7 @@ export async function fetchMaterial({ lesson, setGraphics, setDrawings, setSpeec
 
   function createNewTimelines() {
     const timeline = {};
-    ['avatar', 'graphic', 'drawing', 'speech'].forEach(kind => {
+    ['avatar', 'graphic', 'drawing', 'speech', 'music'].forEach(kind => {
       if (!material[kind + 's']) return
 
       material[kind + 's'].forEach(m => {
