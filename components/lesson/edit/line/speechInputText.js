@@ -17,7 +17,7 @@ const bodyStyle = css({
 })
 
 const inputStyle = css({
-  backgroundColor: 'var(--bg-light-gray)',
+  backgroundColor: 'inherit',
   color: '#3c3c3c', // 他の色と揃える
   fontSize: '16px',
   lineHeight: '40px',
