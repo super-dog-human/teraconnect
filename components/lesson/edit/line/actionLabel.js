@@ -23,7 +23,7 @@ export default function LessonEditActionLabel({ kind, action, status=true }) {
   }, [kind, action])
 
   function avatarLabel() {
-    setLabel('アバター挙動')
+    setLabel('アバター移動')
   }
 
   function drawingLabel() {
