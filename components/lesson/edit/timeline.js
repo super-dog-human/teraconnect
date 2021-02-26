@@ -20,7 +20,11 @@ export default function LessonEditTimeline({ timeline }) {
             <div css={elapsedTimeStyle}>{floatSecondsToMinutesFormat(elapsedtime)}</div>
             <div css={lineBodyStyle}>
               {Object.keys(timeline[elapsedtime]).map(kind =>
-                <LessonEditLine key={elapsedtime + kind} kind={kind} lines={timeline[elapsedtime][kind]} />
+                timeline[elapsedtime][kind].map((line, i) =>
+                  <div css={lineKindStyle} key={i}>
+                    <LessonEditLine kind={kind} line={line} />
+                  </div>
+                )
               )}
             </div>
           </div>
@@ -37,7 +41,7 @@ const bodyStyle = css({
 })
 
 const focusedStyle = css({
-  backgroundColor: '#eaeaea',
+  backgroundColor: '#eaeaea', // fixme
 })
 
 const lineStyle = css({
@@ -58,6 +62,12 @@ const elapsedTimeStyle = css({
 
 const lineBodyStyle = css({
   width: '100%',
+})
+
+const lineKindStyle = css({
+  display: 'flex',
+  width: '100%',
+  minHeight: '55px',
 })
 
 const hrStyle = css({

@@ -1,7 +1,8 @@
 import { fetchWithAuth } from './fetch'
 
-export async function fetchMaterial({ lesson, setGraphics, setDrawings, setSpeeches }) {
+export async function fetchMaterial({ lesson, setAvatars, setDrawings, setGraphics, setSpeeches }) {
   const material = await fetchWithAuth(`/lessons/${lesson.id}/materials`)
+  setAvatars(material.avatars)
   setGraphics(material.graphics)
   setDrawings(material.drawings)
   setSpeeches(material.speeches)
@@ -54,4 +55,17 @@ export async function fetchMaterial({ lesson, setGraphics, setDrawings, setSpeec
 
     return timeline
   }
+}
+
+export async function fetchGraphicURLs(lessonID) {
+  const results = await fetchWithAuth(`/graphics?lesson_id=${lessonID}`)
+    .catch(e => {
+      if (e.response?.status === 404) return []
+      throw e
+    })
+
+  return results.reduce((acc, r) => {
+    acc[r.id] = r.url
+    return acc
+  }, {})
 }

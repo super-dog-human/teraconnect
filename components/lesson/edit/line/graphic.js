@@ -6,8 +6,8 @@ import LessonEditActionLabel from './actionLabel'
 export default function LessonEditLineGraphic({ graphic }) {
   return (
     <>
-      <LessonEditKindIcon kind="graphic" />
-      {graphic.action === 'show' && <Image width={176} height={100} src={graphic.url}/>}
+      <LessonEditKindIcon kind="graphic" status={graphic.action === 'show'}/>
+      {graphic.action === 'show' && graphic.url && <Image width={176} height={100} src={graphic.url}/>}
       {graphic.action === 'hide' && <LessonEditActionLabel kind="graphic" action={'hide'} />}
     </>
   )
