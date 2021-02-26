@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 import { fetchGraphicURLs }  from '../../../lessonEdit'
 
-export default function useGraphicController({ lessonID, graphics, setGraphics, timeline, updateLine }) {
+export default function useGraphicController({ lessonID, graphics, setGraphics, updateLine }) {
   const [finishedGraphicSetting, setFinishedGraphicSetting] = useState(false)
   const [graphicURL, setGraphicURL] = useState({})
   const { showError } = useErrorDialogContext()

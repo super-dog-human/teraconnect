@@ -8,7 +8,7 @@ export default function LessonEditLineSpeech({ speech }) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [audio, setAudio] = useState()
 
-  function handleClick() {
+  function handleClick(e) {
     if (!audio && !speech.url && speech.text) {
       setIsLoading(true)
       const synthesisURL = '' // 自動合成音声を取得してurlにする
@@ -23,6 +23,8 @@ export default function LessonEditLineSpeech({ speech }) {
       audio.pause()
       setIsPlaying(false)
     }
+
+    e.stopPropagation()
   }
 
   function createAudio(voiceURL) {

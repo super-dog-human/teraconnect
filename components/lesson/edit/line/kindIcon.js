@@ -9,8 +9,8 @@ export default function LessonEditKindIcon({ kind, status=true, className, onCli
   })
 
   return(
-    <div css={bodyStyle}>
-      {kind && <Image src={`/img/icon/timeline-${kind}.svg`} width={20} height={20} css={imageStyle} className={className} onClick={onClick} draggable={false} />}
+    <div css={bodyStyle} className={className}>
+      {kind && <Image src={`/img/icon/timeline-${kind}.svg`} width={20} height={20} css={imageStyle} onClick={onClick} draggable={false} />}
     </div>
   )
 }

@@ -3,6 +3,8 @@ import React from 'react'
 import { css } from '@emotion/core'
 import { useScreenClass } from 'react-grid-system'
 import useLessonEditor from '../../../libs/hooks/lesson/edit/useLessonEditor'
+import { ImageViewerProvider } from '../../../libs/contexts/imageViewerContext'
+import ImageViwer from '../../imageViewer'
 import LessonEditHeader from './header'
 import LessonEditPreview from './preview'
 import LessonEditGraphicController from './graphicController/'
@@ -40,15 +42,18 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
     <>
       <LessonEditHeader />
       <main css={mainStyle} ref={ref}>
-        <div css={bodyStyle}>
-          <div css={leftSideStyle}>
-            <LessonEditPreview avatars={avatars} graphics={graphics} drawings={drawings} speeches={speeches} />
-            <LessonEditGraphicController lessonID={lesson.id} graphics={graphics} setGraphics={setGraphics} timeline={timeline} updateLine={updateLine} />
+        <ImageViewerProvider>
+          <ImageViwer />
+          <div css={bodyStyle}>
+            <div css={leftSideStyle}>
+              <LessonEditPreview avatars={avatars} graphics={graphics} drawings={drawings} speeches={speeches} />
+              <LessonEditGraphicController lessonID={lesson.id} graphics={graphics} setGraphics={setGraphics} updateLine={updateLine} />
+            </div>
+            <div css={rightSideStyle}>
+              <LessonEditTimeline timeline={timeline} />
+            </div>
           </div>
-          <div css={rightSideStyle}>
-            <LessonEditTimeline timeline={timeline} />
-          </div>
-        </div>
+        </ImageViewerProvider>
       </main>
     </>
   )
