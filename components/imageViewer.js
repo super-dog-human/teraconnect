@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 import React, { useEffect, useState } from 'react'
-import Image from 'next/image'
 import { css } from '@emotion/core'
 import LoadingIndicator from './loadingIndicator'
 import { useImageViewerContext } from '../libs/contexts/imageViewerContext'
@@ -19,7 +18,6 @@ export default function ImageViwer() {
   }, [image])
 
   function handleLoad(e) {
-    console.log('loaded..', e.target.complete)
     setLoaded(true)
   }
 
@@ -41,33 +39,25 @@ export default function ImageViwer() {
   })
 
   const imageContainerStyle = css({
-    width: '60%',
-    height: '60%',
+    width: `${image.widePer}%`,
+    height: `${image.widePer}%`,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    //    marginTop: '77px',
-    //    width: `${image.widePer || 100}%`,
-    //    height: 'auto',
-    //    opacity: loaded ? 1 : 0,
-    //    backgroundColor: 'blue',
     fontSize: 0,
   })
 
   const imageStyle = css({
-    width: '100%',
-    height: '100%',
     maxWidth: '100%',
     maxHeight: '100%',
     objectFit: 'contain',
+    opacity: loaded ? 1 : 0,
   })
 
   const loadingStyle = css({
     position: 'fixed',
     width: '175px',
     height: '100px',
-    //    marginTop: '77px',
-    //    filter: 'contrast(20%)',
   })
 
   return (

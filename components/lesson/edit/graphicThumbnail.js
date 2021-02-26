@@ -15,7 +15,7 @@ export default function LessonEditGraphicThumbnail({ url, className }) {
 
   function handleClick(e) {
     const url = e.currentTarget.getAttribute('data-image-url')
-    setImage({ url, widePer: 50 })
+    setImage({ url, widePer: 70 })
     e.stopPropagation()
   }
 
