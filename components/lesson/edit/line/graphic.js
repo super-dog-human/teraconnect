@@ -15,9 +15,11 @@ export default function LessonEditLineGraphic({ graphic, index, isEditButtonShow
   return (
     <>
       <LessonEditKindIcon kind="graphic" status={graphic.action === 'show'} css={iconStyle} />
-      {graphic.action === 'show' && graphic.url && <LessonEditGraphicThumbnail url={graphic.url} css={imageStyle} />}
-      {graphic.action === 'hide' && <LessonEditActionLabel kind="graphic" action={'hide'} />}
-      <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} />
+      <div css={graphicContainerStyle}>
+        {graphic.action === 'show' && graphic.url && <LessonEditGraphicThumbnail url={graphic.url} css={imageStyle} />}
+        {graphic.action === 'hide' && <LessonEditActionLabel kind="graphic" action={'hide'} />}
+      </div>
+      <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} css={iconStyle}/>
     </>
   )
 }
@@ -25,6 +27,10 @@ export default function LessonEditLineGraphic({ graphic, index, isEditButtonShow
 const iconStyle = css({
   display: 'block',
   marginTop: '20px',
+})
+
+const graphicContainerStyle = css({
+  width: '100%',
 })
 
 const imageStyle = css({

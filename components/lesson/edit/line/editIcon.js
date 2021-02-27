@@ -3,7 +3,7 @@ import React from 'react'
 import Image from 'next/image'
 import { css } from '@emotion/core'
 
-export default function EditIcon({ onClick, isShow }) {
+export default function EditIcon({ onClick, isShow, className }) {
   const bodyStyle = css({
     display: 'flex',
     visibility: isShow ? 'visible' : 'hidden',
@@ -13,7 +13,7 @@ export default function EditIcon({ onClick, isShow }) {
   })
 
   return(
-    <div css={bodyStyle}>
+    <div css={bodyStyle} className={className}>
       <Image src={'/img/icon/more.svg'} width={20} height={20} onClick={onClick} draggable={false} />
     </div>
   )
