@@ -1,8 +1,8 @@
 import React from 'react'
 import Head from 'next/head'
 import LessonEdit from '../../../components/lesson/edit/'
-import requirePageAuth from '../../../libs/requestHandler/requirePageAuth'
-import fetchLessonAsProps from '../../../libs/requestHandler/fetchLessonAsProps'
+import requirePageAuth from '../../../libs/middlewares/requirePageAuth'
+import fetchLessonAsProps from '../../../libs/middlewares/fetchLessonAsProps'
 import Footer from '../../../components/footer'
 
 const Page = ({ lesson }) => {

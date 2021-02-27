@@ -1,7 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
 import Layout from '../../components/layout'
-import requirePageAuth from '../../libs/requestHandler/requirePageAuth'
+import requirePageAuth from '../../libs/middlewares/requirePageAuth'
 
 const Page = () => (
   <>
