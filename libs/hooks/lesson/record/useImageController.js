@@ -14,9 +14,6 @@ export default function useImageController(setSelectedGraphic) {
       setIsShow(false)
       setImageID()
     } else {
-      if (imageID) {
-        setRecord({ kind: 'graphic', action: 'hide', value: imageID })
-      }
       setRecord({ kind: 'graphic', action: 'show', value: newImageID })
       setIsShow(true)
       setImageID(newImageID)
