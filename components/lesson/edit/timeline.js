@@ -21,9 +21,7 @@ export default function LessonEditTimeline({ timeline }) {
             <div css={lineBodyStyle}>
               {Object.keys(timeline[elapsedtime]).map(kind =>
                 timeline[elapsedtime][kind].map((line, i) =>
-                  <div css={lineKindStyle} key={i}>
-                    <LessonEditLine kind={kind} line={line} />
-                  </div>
+                  <LessonEditLine key={i} index={i} kind={kind} line={line} />
                 )
               )}
             </div>
@@ -64,11 +62,6 @@ const lineBodyStyle = css({
   width: '100%',
 })
 
-const lineKindStyle = css({
-  display: 'flex',
-  width: '100%',
-  minHeight: '55px',
-})
 
 const hrStyle = css({
   backgroundColor: '#dedede', // fixme

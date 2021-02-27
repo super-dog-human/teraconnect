@@ -11,7 +11,7 @@ export default function LessonEditGraphicController(props) {
     <>
       {Object.keys(graphicURL).length > 0 &&
       <>
-        <div>使用した画像 ({Object.keys(graphicURL).length})</div>
+        <div>画像 ({Object.keys(graphicURL).length})</div>
         <hr />
         <div css={bodyStyle}>
           {Object.keys(graphicURL).map(key => (

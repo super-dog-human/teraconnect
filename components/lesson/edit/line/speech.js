@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import LessonEditSpeechButton from './speechButton'
 import LessonEditSpeechInputText from './speechInputText'
+import EditIcon from './editIcon'
 import { findNextElement } from '../../../../libs/utils'
 
-export default function LessonEditLineSpeech({ speech }) {
+export default function LessonEditLineSpeech({ speech, index, isEditButtonShow }) {
   const [isLoading, setIsLoading] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [audio, setAudio] = useState()
@@ -58,6 +59,11 @@ export default function LessonEditLineSpeech({ speech }) {
     // setTimeline()
   }
 
+  function handleEditButtonClick(e) {
+    console.log('editbutton clicked.')
+    e.stopPropagation()
+  }
+
   const newSpeech = {
     voiceID: null,
     elapsedtime: 0,
@@ -76,6 +82,7 @@ export default function LessonEditLineSpeech({ speech }) {
     <>
       <LessonEditSpeechButton kind="speech" isPlaying={isPlaying} onClick={handleClick} />
       <LessonEditSpeechInputText onKeyDown={handleKeyDown} onChange={handleChange} value={speech.subtitle} readOnly={isLoading} />
+      <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} />
     </>
   )
 }

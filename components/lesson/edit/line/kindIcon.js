@@ -14,6 +14,7 @@ export default function LessonEditKindIcon({ kind, status=true, className, onCli
     </div>
   )
 }
+
 const bodyStyle = css({
   display: 'flex',
   justifyContent: 'center',

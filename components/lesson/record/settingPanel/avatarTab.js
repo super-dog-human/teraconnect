@@ -45,7 +45,7 @@ export default function AvatarTab({ avatars, setConfig }) {
     <>
       <div>
         <span>アバター</span>
-        <Select options={selectOptions} onChange={handleAvatarChange} topLabel={null}/>
+        <Select options={selectOptions} onChange={handleAvatarChange} topLabel={null} />
         <span>アップロード</span>
       </div>
       <div>
