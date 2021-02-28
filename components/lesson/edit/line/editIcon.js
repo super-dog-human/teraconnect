@@ -10,6 +10,9 @@ export default function EditIcon({ onClick, isShow, className }) {
     justifyContent: 'center',
     width: '25px',
     marginLeft: '15px',
+    [':hover']: {
+      filter: 'brightness(50%)',
+    }
   })
 
   return(
