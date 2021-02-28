@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { GLTFLoader } from './GLTFLoader'
+import { GLTFLoader } from 'ThreejsExample/jsm/loaders/GLTFLoader'
 import { VRM, VRMSchema } from '@pixiv/three-vrm'
 import * as Const from '../constants'
 
