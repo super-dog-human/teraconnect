@@ -5,7 +5,7 @@ import { css } from '@emotion/core'
 export default function LessonPlayer() {
   return(
     <div css={bodyStyle}>
-      <div css={playerStyle}>player</div>
+      <div css={playerStyle}></div>
     </div>
   )
 }
@@ -15,6 +15,7 @@ const bodyStyle = css({
   width: '100%',
   height: 'auto',
   paddingTop: '56.25%',
+  backgroundColor: 'var(--back-movie-black)',
 })
 
 const playerStyle = css({
