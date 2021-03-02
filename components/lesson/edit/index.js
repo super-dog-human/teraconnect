@@ -7,12 +7,13 @@ import { ImageViewerProvider } from '../../../libs/contexts/imageViewerContext'
 import ImageViwer from '../../imageViewer'
 import LessonEditHeader from './header'
 import LessonEditPreview from './preview'
+import LessonDurationTime from './durationTime'
 import LessonEditGraphicController from './graphicController/'
 import LessonEditTimeline from './timeline'
 
 const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
   const screenClass = useScreenClass()
-  const { isLoading, timeline, avatars, graphics, drawings, speeches, setGraphics, updateLine } = useLessonEditor(lesson)
+  const { isLoading, durationSec, timeline, avatars, graphics, drawings, speeches, setGraphics, updateLine } = useLessonEditor(lesson)
 
   const bodyStyle = css({
     margin: 'auto',
@@ -47,6 +48,7 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
           <div css={bodyStyle}>
             <div css={leftSideStyle}>
               <LessonEditPreview avatars={avatars} graphics={graphics} drawings={drawings} speeches={speeches} />
+              <LessonDurationTime durationSec={durationSec} />
               <LessonEditGraphicController lessonID={lesson.id} graphics={graphics} setGraphics={setGraphics} updateLine={updateLine} />
             </div>
             <div css={rightSideStyle}>

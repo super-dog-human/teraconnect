@@ -1,7 +1,8 @@
 import { fetchWithAuth } from './fetch'
 
-export async function fetchMaterial({ lesson, setAvatars, setDrawings, setGraphics, setSpeeches }) {
+export async function fetchMaterial({ lesson, setDurationSec, setAvatars, setDrawings, setGraphics, setSpeeches }) {
   const material = await fetchWithAuth(`/lessons/${lesson.id}/materials`)
+  setDurationSec(material.durationSec)
   setAvatars(material.avatars)
   setGraphics(material.graphics)
   setDrawings(material.drawings)

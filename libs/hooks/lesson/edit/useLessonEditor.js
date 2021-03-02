@@ -4,6 +4,7 @@ import { fetchMaterial }  from '../../../lessonEdit'
 
 export default function useLessonEditor(lesson) {
   const [isLoading, setIsLoading] = useState(true)
+  const [durationSec, setDurationSec] = useState()
   const [timeline, setTimeline] = useState({})
   const [avatars, setAvatars] = useState([])
   const [drawings, setDrawings] = useState([])
@@ -12,7 +13,7 @@ export default function useLessonEditor(lesson) {
   const { showError } = useErrorDialogContext()
 
   async function fetchResources() {
-    fetchMaterial({ lesson, setAvatars, setDrawings, setGraphics, setSpeeches })
+    fetchMaterial({ lesson, setDurationSec, setAvatars, setDrawings, setGraphics, setSpeeches })
       .then(timeline => {
         setTimeline(timeline)
         setIsLoading(false)
@@ -60,5 +61,5 @@ export default function useLessonEditor(lesson) {
   }, [])
 
 
-  return { isLoading, timeline, avatars, graphics, drawings, speeches, setGraphics, updateLine }
+  return { isLoading, durationSec, timeline, avatars, graphics, drawings, speeches, setGraphics, updateLine }
 }
