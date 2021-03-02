@@ -24,18 +24,23 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
   })
 
   const leftSideStyle = css({
-    flexGrow: '4',
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 4,
     maxWidth: ['xs', 'sm'].includes(screenClass) ? '100%' : '450px',
-    height: '100%',
+    height: 'calc(100% - 80px)',
     marginTop: '40px',
+    marginLeft: '10px',
+    marginBottom: '40px',
   })
 
   const rightSideStyle = css({
-    flexGrow: '6',
+    flexGrow: 6,
     maxWidth: ['xs', 'sm'].includes(screenClass) ? '100%' : '830px',
     height: 'calc(100% - 80px)',
     marginTop: '40px',
     marginLeft: '40px',
+    marginRight: '10px',
     marginBottom: '40px',
   })
 

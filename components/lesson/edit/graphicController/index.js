@@ -8,12 +8,14 @@ export default function LessonEditGraphicController(props) {
   const { graphicURL, swapGraphic, removeGraphic } = useGraphicController(props)
 
   return (
-    <>
+    <div css={bodyStyle}>
       {Object.keys(graphicURL).length > 0 &&
       <>
-        <div>画像 ({Object.keys(graphicURL).length})</div>
-        <hr />
-        <div css={bodyStyle}>
+        <div css={headerStyle}>
+          <div>画像 ({Object.keys(graphicURL).length})</div>
+          <hr />
+        </div>
+        <div css={containerStyle}>
           {Object.keys(graphicURL).map(key => (
             <div css={thumbnailStyle} key={key}>
               <LessonEditGraphicThumbnail url={graphicURL[key]} />
@@ -22,23 +24,25 @@ export default function LessonEditGraphicController(props) {
         </div>
       </>
       }
-    </>
+    </div>
   )
 }
 
 const bodyStyle = css({
+  height: 'calc(100% - 253px - 20px - 45px - 100px)', // 自身の上に存在する要素分を差し引く
+  marginTop: '100px',
+})
+
+const headerStyle = css({
+  height: '50px',
+})
+
+const containerStyle = css({
+  height: 'calc(100% - 50px)',
+  overflowX: 'scroll',
   display: 'flex',
   alignContent: 'flex-start',
   flexWrap: 'wrap',
-  height: 'calc(100% - 337px)', // フッター分を差し引く
-  minHeight: '300px', // モバイル環境用。画面高さよりも小さくすることで要素内外のスクロールをしやすくする
-  overflowX: 'scroll',
-  [':after']: {
-    content: '""',
-    display: 'block',
-    width: '175px',
-    margin: '25px',
-  }
 })
 
 const thumbnailStyle = css({

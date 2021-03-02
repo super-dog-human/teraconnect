@@ -17,6 +17,7 @@ export default function LessonDurationTime({ durationSec }) {
 }
 
 const bodyStyle = css({
+  height: '45px',
   marginTop: '20px',
   textAlign: 'right',
   color: 'gray', // fixme

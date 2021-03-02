@@ -21,6 +21,7 @@ export default function LessonEditGraphicThumbnail({ url, className }) {
 
   const bodyStyle = css({
     position: 'relative',
+    width: '175px',
     height: '100px',
   })
 
