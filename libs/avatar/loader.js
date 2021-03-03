@@ -3,7 +3,6 @@ import { GLTFLoader } from 'ThreejsExample/jsm/loaders/GLTFLoader'
 import { VRM, VRMSchema } from '@pixiv/three-vrm'
 import * as Const from '../constants'
 
-let domSize = {}
 const raycaster = new THREE.Raycaster()
 const mousePosition = new THREE.Vector2()
 const plane = new THREE.Plane()
@@ -13,6 +12,7 @@ const positionShift = new THREE.Vector3()
 
 export default class AvatarLoader {
   constructor() {
+    this.domSize = {}
     this.poseKey = {}
     this.faceKey = {}
     this.vrm
@@ -25,14 +25,14 @@ export default class AvatarLoader {
   }
 
   async render(avatar, container) {
-    const domSize = this._domSize(container)
+    this._calcDomSize(container)
 
-    this._setupCamera(domSize)
+    this._setupCamera()
     await this._setupAvatar(avatar)
 
     this._setDefaultAnimation()
 
-    return this._createDom(domSize)
+    return this._createDom()
   }
 
   setLightColor(color, intensity) {
@@ -88,8 +88,8 @@ export default class AvatarLoader {
     if (!container) return // アバター表示要素がまだ存在しなければスキップ
     if (!this.renderer) return // レンダラーの初期化前にリサイズが発生したらスキップ
 
-    const size = this._domSize(container)
-    this.renderer.setSize(size.width, size.height)
+    this._calcDomSize(container)
+    this.renderer.setSize(this.domSize.width, this.domSize.height)
     this.renderer.render(this.scene, this.camera)
   }
 
@@ -124,7 +124,7 @@ export default class AvatarLoader {
     return this.vrm.scene.position
   }
 
-  _domSize(container) {
+  _calcDomSize(container) {
     let playerWidth, playerHeight
     if (container.clientHeight / container.clientWidth > Const.RATIO_16_TO_9) {
       playerWidth = container.clientWidth
@@ -134,13 +134,12 @@ export default class AvatarLoader {
       playerHeight = container.clientHeight
     }
 
-    domSize = { width: playerWidth, height: playerHeight }
-    return domSize
+    this.domSize = { width: playerWidth, height: playerHeight }
   }
 
   _setRaycast(x, y) {
-    mousePosition.x = (x / domSize.width) * 2 - 1
-    mousePosition.y = ((y / domSize.height) * 2 - 1) * -1
+    mousePosition.x = (x / this.domSize.width) * 2 - 1
+    mousePosition.y = ((y / this.domSize.height) * 2 - 1) * -1
     raycaster.setFromCamera(mousePosition, this.camera)
   }
 
@@ -150,10 +149,10 @@ export default class AvatarLoader {
     return raycaster.intersectObjects(this.vrm.scene.children)
   }
 
-  _setupCamera(domSize) {
+  _setupCamera() {
     this.camera = new THREE.PerspectiveCamera(
       1,
-      domSize.width / domSize.height,
+      this.domSize.width / this.domSize.height,
       150.0,
       160.0
     )
@@ -190,13 +189,13 @@ export default class AvatarLoader {
     return this.vrm.humanoid.getBoneNode(boneName)
   }
 
-  _createDom(domSize) {
+  _createDom() {
     this.renderer = new THREE.WebGLRenderer({
       alpha: true,
       antialias: true,
     })
     this.renderer.setPixelRatio(window.devicePixelRatio)
-    this.renderer.setSize(domSize.width, domSize.height)
+    this.renderer.setSize(this.domSize.width, this.domSize.height)
     this.renderer.render(this.scene, this.camera)
 
     return this.renderer.domElement
