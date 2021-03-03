@@ -1,50 +1,40 @@
-import React from 'react'
+import React, { useRef } from 'react'
 
-let isDragging = false
-let currentIndex
+const DragSwappable = React.forwardRef(function dragSwappable({ children, className, onSwap, direction='horizontal' }, ref) {
+  const indexRef = useRef()
 
-const DragSwappable = React.forwardRef(function dragSwappable({ children, className, onSwap }, ref) {
   function handleDragStart(e) {
-    isDragging = true
-    currentIndex = parseInt(e.currentTarget.dataset.index)
+    indexRef.current = parseInt(e.currentTarget.dataset.index)
   }
 
   function handleDragOver(e) {
     const targetIndex = parseInt(e.currentTarget.dataset.index)
 
-    if (targetIndex === currentIndex) {
+    if (targetIndex === indexRef.current) {
       return // 自分自身へのドラッグでは何も反応させない
     }
 
-    const isMoveLeft = e.currentTarget.clientWidth / 2 < e.nativeEvent.offsetX
+    const isBeginside = (direction === 'horizontal') ?
+      e.currentTarget.clientWidth / 2 < e.nativeEvent.offsetX :
+      e.currentTarget.clientHeight / 2 < e.nativeEvent.offsetY
 
-    if (currentIndex - 1 === targetIndex && isMoveLeft) {
-      return  // 左隣の要素の右半分では何も反応させない
+    if (indexRef.current - 1 === targetIndex && isBeginside) {
+      return // 左隣の要素の右半分、または直上の要素の下半分では何も反応させない
     }
 
-    if (currentIndex + 1 === targetIndex && !isMoveLeft) {
-      return // 右隣の要素の左半分では何も反応させない
+    if (indexRef.current + 1 === targetIndex && !isBeginside) {
+      return // 右隣の要素の左半分、または直下の要素の上半分では何も反応させない
     }
 
-    onSwap(currentIndex, targetIndex)
+    onSwap(indexRef.current, targetIndex)
 
-    currentIndex = targetIndex
-  }
-
-  function handleDragEnd() {
-    if (!isDragging) return
-    isDragging = false
-  }
-
-  function handleDrop() {
-    if (!isDragging) return
-    isDragging = false
+    indexRef.current = targetIndex
   }
 
   return (
     <div className={className} ref={ref}>
       {children.map((c, i) => (
-        <div key={i} data-index={i} onDragStart={handleDragStart} onDragEnd={handleDragEnd} onDragOver={handleDragOver} onDrop={handleDrop}>
+        <div key={i} data-index={i} onDragStart={handleDragStart} onDragOver={handleDragOver}>
           {c}
         </div>
       ))}
