@@ -4,35 +4,34 @@ import AvatarLoader from '../../avatar/loader'
 import { switchSwipable, mouseOrTouchPositions } from '../../utils'
 import { useLessonRecorderContext } from '../../contexts/lessonRecorderContext'
 
-const clock = new Clock()
-const avatar = new AvatarLoader()
-let startDraggingTime
-let isDragging = false
-
 export default function useLessonAvatar(setIsLoading, isSpeaking, hasResize) {
+  const clock = new Clock()
+  const avatarRef = useRef()
+  const startDraggingTimeRef = useRef()
+  const isDraggingRef = useRef(false)
   const [config, setConfig] = useState({})
   const containerRef = useRef(null)
   const { setRecord } = useLessonRecorderContext()
 
   function startDragging(e) {
     const positions = mouseOrTouchPositions(e, ['touchstart'])
-    if (avatar.prepareMovePosition(...positions)) {
+    if (avatarRef.current.prepareMovePosition(...positions)) {
       switchSwipable(false)
-      isDragging = true
-      startDraggingTime = new Date()
+      isDraggingRef.current = true
+      startDraggingTimeRef.current = new Date()
     }
   }
 
   function inDragging(e) {
     const positions = mouseOrTouchPositions(e, ['touchmove'])
 
-    if (isDragging) {
+    if (isDraggingRef.current) {
       e.target.style.cursor = 'move'
-      avatar.movePosition(...positions)
+      avatarRef.current.movePosition(...positions)
       return
     }
 
-    if(avatar.isOverAvatar(...positions)) {
+    if(avatarRef.current.isOverAvatar(...positions)) {
       e.target.style.cursor = 'move'
     } else {
       e.target.style.cursor = 'default'
@@ -40,13 +39,13 @@ export default function useLessonAvatar(setIsLoading, isSpeaking, hasResize) {
   }
 
   function endDragging() {
-    if (isDragging) {
+    if (isDraggingRef.current) {
       switchSwipable(true)
-      isDragging = false
+      isDraggingRef.current = false
       setRecord({
         kind: 'avatarMoving',
-        durationMillisec: new Date() - startDraggingTime,
-        value: { ...avatar.currentPosition() },
+        durationMillisec: new Date() - startDraggingTimeRef.current,
+        value: { ...avatarRef.current.currentPosition() },
       })
     }
   }
@@ -54,8 +53,8 @@ export default function useLessonAvatar(setIsLoading, isSpeaking, hasResize) {
   async function changeAvatar() {
     setIsLoading(true)
 
-    const dom = await avatar.render(config.avatar, containerRef.current)
-    avatar.play()
+    const dom = await avatarRef.current.render(config.avatar, containerRef.current)
+    avatarRef.current.play()
     animate()
 
     containerRef.current.append(dom)
@@ -65,16 +64,16 @@ export default function useLessonAvatar(setIsLoading, isSpeaking, hasResize) {
 
   function changeLightColor() {
     const color = parseInt(rgb2hex(Object.values(config.lightColor).slice(0, 3)), 16)
-    avatar.setLightColor(color, config.lightColor.a * 2)
+    avatarRef.current.setLightColor(color, config.lightColor.a * 2)
   }
 
   function changeSpeakMotion() {
-    avatar.switchSpeaking(isSpeaking)
+    avatarRef.current.switchSpeaking(isSpeaking)
   }
 
   function changeScreenSize() {
     if (!hasResize) return
-    avatar.updateSize(containerRef.current)
+    avatarRef.current.updateSize(containerRef.current)
   }
 
   function rgb2hex(rgb) {
@@ -84,13 +83,14 @@ export default function useLessonAvatar(setIsLoading, isSpeaking, hasResize) {
   }
 
   function animate() {
-    avatar.animate(clock.getDelta())
+    avatarRef.current.animate(clock.getDelta())
     requestAnimationFrame(() => animate())
   }
 
   useEffect(() => {
+    avatarRef.current = new AvatarLoader()
     return () => {
-      avatar.clearBeforeUnload()
+      avatarRef.current.clearBeforeUnload()
     }
   }, [])
 

@@ -1,12 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import useMicrophone from '../../useMicrophone'
 import { useLessonRecorderContext } from '../../../contexts/lessonRecorderContext'
 import { fetchToken } from '../../../fetch'
 
-let recorder
-let uploader
-
 export default function useVoiceRecorder(id) {
+  const recorderRef = useRef()
+  const uploaderRef = useRef()
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [micDeviceID, setMicDeviceID] = useState()
   const [silenceThresholdSec, setSilenceThresholdSec] = useState(1.0)
@@ -14,17 +13,17 @@ export default function useVoiceRecorder(id) {
   const { isRecording, realElapsedTime } = useLessonRecorderContext()
 
   function switchRecording() {
-    if (!recorder) return
-    recorder.port.postMessage({ isRecording })
+    if (!recorderRef.current) return
+    recorderRef.current.port.postMessage({ isRecording })
   }
 
   function terminalCurrentRecorder() {
-    if (!recorder) return
-    recorder.port.postMessage({ isTerminal: true })
+    if (!recorderRef.current) return
+    recorderRef.current.port.postMessage({ isTerminal: true })
   }
 
   function terminalUploader() {
-    uploader.postMessage({ isTerminal: true })
+    uploaderRef.current.postMessage({ isTerminal: true })
   }
 
   function handleRecorderMessage(command) {
@@ -35,21 +34,21 @@ export default function useVoiceRecorder(id) {
         return
       case 'saveRecord':
         // データコピーが発生するが、AudioWorklet内でDedicated Workerを扱えないのでここから受け渡しをする
-        uploader.postMessage({ newVoice: command[k] })
+        uploaderRef.current.postMessage({ newVoice: command[k] })
         return
       }
     })
   }
 
   function updateSilenceThresholdSec() {
-    if(!recorder) return
-    recorder.port.postMessage({ changeThreshold: silenceThresholdSec })
+    if(!recorderRef.current) return
+    recorderRef.current.port.postMessage({ changeThreshold: silenceThresholdSec })
   }
 
   useEffect(() => {
-    uploader = new Worker('/voiceUploader.js')
+    uploaderRef.current = new Worker('/voiceUploader.js')
     fetchToken().then(token => {
-      uploader.postMessage({ initialize: { lessonID: id, token, apiURL: process.env.NEXT_PUBLIC_TERACONNECT_API_URL } })
+      uploaderRef.current.postMessage({ initialize: { lessonID: id, token, apiURL: process.env.NEXT_PUBLIC_TERACONNECT_API_URL } })
     })
 
     return () => {
@@ -65,14 +64,14 @@ export default function useVoiceRecorder(id) {
 
     setNode(micDeviceID, async(ctx, micInput) => {
       await ctx.audioWorklet.addModule('/voiceRecorderProcessor.js')
-      recorder = new AudioWorkletNode(ctx, 'recorder')
-      recorder.port.postMessage({ setElapsedTime: realElapsedTime() })
-      recorder.port.onmessage = e => {
+      recorderRef.current = new AudioWorkletNode(ctx, 'recorder')
+      recorderRef.current.port.postMessage({ setElapsedTime: realElapsedTime() })
+      recorderRef.current.port.onmessage = e => {
         handleRecorderMessage(e.data)
       }
       updateSilenceThresholdSec()
-      micInput.connect(recorder)
-      recorder.connect(ctx.destination)
+      micInput.connect(recorderRef.current)
+      recorderRef.current.connect(ctx.destination)
 
       if (isRecording) switchRecording()
     })

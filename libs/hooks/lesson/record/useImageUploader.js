@@ -1,13 +1,13 @@
-import { useEffect } from 'react'
+import { useRef, useEffect } from 'react'
 import { post, putFile } from '../../../fetch'
 import { extentionNameTo3Chars } from '../../../utils'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 
 const maxFileByteSize = 10485760 // 10MB
 const thumbnailMaxSize = { width: 150, height: 95 }
-let imageCount = 0
 
 export default function useImageUploader(id, images, setImages, inputFileRef, selectImageBarRef) {
+  const imageCountRef = useRef(0)
   const { showError } = useErrorDialogContext()
 
   function handleDrop(e) {
@@ -134,10 +134,10 @@ export default function useImageUploader(id, images, setImages, inputFileRef, se
   }
 
   useEffect(() => {
-    if (imageCount < images.length) {
+    if (imageCountRef.current < images.length) {
       selectImageBarRef.current.scrollLeft = selectImageBarRef.current.scrollWidth - selectImageBarRef.current.clientWidth
     }
-    imageCount = images.length
+    imageCountRef.current = images.length
   }, [images])
 
   return { handleDrop, handleChangeFile, handleUploadButtonClick }

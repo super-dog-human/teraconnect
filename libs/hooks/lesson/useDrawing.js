@@ -2,16 +2,16 @@ import { useRef, useState, useEffect } from 'react'
 import { useLessonRecorderContext } from '../../contexts/lessonRecorderContext'
 import { switchSwipable, mouseOrTouchPositions } from '../../utils'
 
-let canvasCtx
-let isMobileDevice
-let startPosition = {}
-let startDrawingTime
-let isDrawing = false
-let isCleared = true
 const histories = []
 
 export default function useLessonDrawing(hasResize, startDragging, inDragging, endDragging) {
-  const drawingRef = useRef(null)
+  const canvasCtxRef = useRef()
+  const isMobileDeviceRef = useRef()
+  const startPositionRef = useRef({})
+  const startDrawingTimeRef = useRef()
+  const isDrawingRef = useRef(false)
+  const isClearedRef = useRef(true)
+  const drawingRef = useRef()
   const [isDrawingHide, setIsDrawingHide] = useState(false)
   const [enablePen, setEnablePen] = useState(false)
   const [color, setColor] = useState('#ff0000')
@@ -19,26 +19,26 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
   const { setRecord } = useLessonRecorderContext()
 
   function resetCanvasSize() {
-    canvasCtx.canvas.width = canvasCtx.canvas.clientWidth
-    canvasCtx.canvas.height = canvasCtx.canvas.clientHeight
+    canvasCtxRef.current.canvas.width = canvasCtxRef.current.canvas.clientWidth
+    canvasCtxRef.current.canvas.height = canvasCtxRef.current.canvas.clientHeight
 
     redrawFromHistory()
   }
 
   function startDrawing(e) {
-    if (isMobileDevice && e.type === 'mousedown') return // モバイルではtouchstart後にmousedownが呼ばれるのでスキップ
+    if (isMobileDeviceRef.current && e.type === 'mousedown') return // モバイルではtouchstart後にmousedownが呼ばれるのでスキップ
     if (enablePen && !isDrawingHide) {
       switchSwipable(false)
-      isCleared = false
-      isDrawing = true
-      startDrawingTime = new Date()
+      isClearedRef.current = false
+      isDrawingRef.current = true
+      startDrawingTimeRef.current = new Date()
 
       const [x, y] = mouseOrTouchPositions(e, ['touchstart'])
       drawEdgeCircle(x, y)
 
-      canvasCtx.beginPath()
+      canvasCtxRef.current.beginPath()
 
-      startPosition = { x, y }
+      startPositionRef.current = { x, y }
       createNewHistory()
     } else {
       startDragging(e) // ペンが有効でない時はアバターを操作する
@@ -47,20 +47,20 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
 
   function inDrawing(e) {
     if (enablePen && !isDrawingHide) {
-      if (!isDrawing) return
+      if (!isDrawingRef.current) return
 
       const [x, y] = mouseOrTouchPositions(e, ['touchmove'])
       drawLine(x, y)
-      startPosition = { x, y }
+      startPositionRef.current = { x, y }
     } else {
       inDragging(e) // ペンが有効でない時はアバターを操作する
     }
   }
 
   function endDrawing(e) {
-    if (isMobileDevice && e.type === 'mouseup') return // モバイルではtouchend後にmouseupが呼ばれるのでスキップ
+    if (isMobileDeviceRef.current && e.type === 'mouseup') return // モバイルではtouchend後にmouseupが呼ばれるのでスキップ
     if (enablePen && !isDrawingHide) {
-      if (!isDrawing) return
+      if (!isDrawingRef.current) return
       switchSwipable(true)
 
       const [x, y] = mouseOrTouchPositions(e, ['touchend', 'touchcancel'])
@@ -70,31 +70,31 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
       setRecord({
         kind: 'drawing',
         action: 'draw',
-        durationMillisec: new Date() - startDrawingTime,
+        durationMillisec: new Date() - startDrawingTimeRef.current,
         value: histories[histories.length - 1],
       })
 
-      isDrawing = false
+      isDrawingRef.current = false
     } else {
       endDragging(e) // ペンが有効でない時はアバターを操作する
     }
   }
 
   function drawEdgeCircle(x, y) {
-    canvasCtx.beginPath()
-    canvasCtx.arc(x, y, canvasCtx.lineWidth / 2, 0, Math.PI * 2)
-    canvasCtx.fillStyle = color
-    canvasCtx.fill()
-    canvasCtx.closePath()
+    canvasCtxRef.current.beginPath()
+    canvasCtxRef.current.arc(x, y, canvasCtxRef.current.lineWidth / 2, 0, Math.PI * 2)
+    canvasCtxRef.current.fillStyle = color
+    canvasCtxRef.current.fill()
+    canvasCtxRef.current.closePath()
   }
 
   function drawLine(x, y) {
-    if (isSamePosition(startPosition, { x, y })) return
+    if (isSamePosition(startPositionRef.current, { x, y })) return
 
-    canvasCtx.globalCompositeOperation = isEraser() ? 'destination-out': 'source-over'
+    canvasCtxRef.current.globalCompositeOperation = isEraser() ? 'destination-out': 'source-over'
     // カーブの終点をマウスの動く前の座標に、頂点を動いた後の座標にすると滑らかな線が描画できる
-    canvasCtx.quadraticCurveTo(startPosition.x, startPosition.y, x, y)
-    canvasCtx.stroke()
+    canvasCtxRef.current.quadraticCurveTo(startPositionRef.current.x, startPositionRef.current.y, x, y)
+    canvasCtxRef.current.stroke()
 
     addHistory({ x, y })
   }
@@ -106,30 +106,30 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
       if (h.clear) {
         clearCanvas()
       } else {
-        canvasCtx.strokeStyle = h.color
-        canvasCtx.lineWidth = h.lineWidth
-        canvasCtx.globalCompositeOperation = h.eraser ? 'destination-out': 'source-over'
-        const coef = { x: canvasCtx.canvas.clientWidth / h.width, y: canvasCtx.canvas.clientHeight / h.height }
+        canvasCtxRef.current.strokeStyle = h.color
+        canvasCtxRef.current.lineWidth = h.lineWidth
+        canvasCtxRef.current.globalCompositeOperation = h.eraser ? 'destination-out': 'source-over'
+        const coef = { x: canvasCtxRef.current.canvas.clientWidth / h.width, y: canvasCtxRef.current.canvas.clientHeight / h.height }
 
         const circlePositions = calcResizePosition(coef, h.positions[0], h.positions[h.positions.length - 1])
         drawEdgeCircle(circlePositions[0], circlePositions[1])
 
-        canvasCtx.beginPath()
+        canvasCtxRef.current.beginPath()
         h.positions.slice(1).forEach((d, i) => {
-          canvasCtx.quadraticCurveTo(...calcResizePosition(coef, h.positions[i], d))
-          canvasCtx.stroke()
+          canvasCtxRef.current.quadraticCurveTo(...calcResizePosition(coef, h.positions[i], d))
+          canvasCtxRef.current.stroke()
         })
 
         drawEdgeCircle(circlePositions[2], circlePositions[3])
       }
     })
 
-    canvasCtx.strokeStyle = color
-    canvasCtx.lineWidth = lineWidth
+    canvasCtxRef.current.strokeStyle = color
+    canvasCtxRef.current.lineWidth = lineWidth
   }
 
   function clearCanvas() {
-    canvasCtx.clearRect(0, 0, canvasCtx.canvas.clientWidth, canvasCtx.canvas.clientHeight)
+    canvasCtxRef.current.clearRect(0, 0, canvasCtxRef.current.canvas.clientWidth, canvasCtxRef.current.canvas.clientHeight)
   }
 
   function calcResizePosition(coefficient, fromPosition, toPosition) {
@@ -145,12 +145,12 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
   function createNewHistory() {
     histories.push({
       clear: false,
-      width: canvasCtx.canvas.clientWidth,
-      height: canvasCtx.canvas.clientHeight,
+      width: canvasCtxRef.current.canvas.clientWidth,
+      height: canvasCtxRef.current.canvas.clientHeight,
       color: color,
       eraser: isEraser(),
       lineWidth: lineWidth,
-      positions: [startPosition],
+      positions: [startPositionRef.current],
     })
   }
 
@@ -169,16 +169,16 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
     histories.pop()
     redrawFromHistory()
     setRecord({ kind: 'drawing', action: 'undo' })
-    isCleared = false
+    isClearedRef.current = false
   }
 
   function clearDrawing() {
-    if (isCleared) return
+    if (isClearedRef.current) return
 
     addClearHistory()
     clearCanvas()
     setRecord({ kind: 'drawing', action: 'clear' })
-    isCleared = true
+    isClearedRef.current = true
   }
 
   function isEraser() {
@@ -191,8 +191,8 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
   }
 
   useEffect(() => {
-    isMobileDevice = window.ontouchstart !== undefined
-    canvasCtx = drawingRef.current.getContext('2d')
+    isMobileDeviceRef.current = window.ontouchstart !== undefined
+    canvasCtxRef.current = drawingRef.current.getContext('2d')
   }, [])
 
   useEffect(() => {
@@ -202,15 +202,15 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
 
   useEffect(() => {
     if (isEraser()) {
-      canvasCtx.globalCompositeOperation = 'destination-out'
+      canvasCtxRef.current.globalCompositeOperation = 'destination-out'
     } else {
-      canvasCtx.globalCompositeOperation = 'source-over'
-      canvasCtx.strokeStyle = color
+      canvasCtxRef.current.globalCompositeOperation = 'source-over'
+      canvasCtxRef.current.strokeStyle = color
     }
   }, [color])
 
   useEffect(() => {
-    canvasCtx.lineWidth = lineWidth
+    canvasCtxRef.current.lineWidth = lineWidth
   }, [lineWidth])
 
   return {

@@ -1,26 +1,25 @@
-import { useEffect } from 'react'
+import { useRef, useEffect } from 'react'
 import useMicrophone from './useMicrophone'
 
-let canvasCtx
-let analyser
-let bufferLength
-let dataArray
-
 export default function useAudioVisualizer(micDeviceID, canvasRef) {
+  const canvasCtxRef = useRef()
   const { setNode } = useMicrophone()
 
   useEffect(() => {
-    canvasCtx = canvasRef.current.getContext('2d')
-    canvasCtx.canvas.width = canvasRef.current.clientWidth
-    canvasCtx.canvas.height = canvasRef.current.clientHeight
-    canvasCtx.clearRect(0, 0, canvasCtx.canvas.width, canvasCtx.canvas.height)
-    canvasCtx.strokeStyle = 'white'
-    canvasCtx.lineWidth = 5
+    canvasCtxRef.current = canvasRef.current.getContext('2d')
+    canvasCtxRef.current.canvas.width = canvasRef.current.clientWidth
+    canvasCtxRef.current.canvas.height = canvasRef.current.clientHeight
+    canvasCtxRef.current.clearRect(0, 0, canvasCtxRef.current.canvas.width, canvasCtxRef.current.canvas.height)
+    canvasCtxRef.current.strokeStyle = 'white'
+    canvasCtxRef.current.lineWidth = 5
   }, [])
 
   useEffect(() => {
     if (!micDeviceID) return
 
+    let analyser
+    let dataArray
+    let bufferLength
     setNode(micDeviceID, (ctx, micInput) => {
       analyser = ctx.createAnalyser()
       analyser.fftSize = 2048
@@ -35,26 +34,26 @@ export default function useAudioVisualizer(micDeviceID, canvasRef) {
     function drawVisual() {
       requestAnimationFrame(drawVisual)
       analyser.getByteFrequencyData(dataArray)
-      canvasCtx.clearRect(0, 0, canvasCtx.canvas.width, canvasCtx.canvas.height)
-      canvasCtx.beginPath()
+      canvasCtxRef.current.clearRect(0, 0, canvasCtxRef.current.canvas.width, canvasCtxRef.current.canvas.height)
+      canvasCtxRef.current.beginPath()
 
-      const sliceWidth = canvasCtx.canvas.width * 1.0 / bufferLength
+      const sliceWidth = canvasCtxRef.current.canvas.width * 1.0 / bufferLength
       let x = 0
 
       for(var i = 0; i < bufferLength; i++) {
         const v = dataArray[i] / 128.0
-        const y = v * canvasCtx.canvas.height / 2
+        const y = v * canvasCtxRef.current.canvas.height / 2
 
         if (i === 0) {
-          canvasCtx.moveTo(x, canvasCtx.canvas.height - y)
+          canvasCtxRef.current.moveTo(x, canvasCtxRef.current.canvas.height - y)
         } else {
-          canvasCtx.lineTo(x, canvasCtx.canvas.height - y)
+          canvasCtxRef.current.lineTo(x, canvasCtxRef.current.canvas.height - y)
         }
 
         x += sliceWidth
       }
 
-      canvasCtx.stroke()
+      canvasCtxRef.current.stroke()
     }
   }, [micDeviceID])
 }

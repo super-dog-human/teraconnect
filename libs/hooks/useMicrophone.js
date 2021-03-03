@@ -1,23 +1,22 @@
-import { useState, useEffect } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useDialogContext } from '../contexts/dialogContext'
 
-let audioCtx
-let stream
-let micInput
-
 export default function useMicrophone() {
+  const audioCtxRef = useRef()
+  const streamRef = useRef()
+  const micInputRef = useRef()
   const [isMicReady, setIsMicReady] = useState(false)
   const { showDialog } = useDialogContext()
 
   function initAudioContext() {
-    audioCtx = typeof webkitAudioContext === 'undefined' ?
+    audioCtxRef.current = typeof webkitAudioContext === 'undefined' ?
       new AudioContext({ latencyHint: 'balanced' }) : new webkitAudioContext() // for safari
   }
 
   async function initMicInput(micDeviceID) {
-    if (!audioCtx) initAudioContext()
+    if (!audioCtxRef.current) initAudioContext()
 
-    if (audioCtx.state === 'running') {
+    if (audioCtxRef.current.state === 'running') {
       await connectMic(micDeviceID)
     } else {
       return new Promise(resolve => {
@@ -28,7 +27,7 @@ export default function useMicrophone() {
           dismissName: 'キャンセル',
           callbackName: '許可',
           callback: async () => {
-            await audioCtx.resume()
+            await audioCtxRef.current.resume()
             await connectMic(micDeviceID)
             resolve()
           },
@@ -38,7 +37,7 @@ export default function useMicrophone() {
   }
 
   async function connectMic(micDeviceID) {
-    stream = await navigator.mediaDevices.getUserMedia({
+    streamRef.current = await navigator.mediaDevices.getUserMedia({
       audio: {
         echoCancellation: true,
         autoGainControl: true,
@@ -48,25 +47,25 @@ export default function useMicrophone() {
       video: false,
     })
 
-    micInput = audioCtx.createMediaStreamSource(stream)
+    micInputRef.current = audioCtxRef.current.createMediaStreamSource(streamRef.current)
   }
 
   async function terminalMicInput() {
-    if (stream) {
-      stream.getAudioTracks().forEach(track => track.stop())
+    if (streamRef.current) {
+      streamRef.current.getAudioTracks().forEach(track => track.stop())
     }
 
-    if (micInput) {
-      micInput.disconnect()
-      micInput = null
+    if (micInputRef.current) {
+      micInputRef.current.disconnect()
+      micInputRef.current = null
     }
 
-    if (audioCtx && audioCtx.state != 'closed') {
-      await audioCtx.close()
+    if (audioCtxRef.current && audioCtxRef.current.state != 'closed') {
+      await audioCtxRef.current.close()
     }
 
-    if (audioCtx) {
-      audioCtx = null
+    if (audioCtxRef.current) {
+      audioCtxRef.current = null
     }
   }
 
@@ -75,7 +74,7 @@ export default function useMicrophone() {
 
     await terminalMicInput()
     await initMicInput(micDeviceID)
-    await callback(audioCtx, micInput)
+    await callback(audioCtxRef.current, micInputRef.current)
 
     setIsMicReady(true)
   }

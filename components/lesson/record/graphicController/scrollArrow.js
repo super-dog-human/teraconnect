@@ -1,61 +1,62 @@
 /** @jsxImportSource @emotion/react */
-import React, { useEffect } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { css } from '@emotion/core'
 
 const frameUnit = 20
-let isHover = false
-let animationID
-let offsetLeft
-let moveMaxX
-let maxFrameCount
-let frameCount
-let scrollDelayID
 
 function easeOutSine(x) {
   return Math.sin((x * Math.PI) / 2)
 }
 
 export default function ScrollArrow({ className, direction, targetRef }) {
-  function handleMouseOver() {
-    if (isHover) return
-    isHover = true
+  const isHoverRef = useRef(false)
+  const animationIDRef = useRef()
+  const offsetLeftRef = useRef()
+  const moveMaxXRef = useRef()
+  const maxFrameCountRef = useRef()
+  const frameCountRef = useRef()
+  const scrollDelayIDRef = useRef()
 
-    offsetLeft = targetRef.current.scrollLeft
+  function handleMouseOver() {
+    if (isHoverRef.current) return
+    isHoverRef.current = true
+
+    offsetLeftRef.current = targetRef.current.scrollLeft
     if (direction === 'left') {
-      moveMaxX = offsetLeft
+      moveMaxXRef.current = offsetLeftRef.current
     } else {
-      moveMaxX = targetRef.current.scrollWidth - targetRef.current.offsetWidth - offsetLeft
+      moveMaxXRef.current = targetRef.current.scrollWidth - targetRef.current.offsetWidth - offsetLeftRef.current
     }
 
-    maxFrameCount = parseInt(moveMaxX / 300 * frameUnit)      // 移動距離に応じて300px/20フレームの速さで移動
-    if (maxFrameCount <= frameUnit) maxFrameCount = frameUnit // 移動距離が短い時は20フレーム使う
-    frameCount = 0
+    maxFrameCountRef.current = parseInt(moveMaxXRef.current / 300 * frameUnit)      // 移動距離に応じて300px/20フレームの速さで移動
+    if (maxFrameCountRef.current <= frameUnit) maxFrameCountRef.current = frameUnit // 移動距離が短い時は20フレーム使う
+    frameCountRef.current = 0
 
-    scrollDelayID = setTimeout(animate, 200)
+    scrollDelayIDRef.current = setTimeout(animate, 200)
   }
 
   function handleMouseLeave() {
-    isHover = false
-    clearTimeout(scrollDelayID)
+    isHoverRef.current = false
+    clearTimeout(scrollDelayIDRef.current)
   }
 
   function animate() {
-    if (moveMaxX === 0) return
-    if (!isHover) return
+    if (moveMaxXRef.current === 0) return
+    if (!isHoverRef.current) return
 
     if (direction === 'left') {
-      const moveLeft = offsetLeft - Math.floor(moveMaxX * easeOutSine(frameCount / maxFrameCount))
+      const moveLeft = offsetLeftRef.current - Math.floor(moveMaxXRef.current * easeOutSine(frameCountRef.current / maxFrameCountRef.current))
       targetRef.current.scrollLeft = moveLeft
     } else {
-      const moveRight = Math.floor(moveMaxX * easeOutSine(frameCount / maxFrameCount)) + offsetLeft
+      const moveRight = Math.floor(moveMaxXRef.current * easeOutSine(frameCountRef.current / maxFrameCountRef.current)) + offsetLeftRef.current
       targetRef.current.scrollLeft = moveRight
     }
 
-    frameCount += 1
-    if (frameCount <= maxFrameCount) {
-      animationID = requestAnimationFrame(animate)
+    frameCountRef.current += 1
+    if (frameCountRef.current <= maxFrameCountRef.current) {
+      animationIDRef.current = requestAnimationFrame(animate)
     } else {
-      isHover = false
+      isHoverRef.current = false
     }
   }
 
@@ -70,7 +71,7 @@ export default function ScrollArrow({ className, direction, targetRef }) {
 
   useEffect(() => {
     targetRef.current.onwheel = (() => {
-      cancelAnimationFrame(animationID)
+      cancelAnimationFrame(animationIDRef.current)
     })
   }, [])
 

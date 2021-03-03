@@ -1,40 +1,39 @@
-import { useState, useEffect } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import * as THREE from 'three'
 
-let clock
-let realTime = 0
-let isStart = false
-
 export default function useTimeCounter() {
+  const clockRef = useRef()
+  const realTimeRef = useRef(0)
+  const isStartRef = useRef(false)
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
 
   function animate() {
-    if (isStart) {
+    if (isStartRef.current) {
       requestAnimationFrame(animate)
     }
 
-    realTime += clock.getDelta()
-    if (realTime - elapsedSeconds > 1.0) {
-      setElapsedSeconds(Math.floor(realTime))
+    realTimeRef.current += clockRef.current.getDelta()
+    if (realTimeRef.current - elapsedSeconds > 1.0) {
+      setElapsedSeconds(Math.floor(realTimeRef.current))
     }
   }
 
   function switchCounter(status) {
-    isStart = status
-    if (isStart) {
-      clock.start()
+    isStartRef.current = status
+    if (isStartRef.current) {
+      clockRef.current.start()
       animate()
     } else {
-      clock.stop()
+      clockRef.current.stop()
     }
   }
 
   function realElapsedTime() {
-    return realTime
+    return realTimeRef.current
   }
 
   useEffect(() => {
-    clock = new THREE.Clock()
+    clockRef.current = new THREE.Clock()
   }, [])
 
   return { elapsedSeconds, realElapsedTime, switchCounter }
