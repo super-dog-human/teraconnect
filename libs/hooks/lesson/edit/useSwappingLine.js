@@ -21,7 +21,6 @@ export default function useSwappingLine() {
     removeBlankLine()
 
     if (currentIndexRef.current === targetIndex) return
-    if (currentIndexRef.current - 1 === targetIndex) return
 
     const blankLine = document.createElement('div')
     blankLine.dataset.index = 'blank'
@@ -34,12 +33,15 @@ export default function useSwappingLine() {
     blankLine.append(body)
 
     blankLineRef.current = blankLine
-    e.currentTarget.after(blankLineRef.current)
+    if (currentIndexRef.current - 1 === targetIndex) {
+      e.currentTarget.before(blankLineRef.current)
+    } else {
+      e.currentTarget.after(blankLineRef.current)
+    }
   }
 
   function handleDrop(currentIndex, targetIndex) {
     removeBlankLine()
-    // TODO
   }
 
   function removeBlankLine() {
