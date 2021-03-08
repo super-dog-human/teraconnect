@@ -9,7 +9,7 @@ import LessonEditHeader from './header'
 import LessonEditPreview from './preview'
 import LessonDurationTime from './durationTime'
 import LessonEditGraphicController from './graphicController/'
-import LessonEditTimeline from './timeline'
+import Timeline from './timeline'
 
 const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
   const screenClass = useScreenClass()
@@ -57,7 +57,7 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
               <LessonEditGraphicController lessonID={lesson.id} graphics={graphics} setGraphics={setGraphics} updateLine={updateLine} />
             </div>
             <div css={rightSideStyle}>
-              <LessonEditTimeline timeline={timeline} />
+              <Timeline timeline={timeline} />
             </div>
           </div>
         </ImageViewerProvider>

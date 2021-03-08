@@ -15,6 +15,7 @@ export default function useLessonEditor(lesson) {
   async function fetchResources() {
     fetchMaterial({ lesson, setDurationSec, setAvatars, setDrawings, setGraphics, setSpeeches })
       .then(timeline => {
+        console.log(timeline)
         setTimeline(timeline)
         setIsLoading(false)
       }).catch(e => {
@@ -31,8 +32,9 @@ export default function useLessonEditor(lesson) {
       })
   }
 
-  function addLine(lineIndex, kind, value) {
-    // 自身のelapsedtimeが600.0より下なら行を追加。直前のdurationSecを足した値にするが、0なら+1秒で追加する
+
+  function addNewLine() {
+    // 自身のelapsedtimeが600.0より前なら行を追加。+10秒で追加する
   }
 
   function updateLine(lineIndex, kindIndex, kind, value) {
@@ -44,22 +46,9 @@ export default function useLessonEditor(lesson) {
     // kindに応じて各stateも更新する
   }
 
-  function moveLine() {
-
-  }
-
-  function commitMovingLine() {
-
-  }
-
-  function deleteLine() {
-
-  }
-
   useEffect(() => {
     fetchResources()
   }, [])
-
 
   return { isLoading, durationSec, timeline, avatars, graphics, drawings, speeches, setGraphics, updateLine }
 }

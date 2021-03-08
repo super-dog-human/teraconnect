@@ -15,13 +15,15 @@ export async function fetchMaterial({ lesson, setDurationSec, setAvatars, setDra
       if (!material[kind + 's']) return
 
       material[kind + 's'].forEach(m => {
-        if (!timeline[m.elapsedtime]) {
-          timeline[m.elapsedtime] = {}
+        const elapsedtime = m.elapsedtime
+        if (!timeline[elapsedtime]) {
+          timeline[elapsedtime] = {}
         }
-        if (timeline[m.elapsedtime][kind]) {
-          timeline[m.elapsedtime][kind].push(m)
+        delete m.elapsedtime // キーにelapsedtimeが入るので不要
+        if (timeline[elapsedtime][kind]) {
+          timeline[elapsedtime][kind].push(m)
         } else {
-          timeline[m.elapsedtime][kind] = [m]
+          timeline[elapsedtime][kind] = [m]
         }
       })
     })

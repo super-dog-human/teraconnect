@@ -38,7 +38,7 @@ export default function LessonRecordGraphicController({ id, setSelectedGraphic, 
                 <ScrollArrow direction="left" targetRef={selectImageBarRef} />
               </Col>
               <Col sm={8}>
-                <DragSwappable onSwap={moveImage} css={selectImageBarStyle} ref={selectImageBarRef}>
+                <DragSwappable onDragOver={moveImage} css={selectImageBarStyle} ref={selectImageBarRef}>
                   {images.map((image, i) =>
                     <SelectorThumbnail image={image} key={i} onClick={selectImage} onRemoveClick={removeImage} isSelected={image.id === imageID} isFinishing={isFinishing} />
                   )}

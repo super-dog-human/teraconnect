@@ -1,40 +1,47 @@
 import React, { useRef } from 'react'
 
-const DragSwappable = React.forwardRef(function dragSwappable({ children, className, onSwap, direction='horizontal' }, ref) {
+const DragSwappable = React.forwardRef(function dragSwappable({ children, className, onDragStart, onDragLeave, onDragOver, onDragEnd, onDrop }, ref) {
   const indexRef = useRef()
+  const prevTargetRef = useRef()
 
   function handleDragStart(e) {
-    indexRef.current = parseInt(e.currentTarget.dataset.index)
+    indexRef.current = targetIndex(e)
+
+    if (!onDragStart) return
+    onDragStart(e)
   }
 
   function handleDragOver(e) {
-    const targetIndex = parseInt(e.currentTarget.dataset.index)
+    e.preventDefault() // onDrop発火のために必要
 
-    if (targetIndex === indexRef.current) {
-      return // 自分自身へのドラッグでは何も反応させない
-    }
+    const currentIndex = targetIndex(e)
+    if (prevTargetRef.current === currentIndex) return
+    prevTargetRef.current = currentIndex
 
-    const isBeginside = (direction === 'horizontal') ?
-      e.currentTarget.clientWidth / 2 < e.nativeEvent.offsetX :
-      e.currentTarget.clientHeight / 2 < e.nativeEvent.offsetY
+    if (!onDragOver) return
 
-    if (indexRef.current - 1 === targetIndex && isBeginside) {
-      return // 左隣の要素の右半分、または直上の要素の下半分では何も反応させない
-    }
+    onDragOver(indexRef, currentIndex, e)
+  }
 
-    if (indexRef.current + 1 === targetIndex && !isBeginside) {
-      return // 右隣の要素の左半分、または直下の要素の上半分では何も反応させない
-    }
+  function handleDragEnd(e) {
+    if (!onDragEnd) return
+    onDragEnd(e)
+  }
 
-    onSwap(indexRef.current, targetIndex)
+  function handleDrop(e) {
+    if (!onDrop) return
 
-    indexRef.current = targetIndex
+    onDrop(indexRef.current, targetIndex(e))
+  }
+
+  function targetIndex(e) {
+    return parseInt(e.currentTarget.dataset.index)
   }
 
   return (
     <div className={className} ref={ref}>
       {children.map((c, i) => (
-        <div key={i} data-index={i} onDragStart={handleDragStart} onDragOver={handleDragOver}>
+        <div key={i} data-index={i} onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd} onDrop={handleDrop} draggable={true}>
           {c}
         </div>
       ))}

@@ -81,7 +81,7 @@ export default function LessonEditLineSpeech({ speech, index, isEditButtonShow }
   return (
     <>
       <LessonEditSpeechButton kind="speech" isPlaying={isPlaying} onClick={handleClick} />
-      <LessonEditSpeechInputText onKeyDown={handleKeyDown} onChange={handleChange} value={speech.subtitle} readOnly={isLoading} />
+      <LessonEditSpeechInputText onKeyDown={handleKeyDown} onChange={handleChange} value={speech.subtitle} readOnly={isLoading} draggable={false} />
       <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} />
     </>
   )

@@ -14,7 +14,7 @@ export default function LessonEditGraphicThumbnail({ url, className }) {
   }
 
   function handleClick(e) {
-    const url = e.currentTarget.getAttribute('data-image-url')
+    const url = e.currentTarget.dataset['imageUrl']
     setImage({ url, widePer: 70 })
     e.stopPropagation()
   }
