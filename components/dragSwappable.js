@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 
-const DragSwappable = React.forwardRef(function dragSwappable({ children, className, onDragStart, onDragLeave, onDragOver, onDragEnd, onDrop }, ref) {
+const DragSwappable = React.forwardRef(function dragSwappable({ children, className, onDragStart, onDragOver, onDragEnd, onDrop }, ref) {
   const indexRef = useRef()
   const prevTargetRef = useRef()
 
