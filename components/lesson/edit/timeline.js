@@ -4,17 +4,17 @@ import { css } from '@emotion/core'
 import DragSwappable from '../../dragSwappable'
 import Elapsedtime from './line/elapsedtime'
 import LessonEditLine from './line/'
-import BlankLine from './line/blankLine'
+import DropLine from './line/dropLine'
 import useSwappingLine from '../../../libs/hooks/lesson/edit/useSwappingLine'
 
 export default function Timeline({ timeline, swapLine }) {
-  const blankLineRef = useRef()
+  const dropLineRef = useRef()
   const { dragStartIndex, handleDragStart, handleDragEnd, handleDragOver, handleDrop, handleChildDrop }
-    = useSwappingLine({ blankLineRef, swapLine })
+    = useSwappingLine({ dropLineRef, swapLine })
 
   return (
     <div css={bodyStyle}>
-      <BlankLine ref={blankLineRef} onDrop={handleChildDrop} />
+      <DropLine ref={dropLineRef} onDrop={handleChildDrop} />
       <DragSwappable onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd} onDrop={handleDrop}>
         {Object.keys(timeline).sort((a, b) => a - b).map((elapsedtime, i) => (
           <div key={i} css={dragStartIndex === i && focusedStyle}>

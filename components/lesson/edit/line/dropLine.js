@@ -2,7 +2,7 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-const BlankLine = React.forwardRef(function blankLine(props, ref) {
+const DropLine = React.forwardRef(function dropLine(props, ref) {
   function handleDragOver(e) {
     e.preventDefault()
   }
@@ -23,4 +23,4 @@ const bodyStyle = css({
   backgroundColor: 'var(--dark-purple)',
 })
 
-export default BlankLine
+export default DropLine

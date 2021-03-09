@@ -1,7 +1,6 @@
 import { useState, useRef } from 'react'
-// import { inRange } from '../../../utils'
 
-export default function useSwappingLine({ blankLineRef, swapLine }) {
+export default function useSwappingLine({ dropLineRef, swapLine }) {
   const dragStartElementHeightRef = useRef()
   const [dragStartIndex, setDragStartIndex] = useState()
 
@@ -13,34 +12,34 @@ export default function useSwappingLine({ blankLineRef, swapLine }) {
 
   function handleDragEnd() {
     setDragStartIndex()
-    removeBlankLine()
+    removeDropLine()
   }
 
   function handleDragOver(currentIndexRef, targetIndex, e) {
-    removeBlankLine()
+    removeDropLine()
 
     if (currentIndexRef.current === targetIndex) return
     if (currentIndexRef.current + 1 === targetIndex) return
 
-    blankLineRef.current.style.height = dragStartElementHeightRef.current + 'px'
+    dropLineRef.current.style.height = dragStartElementHeightRef.current + 'px'
 
     // 対象行の中の最初の要素として空行を追加する
-    e.currentTarget.insertBefore(blankLineRef.current, e.currentTarget.firstElementChild)
+    e.currentTarget.insertBefore(dropLineRef.current, e.currentTarget.firstElementChild)
   }
 
   function handleDrop(currentIndex, targetIndex) {
-    removeBlankLine()
+    removeDropLine()
     swapLine(currentIndex, targetIndex)
   }
 
   function handleChildDrop(targetIndex) {
-    removeBlankLine()
+    removeDropLine()
     swapLine(dragStartIndex, targetIndex)
   }
 
-  function removeBlankLine() {
-    if (!blankLineRef.current) return
-    blankLineRef.current.remove()
+  function removeDropLine() {
+    if (!dropLineRef.current) return
+    dropLineRef.current.remove()
   }
 
 
