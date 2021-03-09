@@ -42,7 +42,7 @@ export default function LessonEditGraphicThumbnail({ url, className }) {
 
   return (
     <div css={bodyStyle} className={className}>
-      {<Image src={url} width="175" height="100" objectFit="contain" css={imageStyle} data-image-url={url} onClick={handleClick} onLoad={handleLoad} />}
+      {url && <Image src={url} width="175" height="100" objectFit="contain" css={imageStyle} data-image-url={url} onClick={handleClick} onLoad={handleLoad} />}
       {!loaded && <div css={loadingStyle}><LoadingIndicator size={50} /></div>}
     </div>
   )

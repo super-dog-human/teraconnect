@@ -16,7 +16,7 @@ export default function LessonEditLineGraphic({ graphic, index, isEditButtonShow
     <>
       <LessonEditKindIcon kind="graphic" status={graphic.action === 'show'} css={iconStyle} />
       <div css={graphicContainerStyle}>
-        {graphic.action === 'show' && graphic.url && <LessonEditGraphicThumbnail url={graphic.url} css={imageStyle} />}
+        {graphic.action === 'show' && <LessonEditGraphicThumbnail url={graphic.url} css={imageStyle} />}
         {graphic.action === 'hide' && <LessonEditActionLabel kind="graphic" action={'hide'} />}
       </div>
       <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} css={iconStyle}/>

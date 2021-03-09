@@ -12,7 +12,7 @@ export default function LessonEditGraphicController(props) {
       {Object.keys(graphicURL).length > 0 &&
       <>
         <div css={headerStyle}>
-          <div>画像 ({Object.keys(graphicURL).length})</div>
+          <div>アップロード済み ({Object.keys(graphicURL).length})</div>
           <hr />
         </div>
         <div css={containerStyle}>
@@ -35,6 +35,8 @@ const bodyStyle = css({
 
 const headerStyle = css({
   height: '50px',
+  textAlign: 'center',
+  color: 'gray',
 })
 
 const containerStyle = css({
