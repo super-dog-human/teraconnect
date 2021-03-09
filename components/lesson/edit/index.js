@@ -13,7 +13,7 @@ import Timeline from './timeline'
 
 const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
   const screenClass = useScreenClass()
-  const { isLoading, durationSec, timeline, avatars, graphics, drawings, speeches, setGraphics, updateLine } = useLessonEditor(lesson)
+  const { isLoading, durationSec, timeline, avatars, graphics, drawings, speeches, setGraphics, updateLine, swapLine } = useLessonEditor(lesson)
 
   const bodyStyle = css({
     margin: 'auto',
@@ -57,7 +57,7 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
               <LessonEditGraphicController lessonID={lesson.id} graphics={graphics} setGraphics={setGraphics} updateLine={updateLine} />
             </div>
             <div css={rightSideStyle}>
-              <Timeline timeline={timeline} />
+              <Timeline timeline={timeline} swapLine={swapLine} />
             </div>
           </div>
         </ImageViewerProvider>

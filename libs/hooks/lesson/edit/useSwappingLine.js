@@ -1,19 +1,18 @@
 import { useState, useRef } from 'react'
 // import { inRange } from '../../../utils'
 
-export default function useSwappingLine() {
-  const startLineOffsetRef = useRef(false)
-  const [focusedIndex, setFocusedIndex] = useState()
-  const blankLineRef = useRef()
+export default function useSwappingLine({ blankLineRef, swapLine }) {
+  const dragStartElementHeightRef = useRef()
+  const [dragStartIndex, setDragStartIndex] = useState()
 
   function handleDragStart(e) {
-    startLineOffsetRef.current =  e.nativeEvent.offsetY
     const index = parseInt(e.currentTarget.dataset.index)
-    setFocusedIndex(index)
+    dragStartElementHeightRef.current = e.currentTarget.clientHeight
+    setDragStartIndex(index)
   }
 
   function handleDragEnd() {
-    setFocusedIndex()
+    setDragStartIndex()
     removeBlankLine()
   }
 
@@ -21,27 +20,22 @@ export default function useSwappingLine() {
     removeBlankLine()
 
     if (currentIndexRef.current === targetIndex) return
+    if (currentIndexRef.current + 1 === targetIndex) return
 
-    const blankLine = document.createElement('div')
-    blankLine.dataset.index = 'blank'
-    blankLine.style.height = '100px'
-    const body = document.createElement('div')
-    body.style['background-color'] = 'var(--dark-purple)'
-    body.style.width = '100%'
-    body.style.height = '100%'
-    body.style['border-radius'] = '5px'
-    blankLine.append(body)
+    blankLineRef.current.style.height = dragStartElementHeightRef.current + 'px'
 
-    blankLineRef.current = blankLine
-    if (currentIndexRef.current - 1 === targetIndex) {
-      e.currentTarget.before(blankLineRef.current)
-    } else {
-      e.currentTarget.after(blankLineRef.current)
-    }
+    // 対象行の中の最初の要素として空行を追加する
+    e.currentTarget.insertBefore(blankLineRef.current, e.currentTarget.firstElementChild)
   }
 
   function handleDrop(currentIndex, targetIndex) {
     removeBlankLine()
+    swapLine(currentIndex, targetIndex)
+  }
+
+  function handleChildDrop(targetIndex) {
+    removeBlankLine()
+    swapLine(dragStartIndex, targetIndex)
   }
 
   function removeBlankLine() {
@@ -49,9 +43,6 @@ export default function useSwappingLine() {
     blankLineRef.current.remove()
   }
 
-  function deleteLine() {
 
-  }
-
-  return { focusedIndex, handleDragStart, handleDragEnd, handleDragOver, handleDrop }
+  return { dragStartIndex, handleDragStart, handleDragEnd, handleDragOver, handleDrop, handleChildDrop }
 }
