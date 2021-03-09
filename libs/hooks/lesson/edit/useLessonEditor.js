@@ -34,6 +34,7 @@ export default function useLessonEditor(lesson) {
 
   function swapLine(fromIndex, toIndex) {
     if (fromIndex === toIndex) return
+    if (fromIndex === toIndex + 1) return
 
     setTimeline(timeline => {
       const sortedElapsedtimes = Object.keys(timeline).sort((a, b) => a - b)
