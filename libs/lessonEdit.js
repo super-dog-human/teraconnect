@@ -3,10 +3,10 @@ import { fetchWithAuth } from './fetch'
 export async function fetchMaterial({ lesson, setDurationSec, setAvatars, setDrawings, setGraphics, setSpeeches }) {
   const material = await fetchWithAuth(`/lessons/${lesson.id}/materials`)
   setDurationSec(material.durationSec)
-  setAvatars(material.avatars)
-  setGraphics(material.graphics)
-  setDrawings(material.drawings)
-  setSpeeches(material.speeches)
+  setAvatars(material.avatars || [])
+  setGraphics(material.graphics || [])
+  setDrawings(material.drawings || [])
+  setSpeeches(material.speeches || [])
   return createNewTimelines()
 
   function createNewTimelines() {
@@ -46,14 +46,20 @@ export async function fetchMaterial({ lesson, setDurationSec, setAvatars, setDra
     voices.forEach(v => {
       if (!timeline[v.elapsedtime]) timeline[v.elapsedtime] = {}
 
-      timeline[v.elapsedtime].speech = [{
+      const newSpeech = {
         voiceID : v.id,
-        elapsedtime: v.elapsedtime,
         durationSec: v.durationSec,
         subtitle: v.text,
         caption: '',
         url: v.url,
-      }]
+      }
+
+      timeline[v.elapsedtime].speech = [newSpeech]
+      setSpeeches(speeches => {
+        newSpeech.elapsedtime = v.elapsedtime
+        speeches.push(newSpeech)
+        return speeches
+      })
     })
 
     return timeline

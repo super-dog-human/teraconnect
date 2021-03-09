@@ -1,12 +1,19 @@
 /** @jsxImportSource @emotion/react */
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { css } from '@emotion/core'
 import InputText from '../../../form/inputText'
 
-export default function LessonEditSpeechInputText({ value, onKeyDown, onChange, readOnly }) {
+export default function LessonEditSpeechInputText({ defaultValue, onKeyDown, onChange, readOnly, isFocus }) {
+  const inputTextRef = useRef()
+
+  useEffect(() => {
+    if (!isFocus) return
+    inputTextRef.current.focus()
+  }, [])
+
   return (
     <div css={bodyStyle}>
-      <InputText css={inputStyle} key={value} defaultValue={value} onKeyDown={onKeyDown} onChange={onChange} readOnly={readOnly} />
+      <InputText css={inputStyle} key={defaultValue} ref={inputTextRef} defaultValue={defaultValue} onKeyDown={onKeyDown} onChange={onChange} readOnly={readOnly} />
     </div>
   )
 }

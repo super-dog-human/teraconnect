@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 import { fetchMaterial }  from '../../../lessonEdit'
 
@@ -89,31 +89,38 @@ export default function useLessonEditor() {
   }
 
   function maxDurationSecInline(line) {
-    Math.max(Object.keys(line).flatMap(kind => fromLine[kind].map(k => k.durationSec || 0)))
+    return Math.max(Object.keys(line).flatMap(kind => line[kind].map(k => k.durationSec || 0)))
   }
 
   function addSpeechLine() {
     setTimeline(timeline =>  {
       const elapsedtimes = sortedElapsedtimes(timeline)
-      const lastElapsedtime = elapsedtimes[elapsedtimes.length - 1]
+      const lastElapsedtime = parseFloat(elapsedtimes[elapsedtimes.length - 1])
       const lastLine = timeline[lastElapsedtime]
+
       let durationSec = maxDurationSecInline(lastLine)
       if (durationSec === 0) durationSec = 1.0
-      const newElapsedtime = lastElapsedtime + durationSec
 
-      if (newElapsedtime > 600.0) return
+      const newElapsedtime = parseFloat((lastElapsedtime + durationSec).toFixed(3))
+      if (newElapsedtime > 600.0) return timeline
 
-      timeline[newElapsedtime] = {
-        speech: [{
-          voiceID: null,
-          durationSec: 10.0,
-          subtitle: '',
-          caption: '',
-          url: null,
-        }]
+      const newSpeech = {
+        voiceID: null,
+        durationSec: 10.0,
+        subtitle: '',
+        caption: '',
+        url: null,
       }
 
-      return timeline
+      setSpeeches(speeches => {
+        speeches.push(newSpeech)
+        return speeches
+      })
+
+      newSpeech.isFocus = true
+      timeline[newElapsedtime] = { speech: [newSpeech] }
+
+      return { ...timeline }
     })
   }
 
@@ -125,11 +132,27 @@ export default function useLessonEditor() {
     const newTimeline = { ...timeline }
     const elapsedTime = Object.keys(newTimeline)[lineIndex]
     newTimeline[elapsedTime][kind] = value
-    setTimeline(line)
+    setTimeline(newTimeline)
 
     // kindに応じて各stateも更新する
   }
 
+  function updateDurationSec() {
+    const elapsedtimes = sortedElapsedtimes(timeline)
+    const lastElapsedtime = parseFloat(elapsedtimes[elapsedtimes.length - 1])
+
+    const durationSec = timeline[lastElapsedtime].durationSec || 0
+    const totalDurationSec = parseFloat((lastElapsedtime + durationSec).toFixed(3))
+
+    setDurationSec(totalDurationSec)
+  }
+
+  useEffect(() => {
+    if (Object.keys(timeline).length === 0) return
+    updateDurationSec()
+  }, [timeline])
+
+
   return { fetchResources, isLoading, durationSec, timeline, avatars, graphics, drawings, speeches, setGraphics,
-    updateLine, swapLine }
+    updateLine, swapLine, addSpeechLine }
 }

@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react'
 import LessonEditSpeechButton from './speechButton'
 import LessonEditSpeechInputText from './speechInputText'
 import EditIcon from './editIcon'
+import { useLessonEditorContext } from '../../../../libs/contexts/lessonEditorContext'
 import { findNextElement } from '../../../../libs/utils'
 
 export default function LessonEditLineSpeech({ speech, index, isEditButtonShow }) {
   const [isLoading, setIsLoading] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [audio, setAudio] = useState()
+  const { addSpeechLine } = useLessonEditorContext()
 
   function handleClick(e) {
     if (!audio && !speech.url && speech.text) {
@@ -35,7 +37,7 @@ export default function LessonEditLineSpeech({ speech, index, isEditButtonShow }
   }
 
   function handleKeyDown(e) {
-    if (e.keyCode != 13) return // 日本語の確定でEnterキーを押下した場合はスキップ
+    if (e.keyCode != 13) return // Enter以外のキーや、Enterでも日本語の確定でキーを押下した場合はスキップ
 
     let current = e.target.parentNode
     while(current.parentNode != null && current.parentNode != document.documentElement) {
@@ -43,17 +45,17 @@ export default function LessonEditLineSpeech({ speech, index, isEditButtonShow }
       current = current.parentNode
     }
 
-    findNextElement(current.parentNode, 'input', inputs => {
+    findNextElement(current, 'input', inputs => {
       inputs[0].focus()
     })
 
     if (document.activeElement === e.target) {
-      console.log('フォーカスが変わらなかったので行を追加する')
+      addSpeechLine() // フォーカスが変わらなかったので新しい行を追加する
     }
   }
 
   function handleChange(e) {
-    console.log(e.target.value)
+    // console.log(e.target.value)
     // speechesを更新する
     // setSpeeches()
     // setTimeline()
@@ -69,10 +71,11 @@ export default function LessonEditLineSpeech({ speech, index, isEditButtonShow }
     createAudio(speech.url)
   }, [speech])
 
+
   return (
     <>
       <LessonEditSpeechButton kind="speech" isPlaying={isPlaying} onClick={handleClick} />
-      <LessonEditSpeechInputText onKeyDown={handleKeyDown} onChange={handleChange} value={speech.subtitle} readOnly={isLoading} draggable={false} />
+      <LessonEditSpeechInputText onKeyDown={handleKeyDown} onChange={handleChange} defaultValue={speech.subtitle} readOnly={isLoading} draggable={false} isFocus={speech.isFocus} />
       <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} />
     </>
   )
