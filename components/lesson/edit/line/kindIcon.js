@@ -8,7 +8,7 @@ export default function LessonEditKindIcon({ kind, status=true, className, onCli
     filter: status ? 'grayscale(0)' : 'grayscale(1) brightness(130%)',
   })
 
-  return(
+  return (
     <div css={bodyStyle} className={className}>
       {kind && <Image src={`/img/icon/timeline-${kind}.svg`} width={20} height={20} css={imageStyle} onClick={onClick} draggable={false} />}
     </div>

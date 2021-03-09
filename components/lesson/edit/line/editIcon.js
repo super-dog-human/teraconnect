@@ -15,7 +15,7 @@ export default function EditIcon({ onClick, isShow, className }) {
     }
   })
 
-  return(
+  return (
     <div css={bodyStyle} className={className}>
       <Image src={'/img/icon/more.svg'} width={20} height={20} onClick={onClick} draggable={false} />
     </div>

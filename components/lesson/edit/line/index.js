@@ -18,7 +18,7 @@ export default function LessonEditLine({ index, kind, line }) {
     setIsEditButtonShow(false)
   }
 
-  return(
+  return (
     <div css={bodyStyle} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       {kind === 'avatar'  && <LessonEditLineAvatar avatar={line} index={index} isEditButtonShow={isEditButtonShow} />}
       {kind === 'drawing' && <LessonEditLineDrawing drawing={line} index={index} isEditButtonShow={isEditButtonShow} />}

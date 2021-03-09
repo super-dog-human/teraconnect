@@ -3,7 +3,7 @@ import React from 'react'
 import { css } from '@emotion/core'
 
 export default function LessonPlayer() {
-  return(
+  return (
     <div css={bodyStyle}>
       <div css={playerStyle}></div>
     </div>
