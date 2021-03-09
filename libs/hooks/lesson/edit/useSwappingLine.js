@@ -19,12 +19,12 @@ export default function useSwappingLine({ dropLineRef, swapLine }) {
     removeDropLine()
 
     if (currentIndexRef.current === targetIndex) return
-    if (currentIndexRef.current + 1 === targetIndex) return
+    if (currentIndexRef.current - 1 === targetIndex) return
 
     dropLineRef.current.style.height = dragStartElementHeightRef.current + 'px'
 
-    // 対象行の中の最初の要素として空行を追加する
-    e.currentTarget.insertBefore(dropLineRef.current, e.currentTarget.firstElementChild)
+    // 対象行の中の最後の要素として空行を追加する
+    e.currentTarget.appendChild(dropLineRef.current)
   }
 
   function handleDrop(currentIndex, targetIndex) {

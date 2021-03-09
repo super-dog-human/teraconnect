@@ -33,72 +33,55 @@ export default function useLessonEditor(lesson) {
   }
 
   function swapLine(fromIndex, toIndex) {
-    const isTopToBottom = fromIndex < toIndex
-    console.log(fromIndex, toIndex)
-    /*
-    const newTimeline = { ...timeline }
-    const sortedElapsedtimes = Object.keys(timeline).sort((a, b) => a - b)
+    if (fromIndex === toIndex) return
 
-    const fromElapsedtime = parseFloat(sortedElapsedtimes[currentIndex])
-    const toElapsedtime = parseFloat(sortedElapsedtimes[targetIndex])
+    setTimeline(timeline => {
+      const sortedElapsedtimes = Object.keys(timeline).sort((a, b) => a - b)
 
-    const fromLine = newTimeline[fromElapsedtime]
-    console.log(fromLine)
+      const fromElapsedtime = parseFloat(sortedElapsedtimes[fromIndex])
+      const fromLine = timeline[fromElapsedtime]
+      delete timeline[fromElapsedtime]
 
-    delete newTimeline[fromElapsedtime]
-//    fromLine.elapsedtime = toElapsedtime
-    newTimeline[toElapsedtime] = fromLine
-*/
-    /*
-
-    const targetTimes = Object.keys(timeline)
-      .map(t => parseFloat(t))
-      .filter(t => inRange(fromElapsedtime, toElapsedtime, t))
-
-
-    //
-    // しゃべった直後に画像とかだと結局speechのdurationを採用した方が良さそう
-    // speech以外は直後のelapsedtimeまでの時間でよさそう
-    if (fromElapsedtime < toElapsedtime) {
-      // targetTimesが照準である必要がある
-      targetTimes.forEach(targetTime => {
-        const target = newTimeline[targetTime]
-        delete newTimeline[targetTime]
-        newTimeline[target - fromLine.durationSec] = target
-          // さらにkind先のelapsedtimeを更新する
-      })
-    } else {
-
-    }
-
-    console.log(fromElapsedtime, toElapsedtime)
-    //    const toLine = newTimeline[toElapsedtime]
-    console.log(targetTimes)
-    function updateElapsedtime() {
-
-    }
-
-    newTimeline[toElapsedtime] = fromLine
-
-*/
-    //    setTimeline(newTimeline)
-
-    function offsetTime() {
-      /*
-      if (isTopToBottom) {
-
+      let offsetTime
+      if (fromIndex === Object.keys(timeline).length) {
+        const elapsedtime = Math.max(Object.keys(fromLine).flatMap(kind => fromLine[kind].map(k => k.durationSec || 0)))
+        offsetTime = elapsedtime > 0 ? elapsedtime : 1.0 // 画像の切り替えなどでdurationSecを持たないものは便宜上1秒にする
       } else {
-
-
+        const nextElapsedtime = parseFloat(sortedElapsedtimes[fromIndex + 1])
+        offsetTime = parseFloat((nextElapsedtime - fromElapsedtime).toFixed(3))
       }
-      if (sortedElapsedtimes.length > currentIndex + 1) {
-        const nextElapsedtime = parseFloat(sortedElapsedtimes[currentIndex + 1])
-        return nextElapsedtime - toElapsedtime
+
+      if (fromIndex < toIndex) {
+        for(let i = fromIndex + 1; i <= toIndex; i++) {
+          const elapsedtime = parseFloat(sortedElapsedtimes[i])
+          const line = timeline[elapsedtime]
+          delete timeline[elapsedtime]
+
+          const newElapsedtime = parseFloat((elapsedtime - offsetTime).toFixed(3))
+          timeline[newElapsedtime] = line
+        }
+
+        const lastElapsedtime = parseFloat(sortedElapsedtimes[toIndex + 1])
+        const toElapsedtime = parseFloat((lastElapsedtime - offsetTime).toFixed(3))
+        timeline[toElapsedtime] = fromLine
       } else {
-        return Math.max(Object.keys(newTimeline[toElapsedtime]).flatMap(kinds.map(k => k.durationSec || 0)))
+        for(let i = toIndex + 1; i < fromIndex; i++) {
+          const elapsedtime = parseFloat(sortedElapsedtimes[i])
+          const line = timeline[elapsedtime]
+          delete timeline[elapsedtime]
+
+          const newElapsedtime = parseFloat((elapsedtime + offsetTime).toFixed(3))
+          timeline[newElapsedtime] = line
+
+          if (i === toIndex + 1) {
+            const toElapsedtime = parseFloat((newElapsedtime - offsetTime).toFixed(3))
+            timeline[toElapsedtime] = fromLine
+          }
+        }
       }
-      */
-    }
+
+      return timeline
+    })
   }
 
   function addNewLine() {

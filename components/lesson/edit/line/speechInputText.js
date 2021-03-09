@@ -6,7 +6,7 @@ import InputText from '../../../form/inputText'
 export default function LessonEditSpeechInputText({ value, onKeyDown, onChange, readOnly }) {
   return (
     <div css={bodyStyle}>
-      <InputText css={inputStyle} defaultValue={value} onKeyDown={onKeyDown} onChange={onChange} readOnly={readOnly} />
+      <InputText css={inputStyle} key={value} defaultValue={value} onKeyDown={onKeyDown} onChange={onChange} readOnly={readOnly} />
     </div>
   )
 }
