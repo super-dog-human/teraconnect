@@ -2,10 +2,12 @@
 import React from 'react'
 import { css } from '@emotion/core'
 import useGraphicController from '../../../../libs/hooks/lesson/edit/useGraphicController'
+import { useLessonEditorContext } from '../../../../libs/contexts/lessonEditorContext'
 import LessonEditGraphicThumbnail from '../graphicThumbnail'
 
-export default function LessonEditGraphicController(props) {
-  const { graphicURL, swapGraphic, removeGraphic } = useGraphicController(props)
+export default function LessonEditGraphicController({ lessonID }) {
+  const { graphics, setGraphics, updateLine } = useLessonEditorContext()
+  const { graphicURL, swapGraphic, removeGraphic } = useGraphicController({ lessonID, graphics, setGraphics, updateLine })
 
   return (
     <div css={bodyStyle}>

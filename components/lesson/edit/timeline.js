@@ -6,9 +6,11 @@ import Elapsedtime from './line/elapsedtime'
 import LessonEditLine from './line/'
 import DropLine from './line/dropLine'
 import useSwappingLine from '../../../libs/hooks/lesson/edit/useSwappingLine'
+import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorContext'
 
-export default function Timeline({ timeline, swapLine }) {
+export default function Timeline() {
   const dropLineRef = useRef()
+  const { timeline, swapLine } = useLessonEditorContext()
   const { dragStartIndex, handleDragStart, handleDragEnd, handleDragOver, handleDrop, handleChildDrop }
     = useSwappingLine({ dropLineRef, swapLine })
 
@@ -28,7 +30,7 @@ export default function Timeline({ timeline, swapLine }) {
                 )}
               </div>
             </div>
-            {Object.keys(timeline).length -1 > i && <hr css={hrStyle} />}
+            {Object.keys(timeline).length - 1 > i && <hr css={hrStyle} />}
           </div>
         ))}
       </DragSwappable>

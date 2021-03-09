@@ -64,15 +64,6 @@ export default function LessonEditLineSpeech({ speech, index, isEditButtonShow }
     e.stopPropagation()
   }
 
-  const newSpeech = {
-    voiceID: null,
-    elapsedtime: 0,
-    durationSec: 0,
-    subtitle: '',
-    caption: '',
-    url: null,
-  }
-
   useEffect(() => {
     if (!speech.url) return
     createAudio(speech.url)

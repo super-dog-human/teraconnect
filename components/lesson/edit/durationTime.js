@@ -1,9 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
 import { css } from '@emotion/core'
+import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorContext'
 import { floatSecondsToMinutesFormat } from '../../../libs/utils'
 
-export default function LessonDurationTime({ durationSec }) {
+export default function LessonDurationTime() {
+  const { durationSec } = useLessonEditorContext()
+
   return (
     <div css={bodyStyle}>
       {durationSec && <>

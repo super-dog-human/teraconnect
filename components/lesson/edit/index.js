@@ -1,8 +1,8 @@
 /** @jsxImportSource @emotion/react */
-import React from 'react'
+import React, { useEffect } from 'react'
 import { css } from '@emotion/core'
 import { useScreenClass } from 'react-grid-system'
-import useLessonEditor from '../../../libs/hooks/lesson/edit/useLessonEditor'
+import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorContext'
 import { ImageViewerProvider } from '../../../libs/contexts/imageViewerContext'
 import ImageViwer from '../../imageViewer'
 import LessonEditHeader from './header'
@@ -13,7 +13,7 @@ import Timeline from './timeline'
 
 const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
   const screenClass = useScreenClass()
-  const { isLoading, durationSec, timeline, avatars, graphics, drawings, speeches, setGraphics, updateLine, swapLine } = useLessonEditor(lesson)
+  const { fetchResources } = useLessonEditorContext()
 
   const bodyStyle = css({
     margin: 'auto',
@@ -44,6 +44,10 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
     marginBottom: '40px',
   })
 
+  useEffect(() => {
+    fetchResources(lesson)
+  }, [])
+
   return (
     <>
       <LessonEditHeader />
@@ -52,12 +56,12 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
           <ImageViwer />
           <div css={bodyStyle}>
             <div css={leftSideStyle}>
-              <LessonEditPreview avatars={avatars} graphics={graphics} drawings={drawings} speeches={speeches} />
-              <LessonDurationTime durationSec={durationSec} />
-              <LessonEditGraphicController lessonID={lesson.id} graphics={graphics} setGraphics={setGraphics} updateLine={updateLine} />
+              <LessonEditPreview />
+              <LessonDurationTime />
+              <LessonEditGraphicController lessonID={lesson.id} />
             </div>
             <div css={rightSideStyle}>
-              <Timeline timeline={timeline} swapLine={swapLine} />
+              <Timeline />
             </div>
           </div>
         </ImageViewerProvider>
