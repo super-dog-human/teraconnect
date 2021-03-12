@@ -7,7 +7,6 @@ const defaultSpeech = {
 
 export async function fetchMaterial({ lesson, setDurationSec, setVoiceSynthesisConfig, setAvatars, setDrawings, setGraphics, setMusics, setSpeeches }) {
   const material = await fetchWithAuth(`/lessons/${lesson.id}/materials`)
-  console.log('material', material.voiceSynthesisConfig)
   setDurationSec(material.durationSec)
   setVoiceSynthesisConfig(material.voiceSynthesisConfig)
   setAvatars(material.avatars || [])

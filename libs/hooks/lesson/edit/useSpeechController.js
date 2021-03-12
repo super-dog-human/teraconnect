@@ -91,7 +91,7 @@ export default function useSpeechController({ speech, lineIndex, kindIndex }) {
     })
 
     if (document.activeElement === e.target) {
-      addSpeechLine() // フォーカスが変わらなかったので新しい行を追加する
+      addSpeechLine() // フォーカスが変わらなかったなら新しい行を追加する
     }
   }
 
