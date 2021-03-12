@@ -34,7 +34,7 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
       startDrawingTimeRef.current = new Date()
 
       const [x, y] = mouseOrTouchPositions(e, ['touchstart'])
-      drawEdgeCircle(x, y)
+      drawEdgeCircle(x, y, color)
 
       canvasCtxRef.current.beginPath()
 
@@ -65,7 +65,7 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
 
       const [x, y] = mouseOrTouchPositions(e, ['touchend', 'touchcancel'])
       drawLine(x, y)
-      drawEdgeCircle(x, y)
+      drawEdgeCircle(x, y, color)
 
       setRecord({
         kind: 'drawing',
@@ -80,10 +80,10 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
     }
   }
 
-  function drawEdgeCircle(x, y) {
+  function drawEdgeCircle(x, y, currentColor) {
     canvasCtxRef.current.beginPath()
     canvasCtxRef.current.arc(x, y, canvasCtxRef.current.lineWidth / 2, 0, Math.PI * 2)
-    canvasCtxRef.current.fillStyle = color
+    canvasCtxRef.current.fillStyle = currentColor
     canvasCtxRef.current.fill()
     canvasCtxRef.current.closePath()
   }
@@ -112,7 +112,7 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
         const coef = { x: canvasCtxRef.current.canvas.clientWidth / h.width, y: canvasCtxRef.current.canvas.clientHeight / h.height }
 
         const circlePositions = calcResizePosition(coef, h.positions[0], h.positions[h.positions.length - 1])
-        drawEdgeCircle(circlePositions[0], circlePositions[1])
+        drawEdgeCircle(circlePositions[0], circlePositions[1], h.color)
 
         canvasCtxRef.current.beginPath()
         h.positions.slice(1).forEach((d, i) => {
@@ -120,7 +120,7 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
           canvasCtxRef.current.stroke()
         })
 
-        drawEdgeCircle(circlePositions[2], circlePositions[3])
+        drawEdgeCircle(circlePositions[2], circlePositions[3], h.color)
       }
     })
 
