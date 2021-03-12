@@ -3,7 +3,7 @@ import React from 'react'
 import { css } from '@emotion/core'
 import LessonEditKindIcon from './kindIcon'
 
-export default function LessonEditSpeechButton({ isPlaying, onClick }) {
+export default function LessonEditSpeechButton({ isLoading, isPlaying, onClick }) {
   const bodyStyle = css({
     filter: isPlaying ? 'contrast(400%)' : '',
     [':hover']: {
@@ -12,6 +12,8 @@ export default function LessonEditSpeechButton({ isPlaying, onClick }) {
   })
 
   return (
-    <LessonEditKindIcon kind="speech" css={bodyStyle} onClick={onClick} />
+    <>
+      {!isLoading && <LessonEditKindIcon kind="speech" css={bodyStyle} onClick={onClick} />}
+    </>
   )
 }

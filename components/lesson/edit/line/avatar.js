@@ -4,7 +4,7 @@ import LessonEditKindIcon from './kindIcon'
 import LessonEditActionLabel from './actionLabel'
 import EditIcon from './editIcon'
 
-export default function LessonEditLineAvatar({ avatar, index, isEditButtonShow }) {
+export default function LessonEditLineAvatar({ avatar, lineIndex, kindIndex, isEditButtonShow }) {
   function handleEditButtonClick(e) {
     console.log('editbutton clicked.')
     e.stopPropagation()

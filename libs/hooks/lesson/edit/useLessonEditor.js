@@ -1,19 +1,24 @@
-import { useState, useEffect } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 import { fetchMaterial }  from '../../../lessonEdit'
 
 export default function useLessonEditor() {
+  const lessonRef = useRef()
   const [isLoading, setIsLoading] = useState(true)
   const [durationSec, setDurationSec] = useState()
   const [timeline, setTimeline] = useState({})
+  const [voiceSynthesisConfig, setVoiceSynthesisConfig] = useState({})
   const [avatars, setAvatars] = useState([])
   const [drawings, setDrawings] = useState([])
   const [graphics, setGraphics] = useState([])
+  const [musics, setMusics] = useState([])
   const [speeches, setSpeeches] = useState([])
   const { showError } = useErrorDialogContext()
 
   async function fetchResources(lesson) {
-    fetchMaterial({ lesson, setDurationSec, setAvatars, setDrawings, setGraphics, setSpeeches })
+    lessonRef.current = lesson
+
+    fetchMaterial({ lesson, setDurationSec, setVoiceSynthesisConfig, setAvatars, setDrawings, setGraphics, setMusics, setSpeeches })
       .then(timeline => {
         setTimeline(timeline)
         setIsLoading(false)
@@ -110,6 +115,7 @@ export default function useLessonEditor() {
         subtitle: '',
         caption: '',
         url: null,
+        isSynthesis: !lessonRef.current.needsRecording,
       }
 
       setSpeeches(speeches => {
@@ -131,7 +137,7 @@ export default function useLessonEditor() {
   function updateLine(lineIndex, kindIndex, kind, value) {
     const newTimeline = { ...timeline }
     const elapsedTime = Object.keys(newTimeline)[lineIndex]
-    newTimeline[elapsedTime][kind] = value
+    newTimeline[elapsedTime][kind][kindIndex] = value
     setTimeline(newTimeline)
 
     // kindに応じて各stateも更新する
@@ -153,6 +159,6 @@ export default function useLessonEditor() {
   }, [timeline])
 
 
-  return { fetchResources, isLoading, durationSec, timeline, avatars, graphics, drawings, speeches, setGraphics,
-    updateLine, swapLine, addSpeechLine }
+  return { fetchResources, isLoading, durationSec, timeline, voiceSynthesisConfig, setVoiceSynthesisConfig,
+    avatars, graphics, setGraphics, drawings, musics, speeches, updateLine, swapLine, addSpeechLine }
 }

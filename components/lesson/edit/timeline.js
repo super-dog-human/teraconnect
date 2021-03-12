@@ -24,8 +24,8 @@ export default function Timeline() {
               <Elapsedtime elapsedtime={elapsedtime} />
               <div css={lineBodyStyle}>
                 {Object.keys(timeline[elapsedtime]).map(kind =>
-                  timeline[elapsedtime][kind].map((line, i) =>
-                    <LessonEditLine key={i} index={i} kind={kind} line={line} />
+                  timeline[elapsedtime][kind].map((line, kindIndex) =>
+                    <LessonEditLine key={kindIndex} lineIndex={i} kindIndex={kindIndex} kind={kind} line={line} />
                   )
                 )}
               </div>

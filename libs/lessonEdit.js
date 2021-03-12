@@ -1,11 +1,19 @@
 import { fetchWithAuth } from './fetch'
 
-export async function fetchMaterial({ lesson, setDurationSec, setAvatars, setDrawings, setGraphics, setSpeeches }) {
+const defaultSpeech = {
+  isSynthesis: false,
+  caption: '',
+}
+
+export async function fetchMaterial({ lesson, setDurationSec, setVoiceSynthesisConfig, setAvatars, setDrawings, setGraphics, setMusics, setSpeeches }) {
   const material = await fetchWithAuth(`/lessons/${lesson.id}/materials`)
+  console.log('material', material.voiceSynthesisConfig)
   setDurationSec(material.durationSec)
+  setVoiceSynthesisConfig(material.voiceSynthesisConfig)
   setAvatars(material.avatars || [])
   setGraphics(material.graphics || [])
   setDrawings(material.drawings || [])
+  setMusics(material.musics || [])
   setSpeeches(material.speeches || [])
   return createNewTimelines()
 
@@ -46,13 +54,10 @@ export async function fetchMaterial({ lesson, setDurationSec, setAvatars, setDra
     voices.forEach(v => {
       if (!timeline[v.elapsedtime]) timeline[v.elapsedtime] = {}
 
-      const newSpeech = {
-        voiceID : v.id,
-        durationSec: v.durationSec,
-        subtitle: v.text,
-        caption: '',
-        url: v.url,
-      }
+      const newSpeech = { ...defaultSpeech }
+      newSpeech.voiceID = v.id
+      newSpeech.durationSec = v.durationSec
+      newSpeech.subtitle = v.text
 
       timeline[v.elapsedtime].speech = [newSpeech]
       setSpeeches(speeches => {

@@ -7,7 +7,7 @@ import LessonEditLineGraphic from './graphic'
 import LessonEditLineMusic from './music'
 import LessonEditLineSpeech from './speech'
 
-export default function LessonEditLine({ index, kind, line }) {
+export default function LessonEditLine({ lineIndex, line, kindIndex, kind }) {
   const [isEditButtonShow, setIsEditButtonShow] = useState(false)
 
   function handleMouseEnter() {
@@ -20,11 +20,11 @@ export default function LessonEditLine({ index, kind, line }) {
 
   return (
     <div css={bodyStyle} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-      {kind === 'avatar'  && <LessonEditLineAvatar avatar={line} index={index} isEditButtonShow={isEditButtonShow} />}
-      {kind === 'drawing' && <LessonEditLineDrawing drawing={line} index={index} isEditButtonShow={isEditButtonShow} />}
-      {kind === 'graphic' && <LessonEditLineGraphic graphic={line} index={index} isEditButtonShow={isEditButtonShow} />}
-      {kind === 'music'   && <LessonEditLineMusic music={line} index={index} isEditButtonShow={isEditButtonShow} />}
-      {kind === 'speech'  && <LessonEditLineSpeech speech={line} index={index} isEditButtonShow={isEditButtonShow} />}
+      {kind === 'avatar'  && <LessonEditLineAvatar avatar={line} lineIndex={lineIndex} kindIndex={kindIndex} isEditButtonShow={isEditButtonShow} />}
+      {kind === 'drawing' && <LessonEditLineDrawing drawing={line} lineIndex={lineIndex} kindIndex={kindIndex} isEditButtonShow={isEditButtonShow} />}
+      {kind === 'graphic' && <LessonEditLineGraphic graphic={line} lineIndex={lineIndex} kindIndex={kindIndex} isEditButtonShow={isEditButtonShow} />}
+      {kind === 'music'   && <LessonEditLineMusic music={line} lineIndex={lineIndex} kindIndex={kindIndex} isEditButtonShow={isEditButtonShow} />}
+      {kind === 'speech'  && <LessonEditLineSpeech speech={line} lineIndex={lineIndex} kindIndex={kindIndex} isEditButtonShow={isEditButtonShow} />}
     </div>
   )
 }
