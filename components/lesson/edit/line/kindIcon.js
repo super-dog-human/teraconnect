@@ -2,6 +2,7 @@
 import React from 'react'
 import Image from 'next/image'
 import { css } from '@emotion/core'
+import LoadingIndicator from '../../../loadingIndicator'
 
 export default function LessonEditKindIcon({ kind, status=true, className, onClick }) {
   const imageStyle = css({
@@ -10,7 +11,8 @@ export default function LessonEditKindIcon({ kind, status=true, className, onCli
 
   return (
     <div css={bodyStyle} className={className}>
-      {kind && <Image src={`/img/icon/timeline-${kind}.svg`} width={20} height={20} css={imageStyle} onClick={onClick} draggable={false} />}
+      {kind === 'loading' && <LoadingIndicator />}
+      {kind != 'loading' && <Image src={`/img/icon/timeline-${kind}.svg`} width={20} height={20} css={imageStyle} onClick={onClick} draggable={false} />}
     </div>
   )
 }

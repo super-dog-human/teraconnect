@@ -135,10 +135,11 @@ export default function useLessonEditor() {
   }
 
   function updateLine(lineIndex, kindIndex, kind, value) {
-    const newTimeline = { ...timeline }
-    const elapsedTime = Object.keys(newTimeline)[lineIndex]
-    newTimeline[elapsedTime][kind][kindIndex] = value
-    setTimeline(newTimeline)
+    setTimeline(timeline => {
+      const elapsedTime = sortedElapsedtimes(timeline)[lineIndex]
+      timeline[elapsedTime][kind][kindIndex] = value
+      return { ...timeline }
+    })
 
     // kindに応じて各stateも更新する
   }

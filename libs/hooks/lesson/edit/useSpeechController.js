@@ -7,9 +7,9 @@ import { useRouter } from 'next/router'
 
 export default function useSpeechController({ speech, lineIndex, kindIndex }) {
   const router = useRouter()
+  const audioRef = useRef()
   const [isLoading, setIsLoading] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
-  const audioRef = useRef()
   const { addSpeechLine, voiceSynthesisConfig, updateLine } = useLessonEditorContext()
 
   async function handleSpeechClick(e) {
@@ -22,14 +22,16 @@ export default function useSpeechController({ speech, lineIndex, kindIndex }) {
     if (speech.url) {
       createAudio(speech.url)
     } else if (speech.isSynthesis && speech.text) {
-      console.log(speech.tex)
-      const synthesisURL = await createVoiceFile(lessonID, speech)
-      createAudio(synthesisURL)
-      // updateLine
+      const voice = await createVoiceFile(lessonID, speech)
+      createAudio(voice.url)
+      speech.voiceID = voice.id
+      speech.url = voice.url
+      updateLine(lineIndex, kindIndex, 'speech', speech)
     } else if (!speech.isSynthesis) {
-      const synthesisURL = await fetchVoiceFileURL(speech.voiceID, lessonID)
-      createAudio(synthesisURL)
-      // updateLine
+      const voice = await fetchVoiceFileURL(speech.voiceID, lessonID)
+      createAudio(voice.url)
+      speech.url = voice.url
+      updateLine(lineIndex, kindIndex, 'speech', speech)
     }
 
     setIsLoading(false)
@@ -45,7 +47,7 @@ export default function useSpeechController({ speech, lineIndex, kindIndex }) {
 
   function fetchVoiceFileURL(voiceID, lessonID) {
     return fetchWithAuth(`/voices/${voiceID}?lesson_id=${lessonID}`)
-      .then(result => result.url)
+      .then(result => result)
       .catch(e  => {
         console.error(e)
       })
@@ -62,10 +64,8 @@ export default function useSpeechController({ speech, lineIndex, kindIndex }) {
       'volumeGainDb': speech.synthesisConfig?.volumeGainDb || voiceSynthesisConfig.volumeGainDb,
     }
 
-    console.log(request)
-
     return post('/synthesis_voice', request)
-      .then(result => result.url)
+      .then(result => result)
       .catch(e  => {
         console.error(e)
       })
@@ -96,10 +96,8 @@ export default function useSpeechController({ speech, lineIndex, kindIndex }) {
   }
 
   function handleTextChange(e) {
-    // console.log(e.target.value)
-    // speechesを更新する
-    // setSpeeches()
-    // setTimeline()
+    speech.text = e.target.value
+    updateLine(lineIndex, kindIndex, 'speech', speech)
   }
 
   function handleEditButtonClick(e) {
