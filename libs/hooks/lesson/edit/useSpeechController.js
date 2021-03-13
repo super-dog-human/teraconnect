@@ -38,7 +38,7 @@ export default function useSpeechController({ speech, lineIndex, kindIndex }) {
   function createVoiceFile(lessonID, speech) {
     const request = {
       'lessonID': lessonID,
-      'text': speech.text,
+      'text': speech.subtitle,
       'languageCode': speech.synthesisConfig?.languageCode || voiceSynthesisConfig.languageCode,
       'name': speech.synthesisConfig?.name || voiceSynthesisConfig.name,
       'speakingRate': speech.synthesisConfig?.speakingRate || voiceSynthesisConfig.speakingRate,
@@ -59,7 +59,7 @@ export default function useSpeechController({ speech, lineIndex, kindIndex }) {
     if (speech.url) {
       if (!audioRef.current) createAudio(speech.url)
     } else if (speech.isSynthesis && speech.text) {
-      speech.text = text
+      speech.subtitle = text
       const voice = await createVoiceFile(lessonID, speech)
       createAudio(voice.url)
       speech.voiceID = voice.id
@@ -99,10 +99,12 @@ export default function useSpeechController({ speech, lineIndex, kindIndex }) {
     }
   }
 
-  function handleTextChange(e) {
-    speech.text = e.target.value
-    // 重すぎるので対応必要
-//    updateLine(lineIndex, kindIndex, 'speech', { ...speech })
+  function handleTextBlur(e) {
+    const text = e.target.value
+    if (text === speech.subtitle) return
+
+    speech.subtitle = text
+    updateLine(lineIndex, kindIndex, 'speech', { ...speech })
   }
 
   function handleEditButtonClick(e) {
@@ -110,5 +112,5 @@ export default function useSpeechController({ speech, lineIndex, kindIndex }) {
     e.stopPropagation()
   }
 
-  return { isLoading, isPlaying, handleSpeechClick, handleInputKeyDown, handleTextChange, handleEditButtonClick }
+  return { isLoading, isPlaying, handleSpeechClick, handleInputKeyDown, handleTextBlur, handleEditButtonClick }
 }
