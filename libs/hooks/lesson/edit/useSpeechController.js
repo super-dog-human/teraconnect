@@ -12,33 +12,15 @@ export default function useSpeechController({ speech, lineIndex, kindIndex }) {
   const [isPlaying, setIsPlaying] = useState(false)
   const { addSpeechLine, voiceSynthesisConfig, updateLine } = useLessonEditorContext()
 
-  async function handleSpeechClick(e) {
-    e.stopPropagation()
-
+  async function handleSpeechClick(text) {
     setIsLoading(true)
-
-    const lessonID = parseInt(router.query.id)
-
-    if (speech.url) {
-      createAudio(speech.url)
-    } else if (speech.isSynthesis && speech.text) {
-      const voice = await createVoiceFile(lessonID, speech)
-      createAudio(voice.url)
-      speech.voiceID = voice.id
-      speech.url = voice.url
-      updateLine(lineIndex, kindIndex, 'speech', speech)
-    } else if (!speech.isSynthesis) {
-      const voice = await fetchVoiceFileURL(speech.voiceID, lessonID)
-      createAudio(voice.url)
-      speech.url = voice.url
-      updateLine(lineIndex, kindIndex, 'speech', speech)
-    }
-
+    await setAudioIfNeeded(text)
     setIsLoading(false)
 
     if (audioRef.current.paused || audioRef.current.ended) {
       audioRef.current.play()
       setIsPlaying(true)
+      return
     } else {
       audioRef.current.pause()
       setIsPlaying(false)
@@ -71,10 +53,32 @@ export default function useSpeechController({ speech, lineIndex, kindIndex }) {
       })
   }
 
-  function createAudio(voiceURL) {
-    const audio = new Audio(voiceURL)
-    audio.onended = () => setIsPlaying(false)
-    audioRef.current = audio
+  async function setAudioIfNeeded(text) {
+    const lessonID = parseInt(router.query.id)
+
+    if (speech.url) {
+      if (!audioRef.current) createAudio(speech.url)
+    } else if (speech.isSynthesis && speech.text) {
+      speech.text = text
+      const voice = await createVoiceFile(lessonID, speech)
+      createAudio(voice.url)
+      speech.voiceID = voice.id
+      speech.url = voice.url
+
+      updateLine(lineIndex, kindIndex, 'speech', speech)
+    } else if (!speech.isSynthesis) {
+      const voice = await fetchVoiceFileURL(speech.voiceID, lessonID)
+      createAudio(voice.url)
+      speech.url = voice.url
+
+      updateLine(lineIndex, kindIndex, 'speech', speech)
+    }
+
+    function createAudio(voiceURL) {
+      const audio = new Audio(voiceURL)
+      audio.onended = () => setIsPlaying(false)
+      audioRef.current = audio
+    }
   }
 
   function handleInputKeyDown(e) {
@@ -91,13 +95,14 @@ export default function useSpeechController({ speech, lineIndex, kindIndex }) {
     })
 
     if (document.activeElement === e.target) {
-      addSpeechLine() // フォーカスが変わらなかったなら新しい行を追加する
+      addSpeechLine() // フォーカスが変わらなかったら最後の行なので、新しい行を追加する
     }
   }
 
   function handleTextChange(e) {
     speech.text = e.target.value
-    updateLine(lineIndex, kindIndex, 'speech', speech)
+    // 重すぎるので対応必要
+//    updateLine(lineIndex, kindIndex, 'speech', { ...speech })
   }
 
   function handleEditButtonClick(e) {
