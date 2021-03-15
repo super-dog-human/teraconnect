@@ -3,20 +3,30 @@ import React, { useRef } from 'react'
 import { css } from '@emotion/core'
 import DragSwappable from '../../dragSwappable'
 import Elapsedtime from './line/elapsedtime'
-import LessonEditLine from './line/'
+import ContextMenu from './line/contextMenu'
+import LineConfig from './line/lineConfig'
 import DropLine from './line/dropLine'
+import LessonEditLine from './line/'
+import LessonEditLineAvatar from './line/avatar'
+import LessonEditLineDrawing from './line/drawing'
+import LessonEditLineGraphic from './line/graphic'
+import LessonEditLineMusic from './line/music'
+import LessonEditLineSpeech from './line/speech'
 import useSwappingLine from '../../../libs/hooks/lesson/edit/useSwappingLine'
+import useLineConfig from '../../../libs/hooks/lesson/edit/useLineConfig'
 import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorContext'
 
 export default function Timeline() {
   const dropLineRef = useRef()
   const { timeline, swapLine } = useLessonEditorContext()
-  const { dragStartIndex, handleDragStart, handleDragEnd, handleDragOver, handleDrop, handleChildDrop }
-    = useSwappingLine({ dropLineRef, swapLine })
+  const { dragStartIndex, handleDragStart, handleDragEnd, handleDragOver, handleDrop, handleChildDrop } = useSwappingLine({ dropLineRef, swapLine })
+  const { handleEditButtonClick, menuOption, lineConfig } = useLineConfig()
 
   return (
     <div css={bodyStyle}>
       <DropLine ref={dropLineRef} onDrop={handleChildDrop} />
+      <ContextMenu menuOption={menuOption} />
+      <LineConfig config={lineConfig} />
       <DragSwappable onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd} onDrop={handleDrop}>
         {Object.keys(timeline).sort((a, b) => a - b).map((elapsedtime, i) => (
           <div key={i} css={dragStartIndex === i && focusedStyle}>
@@ -24,9 +34,15 @@ export default function Timeline() {
               <Elapsedtime elapsedtime={elapsedtime} />
               <div css={lineBodyStyle}>
                 {Object.keys(timeline[elapsedtime]).map(kind =>
-                  timeline[elapsedtime][kind].map((line, kindIndex) =>
-                    <LessonEditLine key={kindIndex} lineIndex={i} kindIndex={kindIndex} kind={kind} line={line} />
-                  )
+                  timeline[elapsedtime][kind].map((line, kindIndex) => (
+                    <LessonEditLine key={`${elapsedtime}-${kindIndex}`} css={lineContainerStyle}>
+                      {kind === 'avatar'  && <LessonEditLineAvatar avatar={line} lineIndex={i} kindIndex={kindIndex} handleEditClick={handleEditButtonClick} />}
+                      {kind === 'drawing' && <LessonEditLineDrawing drawing={line} lineIndex={i} kindIndex={kindIndex} handleEditClick={handleEditButtonClick} />}
+                      {kind === 'graphic' && <LessonEditLineGraphic graphic={line} lineIndex={i} kindIndex={kindIndex} handleEditClick={handleEditButtonClick} />}
+                      {kind === 'music'   && <LessonEditLineMusic music={line} lineIndex={i} kindIndex={kindIndex} handleEditClick={handleEditButtonClick} />}
+                      {kind === 'speech'  && <LessonEditLineSpeech speech={line} lineIndex={i} kindIndex={kindIndex} handleEditClick={handleEditButtonClick} />}
+                    </LessonEditLine>
+                  ))
                 )}
               </div>
             </div>
@@ -57,6 +73,12 @@ const lineBodyStyle = css({
 
 const focusedStyle = css({
   backgroundColor: '#eaeaea', // fixme
+})
+
+const lineContainerStyle = css({
+  display: 'flex',
+  width: '100%',
+  minHeight: '55px',
 })
 
 const hrStyle = css({

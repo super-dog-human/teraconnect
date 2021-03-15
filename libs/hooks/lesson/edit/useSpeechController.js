@@ -107,10 +107,5 @@ export default function useSpeechController({ speech, lineIndex, kindIndex }) {
     updateLine(lineIndex, kindIndex, 'speech', { ...speech })
   }
 
-  function handleEditButtonClick(e) {
-    console.log('editbutton clicked.')
-    e.stopPropagation()
-  }
-
-  return { isLoading, isPlaying, handleSpeechClick, handleInputKeyDown, handleTextBlur, handleEditButtonClick }
+  return { isLoading, isPlaying, handleSpeechClick, handleInputKeyDown, handleTextBlur }
 }

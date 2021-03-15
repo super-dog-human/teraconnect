@@ -4,15 +4,21 @@ import LessonEditSpeechInputText from './speechInputText'
 import EditIcon from './editIcon'
 import useSpeechController from '../../../../libs/hooks/lesson/edit/useSpeechController'
 
-export default function LessonEditLineSpeech({ speech, lineIndex, kindIndex, isEditButtonShow }) {
-  const { isLoading, isPlaying, handleSpeechClick, handleInputKeyDown, handleTextBlur, handleEditButtonClick } =
-    useSpeechController({ speech, lineIndex, kindIndex })
+export default function LessonEditLineSpeech({ speech, lineIndex, kindIndex, isEditButtonShow, handleEditClick }) {
+  const { isLoading, isPlaying, handleSpeechClick, handleInputKeyDown, handleTextBlur } = useSpeechController({ speech, lineIndex, kindIndex })
   const inputRef = useRef()
   const [status, setStatus] = useState(true)
 
-  function handleClick(e) {
+  function handleSpeechButtonClick(e) {
     if (!status) return
     handleSpeechClick(inputRef.current.value)
+  }
+
+  function handleEditButtonClick(e) {
+    e.stopPropagation()
+
+    speech.subtitle = inputRef.current.value
+    handleEditClick(e, 'speech', lineIndex, kindIndex, speech)
   }
 
   useEffect(() => {
@@ -27,7 +33,7 @@ export default function LessonEditLineSpeech({ speech, lineIndex, kindIndex, isE
 
   return (
     <>
-      <LessonEditSpeechButton kind="speech" isLoading={isLoading} isPlaying={isPlaying} status={status} onClick={handleClick} />
+      <LessonEditSpeechButton kind="speech" isLoading={isLoading} isPlaying={isPlaying} status={status} onClick={handleSpeechButtonClick} />
       <LessonEditSpeechInputText onKeyDown={handleInputKeyDown} onBlur={handleTextBlur}
         defaultValue={speech.subtitle} readOnly={isLoading} draggable={false} isFocus={speech.isFocus} ref={inputRef} />
       <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} />

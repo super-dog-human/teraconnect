@@ -1,16 +1,9 @@
-/** @jsxImportSource @emotion/react */
 import React, { useState } from 'react'
-import { css } from '@emotion/core'
-import LessonEditLineAvatar from './avatar'
-import LessonEditLineDrawing from './drawing'
-import LessonEditLineGraphic from './graphic'
-import LessonEditLineMusic from './music'
-import LessonEditLineSpeech from './speech'
 
-export default function LessonEditLine({ lineIndex, line, kindIndex, kind }) {
+export default function LessonEditLine({ className, children }) {
   const [isEditButtonShow, setIsEditButtonShow] = useState(false)
 
-  function handleMouseEnter() {
+  function handleMouseOver() {
     setIsEditButtonShow(true)
   }
 
@@ -19,18 +12,13 @@ export default function LessonEditLine({ lineIndex, line, kindIndex, kind }) {
   }
 
   return (
-    <div css={bodyStyle} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-      {kind === 'avatar'  && <LessonEditLineAvatar avatar={line} lineIndex={lineIndex} kindIndex={kindIndex} isEditButtonShow={isEditButtonShow} />}
-      {kind === 'drawing' && <LessonEditLineDrawing drawing={line} lineIndex={lineIndex} kindIndex={kindIndex} isEditButtonShow={isEditButtonShow} />}
-      {kind === 'graphic' && <LessonEditLineGraphic graphic={line} lineIndex={lineIndex} kindIndex={kindIndex} isEditButtonShow={isEditButtonShow} />}
-      {kind === 'music'   && <LessonEditLineMusic music={line} lineIndex={lineIndex} kindIndex={kindIndex} isEditButtonShow={isEditButtonShow} />}
-      {kind === 'speech'  && <LessonEditLineSpeech speech={line} lineIndex={lineIndex} kindIndex={kindIndex} isEditButtonShow={isEditButtonShow} />}
+    <div className={className} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave}>
+      {children.map((child, key) => {
+        if (React.isValidElement(child)) {
+          return React.cloneElement(child, { key, isEditButtonShow })
+        }
+        return child
+      })}
     </div>
   )
 }
-
-const bodyStyle = css({
-  display: 'flex',
-  width: '100%',
-  minHeight: '55px',
-})
