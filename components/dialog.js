@@ -38,7 +38,7 @@ export default function Dialog() {
 }
 
 const backgroundStyle = css({
-  position: 'absolute',
+  position: 'fixed',
   display: 'block',
   width: '100%',
   height: '100%',

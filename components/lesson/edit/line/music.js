@@ -3,10 +3,10 @@ import LessonEditKindIcon from './kindIcon'
 import LessonEditActionLabel from './actionLabel'
 import EditIcon from './editIcon'
 
-export default function LessonEditLineMusic({ music, index, isEditButtonShow }) {
+export default function LessonLineMusic({ music, lineIndex, kindIndex, isEditButtonShow, handleEditClick }) {
   function handleEditButtonClick(e) {
-    console.log('editbutton clicked.')
     e.stopPropagation()
+    handleEditClick(e, 'music', lineIndex, kindIndex, music)
   }
 
   return (

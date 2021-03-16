@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-export default function LessonEditLine({ className, children }) {
+export default function LessonLine({ className, children }) {
   const [isEditButtonShow, setIsEditButtonShow] = useState(false)
 
   function handleMouseOver() {

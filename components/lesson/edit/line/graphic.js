@@ -6,10 +6,10 @@ import LessonEditActionLabel from './actionLabel'
 import LessonEditGraphicThumbnail from '../graphicThumbnail'
 import EditIcon from './editIcon'
 
-export default function LessonEditLineGraphic({ graphic, lineIndex, kindIndex, isEditButtonShow }) {
+export default function LessonLineGraphic({ graphic, lineIndex, kindIndex, isEditButtonShow, handleEditClick }) {
   function handleEditButtonClick(e) {
-    console.log('editbutton clicked.', graphic)
     e.stopPropagation()
+    handleEditClick(e, 'graphic', lineIndex, kindIndex, graphic)
   }
 
   return (

@@ -130,8 +130,28 @@ export default function useLessonEditor() {
     })
   }
 
-  function deleteLine() {
+  function deleteLine(lineIndex, kindIndex, kind) {
+    setTimeline(timeline => {
+      const elapsedTimes = sortedElapsedtimes(timeline)
+      const elapsedTime = elapsedTimes[lineIndex]
+      timeline[elapsedTime][kind].splice(kindIndex, 1)
 
+      if (timeline[elapsedTime][kind].length === 0) {
+        delete timeline[elapsedTime][kind]
+      }
+
+      if (Object.keys(timeline[elapsedTime]).length === 0) {
+        delete timeline[elapsedTime]
+        const diffElapasedTime = elapsedTimes[lineIndex + 1] - elapsedTime
+        if (diffElapasedTime > 0) {
+          // 削除した行の分、後続の開始時間を縮める
+        }
+      }
+
+      return { ...timeline }
+    })
+
+    // kindに応じて各stateも更新する
   }
 
   function updateLine(lineIndex, kindIndex, kind, value) {
@@ -161,5 +181,5 @@ export default function useLessonEditor() {
 
 
   return { fetchResources, isLoading, durationSec, timeline, voiceSynthesisConfig, setVoiceSynthesisConfig,
-    avatars, graphics, setGraphics, drawings, musics, speeches, updateLine, swapLine, addSpeechLine }
+    avatars, graphics, setGraphics, drawings, musics, speeches, updateLine, deleteLine, swapLine, addSpeechLine }
 }

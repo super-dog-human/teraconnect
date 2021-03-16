@@ -6,12 +6,12 @@ import Elapsedtime from './line/elapsedtime'
 import ContextMenu from './line/contextMenu'
 import LineConfig from './line/lineConfig'
 import DropLine from './line/dropLine'
-import LessonEditLine from './line/'
-import LessonEditLineAvatar from './line/avatar'
-import LessonEditLineDrawing from './line/drawing'
-import LessonEditLineGraphic from './line/graphic'
-import LessonEditLineMusic from './line/music'
-import LessonEditLineSpeech from './line/speech'
+import LessonLine from './line/'
+import LessonLineAvatar from './line/avatar'
+import LessonLineDrawing from './line/drawing'
+import LessonLineGraphic from './line/graphic'
+import LessonLineMusic from './line/music'
+import LessonLineSpeech from './line/speech'
 import useSwappingLine from '../../../libs/hooks/lesson/edit/useSwappingLine'
 import useLineConfig from '../../../libs/hooks/lesson/edit/useLineConfig'
 import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorContext'
@@ -35,13 +35,13 @@ export default function Timeline() {
               <div css={lineBodyStyle}>
                 {Object.keys(timeline[elapsedtime]).map(kind =>
                   timeline[elapsedtime][kind].map((line, kindIndex) => (
-                    <LessonEditLine key={`${elapsedtime}-${kindIndex}`} css={lineContainerStyle}>
-                      {kind === 'avatar'  && <LessonEditLineAvatar avatar={line} lineIndex={i} kindIndex={kindIndex} handleEditClick={handleEditButtonClick} />}
-                      {kind === 'drawing' && <LessonEditLineDrawing drawing={line} lineIndex={i} kindIndex={kindIndex} handleEditClick={handleEditButtonClick} />}
-                      {kind === 'graphic' && <LessonEditLineGraphic graphic={line} lineIndex={i} kindIndex={kindIndex} handleEditClick={handleEditButtonClick} />}
-                      {kind === 'music'   && <LessonEditLineMusic music={line} lineIndex={i} kindIndex={kindIndex} handleEditClick={handleEditButtonClick} />}
-                      {kind === 'speech'  && <LessonEditLineSpeech speech={line} lineIndex={i} kindIndex={kindIndex} handleEditClick={handleEditButtonClick} />}
-                    </LessonEditLine>
+                    <LessonLine key={`${elapsedtime}-${kindIndex}`} css={lineContainerStyle}>
+                      {kind === 'avatar'  && <LessonLineAvatar avatar={line} lineIndex={i} kindIndex={kindIndex} handleEditClick={handleEditButtonClick} />}
+                      {kind === 'drawing' && <LessonLineDrawing drawing={line} lineIndex={i} kindIndex={kindIndex} handleEditClick={handleEditButtonClick} />}
+                      {kind === 'graphic' && <LessonLineGraphic graphic={line} lineIndex={i} kindIndex={kindIndex} handleEditClick={handleEditButtonClick} />}
+                      {kind === 'music'   && <LessonLineMusic music={line} lineIndex={i} kindIndex={kindIndex} handleEditClick={handleEditButtonClick} />}
+                      {kind === 'speech'  && <LessonLineSpeech speech={line} lineIndex={i} kindIndex={kindIndex} handleEditClick={handleEditButtonClick} />}
+                    </LessonLine>
                   ))
                 )}
               </div>

@@ -14,18 +14,19 @@ const LessonEditorContext = React.createContext({
   drawings: [],
   speeches: [],
   updateLine: () => {},
+  deleteLine: () => {},
   swapLine: () => {},
   addSpeechLine: () => {},
 })
 
 const LessonEditorProvider = ({ children }) => {
   const { fetchResources, isLoading, durationSec, timeline, voiceSynthesisConfig, setVoiceSynthesisConfig,
-    avatars, graphics, setGraphics, drawings, speeches, updateLine, swapLine, addSpeechLine } = useLessonEditor()
+    avatars, graphics, setGraphics, drawings, speeches, updateLine, deleteLine, swapLine, addSpeechLine } = useLessonEditor()
 
   return (
     <LessonEditorContext.Provider value={{
       fetchResources, isLoading, durationSec, timeline, voiceSynthesisConfig, setVoiceSynthesisConfig,
-      avatars, graphics, setGraphics, drawings, speeches, updateLine, swapLine, addSpeechLine
+      avatars, graphics, setGraphics, drawings, speeches, updateLine, deleteLine, swapLine, addSpeechLine
     }}>
       {children}
     </LessonEditorContext.Provider>

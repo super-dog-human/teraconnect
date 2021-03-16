@@ -4,7 +4,7 @@ import LessonEditSpeechInputText from './speechInputText'
 import EditIcon from './editIcon'
 import useSpeechController from '../../../../libs/hooks/lesson/edit/useSpeechController'
 
-export default function LessonEditLineSpeech({ speech, lineIndex, kindIndex, isEditButtonShow, handleEditClick }) {
+export default function LessonLineSpeech({ speech, lineIndex, kindIndex, isEditButtonShow, handleEditClick }) {
   const { isLoading, isPlaying, handleSpeechClick, handleInputKeyDown, handleTextBlur } = useSpeechController({ speech, lineIndex, kindIndex })
   const inputRef = useRef()
   const [status, setStatus] = useState(true)
