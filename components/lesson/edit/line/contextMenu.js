@@ -60,6 +60,6 @@ const menuTextStyle = css({
   cursor: 'pointer',
   [':hover']: {
     backgroundColor: 'var(--soft-white)',
-    color: 'gray',
+    color: 'var(--dark-gray)',
   },
 })
