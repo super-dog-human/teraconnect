@@ -142,9 +142,10 @@ export default function useLessonEditor() {
 
       if (Object.keys(timeline[elapsedTime]).length === 0) {
         delete timeline[elapsedTime]
-        const diffElapasedTime = elapsedTimes[lineIndex + 1] - elapsedTime
-        if (diffElapasedTime > 0) {
-          // 削除した行の分、後続の開始時間を縮める
+        const nextElapsedTime = parseFloat(elapsedTimes[lineIndex + 1])
+        const diffElapasedTime = parseFloat((nextElapsedTime - parseFloat(elapsedTime)).toFixed(3))
+        if (nextElapsedTime > 0) {
+          shiftTimeline(timeline, nextElapsedTime, diffElapasedTime)
         }
       }
 
@@ -152,6 +153,16 @@ export default function useLessonEditor() {
     })
 
     // kindに応じて各stateも更新する
+  }
+
+  function shiftTimeline(timeline, startElapsedtime, offsetTime) {
+    sortedElapsedtimes(timeline).map(t => parseFloat(t)).filter(t => t >= startElapsedtime)
+      .forEach(elapsedtime => {
+        const line = timeline[elapsedtime]
+        delete timeline[elapsedtime]
+        const newElapsedtime = parseFloat((elapsedtime - offsetTime).toFixed(3))
+        timeline[newElapsedtime] = line
+      })
   }
 
   function updateLine(lineIndex, kindIndex, kind, value) {

@@ -9,86 +9,42 @@ export default function useLineConfig() {
   const { deleteLine } = useLessonEditorContext()
 
   function handleEditButtonClick(e, kind, lineIndex, kindIndex, line) {
-    switch(kind) {
-    case 'avatar':
-      setMenuOption({
-        labels: ['編集', '行の追加', '削除'],
-        actions: [editAvatar, addNewLine, deleteCurrentLine],
-        position: { x: e.clientX, y: e.clientY },
-      })
-      return
-    case 'drawing':
-      setMenuOption({
-        labels: ['編集', '行の追加', '削除'],
-        actions: [editDrawing, addNewLine, deleteCurrentLine],
-        position: { x: e.clientX, y: e.clientY },
-      })
-      return
-    case 'graphic':
-      setMenuOption({
-        labels: ['編集', '行の追加', '削除'],
-        actions: [editGraphic, addNewLine, deleteCurrentLine],
-        position: { x: e.clientX, y: e.clientY },
-      })
-      return
-    case 'music':
-      setMenuOption({
-        labels: ['編集', '行の追加', '削除'],
-        actions: [editMusic, addNewLine, deleteCurrentLine],
-        position: { x: e.clientX, y: e.clientY },
-      })
-      return
-    case 'speech':
+    if (kind === 'speech') {
       setMenuOption({
         labels: ['編集', '分割', '行の追加', '削除'],
-        actions: [editSpeech, separeteSpeech, addNewLine, deleteCurrentLine],
+        actions: [editLine, separeteSpeech, addNewLine, deleteCurrentLine],
         position: { x: e.clientX, y: e.clientY },
       })
-      return
+    } else {
+      setMenuOption({
+        labels: ['編集', '行の追加', '削除'],
+        actions: [editLine, addNewLine, deleteCurrentLine],
+        position: { x: e.clientX, y: e.clientY },
+      })
     }
 
-    function editAvatar() {
-
-    }
-
-    function editDrawing() {
-
-    }
-
-    function editGraphic() {
-
-    }
-
-    function editMusic() {
-
-    }
-
-    function editSpeech() {
+    function editLine() {
       setLineConfig({
-        kind: 'speech',
-        line,
-        lineIndex,
-        kindIndex,
+        action: 'config', kind, line, lineIndex, kindIndex,
       })
     }
 
     function separeteSpeech() {
       setLineConfig({
-        kind: 'speech',
-        line,
-        lineIndex,
-        kindIndex,
+        action: 'separate', kind: 'speech', line, lineIndex, kindIndex,
       })
     }
 
     function addNewLine() {
-
+      setLineConfig({
+        action: 'newLine', lineIndex, kindIndex,
+      })
     }
 
     function deleteCurrentLine() {
       showDialog({
         title: '削除の確認',
-        message: 'この行を削除しますか？',
+        message: '行を削除しますか？',
         canDismiss: true,
         dismissName: 'キャンセル',
         callbackName: '削除する',
