@@ -11,6 +11,7 @@ export default function ContextMenu({ menuOption }) {
     left: 0,
     width: '100vw',
     height: '100vh',
+    filter: 'drop-shadow(2px 2px 2px gray)',
     display: isShow ? 'block' : 'none',
   })
 

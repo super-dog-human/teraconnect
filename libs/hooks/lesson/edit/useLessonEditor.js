@@ -152,7 +152,7 @@ export default function useLessonEditor() {
       return { ...timeline }
     })
 
-    // kindに応じて各stateも更新する
+    // TODO kindに応じて各stateも更新する(影響を受けた他kindも)
   }
 
   function shiftTimeline(timeline, startElapsedtime, offsetTime) {
@@ -172,7 +172,7 @@ export default function useLessonEditor() {
       return { ...timeline }
     })
 
-    // kindに応じて各stateも更新する
+    // TODO kindに応じて各stateも更新する(影響を受けた他kindも)
   }
 
   function updateDurationSec() {

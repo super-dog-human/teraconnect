@@ -25,19 +25,19 @@ export default function useLineConfig() {
 
     function editLine() {
       setLineConfig({
-        action: 'config', kind, line, lineIndex, kindIndex,
+        action: 'config', kind, line, lineIndex, kindIndex, closeCallback
       })
     }
 
     function separeteSpeech() {
       setLineConfig({
-        action: 'separate', kind: 'speech', line, lineIndex, kindIndex,
+        action: 'separate', kind: 'speech', line, lineIndex, kindIndex, closeCallback
       })
     }
 
     function addNewLine() {
       setLineConfig({
-        action: 'newLine', lineIndex, kindIndex,
+        action: 'newLine', lineIndex, kindIndex, closeCallback
       })
     }
 
@@ -50,6 +50,10 @@ export default function useLineConfig() {
         callbackName: '削除する',
         callback: () => deleteLine(lineIndex, kindIndex, kind),
       })
+    }
+
+    function closeCallback() {
+      setLineConfig({})
     }
   }
 
