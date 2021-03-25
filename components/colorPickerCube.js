@@ -1,17 +1,17 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { HexColorPicker } from 'react-colorful'
 import { css } from '@emotion/core'
 import InputText from './form/inputText'
 import 'react-colorful/dist/index.css'
 
-export default function ColorPickerCube({ initialColor, isBorder=false, className }) {
+export default function ColorPickerCube({ initialColor, isBorder=false, size=0, onChange }) {
   const [color, setColor] = useState(initialColor)
   const positionRef = useRef({ x: 0, y: 0 })
   const [isPickerShow, setIsPickerShow] = useState(false)
 
   function handleClick(e) {
-    console.log(e)
+    console.log(e.nativeEvent)
     positionRef.current = { x: e.nativeEvent.layerX, y: e.nativeEvent.layerY + 20 }
     setIsPickerShow(true)
   }
@@ -35,6 +35,8 @@ export default function ColorPickerCube({ initialColor, isBorder=false, classNam
     border: isBorder ? `5px solid ${color}` : 'none',
     padding: '0',
     borderRadius: '0',
+    width: `${size}px`,
+    height: `${size}px`,
   })
 
   const pickerContainerStyle = css({
@@ -68,14 +70,15 @@ export default function ColorPickerCube({ initialColor, isBorder=false, classNam
     border: 'none',
     backgroundColor: 'inherit',
     color: 'var(--text-gray)',
-    [':focus']: {
-      outline: 'none',
-    },
   })
+
+  useEffect(() => {
+    onChange(color)
+  }, [color])
 
   return (
     <>
-      <button css={bodyStyle} className={className} onClick={handleClick}></button>
+      <button css={bodyStyle} onClick={handleClick}></button>
       <div css={pickerContainerStyle} onClick={handleBackgroundClick}>
         <HexColorPicker color={color} onChange={handleColorChange} css={colorPickerStyle}/>
         <InputText css={colorStringStyle} key={color} defaultValue={color} onBlur={handleTextBlur}/>

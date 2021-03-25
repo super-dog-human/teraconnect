@@ -1,61 +1,45 @@
-/** @jsxImportSource @emotion/react */
 import React from 'react'
-import { Tab, Tabs, TabList, TabPanel, resetIdCounter } from 'react-tabs'
+import { Tab, TabList, Tabs, TabPanel, resetIdCounter } from 'react-tabs'
+import TabListWithCloseButton from '../../../../tab/tabListWithCloseButton'
+import TabContainer from '../../../../tab/tabContainer'
+import DragHandler from '../../../../dragHandler'
 import VoiceTab from './voiceTab'
 import TextTab from './textTab'
-import { css } from '@emotion/core'
 import { useLessonEditorContext } from '../../../../../libs/contexts/lessonEditorContext'
 import 'react-tabs/style/react-tabs.css'
 
 export default function Speech({ config, closeCallback }) {
   const { updateLine } = useLessonEditorContext()
 
-  function handleConfirmClick() {
+  function handleConfirm() {
     updateLine(config.lineIndex, config.kindIndex, 'speech', config.line)
     closeCallback()
   }
 
-  function handleCloseClick() {
+  function handleClose() {
     closeCallback()
   }
 
   resetIdCounter()
 
   return (
-    <div css={bodyStyle}>
+    <TabContainer minHeight='400'>
       <Tabs forceRenderTabPanel={true}>
-        <div css={dragHandleStyle} className="drag-handle">
+        <DragHandler>
           <TabList>
-            <Tab>字幕・テロップ</Tab>
-            <Tab>音声</Tab>
-            <button css={closeButtonStyle} onClick={handleCloseClick}>x</button>
+            <TabListWithCloseButton onClose={handleClose} color='var(--soft-white)'>
+              <Tab>字幕・テロップ</Tab>
+              <Tab>音声</Tab>
+            </TabListWithCloseButton>
           </TabList>
-        </div>
+        </DragHandler>
         <TabPanel>
-          <TextTab config={config.line} handleClose={handleCloseClick} />
+          <TextTab config={config.line} onCancel={handleClose} onConfirm={handleConfirm} />
         </TabPanel>
         <TabPanel>
-          <VoiceTab config={config.line} handleClose={handleCloseClick} />
+          <VoiceTab config={config.line} onCancel={handleClose} onConfirm={handleConfirm} />
         </TabPanel>
       </Tabs>
-    </div>
+    </TabContainer>
   )
 }
-
-const bodyStyle = css({
-  minHeight: '400px',
-  ['.react-tabs__tab-list']: {
-    border: 'none',
-  },
-  ['.react-tabs__tab']: {
-    //    backgroundColor: 'black',
-  }
-})
-
-const dragHandleStyle = css({
-  cursor: 'move',
-})
-
-const closeButtonStyle = css({
-  textAlign: 'right',
-})

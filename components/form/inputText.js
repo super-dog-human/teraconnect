@@ -2,18 +2,26 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-const style = css({
-  width: 'calc(100% - 2px)',
-  height: '100%',
-  lineHeight: '100%',
-  padding: '0px',
-  margin: '0px',
-  border: '1px solid var(--border-gray)'
-})
+const InputText = React.forwardRef(function inputText({ size, color, backgroundColor, borderColor, borderWidth, defaultValue, maxLength, onKeyDown, onBlur, readOnly }, ref) {
+  const bodyStyle = css({
+    width: 'calc(100% - 2px)',
+    height: '100%',
+    fontSize: `${size}px`,
+    lineHeight: `${size}px`,
+    color,
+    backgroundColor: backgroundColor ? backgroundColor : 'inherit',
+    borderColor,
+    borderWidth,
+    borderStyle: 'solid',
+    padding: '0px',
+    margin: '0px',
+    ':focus': {
+      outline: 'none', // type=textではカーソルが表示されるのでnoneを許容する
+    },
+  })
 
-const InputText = React.forwardRef(function inputText(props, ref) {
   return (
-    <input type="text" ref={ref} css={style} className={props.className} {...props} />
+    <input type="text" defaultValue={defaultValue} ref={ref} css={bodyStyle} maxLength={maxLength} onKeyDown={onKeyDown} onBlur={onBlur} readOnly={readOnly} />
   )
 })
 

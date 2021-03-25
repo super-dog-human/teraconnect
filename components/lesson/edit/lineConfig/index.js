@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from 'react'
 import Draggable from 'react-draggable'
+import ViewPortContainer from '../../../viewPortContainer'
 import { css } from '@emotion/core'
 import Speech from './speech/'
 
@@ -22,24 +23,16 @@ export default function LineConfig({ config }) {
 
   return (
     <>
-      {isShow && <div css={backgroundStyle} className="modal-panel-z">
+      {isShow && <ViewPortContainer position='fixed' width='100' height='100' zKind='modal-panel'>
         <Draggable handle=".drag-handle">
           <div css={bodyStyle}>
             {config.kind === 'speech' && <Speech config={config} closeCallback={handleClose} />}
           </div>
         </Draggable>
-      </div>}
+      </ViewPortContainer>}
     </>
   )
 }
-
-const backgroundStyle = css({
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  width: '100vw',
-  height: '100vh',
-})
 
 const bodyStyle = css({
   position: 'absolute',
