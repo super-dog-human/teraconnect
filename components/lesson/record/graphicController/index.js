@@ -22,7 +22,7 @@ export default function LessonRecordGraphicController({ id, setSelectedGraphic, 
   return (
     <div css={bodyStyle}>
       <div css={controllerStyle}>
-        <input type="file" accept="image/jpeg,image/png,image/gif,image/svg+xml" multiple={true}
+        <input type="file" accept="image/jpeg,image/png,image/gif" multiple={true}
           onChange={handleChangeFile} css={inputFileStyle} ref={inputFileRef} />
 
         {images.length === 0 && (

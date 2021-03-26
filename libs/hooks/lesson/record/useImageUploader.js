@@ -25,7 +25,7 @@ export default function useImageUploader(id, images, setImages, inputFileRef, se
 
   async function uploadImages(files) {
     const validFiles = Array.from(files)
-      .filter(f => ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'].includes(f.type))
+      .filter(f => ['image/jpeg', 'image/png', 'image/gif'].includes(f.type))
       .filter(f => f.size <= maxFileByteSize)
 
     const temporaryIDs = validFiles.map(() => Math.random().toString(32).substring(2))
