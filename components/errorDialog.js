@@ -67,13 +67,13 @@ const headerStyle = ({
   height: '50px',
   borderBottom: '1px solid var(--soft-white)',
   padding: '0px',
-  ['>img']: {
+  '>img': {
     width: 'auto',
     height: '24px',
     verticalAlign: 'middle',
     marginLeft: '20px',
   },
-  ['>span']: {
+  '>span': {
     color: 'var(--border-gray)',
     fontSize: '16px',
     lineHeight: '50px',
@@ -106,7 +106,7 @@ const errorNameStyle = css({
 const footerStyle = css({
   display: 'flex',
   justifyContent: 'space-around',
-  ['>button']: {
+  '>button': {
     width: '100px',
     fontSize: '15px',
   }

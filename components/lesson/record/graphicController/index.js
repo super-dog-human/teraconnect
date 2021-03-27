@@ -84,7 +84,7 @@ const centeringStyle = css({
 
 const selectImageBarStyle =css({
   overflowX: 'scroll',
-  ['&::-webkit-scrollbar']: {
+  '&::-webkit-scrollbar': {
     display: 'none',
   },
   scrollbarWidth: 'none',

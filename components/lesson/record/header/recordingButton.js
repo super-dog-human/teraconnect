@@ -47,10 +47,10 @@ export default function RecordingButton({ lessonID, isMicReady }) {
   const finishRecordingStyle = css({
     width: '140px',
     opacity: !isRecording && hasRecordingStarted ? 0.3 : 0,
-    [':hover']: {
+    ':hover': {
       opacity: isFinishing ? 0.3 : !isRecording && hasRecordingStarted ? 1 : 0,
     },
-    ['> img']: {
+    '> img': {
       width: '22px',
       height: '22px',
     }
@@ -101,15 +101,15 @@ const bodyStyle = css({
 })
 
 const buttonStyle = css({
-  ['img']: {
+  'img': {
     width: '26px',
     height: 'auto',
     verticalAlign: 'middle',
   },
-  [':hover']: {
+  ':hover': {
     backgroundColor: 'var(--text-gray)',
   },
-  [':disabled']: {
+  ':disabled': {
     opacity: 0.3,
     cursor: 'default',
     backgroundColor: 'var(--dark-gray)',

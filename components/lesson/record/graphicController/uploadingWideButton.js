@@ -16,18 +16,18 @@ export default function uploadingWideButton({ hasDragOver, onDragOver,onDragLeav
     border: '2px var(--border-gray) dashed',
     borderStyle: 'dashed',
     opacity: hasDragOver ? 1 : 0.7,
-    [':hover']: {
+    ':hover': {
       opacity: 1,
     },
-    [':disabled']: {
+    ':disabled': {
       opacity: 0.3,
       cursor: 'default',
     },
-    ['>img']: {
+    '>img': {
       verticalAlign: 'middle',
       marginRight: '30px',
     },
-    ['>span']: {
+    '>span': {
       whiteSpace: 'normal',
       fontSize: '15px',
       lineHeight: '15px',

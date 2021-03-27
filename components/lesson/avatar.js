@@ -15,8 +15,8 @@ const bodyStyle = css({
   top: 0,
   width: '100%',
   height: '100%',
-  ['canvas']: {
-    [':focus']: {
+  'canvas': {
+    ':focus': {
       outline: 'none',
     }
   },

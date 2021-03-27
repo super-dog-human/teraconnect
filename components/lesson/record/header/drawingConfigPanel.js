@@ -75,7 +75,7 @@ export default function DrawingConfigPanel({ disabled, color, setColor, setLineW
 const sortDownButtonStyle = css({
   paddingLeft: '3px',
   height: '38px',
-  ['img']: {
+  'img': {
     width: '8px',
   },
 })

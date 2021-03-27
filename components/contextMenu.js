@@ -59,7 +59,7 @@ const menuTextStyle = css({
   paddingLeft: '20px',
   paddingRight: '20px',
   cursor: 'pointer',
-  [':hover']: {
+  ':hover': {
     backgroundColor: 'var(--soft-white)',
     color: 'var(--dark-gray)',
   },

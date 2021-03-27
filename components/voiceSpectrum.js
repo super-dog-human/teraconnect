@@ -33,7 +33,7 @@ export default function VoiceSpectrum({ micDeviceID, isShow, setIsShow }) {
     top: 0,
     right: 0,
     opacity: isHover ? 1 : 0,
-    ['>img']: {
+    '>img': {
       display: 'block',
       width: '10px',
       height: '10px',

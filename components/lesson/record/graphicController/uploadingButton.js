@@ -13,10 +13,10 @@ export default function uploadingButton({ onClick, disabled }) {
 
 const bodyStyle = css({
   opacity: 0.7,
-  [':hover']: {
+  ':hover': {
     opacity: 1,
   },
-  [':disabled']: {
+  ':disabled': {
     opacity: 0.3,
     cursor: 'default',
   },

@@ -85,7 +85,7 @@ export default function ScrollArrow({ className, direction, targetRef }) {
 const buttonStyle = css({
   opacity: '0.3',
   transition: 'opacity 0.5s',
-  [':hover']: {
+  ':hover': {
     opacity: '1',
   },
 })

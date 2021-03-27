@@ -43,7 +43,7 @@ export default function SelectorThumbnail({ image, onClick, onRemoveClick, isSel
     padding: 0,
     border: 'none',
     opacity: '0.5',
-    [':hover']: {
+    ':hover': {
       opacity: '1',
     },
   })

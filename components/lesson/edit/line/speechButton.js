@@ -6,7 +6,7 @@ import LessonEditKindIcon from './kindIcon'
 export default function LessonEditSpeechButton({ isLoading, isPlaying, status, onClick }) {
   const bodyStyle = css({
     filter: isPlaying ? 'contrast(400%)' : '',
-    [':hover']: {
+    ':hover': {
       opacity: '0.6',
     },
   })

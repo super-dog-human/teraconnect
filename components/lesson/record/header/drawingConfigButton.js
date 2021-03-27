@@ -4,19 +4,19 @@ import { css } from '@emotion/core'
 
 export default function DrawingConfigButton({ isSelected, className, disabled, onMouseDown, onClick, children }) {
   const bodyStyle = css({
-    ['> img']: {
+    '> img': {
       width: '18px',
       height: 'auto',
       verticalAlign: 'middle',
     },
     backgroundColor: isSelected ? 'var(--back-movie-black)' : 'inherited',
-    [':hover']: {
+    ':hover': {
       backgroundColor: isSelected ? 'var(--back-movie-black)' : 'var(--text-gray)',
     },
-    [':active']: {
+    ':active': {
       backgroundColor: isSelected ? 'var(--back-movie-black)' : 'var(--text-gray)',
     },
-    [':disabled']: {
+    ':disabled': {
       opacity: '0.3',
       cursor: 'default',
       backgroundColor: 'var(--dark-gray)',
