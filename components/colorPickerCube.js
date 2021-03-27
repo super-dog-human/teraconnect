@@ -1,25 +1,32 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import { HexColorPicker } from 'react-colorful'
 import { css } from '@emotion/core'
 import InputText from './form/inputText'
+import Container from './container'
+import Spacer from './spacer'
 import 'react-colorful/dist/index.css'
 
 export default function ColorPickerCube({ initialColor, isBorder=false, size=0, onChange }) {
   const [color, setColor] = useState(initialColor)
-  const positionRef = useRef({ x: 0, y: 0 })
+  const clickEventRef = useRef()
+  const buttonRef = useRef()
   const [isPickerShow, setIsPickerShow] = useState(false)
 
-  function handleClick(e) {
-    console.log(e.nativeEvent)
-    positionRef.current = { x: e.nativeEvent.layerX, y: e.nativeEvent.layerY + 20 }
-    setIsPickerShow(true)
+  function handlePickerClick(e) {
+    if (!isPickerShow) {
+      clickEventRef.current = e.nativeEvent
+      setIsPickerShow(true)
+      window.addEventListener('click', handleBackgroundClick, { passive: false })
+    }
   }
 
   function handleBackgroundClick(e) {
-    if (e.target === e.currentTarget) {
-      setIsPickerShow(false)
-    }
+    if (e === clickEventRef.current) return
+
+    setIsPickerShow(false)
+    window.removeEventListener('click', handleBackgroundClick)
+    onChange(color)
   }
 
   function handleColorChange(color) {
@@ -30,7 +37,7 @@ export default function ColorPickerCube({ initialColor, isBorder=false, size=0, 
     setColor(e.target.value)
   }
 
-  const bodyStyle = css({
+  const buttonStyle = css({
     backgroundColor: isBorder ? 'white' : color,
     border: isBorder ? `5px solid ${color}` : 'none',
     padding: '0',
@@ -39,50 +46,24 @@ export default function ColorPickerCube({ initialColor, isBorder=false, size=0, 
     height: `${size}px`,
   })
 
-  const pickerContainerStyle = css({
-    display: isPickerShow ? 'block' : 'none',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    ['.react-colorful']: {
-      width: '130px',
-      height: '130px',
-    }
-  })
-
-  const colorPickerStyle = css({
-    position: 'relative',
-    top: positionRef.current.y,
-    left: positionRef.current.x,
-  })
-
-  const colorStringStyle = css({
-    position: 'relative',
-    top: positionRef.current.y,
-    left: positionRef.current.x,
-    width: '130px',
-    height: '15px',
-    fontSize: '15px',
-    lineHeight: '15px',
-    textAlign: 'center',
-    border: 'none',
-    backgroundColor: 'inherit',
-    color: 'var(--text-gray)',
-  })
-
-  useEffect(() => {
-    onChange(color)
-  }, [color])
-
   return (
-    <>
-      <button css={bodyStyle} onClick={handleClick}></button>
-      <div css={pickerContainerStyle} onClick={handleBackgroundClick}>
-        <HexColorPicker color={color} onChange={handleColorChange} css={colorPickerStyle}/>
-        <InputText css={colorStringStyle} key={color} defaultValue={color} onBlur={handleTextBlur}/>
-      </div>
-    </>
+    <div>
+      <button css={buttonStyle} onClick={handlePickerClick} ref={buttonRef} />
+      {isPickerShow && <div css={pickerStyle} onClick={e => e.stopPropagation()}>
+        <Spacer height='10' />
+        <HexColorPicker color={color} onChange={handleColorChange} />
+        <Container width='100' height='15'>
+          <InputText size='15' borderWidth='0' color='var(--text-gray)' key={color} defaultValue={color} onBlur={handleTextBlur} />
+        </Container>
+      </div>}
+    </div>
   )
 }
+
+const pickerStyle = css({
+  position: 'absolute',
+  '.react-colorful': {
+    width: '100px',
+    height: '100px',
+  },
+})

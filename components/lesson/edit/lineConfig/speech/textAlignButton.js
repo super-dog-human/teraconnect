@@ -1,7 +1,6 @@
-/** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from 'react'
-import CubeButton from '../../../../cubeButton'
-import { css } from '@emotion/core'
+import Container from '../../../../container'
+import IconButton from '../../../../button/iconButton'
 
 export default function TextAlignButton({ align, value, onClick }) {
   const [isSelected, setIsSelected] = useState()
@@ -20,17 +19,11 @@ export default function TextAlignButton({ align, value, onClick }) {
     }
   }, [value])
 
-  const buttonStyle = css({
-    backgroundColor: isSelected ? 'var(--text-gray)' : 'inherit',
-    width: '28px',
-    height: '28px',
-    padding: '5px',
-    [':hover']: {
-      opacity: '0.3',
-    },
-  })
+  const backgroundColor = isSelected ? 'var(--text-gray)' : 'var(--dark-gray)'
 
   return (
-    <CubeButton icon={`align-${align}`} onClick={handleClick} css={buttonStyle} />
+    <Container width='28' height='28'>
+      <IconButton name={`align-${align}`} borderColor={backgroundColor} backgroundColor={backgroundColor} padding='5' onClick={handleClick} />
+    </Container>
   )
 }

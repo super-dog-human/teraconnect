@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
+import IconButton from '../button/iconButton'
 import { css } from '@emotion/core'
 
 export default function TabListWithCloseButton({ onClose, color, children }) {
@@ -18,7 +19,12 @@ export default function TabListWithCloseButton({ onClose, color, children }) {
       backdropFilter: 'none',
       filter: 'none',
     },
+    '.react-tabs__tab:focus': {
+      boxShadow: 'none',
+      outline: '2px dotted gray',
+    },
     '.react-tabs__tab:focus:after': {
+      content: 'none',
       background: 'inherit',
     }
   })
@@ -26,21 +32,15 @@ export default function TabListWithCloseButton({ onClose, color, children }) {
   return (
     <div css={tabListStyle}>
       {children}
-      <button css={closeButtonStyle} onClick={onClose}><img src="/img/icon/close.svg" css={imageStyle}/></button>
+      <div css={buttonStyle}>
+        <IconButton name={'close'} padding='10' onClick={onClose} borderColor='var(--dark-gray)' />
+      </div>
     </div>
   )
 }
 
-const closeButtonStyle = css({
+const buttonStyle = css({
+  display: 'inline-block',
   width: '36px',
   height: '36px',
-  border: 'none',
-  ':hover': {
-    filter: 'brightness(70%)',
-  },
-})
-
-const imageStyle = css({
-  width: '10px',
-  height: '10px',
 })

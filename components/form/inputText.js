@@ -2,14 +2,14 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-const InputText = React.forwardRef(function inputText({ size, color, backgroundColor, borderColor, borderWidth, defaultValue, maxLength, onKeyDown, onBlur, readOnly }, ref) {
+const InputText = React.forwardRef(function inputText({ size, color, backgroundColor='inherit', borderColor, borderWidth, defaultValue, maxLength, onKeyDown, onBlur, readOnly }, ref) {
   const bodyStyle = css({
     width: 'calc(100% - 2px)',
     height: '100%',
     fontSize: `${size}px`,
     lineHeight: `${size}px`,
     color,
-    backgroundColor: backgroundColor ? backgroundColor : 'inherit',
+    backgroundColor,
     borderColor,
     borderWidth,
     borderStyle: 'solid',
