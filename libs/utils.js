@@ -39,8 +39,6 @@ export function extentionNameTo3Chars(extention) {
   switch(extention) {
   case 'jpeg':
     return 'jpg'
-  case 'svg+xml':
-    return 'svg'
   default:
     return extention.substring(0, 3)
   }
@@ -88,4 +86,10 @@ export function findNextElement(origin, tagName, callback) {
     }
     next = next.nextElementSibling
   }
+}
+
+export function inRange(left, right, value) {
+  const min = Math.min(left, right)
+  const max = Math.max(left, right)
+  return min <= value && max >= value
 }
