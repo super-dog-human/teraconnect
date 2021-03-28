@@ -5,7 +5,7 @@ import { css } from '@emotion/core'
 import LoadingIndicator from '../../../components/loadingIndicator'
 import { useImageViewerContext } from '../../../libs/contexts/imageViewerContext'
 
-export default function LessonEditGraphicThumbnail({ url, className }) {
+export default function LessonEditGraphicThumbnail({ url }) {
   const { setImage } = useImageViewerContext()
   const [loaded, setLoaded] = useState(false)
 
@@ -41,7 +41,7 @@ export default function LessonEditGraphicThumbnail({ url, className }) {
   })
 
   return (
-    <div css={bodyStyle} className={className}>
+    <div css={bodyStyle}>
       {url && <Image src={url} width="175" height="100" objectFit="contain" css={imageStyle} data-image-url={url} onClick={handleClick} onLoad={handleLoad} />}
       {!loaded && <div css={loadingStyle}><LoadingIndicator size={50} /></div>}
     </div>

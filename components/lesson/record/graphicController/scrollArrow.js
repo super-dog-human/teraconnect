@@ -8,7 +8,7 @@ function easeOutSine(x) {
   return Math.sin((x * Math.PI) / 2)
 }
 
-export default function ScrollArrow({ className, direction, targetRef }) {
+export default function ScrollArrow({ direction, targetRef }) {
   const isHoverRef = useRef(false)
   const animationIDRef = useRef()
   const offsetLeftRef = useRef()
@@ -76,7 +76,7 @@ export default function ScrollArrow({ className, direction, targetRef }) {
   }, [])
 
   return (
-    <button css={buttonStyle} className={className} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave}>
+    <button css={buttonStyle} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave}>
       <img src="/img/icon/double-arrows.svg" css={iconStyle} />
     </button>
   )

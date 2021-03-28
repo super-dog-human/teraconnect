@@ -2,10 +2,11 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-export default function DrawingConfigButton({ isSelected, disabled, onClick, children }) {
+export default function DrawingSortDownButton({ isSelected, disabled, onMouseDown }) {
   const bodyStyle = css({
+    paddingLeft: '3px',
     '> img': {
-      width: '18px',
+      width: '8px',
       height: 'auto',
       verticalAlign: 'middle',
     },
@@ -24,6 +25,8 @@ export default function DrawingConfigButton({ isSelected, disabled, onClick, chi
   })
 
   return (
-    <button css={bodyStyle} disabled={disabled} onClick={onClick}>{children}</button>
+    <button css={bodyStyle} disabled={disabled} onMouseDown={onMouseDown}>
+      <img src="/img/icon/sort-down.svg" />
+    </button>
   )
 }

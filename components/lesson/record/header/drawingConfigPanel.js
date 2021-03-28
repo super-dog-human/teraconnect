@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import { css } from '@emotion/core'
 import { HexColorInput } from 'react-colorful'
-import DrawingConfigButton from './drawingConfigButton'
+import DrawingSortDownButton from './drawingSortDownButton'
 import 'react-colorful/dist/index.css'
 
 export default function DrawingConfigPanel({ disabled, color, setColor, setLineWidth, setEnablePen }) {
@@ -52,9 +52,7 @@ export default function DrawingConfigPanel({ disabled, color, setColor, setLineW
 
   return (
     <>
-      <DrawingConfigButton css={sortDownButtonStyle} onMouseDown={handleShowPanel} disabled={disabled}>
-        <img src="/img/icon/sort-down.svg" />
-      </DrawingConfigButton>
+      <DrawingSortDownButton onMouseDown={handleShowPanel} disabled={disabled} />
       <div css={backgroundStyle} onClick={handleShowPanel}>
         <div css={contextMenuStyle}>
           <button onClick={handleWidthChange} data-width="5">細</button>
@@ -71,11 +69,3 @@ export default function DrawingConfigPanel({ disabled, color, setColor, setLineW
     </>
   )
 }
-
-const sortDownButtonStyle = css({
-  paddingLeft: '3px',
-  height: '38px',
-  'img': {
-    width: '8px',
-  },
-})

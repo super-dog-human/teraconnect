@@ -35,7 +35,7 @@ export default function Timeline() {
               <div css={lineBodyStyle}>
                 {Object.keys(timeline[elapsedtime]).map(kind =>
                   timeline[elapsedtime][kind].map((line, kindIndex) => (
-                    <LessonLine key={`${elapsedtime}-${kindIndex}`} css={lineContainerStyle}>
+                    <LessonLine key={`${elapsedtime}-${kindIndex}`}>
                       {kind === 'avatar'  && <LessonLineAvatar avatar={line} lineIndex={i} kindIndex={kindIndex} handleEditClick={handleEditButtonClick} />}
                       {kind === 'drawing' && <LessonLineDrawing drawing={line} lineIndex={i} kindIndex={kindIndex} handleEditClick={handleEditButtonClick} />}
                       {kind === 'graphic' && <LessonLineGraphic graphic={line} lineIndex={i} kindIndex={kindIndex} handleEditClick={handleEditButtonClick} />}
@@ -73,12 +73,6 @@ const lineBodyStyle = css({
 
 const focusedStyle = css({
   backgroundColor: '#eaeaea', // fixme
-})
-
-const lineContainerStyle = css({
-  display: 'flex',
-  width: '100%',
-  minHeight: '55px',
 })
 
 const hrStyle = css({

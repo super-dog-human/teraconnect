@@ -1,12 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
 import { css } from '@emotion/core'
-import ImageUploadingIcon from './uploadingIcon'
+import UploadingIcon from './uploadingIcon'
 
 export default function uploadingButton({ onClick, disabled }) {
   return (
     <button css={bodyStyle} onClick={onClick} disabled={disabled}>
-      <ImageUploadingIcon css={imageStyle} />
+      <UploadingIcon />
     </button>
   )
 }
@@ -20,8 +20,4 @@ const bodyStyle = css({
     opacity: 0.3,
     cursor: 'default',
   },
-})
-
-const imageStyle = css({
-  display: 'block',
 })

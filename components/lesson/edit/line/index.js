@@ -1,6 +1,8 @@
+/** @jsxImportSource @emotion/react */
 import React, { useState } from 'react'
+import { css } from '@emotion/core'
 
-export default function LessonLine({ className, children }) {
+export default function LessonLine({ children }) {
   const [isEditButtonShow, setIsEditButtonShow] = useState(false)
 
   function handleMouseOver() {
@@ -12,7 +14,7 @@ export default function LessonLine({ className, children }) {
   }
 
   return (
-    <div className={className} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave}>
+    <div css={bodyStyle} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave}>
       {children.map((child, key) => {
         if (React.isValidElement(child)) {
           return React.cloneElement(child, { key, isEditButtonShow })
@@ -22,3 +24,9 @@ export default function LessonLine({ className, children }) {
     </div>
   )
 }
+
+const bodyStyle = css({
+  display: 'flex',
+  width: '100%',
+  minHeight: '55px',
+})

@@ -1,6 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
 import { css } from '@emotion/core'
+import ContainerSpacer from '../../../containerSpacer'
+import Spacer from '../../../spacer'
 import LessonEditKindIcon from './kindIcon'
 import LessonEditActionLabel from './actionLabel'
 import LessonEditGraphicThumbnail from '../graphicThumbnail'
@@ -16,10 +18,12 @@ export default function LessonLineGraphic({ graphic, lineIndex, kindIndex, isEdi
     <>
       <LessonEditKindIcon kind="graphic" status={graphic.action === 'show'} css={iconStyle} />
       <div css={graphicContainerStyle}>
-        {graphic.action === 'show' && <LessonEditGraphicThumbnail url={graphic.url} css={imageStyle} />}
+        {graphic.action === 'show' && <><Spacer height='20'/><LessonEditGraphicThumbnail url={graphic.url} /><Spacer height='20'/></>}
         {graphic.action === 'hide' && <LessonEditActionLabel kind="graphic" action={'hide'} />}
       </div>
-      <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} css={iconStyle}/>
+      <ContainerSpacer top='20'>
+        <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} />
+      </ContainerSpacer>
     </>
   )
 }
@@ -31,9 +35,4 @@ const iconStyle = css({
 
 const graphicContainerStyle = css({
   width: '100%',
-})
-
-const imageStyle = css({
-  marginTop: '20px',
-  marginBottom: '20px',
 })

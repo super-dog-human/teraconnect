@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/core'
 import { floatSecondsToMinutesFormat } from '../../../../libs/utils'
 
-export default function ElapsedTime({ elapsedSeconds, className }) {
+export default function ElapsedTime({ elapsedSeconds }) {
   const [displayTime, setDisplayTime] = useState('')
 
   useEffect(() => {
@@ -11,7 +11,7 @@ export default function ElapsedTime({ elapsedSeconds, className }) {
   }, [elapsedSeconds])
 
   return (
-    <span className={className}>
+    <span>
       <span css={textStyle}>{displayTime}</span>
     </span>
   )

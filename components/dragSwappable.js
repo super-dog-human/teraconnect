@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 
-const DragSwappable = React.forwardRef(function dragSwappable({ children, className, onDragStart, onDragOver, onDragEnd, onDrop }, ref) {
+export default function DragSwappable({ children, onDragStart, onDragOver, onDragEnd, onDrop }) {
   const indexRef = useRef()
   const prevTargetRef = useRef()
 
@@ -39,14 +39,12 @@ const DragSwappable = React.forwardRef(function dragSwappable({ children, classN
   }
 
   return (
-    <div className={className} ref={ref}>
+    <>
       {children.map((c, i) => (
         <div key={i} data-index={i} onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd} onDrop={handleDrop} draggable={true}>
           {c}
         </div>
       ))}
-    </div>
+    </>
   )
-})
-
-export default DragSwappable
+}
