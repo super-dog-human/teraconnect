@@ -31,25 +31,15 @@ export default function useImageController(setSelectedGraphic) {
     setImages(images.filter(i => i.id != targetImageID))
   }
 
-  function moveImage(fromIndexRef, toIndex, e) {
+  function moveImage(fromIndexRef, toIndex) {
     const fromIndex = fromIndexRef.current
     if (fromIndex === toIndex) return
 
-    const isBeginside = e.currentTarget.clientWidth / 2 < e.nativeEvent.offsetX
-    if (fromIndexRef.current - 1 === toIndex && isBeginside) {
-      return // 左隣の要素の右半分では何も反応させない
-    }
-
-    if (fromIndexRef.current + 1 === toIndex && !isBeginside) {
-      return // 右隣の要素の左半分では何も反応させない
-    }
-
-    const newImages = [...images]
-    const target = newImages.splice(fromIndex, 1)[0]
-    newImages.splice(toIndex, 0, target)
-
-    setImages(newImages)
-    fromIndexRef.current = toIndex
+    setImages(images => {
+      const target = images.splice(fromIndex, 1)[0]
+      images.splice(toIndex, 0, target)
+      return images
+    })
   }
 
   useEffect(() => {

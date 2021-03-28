@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 
-export default function DragSwappable({ children, onDragStart, onDragOver, onDragEnd, onDrop }) {
+export default function DragSwappable({ children, onDragStart, onDragOver, onDragEnd, onDrop, isSwapImmediately=false }) {
   const indexRef = useRef()
   const prevTargetRef = useRef()
 
@@ -19,8 +19,9 @@ export default function DragSwappable({ children, onDragStart, onDragOver, onDra
     prevTargetRef.current = currentIndex
 
     if (!onDragOver) return
-
     onDragOver(indexRef, currentIndex, e)
+
+    if (isSwapImmediately) indexRef.current = currentIndex
   }
 
   function handleDragEnd(e) {
