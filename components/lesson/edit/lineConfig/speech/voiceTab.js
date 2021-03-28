@@ -1,12 +1,10 @@
-/** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
 import Flex from '../../../../flex'
 import Container from '../../../../container'
 import ContainerSpacer from '../../../../containerSpacer'
 import IconButton from '../../../../button/iconButton'
 import Spacer from '../../../../spacer'
-import DialogFooter from '../../../../configDialog/dialogFooter'
+import DialogFooter from '../configDialog/dialogFooter'
 
 export default function VoiceTab({ config, onCancel, onConfirm }) {
   return (
