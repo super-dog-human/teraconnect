@@ -57,14 +57,14 @@ export default function LessonEditActionLabel({ kind, action, status=true }) {
     }
   }
 
-  const bodyStyle = css({
-    color: status ? 'var(--text-gray)' : 'lightGray',
-    lineHeight: '55px',
-    width: '100%',
-    height: '55px',
-  })
-
   return (
     <div css={bodyStyle}><span>{label}</span></div>
   )
 }
+
+const bodyStyle = css({
+  color: 'var(--text-gray)',
+  lineHeight: '55px',
+  width: '100%',
+  height: '55px',
+})
