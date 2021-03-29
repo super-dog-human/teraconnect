@@ -1,21 +1,21 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
+import Container from '../container'
 import IconButton from '../button/iconButton'
 import { css } from '@emotion/core'
 
 export default function TabListWithCloseButton({ onClose, color, children }) {
   const tabListStyle = css({
     '.react-tabs__tab': {
-      bottom: '0',
       border: 'none',
       backgroundColor: 'inherit',
-      backdropFilter: 'brightness(150%)',
-      filter: 'brightness(80%)',
-      // 26pxはタブのborderとpaddingの左右合計値
-      width: `calc((100% - ${children.length * 26}px - 36px) / ${children.length})`,
+      filter: 'brightness(70%)',
+      // 24pxはタブのborderとpaddingの左右合計値
+      width: `calc((100% - ${children.length * 24}px - 36px) / ${children.length})`,
       color,
     },
     '.react-tabs__tab--selected': {
+      borderBottom: '1px solid',
       backdropFilter: 'none',
       filter: 'none',
     },
@@ -32,15 +32,9 @@ export default function TabListWithCloseButton({ onClose, color, children }) {
   return (
     <div css={tabListStyle}>
       {children}
-      <div css={buttonStyle}>
+      <Container width='36' height='36' display='inline-block'>
         <IconButton name={'close'} padding='10' onClick={onClose} borderColor='var(--dark-gray)' />
-      </div>
+      </Container>
     </div>
   )
 }
-
-const buttonStyle = css({
-  display: 'inline-block',
-  width: '36px',
-  height: '36px',
-})

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import Container from '../../../../container'
 import InputText from '../../../../form/inputText'
 import { floatSecondsToMinutesFormat } from '../../../../../libs/utils'
 
@@ -12,6 +13,8 @@ export default function DialogFooter({ elapsedtime }) {
   }, [elapsedtime])
 
   return (
-    <InputText defaultValue={displayTime} size='15' color='var(--soft-white)' borderWidth='0' maxLength='9' />
+    <Container width='80'>
+      <InputText defaultValue={displayTime} size='15' color='var(--soft-white)' borderWidth='0' maxLength='9' />
+    </Container>
   )
 }

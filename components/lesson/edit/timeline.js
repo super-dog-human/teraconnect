@@ -47,7 +47,7 @@ export default function Timeline() {
                 )}
               </div>
             </div>
-            {Object.keys(timeline).length - 1 > i && <ContainerSpacer left='65' right='5'><hr css={hrStyle} /></ContainerSpacer>}
+            {Object.keys(timeline).length - 1 > i && <ContainerSpacer left='65'><hr css={hrStyle} /></ContainerSpacer>}
           </div>
         ))}
       </DragSwappable>
@@ -77,6 +77,7 @@ const focusedStyle = css({
 })
 
 const hrStyle = css({
+  marginRight: '0',
   backgroundColor: '#dedede', // fixme
   width: 'calc(100% - 70px)',
   height: '1px',
