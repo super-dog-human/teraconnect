@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { useRef } from 'react'
 import { css } from '@emotion/core'
+import ContainerSpacer from '../../containerSpacer'
 import DragSwappable from '../../dragSwappable'
 import Elapsedtime from './line/elapsedtime'
 import ContextMenu from '../../contextMenu'
@@ -46,7 +47,7 @@ export default function Timeline() {
                 )}
               </div>
             </div>
-            {Object.keys(timeline).length - 1 > i && <hr css={hrStyle} />}
+            {Object.keys(timeline).length - 1 > i && <ContainerSpacer left='65' right='5'><hr css={hrStyle} /></ContainerSpacer>}
           </div>
         ))}
       </DragSwappable>
@@ -79,8 +80,4 @@ const hrStyle = css({
   backgroundColor: '#dedede', // fixme
   width: 'calc(100% - 70px)',
   height: '1px',
-  marginLeft: '65px',
-  marginRight: '5px',
-  marginTop: '0px',
-  marginBottom: '0px',
 })

@@ -37,6 +37,7 @@ const bodyStyle = css({
 
 const headerStyle = css({
   height: '50px',
+  fontSize: '14px',
   textAlign: 'center',
   color: 'gray',
 })
