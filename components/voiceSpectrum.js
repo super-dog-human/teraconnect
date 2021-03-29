@@ -63,7 +63,7 @@ export default function VoiceSpectrum({ micDeviceID, isShow, setIsShow }) {
         <div ref={draggableRef} css={bodyStyle} className="overay-ui-z" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
           <canvas css={spectrumStyle} ref={canvasRef} />
           <button onClick={handleCloseClick} css={closeButtonStyle}>
-            <img src="/img/icon/close.svg" draggable="false" />
+            <img src="/img/icon/close-bold.svg" draggable="false" />
           </button>
         </div>
       </Draggable>
