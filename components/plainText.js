@@ -9,6 +9,6 @@ export default function PlainText({ children, size, color }) {
   })
 
   return (
-    <div css={bodyStyle}>{children}</div>
+    <span css={bodyStyle}>{children}</span>
   )
 }
