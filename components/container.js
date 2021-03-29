@@ -2,7 +2,7 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-export default function Container({ children, width, height, minWidth, minHeight, maxWidth, maxHeight }) {
+export default function Container({ children, width, height, minWidth, minHeight, maxWidth, maxHeight, display='block' }) {
   const bodyStyle = css({
     width: width ? `${width}px` : 'auto',
     height: height ? `${height}px` : 'auto',
@@ -10,6 +10,7 @@ export default function Container({ children, width, height, minWidth, minHeight
     minHeight: minHeight ? `${minHeight}px` : 'auto',
     maxWidth: maxWidth ? `${maxWidth}px` : 'none',
     maxHeight: maxHeight ? `${maxHeight}px` : 'none',
+    display,
   })
 
   return (
