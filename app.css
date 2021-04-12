@@ -85,6 +85,7 @@ main {
   --bg-light-gray: #f0f0f0;
   --text-gray: #8c8e98;
   --border-gray: #c1c1c1;
+  --border-dark-gray: #707070;
   --back-movie-black: #141414;
   --error-red: #dc143c;
 }
