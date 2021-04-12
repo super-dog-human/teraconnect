@@ -26,7 +26,7 @@ export default function LineConfig({ config }) {
       {isShow && <FullscreenContainer position='fixed' zKind='modal-panel'>
         <Draggable handle=".drag-handle">
           <div css={bodyStyle}>
-            {config.kind === 'speech' && <Speech config={config} closeCallback={handleClose} />}
+            {config.kind === 'speech' && <Speech kindIndex={config.kindIndex} lineIndex={config.lineIndex} initialConfig={config.line} closeCallback={handleClose} />}
           </div>
         </Draggable>
       </FullscreenContainer>}

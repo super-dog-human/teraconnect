@@ -113,9 +113,10 @@ export default function useLessonEditor() {
         voiceID: null,
         durationSec: 10.0,
         subtitle: '',
-        caption: '',
+        caption: {},
         url: null,
         isSynthesis: !lessonRef.current.needsRecording,
+        synthesisConfig: {},
       }
 
       setSpeeches(speeches => {

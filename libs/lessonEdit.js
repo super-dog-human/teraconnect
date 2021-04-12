@@ -2,7 +2,6 @@ import { fetchWithAuth } from './fetch'
 
 const defaultSpeech = {
   isSynthesis: false,
-  caption: '',
 }
 
 export async function fetchMaterial({ lesson, setDurationSec, setVoiceSynthesisConfig, setAvatars, setDrawings, setGraphics, setMusics, setSpeeches }) {
@@ -54,9 +53,11 @@ export async function fetchMaterial({ lesson, setDurationSec, setVoiceSynthesisC
       if (!timeline[v.elapsedtime]) timeline[v.elapsedtime] = {}
 
       const newSpeech = { ...defaultSpeech }
+      newSpeech.caption = {}
       newSpeech.voiceID = v.id
       newSpeech.durationSec = v.durationSec
       newSpeech.subtitle = v.text
+      newSpeech.synthesisConfig = {}
 
       timeline[v.elapsedtime].speech = [newSpeech]
       setSpeeches(speeches => {

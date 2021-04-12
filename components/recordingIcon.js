@@ -14,7 +14,7 @@ export default function RecordingIcon(props) {
   return (
     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
       <circle cx="50" cy="50" r="44.5" strokeWidth="11" stroke="white" fill="none" />
-      <circle cx="50" cy="50" r="24" fill="white" css={props.recording && recordingStyle} />
+      <circle cx="50" cy="50" r="24" fill="white" css={props.isRecording && recordingStyle} />
     </svg>
   )
 }

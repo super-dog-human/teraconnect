@@ -33,7 +33,7 @@ export default function TabListWithCloseButton({ onClose, color, children }) {
     <div css={tabListStyle}>
       {children}
       <Container width='36' height='36' display='inline-block'>
-        <IconButton name={'close'} padding='10' onClick={onClose} borderColor='var(--dark-gray)' />
+        <IconButton name={'close'} padding='10' onClick={onClose} backgroundColor='var(--dark-gray)' borderColor='var(--dark-gray)' />
       </Container>
     </div>
   )

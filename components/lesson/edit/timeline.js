@@ -77,8 +77,5 @@ const focusedStyle = css({
 })
 
 const hrStyle = css({
-  marginRight: '0',
   backgroundColor: '#dedede', // fixme
-  width: 'calc(100% - 70px)',
-  height: '1px',
 })

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/core'
 import { useLessonRecorderContext } from '../../../../libs/contexts/lessonRecorderContext'
-import RecordingIcon from './recordingIcon'
+import RecordingIcon from '../../../recordingIcon'
 import ElapsedTime from './elapsedTime'
 
 const maxRecordableSeconds = 600
@@ -84,7 +84,7 @@ export default function RecordingButton({ lessonID, isMicReady }) {
       <div onClick={handleSwitchRecordingClick}>
         <button css={buttonStyle} disabled={!isRecordable || isFinishing}>
           <div css={recordingIconStyle}>
-            <RecordingIcon recording={isRecording} />
+            <RecordingIcon isRecording={isRecording} />
           </div>
         </button>
       </div>

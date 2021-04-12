@@ -1,52 +1,25 @@
-import { useRef, useState } from 'react'
 import { useLessonEditorContext } from '../../../contexts/lessonEditorContext'
+import useAudioPlayer from '../../useAudioPlayer'
+import useSynthesisVoice from './useSynthesisVoice'
 import { findNextElement } from '../../../utils'
-import { post, fetchWithAuth } from '../../../fetch'
-
+import { fetchWithAuth } from '../../../fetch'
 import { useRouter } from 'next/router'
 
 export default function useSpeechController({ speech, lineIndex, kindIndex }) {
   const router = useRouter()
-  const audioRef = useRef()
-  const [isLoading, setIsLoading] = useState(false)
-  const [isPlaying, setIsPlaying] = useState(false)
-  const { addSpeechLine, voiceSynthesisConfig, updateLine } = useLessonEditorContext()
+  const { isLoading, setIsLoading, isPlaying, createAudio, switchAudio, audioRef } = useAudioPlayer()
+  const { addSpeechLine, updateLine } = useLessonEditorContext()
+  const { createSynthesisVoiceFile } = useSynthesisVoice()
 
   async function handleSpeechClick(text) {
     setIsLoading(true)
     await setAudioIfNeeded(text)
     setIsLoading(false)
-
-    if (audioRef.current.paused || audioRef.current.ended) {
-      audioRef.current.play()
-      setIsPlaying(true)
-      return
-    } else {
-      audioRef.current.pause()
-      setIsPlaying(false)
-    }
+    switchAudio()
   }
 
   function fetchVoiceFileURL(voiceID, lessonID) {
     return fetchWithAuth(`/voices/${voiceID}?lesson_id=${lessonID}`)
-      .then(result => result)
-      .catch(e  => {
-        console.error(e)
-      })
-  }
-
-  function createVoiceFile(lessonID, speech) {
-    const request = {
-      'lessonID': lessonID,
-      'text': speech.subtitle,
-      'languageCode': speech.synthesisConfig?.languageCode || voiceSynthesisConfig.languageCode,
-      'name': speech.synthesisConfig?.name || voiceSynthesisConfig.name,
-      'speakingRate': speech.synthesisConfig?.speakingRate || voiceSynthesisConfig.speakingRate,
-      'pitch': speech.synthesisConfig?.pitch || voiceSynthesisConfig.pitch,
-      'volumeGainDb': speech.synthesisConfig?.volumeGainDb || voiceSynthesisConfig.volumeGainDb,
-    }
-
-    return post('/synthesis_voice', request)
       .then(result => result)
       .catch(e  => {
         console.error(e)
@@ -60,7 +33,7 @@ export default function useSpeechController({ speech, lineIndex, kindIndex }) {
       if (!audioRef.current) createAudio(speech.url)
     } else if (speech.isSynthesis && speech.text) {
       speech.subtitle = text
-      const voice = await createVoiceFile(lessonID, speech)
+      const voice = await createSynthesisVoiceFile(lessonID, speech)
       createAudio(voice.url)
       speech.voiceID = voice.id
       speech.url = voice.url
@@ -72,12 +45,6 @@ export default function useSpeechController({ speech, lineIndex, kindIndex }) {
       speech.url = voice.url
 
       updateLine(lineIndex, kindIndex, 'speech', speech)
-    }
-
-    function createAudio(voiceURL) {
-      const audio = new Audio(voiceURL)
-      audio.onended = () => setIsPlaying(false)
-      audioRef.current = audio
     }
   }
 

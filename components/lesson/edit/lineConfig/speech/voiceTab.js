@@ -1,21 +1,22 @@
-import React from 'react'
-import Flex from '../../../../flex'
-import Container from '../../../../container'
-import ContainerSpacer from '../../../../containerSpacer'
-import IconButton from '../../../../button/iconButton'
-import Spacer from '../../../../spacer'
-import DialogFooter from '../configDialog/dialogFooter'
+import React, { useState } from 'react'
+import HumanVoiceTab from './humanVoiceTab'
+import SynthesisVoiceTab from './synthesisVoiceTab'
 
-export default function VoiceTab({ config, onCancel, onConfirm }) {
+export default function VoiceTab({ config, setConfig }) {
+  const [showHumanVoiceTab, setShowHumanVoiceTab] = useState(!config.isSynthesis)
+
+  function switchVoiceTab() {
+    setConfig(config => {
+      config.isSynthesis = !config.isSynthesis
+      return { ...config }
+    })
+    setShowHumanVoiceTab(show => !show)
+  }
+
   return (
-    <ContainerSpacer left='50' right='50'>
-      <Spacer height='10' />
-      <Flex alignItems='center' justifyContent='flex-end'>
-        <Container width='20' height='20'>
-          <IconButton name='microphone' borderColor='var(--dark-gray)' padding='0' />
-        </Container>
-      </Flex>
-      <DialogFooter elapsedtime={config.elapsedtime} onCancel={onCancel} onConfirm={onConfirm} />
-    </ContainerSpacer>
+    <>
+      {showHumanVoiceTab && <HumanVoiceTab config={config} setConfig={setConfig} switchTab={switchVoiceTab} />}
+      {!showHumanVoiceTab && <SynthesisVoiceTab config={config} setConfig={setConfig} switchTab={switchVoiceTab} />}
+    </>
   )
 }
