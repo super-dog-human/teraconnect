@@ -1,8 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
 import { css } from '@emotion/core'
+import LoadingIndicator from '../loadingIndicator'
 
-export default function IconButton({ name, backgroundColor='inherit', color='inherit', borderColor='inherit', padding='0', onClick }) {
+export default function IconButton({ name, backgroundColor='inherit', color='inherit', borderColor='inherit', padding='0', disabled=false, isProcessing=false, onClick }) {
   const bodyStyle = css({
     display: 'block',
     width: '100%',
@@ -13,13 +14,14 @@ export default function IconButton({ name, backgroundColor='inherit', color='inh
     backgroundColor,
     color,
     ':hover': {
-      filter: 'brightness(110%)',
+      filter: 'brightness(80%)',
     },
   })
 
   return (
-    <button onClick={onClick} css={bodyStyle}>
-      <img src={`/img/icon/${name}.svg`} onClick={onClick} draggable={false} css={imageStyle} />
+    <button onClick={onClick} disabled={disabled || isProcessing} css={bodyStyle}>
+      {!isProcessing && <img src={`/img/icon/${name}.svg`} draggable={false} css={imageStyle} />}
+      {isProcessing && <LoadingIndicator size='80' />}
     </button>
   )
 }
