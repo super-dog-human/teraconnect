@@ -2,40 +2,44 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-const style = css({
-  width: '100%',
-  height: '100%',
-  lineHeight: '100%',
-  padding: '0px',
-  margin: '0px',
-  border: '1px solid var(--border-gray)'
-})
-
-const Select = React.forwardRef((props, ref) => {
-  const selectProps = Object.assign({}, props)
-  Object.keys(Select.defaultProps).forEach((key) => {
-    delete selectProps[key]
+const Select = React.forwardRef(({ options, topLabel, value, color='inherit', backgroundColor='inherit', onChange }, ref) => {
+  const bodyStyle = css({
+    width: '100%',
+    height: '100%',
+    lineHeight: '100%',
+    padding: '0px',
+    margin: '0px',
+    border: 'none',
+    borderBottom: '1px solid var(--text-gray)',
+    color,
+    backgroundColor,
+    ':active': {
+      outline: 'none',
+    },
+    ':focus': {
+      outline: '2px dotted gray',
+    },
   })
 
   return (
-    <select ref={ ref } css={ style } { ...selectProps }>
-      { props.topLabel && (
-        <option label={ props.topLabel }></option>
-      ) }
+    <select ref={ref} css={bodyStyle} value={value} onChange={onChange}>
+      {topLabel && (
+        <option label={ topLabel }></option>
+      )}
 
-      { Array.isArray(props.options) && props.options.map((opt, i) => (
+      {Array.isArray(options) && options.map((opt, i) => (
         <option value={ opt.value } key={ i } label={ opt.label } />
-      )) }
+      ))}
 
-      { !Array.isArray(props.options) && Object.keys(props.options).map((key, i) => (
+      {!Array.isArray(options) && Object.keys(options).map((key, i) => (
         <optgroup label={ key } key={ i }>
-          { props.options[key].map((opt, i) => (
+          {options[key].map((opt, i) => (
             <option value={ opt.value } key={ i } label={ opt.label } />
-          )) }
+          ))}
         </optgroup>
-      )) }
+      ))}
     </select>
-  )} )
+  )})
 
 Select.defaultProps = {
   options: [],
