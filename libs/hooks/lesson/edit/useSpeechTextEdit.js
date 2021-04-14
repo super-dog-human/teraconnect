@@ -1,14 +1,14 @@
 export default function useSpeechTextEdit(setConfig) {
-  function setSubtitle(subtitle) {
+  function setSubtitle(e) {
     setConfig(config => {
-      config.subtitle = subtitle
+      config.subtitle = e.target.value
       return { ...config }
     })
   }
 
-  function setBody(body) {
+  function setBody(e) {
     setConfig(config => {
-      config.caption.body = body
+      config.caption.body = e.target.value
       return { ...config }
     })
   }

@@ -2,7 +2,6 @@ import { useRef, useState } from 'react'
 
 export default function useAudioPlayer() {
   const audioRef = useRef()
-  const [isLoading, setIsLoading] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
 
   function createAudio(voiceURL) {
@@ -21,5 +20,5 @@ export default function useAudioPlayer() {
     }
   }
 
-  return { isLoading, setIsLoading, isPlaying, createAudio, switchAudio, audioRef }
+  return { isPlaying, createAudio, switchAudio, audioRef }
 }

@@ -15,11 +15,11 @@ export default function TextTab({ config, setConfig }) {
     <ContainerSpacer top='30' left='50' right='50'>
       <PlainText size='13' color='var(--soft-white)'>字幕</PlainText>
       <Spacer height='13' />
-      <SpeechInputText value={config.subtitle} onBlur={setSubtitle} />
+      <SpeechInputText defaultValue={config.subtitle} onBlur={setSubtitle} />
       <Spacer height='50' />
       <PlainText size='13' color='var(--soft-white)'>テロップ</PlainText>
       <Spacer height='13' />
-      <SpeechInputText value={config.caption?.body} onBlur={setBody} />
+      <SpeechInputText defaultValue={config.caption?.body} onBlur={setBody} />
       <ContainerSpacer top='10' left='20'>
         <Flex alignItems='center' justifyContent='flex-start'>
           <ColorPickerCube initialColor={config.caption?.bodyColor || '#ffffff'} size='20' onChange={setBodyColor} />

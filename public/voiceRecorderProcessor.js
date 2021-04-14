@@ -4,7 +4,8 @@ class Recorder extends AudioWorkletProcessor {
 
     this.isRecording = false
     this.isSpeaking = false
-    this.isRunnning = true
+    this.isRunning = true
+    this.isSimpleRecording = false  // 無音を検出せず、開始から停止までを全て録音する単純な録音モード
     this.silenceLipSyncThreshold = 0.2
     this.silenceSecondThreshold     // changeThresholdメッセージで外部から設定される
     this.durationSecondThreshold = 2.0
@@ -32,6 +33,9 @@ class Recorder extends AudioWorkletProcessor {
         case 'setElapsedTime':
           this.elapsedSeconds = e.data[k] // 収録開始後にマイクを切り替えた場合、Workletも作り直されるので経過時間を再セットする
           return
+        case 'setIsSimpleMode':
+          this.isSimpleRecording = e.data[k]
+          return
         case 'changeThreshold':
           this.silenceSecondThreshold = e.data[k]
           return
@@ -39,7 +43,7 @@ class Recorder extends AudioWorkletProcessor {
           if (this.buffers.length > 0) {
             this._saveRecord()
           }
-          this.isRunnning = false
+          this.isRunning = false
           return
         }
       })
@@ -48,6 +52,24 @@ class Recorder extends AudioWorkletProcessor {
 
   process(allInputs) {
     const inputs = allInputs[0][0] // モノラル録音
+
+    if (this.isSimpleRecording) {
+      return this._simpleRecording(inputs)
+    } else {
+      return this._autoRecording(inputs)
+    }
+  }
+
+  _simpleRecording(inputs) {
+    if (!this.isRecording) {
+      return this.isRunning
+    }
+
+    this._recordInput(inputs)
+    return this.isRunning
+  }
+
+  _autoRecording(inputs) {
     const isSilence = this._isSilence(inputs)
 
     if (isSilence && this.beginningSilenceTime === 0) {
@@ -67,7 +89,7 @@ class Recorder extends AudioWorkletProcessor {
     }
 
     if (!this.isRecording) {
-      return this.isRunnning
+      return this.isRunning
     }
 
     if (isSilence) {
@@ -86,7 +108,7 @@ class Recorder extends AudioWorkletProcessor {
       this._recordInput(inputs)
     }
 
-    return this.isRunnning
+    return this.isRunning
   }
 
   _elapsedSeconds(nowTime) {

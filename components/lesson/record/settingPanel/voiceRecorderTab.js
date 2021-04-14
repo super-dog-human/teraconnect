@@ -5,8 +5,7 @@ import Select from '../../../form/select'
 import useAudioInputDevices from '../../../../libs/hooks/useAudioInputDevices'
 
 export default function VoiceRecorderTab({ setMicDeviceID, setSilenceThresholdSec, isShowVoiceSpectrum, silenceThresholdSec, setIsShowVoiceSpectrum }) {
-  const { devices, requestMicPermission } = useAudioInputDevices()
-  const [selectOptions, setSelectOptions] = useState([])
+  const { deviceOptions, requestMicPermission } = useAudioInputDevices()
 
   function handleThresholdChange(e) {
     setSilenceThresholdSec(parseFloat(e.target.value))
@@ -21,17 +20,10 @@ export default function VoiceRecorderTab({ setMicDeviceID, setSilenceThresholdSe
   }
 
   useEffect(() => {
-    if (devices.length === 0 || selectOptions.length > 0) return
+    if (deviceOptions.length === 0) return
 
-    setSelectOptions(devices.map(d => (
-      {
-        value: d.deviceId,
-        label: d.label,
-      }
-    )))
-    setMicDeviceID(devices[0].deviceId)
-  }, [devices])
-
+    setMicDeviceID(deviceOptions[0].value)
+  }, [deviceOptions])
 
   return (
     <>
@@ -39,7 +31,7 @@ export default function VoiceRecorderTab({ setMicDeviceID, setSilenceThresholdSe
       <div>無音検出：{silenceThresholdSec} 秒</div>
 
       使用マイク
-      <Select options={selectOptions} onChange={hanldeMicChange} topLabel={null} />
+      <Select options={deviceOptions} onChange={hanldeMicChange} topLabel={null} />
 
       <button onClick={requestMicPermission}>マイクの使用を許可する</button>
 

@@ -1,12 +1,13 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/core'
+import { useLessonRecorderContext } from '../../../libs/contexts/lessonRecorderContext'
 import useLessonRecordChangeTabDetector from '../../../libs/hooks/lesson/record/useChangeTabDetector'
 import useRecordResource from '../../../libs/hooks/lesson/record/useRecordResource'
 import useDragOverDetector from '../../../libs/hooks/useDragOverDetector'
 import useLessonAvatar from '../../../libs/hooks/lesson/useAvatar'
 import useLessonDrawing from '../../../libs/hooks/lesson/useDrawing'
-import useVoiceRecorder from '../../../libs/hooks/lesson/record/useVoiceRecorder'
+import useVoiceRecorder from '../../../libs/hooks/lesson/useVoiceRecorder'
 import LessonRecordHeader from './header'
 import LessonRecordLoadingIndicator from './loadingIndicator'
 import LessonRecordSettingPanel from './settingPanel'
@@ -20,6 +21,7 @@ import VoiceSpectrum from '../../voiceSpectrum'
 import { addPreventSwipeEvent, removePreventSwipeEvent } from '../../../libs/utils'
 
 const LessonRecord = React.forwardRef(function lessonRecord({ lesson, hasResize }, ref) {
+  const { isRecording, realElapsedTime } = useLessonRecorderContext()
   const [isLoading, setIsLoading] = useState(true)
   const [bgImageURL, setBgImageURL] = useState()
   const [selectedGraphic, setSelectedGraphic] = useState()
@@ -28,7 +30,7 @@ const LessonRecord = React.forwardRef(function lessonRecord({ lesson, hasResize 
   useLessonRecordChangeTabDetector()
   const { hasDragOver, handleAreaDragOver, handleAreaDragLeave, handleAreaDrop } = useDragOverDetector()
   const { bgImages, avatars, bgms } = useRecordResource(setBgImageURL)
-  const { isMicReady, isSpeaking, micDeviceID, setMicDeviceID, silenceThresholdSec, setSilenceThresholdSec } = useVoiceRecorder(lesson.id)
+  const { isMicReady, isSpeaking, micDeviceID, setMicDeviceID, silenceThresholdSec, setSilenceThresholdSec } = useVoiceRecorder({ lessonID: lesson.id, isRecording, realElapsedTime })
   const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useLessonAvatar(setIsLoading, isSpeaking, hasResize)
   const { isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth,
     startDrawing, inDrawing, endDrawing, drawingRef } = useLessonDrawing(hasResize, startDragging, inDragging, endDragging)

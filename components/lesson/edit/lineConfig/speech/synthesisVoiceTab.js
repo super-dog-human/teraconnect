@@ -26,7 +26,7 @@ export default function SynthesisVoiceTab({ config, setConfig, switchTab }) {
         </Container>
       </Flex>
       <Spacer height='18' />
-      <InputText defaultValue={config.subtitle} size='18' color='var(--soft-white)' borderWidth='0 0 1px' borderColor='var(--text-gray)' onBlur={setSubtitle} />
+      <InputText defaultValue={config.subtitle} key={config.subtitle} size='18' color='var(--soft-white)' borderWidth='0 0 1px' borderColor='var(--text-gray)' onBlur={setSubtitle} />
       <GridContainer>
         <Spacer height='40' />
         <Row>

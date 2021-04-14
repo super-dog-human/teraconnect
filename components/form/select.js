@@ -2,7 +2,7 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-const Select = React.forwardRef(({ options, topLabel, value, color='inherit', backgroundColor='inherit', onChange }, ref) => {
+const Select = React.forwardRef(({ options, topLabel, value, color='inherit', backgroundColor='inherit', disabled=false, onChange }, ref) => {
   const bodyStyle = css({
     width: '100%',
     height: '100%',
@@ -22,7 +22,7 @@ const Select = React.forwardRef(({ options, topLabel, value, color='inherit', ba
   })
 
   return (
-    <select ref={ref} css={bodyStyle} value={value} onChange={onChange}>
+    <select ref={ref} css={bodyStyle} value={value} disabled={disabled} onChange={onChange}>
       {topLabel && (
         <option label={ topLabel }></option>
       )}

@@ -16,6 +16,10 @@ export default function IconButton({ name, backgroundColor='inherit', color='inh
     ':hover': {
       filter: 'brightness(80%)',
     },
+    ':disabled': {
+      opacity: 0.3,
+      cursor: 'default',
+    },
   })
 
   return (

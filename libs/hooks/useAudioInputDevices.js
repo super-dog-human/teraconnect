@@ -3,6 +3,7 @@ import { useErrorDialogContext } from '../contexts/errorDialogContext'
 
 export default function useAudioInputDevices() {
   const [devices, setDevices] = useState([])
+  const [deviceOptions, setDeviceOptions] = useState([])
   const { showError } = useErrorDialogContext()
 
   function requestMicPermission() {
@@ -27,5 +28,17 @@ export default function useAudioInputDevices() {
     requestMicPermission()
   }, [])
 
-  return { devices, requestMicPermission }
+
+  useEffect(() => {
+    if (devices.length === 0) return
+
+    setDeviceOptions(devices.map(d => (
+      {
+        value: d.deviceId,
+        label: d.label,
+      }
+    )))
+  }, [devices])
+
+  return { deviceOptions, requestMicPermission }
 }

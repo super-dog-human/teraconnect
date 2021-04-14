@@ -20,7 +20,7 @@ export default function Speech({ lineIndex, kindIndex, initialConfig, closeCallb
 
   function handleConfirm() {
     setIsProcessing(true)
-    // 声を録音しててurlがfileならアップロードも必要
+    // 声を録音しててurlがdataURIならアップロードも必要
     if (!tabConfig.isSynthesis) {
       //      tabConfig.synthesisConfig = {} // 不要になった設定は空にする
       //      setTabConfig()

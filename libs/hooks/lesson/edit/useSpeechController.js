@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useLessonEditorContext } from '../../../contexts/lessonEditorContext'
 import useAudioPlayer from '../../useAudioPlayer'
 import useSynthesisVoice from './useSynthesisVoice'
@@ -7,7 +8,8 @@ import { useRouter } from 'next/router'
 
 export default function useSpeechController({ speech, lineIndex, kindIndex }) {
   const router = useRouter()
-  const { isLoading, setIsLoading, isPlaying, createAudio, switchAudio, audioRef } = useAudioPlayer()
+  const [isLoading, setIsLoading] = useState(false)
+  const { isPlaying, createAudio, switchAudio, audioRef } = useAudioPlayer()
   const { addSpeechLine, updateLine } = useLessonEditorContext()
   const { createSynthesisVoiceFile } = useSynthesisVoice()
 
