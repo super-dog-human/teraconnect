@@ -37,7 +37,7 @@ export default function useAudioPlayer() {
     durationTime.current = floatSecondsToMinutesFormat(audioRef.current.duration)
 
     setIsPlaying(true)
-    updateAudioElapsedtime()
+    updateAudioTimes()
   }
 
   function stop() {
@@ -45,13 +45,17 @@ export default function useAudioPlayer() {
     setIsPlaying(false)
   }
 
-  function updateAudioElapsedtime() {
+  function updateAudioTimes() {
     setAudioCurrent(audioRef.current.currentTime)
-    const time = floatSecondsToMinutesFormat(audioRef.current.currentTime) + ' / ' + durationTime.current
-    setAudioElapasedTime(time)
+    updateAudioElapsedtime()
 
     if (isStopped()) return
-    requestAnimationFrame(updateAudioElapsedtime)
+    requestAnimationFrame(updateAudioTimes)
+  }
+
+  function updateAudioElapsedtime() {
+    const time = floatSecondsToMinutesFormat(audioRef.current.currentTime) + ' / ' + durationTime.current
+    setAudioElapasedTime(time)
   }
 
   function seekAudio(toSeconds) {

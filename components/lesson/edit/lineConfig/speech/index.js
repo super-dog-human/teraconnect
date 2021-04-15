@@ -20,10 +20,11 @@ export default function Speech({ lineIndex, kindIndex, initialConfig, closeCallb
 
   function handleConfirm() {
     setIsProcessing(true)
-    // 声を録音しててurlがdataURIならアップロードも必要
+    // 声を録音しててurlがdataURIならmp3にしてアップロードも必要
+    // duationも更新されているので自身以降も更新する必要がある
     if (!tabConfig.isSynthesis) {
-      //      tabConfig.synthesisConfig = {} // 不要になった設定は空にする
-      //      setTabConfig()
+    //      tabConfig.synthesisConfig = {} // 不要になった設定は空にする
+    //      setTabConfig()
     }
     updateLine(lineIndex, kindIndex, 'speech', tabConfig)
     closeCallback()
