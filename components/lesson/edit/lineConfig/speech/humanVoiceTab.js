@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import Flex from '../../../../flex'
 import Container from '../../../../container'
 import ContainerSpacer from '../../../../containerSpacer'
@@ -11,51 +11,12 @@ import Spacer from '../../../../spacer'
 import InputRange from '../../../../form/inputRange'
 import Select from '../../../../form/select'
 import RecordingIcon from '../../../../recordingIcon'
+import PlayButton from './playButton'
 import { Container as GridContainer, Row, Col } from 'react-grid-system'
-import useAudioInputDevices from '../../../../../libs/hooks/useAudioInputDevices'
-import useVoiceRecorder from '../../../../../libs/hooks/lesson/useVoiceRecorder'
-import useAudioPlayer from '../../../../../libs/hooks/useAudioPlayer'
+import useSpeechVoice from '../../../../../libs/hooks/lesson/edit/useSpeechVoice'
 
 export default function HumanVoiceTab({ config, setConfig, switchTab }) {
-  const [isRecording, setIsRecording] = useState(false)
-  const  { deviceOptions, requestMicPermission } = useAudioInputDevices()
-  const { isMicReady, micDeviceID, setMicDeviceID, voiceFile } = useVoiceRecorder({ needsUpload: false, isRecording })
-  const { isPlaying, createAudio, switchAudio } = useAudioPlayer()
-
-  function handleRecording() {
-    setIsRecording(status => !status)
-  }
-
-  function handleMicChange(e) {
-    setMicDeviceID(e.target.value)
-  }
-
-  function handleAudioPlay() {
-    switchAudio()
-  }
-
-  useEffect(() => {
-    requestMicPermission()
-
-    if (config.url) createAudio(config.audio)
-  }, [])
-
-  useEffect(() => {
-    if (deviceOptions.length === 0) return
-
-    setMicDeviceID(deviceOptions[0].value)
-  }, [deviceOptions])
-
-  useEffect(() => {
-    if (!voiceFile) return
-
-    const url = URL.createObjectURL(voiceFile)
-    setConfig(config => {
-      config.url = url
-      return { ...config }
-    })
-    createAudio(url)
-  }, [voiceFile])
+  const { deviceOptions, audioElapsedTime, audioDuration, audioCurrent, isMicReady, isPlaying, isRecording, handleMicChange, handleAudioPlay, handleRecording, handleSeek } = useSpeechVoice(config, setConfig)
 
   return (
     <ContainerSpacer left='50' right='50'>
@@ -71,9 +32,11 @@ export default function HumanVoiceTab({ config, setConfig, switchTab }) {
           <Col md={11}>
             <Row>
               <Col md={11}>
-                <InputRange value='0' max='0' step='0.1'/>
+                <InputRange key={audioCurrent} defaultValue={audioCurrent} min='0' max={audioDuration} step='0.01' onChange={handleSeek} />
                 <AlignContainer textAlign='right'>
-                  <PlainText color='var(--soft-white)'>00:00 / 00:00</PlainText>
+                  <Container height='14'>
+                    <PlainText size='14' color='var(--soft-white)'>{audioElapsedTime}</PlainText>
+                  </Container>
                 </AlignContainer>
               </Col>
               <Col md={1}>
@@ -86,19 +49,19 @@ export default function HumanVoiceTab({ config, setConfig, switchTab }) {
           </Col>
           <Col md={1}>
             <Container width='35' height='35'>
-              <IconButton name='play' backgroundColor='var(--dark-gray)' borderColor='var(--border-dark-gray)' padding='10' onClick={handleAudioPlay} disabled={!config.url || isRecording} />
+              <PlayButton isPlaying={isPlaying} onClick={handleAudioPlay} disabled={!config.url || isRecording} />
             </Container>
           </Col>
         </Row>
         <Spacer height='30' />
         <Row>
           <Col md={11}>
-            <Select options={deviceOptions} topLabel={null} value={micDeviceID} color='var(--soft-white)' backgroundColor='var(--dark-gray)' disabled={isRecording} onChange={handleMicChange} />
+            <Select options={deviceOptions} topLabel={null} color='var(--soft-white)' backgroundColor='var(--dark-gray)' disabled={isRecording} onChange={handleMicChange} />
           </Col>
           <Col md={1}>
             <Container width='35' height='35'>
               <SVGButton backgroundColor='var(--dark-gray)' borderColor='var(--border-dark-gray)' padding='8' disabled={!isMicReady} onClick={handleRecording}>
-                <RecordingIcon />
+                <RecordingIcon isRecording={isRecording} />
               </SVGButton>
             </Container>
           </Col>

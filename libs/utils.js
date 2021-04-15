@@ -24,8 +24,8 @@ export function stringToUpperCamel(str) {
 }
 
 export function floatSecondsToMinutesFormat(elapsedSeconds) {
-  const minutes = Math.floor(elapsedSeconds / 60) % 60
-  const seconds = Math.floor(elapsedSeconds - minutes * 60)
+  const minutes = Math.floor(elapsedSeconds / 60) % 60      // 分は端数の秒が不要なので切り捨て
+  const seconds = Math.round(elapsedSeconds - minutes * 60) // 秒数は小数点以下を四捨五入
   return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
 }
 
