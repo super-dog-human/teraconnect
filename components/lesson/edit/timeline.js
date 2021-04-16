@@ -26,7 +26,7 @@ export default function Timeline() {
   return (
     <div css={bodyStyle}>
       <DropLine ref={dropLineRef} onDrop={handleChildDrop} />
-      <ContextMenu menuOption={menuOption} />
+      <ContextMenu {...menuOption} />
       <LineConfig config={lineConfig} />
       <DragSwappable onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd} onDrop={handleDrop}>
         {Object.keys(timeline).sort((a, b) => a - b).map((elapsedtime, i) => (

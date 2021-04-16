@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/core'
 
-export default function ContextMenu({ menuOption }) {
+export default function ContextMenu({ labels=[], actions=[], position={} }) {
   const[isShow, setIsShow] = useState(false)
 
   const bodyStyle = css({
@@ -17,8 +17,8 @@ export default function ContextMenu({ menuOption }) {
 
   const menuStyle = css({
     position: 'absolute',
-    top: menuOption.position?.y,
-    left: menuOption.position?.x,
+    top: position?.y,
+    left: position?.x,
     borderRadius: '5px',
     backgroundColor: 'var(--dark-gray)',
     paddingTop: '5px',
@@ -26,19 +26,19 @@ export default function ContextMenu({ menuOption }) {
   })
 
   useEffect(() => {
-    if (Object.keys(menuOption).length > 0) {
+    if (Object.keys(labels).length > 0) {
       setIsShow(true)
     } else {
       setIsShow(false)
     }
-  }, [menuOption])
+  }, [labels, actions, position])
 
   return (
     <>
       {isShow && <div css={bodyStyle} onClick={() => setIsShow(false)}>
         <div css={menuStyle}>
-          {menuOption.labels.length > 0 && menuOption.labels.map((label, i) =>
-            <div key={i} onClick={menuOption.actions[i]} css={menuTextStyle}>{label}</div>
+          {labels.length > 0 && labels.map((label, i) =>
+            <div key={i} onClick={actions[i]} css={menuTextStyle}>{label}</div>
           )}
         </div>
       </div>
