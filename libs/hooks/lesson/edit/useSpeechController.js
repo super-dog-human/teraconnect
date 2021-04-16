@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useLessonEditorContext } from '../../../contexts/lessonEditorContext'
 import useAudioPlayer from '../../useAudioPlayer'
-import useSynthesisVoice from './useSynthesisVoice'
+import useSynthesisVoice from '../../useSynthesisVoice'
 import { findNextElement } from '../../../utils'
 import { fetchWithAuth } from '../../../fetch'
 import { useRouter } from 'next/router'

@@ -33,7 +33,7 @@ export default function useAudioPlayer() {
 
   function play() {
     audioRef.current.play()
-    setAudioDuration(Math.floor(audioRef.current.duration * 100) / 100) // rangeのmaxで使用するがstepによっては最後までシークが届かず再生終了するので切り捨てる
+    setAudioDuration(Math.floor(audioRef.current.duration * 100) / 100) // rangeのmaxに使用されるがstepによっては最後までシークの●が届かないので切り捨てる
     durationTime.current = floatSecondsToMinutesFormat(audioRef.current.duration)
 
     setIsPlaying(true)
@@ -46,7 +46,7 @@ export default function useAudioPlayer() {
   }
 
   function updateAudioTimes() {
-    setAudioCurrent(audioRef.current.currentTime)
+    setAudioCurrent(audioRef.current.currentTime) // シークバーの●を動かすのに使用される
     updateAudioElapsedtime()
 
     if (isStopped()) return

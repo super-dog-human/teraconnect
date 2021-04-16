@@ -1,5 +1,5 @@
-import { useLessonEditorContext } from '../../../contexts/lessonEditorContext'
-import { post } from '../../../fetch'
+import { useLessonEditorContext } from '../contexts/lessonEditorContext'
+import { post } from '../fetch'
 
 export default function useSynthesisVoice() {
   const { voiceSynthesisConfig } = useLessonEditorContext()

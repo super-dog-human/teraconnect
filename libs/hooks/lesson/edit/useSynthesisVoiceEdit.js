@@ -1,40 +1,15 @@
 import { useState } from 'react'
-import useSynthesisVoice from './useSynthesisVoice'
+import useSynthesisVoice from '../../useSynthesisVoice'
 import useAudioPlayer from '../../useAudioPlayer'
 import { useRouter } from 'next/router'
+import { SYNTHESIS_VOICE_LANGUAGE_NAMES, SYNTHESIS_JAPANESE_VOICE_NAMES, SYNTHESIS_ENGLISH_VOICE_NAMES } from '../../../constants'
 
 export default function useSynthesisVoiceEdit(config, setConfig) {
-  const languageNames = [
-    { value: 'ja-JP', label: '日本語' },
-    { value: 'en-US', label: '英語' },
-  ]
-
-  const japaneseVoiceNames = [
-    { value: 'ja-JP-Wavenet-A', label: 'タイプA' },
-    { value: 'ja-JP-Wavenet-B', label: 'タイプB' },
-    { value: 'ja-JP-Wavenet-C', label: 'タイプC' },
-    { value: 'ja-JP-Wavenet-D', label: 'タイプD' },
-  ]
-
-  const englishVoiceNames = [
-    { value: 'en-US-Wavenet-A', label: 'タイプA' },
-    { value: 'en-US-Wavenet-B', label: 'タイプB' },
-    { value: 'en-US-Wavenet-C', label: 'タイプC' },
-    { value: 'en-US-Wavenet-D', label: 'タイプD' },
-    { value: 'en-US-Wavenet-E', label: 'タイプE' },
-    { value: 'en-US-Wavenet-F', label: 'タイプF' },
-    { value: 'en-US-Wavenet-G', label: 'タイプG' },
-    { value: 'en-US-Wavenet-H', label: 'タイプH' },
-    { value: 'en-US-Wavenet-I', label: 'タイプI' },
-    { value: 'en-US-Wavenet-J', label: 'タイプJ' },
-  ]
-
-  const [voiceNames, setVoiceNames] = useState(japaneseVoiceNames)
+  const [voiceNames, setVoiceNames] = useState(SYNTHESIS_JAPANESE_VOICE_NAMES)
   const [isSynthesing, setIsSynthesing] = useState(false)
   const router = useRouter()
   const { createSynthesisVoiceFile } = useSynthesisVoice()
   const { isPlaying, createAudio, switchAudio } = useAudioPlayer()
-
 
   function setSubtitle(e) {
     setConfig(config => {
@@ -46,15 +21,18 @@ export default function useSynthesisVoiceEdit(config, setConfig) {
 
   function setLanguageCode(e) {
     const languageCode = e.target.value
-
-    if (languageCode === languageNames[0].value) {
-      setVoiceNames(japaneseVoiceNames)
+    let newVoiceName // 言語を変更した際、声も選択肢の最初のものにリセットする
+    if (languageCode === SYNTHESIS_VOICE_LANGUAGE_NAMES[0].value) {
+      setVoiceNames(SYNTHESIS_JAPANESE_VOICE_NAMES)
+      newVoiceName = SYNTHESIS_JAPANESE_VOICE_NAMES[0].value
     } else {
-      setVoiceNames(englishVoiceNames)
+      setVoiceNames(SYNTHESIS_ENGLISH_VOICE_NAMES)
+      newVoiceName = SYNTHESIS_ENGLISH_VOICE_NAMES[0].value
     }
 
     setConfig(config => {
       config.synthesisConfig.languageCode = languageCode
+      config.synthesisConfig.name = newVoiceName
       config.url = ''
       return { ...config }
     })
@@ -118,5 +96,6 @@ export default function useSynthesisVoiceEdit(config, setConfig) {
     switchAudio()
   }
 
-  return { languageNames, voiceNames, setSubtitle, setLanguageCode, setName, setSpeakingRate, setPitch, setVolumeGainDb, playVoice, isSynthesing }
+  return { languageNames: SYNTHESIS_VOICE_LANGUAGE_NAMES, voiceNames, setSubtitle, setLanguageCode, setName,
+    setSpeakingRate, setPitch, setVolumeGainDb, playVoice, isSynthesing }
 }

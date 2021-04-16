@@ -14,8 +14,7 @@ import { Container as GridContainer, Row, Col } from 'react-grid-system'
 import useSynthesisVoiceEdit from '../../../../../libs/hooks/lesson/edit/useSynthesisVoiceEdit'
 
 export default function SynthesisVoiceTab({ config, setConfig, switchTab }) {
-  const { languageNames, voiceNames, setSubtitle, setLanguageCode, setName, setSpeakingRate, setPitch, setVolumeGainDb,
-    playVoice, isSynthesing } = useSynthesisVoiceEdit(config, setConfig)
+  const { languageNames, voiceNames, setSubtitle, setLanguageCode, setName, setSpeakingRate, setPitch, setVolumeGainDb, playVoice, isSynthesing } = useSynthesisVoiceEdit(config, setConfig)
 
   return (
     <ContainerSpacer left='50' right='50'>
