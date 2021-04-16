@@ -33,7 +33,8 @@ export default function useAudioPlayer() {
 
   function play() {
     audioRef.current.play()
-    setAudioDuration(Math.floor(audioRef.current.duration * 100) / 100) // rangeのmaxに使用されるがstepによっては最後までシークの●が届かないので切り捨てる
+    // audioDurationはrangeのmaxに使用されるが、stepが0.1だと四捨五入した値で最後までシークバーの●が届かない場合があるので切り捨てる
+    setAudioDuration(Math.floor(audioRef.current.duration * 10) / 10)
     durationTime.current = floatSecondsToMinutesFormat(audioRef.current.duration)
 
     setIsPlaying(true)
@@ -70,5 +71,5 @@ export default function useAudioPlayer() {
     }
   }, [])
 
-  return { isPlaying, createAudio, switchAudio, seekAudio, audioRef, audioElapsedTime, audioDuration, audioCurrent }
+  return { isPlaying, createAudio, switchAudio, seekAudio, audioElapsedTime, audioDuration, audioCurrent }
 }

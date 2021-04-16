@@ -4,9 +4,9 @@ import useAudioPlayer from '../../useAudioPlayer'
 import { useRouter } from 'next/router'
 import { SYNTHESIS_VOICE_LANGUAGE_NAMES, SYNTHESIS_JAPANESE_VOICE_NAMES, SYNTHESIS_ENGLISH_VOICE_NAMES } from '../../../constants'
 
-export default function useSynthesisVoiceEdit(config, setConfig) {
+export default function useSynthesisVoiceEditor(config, setConfig) {
   const [voiceNames, setVoiceNames] = useState(SYNTHESIS_JAPANESE_VOICE_NAMES)
-  const [isSynthesing, setIsSynthesing] = useState(false)
+  const [isSynthesizing, setIsSynthesizing] = useState(false)
   const router = useRouter()
   const { createSynthesisVoiceFile } = useSynthesisVoice()
   const { isPlaying, createAudio, switchAudio } = useAudioPlayer()
@@ -79,7 +79,7 @@ export default function useSynthesisVoiceEdit(config, setConfig) {
     if (config.url) {
       createAudio(config.url)
     } else {
-      setIsSynthesing(true)
+      setIsSynthesizing(true)
 
       const lessonID = parseInt(router.query.id)
       const voice = await createSynthesisVoiceFile(lessonID, config)
@@ -90,12 +90,12 @@ export default function useSynthesisVoiceEdit(config, setConfig) {
       })
       createAudio(voice.url)
 
-      setIsSynthesing(false)
+      setIsSynthesizing(false)
     }
 
     switchAudio()
   }
 
   return { languageNames: SYNTHESIS_VOICE_LANGUAGE_NAMES, voiceNames, setSubtitle, setLanguageCode, setName,
-    setSpeakingRate, setPitch, setVolumeGainDb, playVoice, isSynthesing }
+    setSpeakingRate, setPitch, setVolumeGainDb, playVoice, isSynthesizing }
 }

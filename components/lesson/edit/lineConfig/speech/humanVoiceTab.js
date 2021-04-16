@@ -13,10 +13,10 @@ import Select from '../../../../form/select'
 import RecordingIcon from '../../../../recordingIcon'
 import PlayButton from './playButton'
 import { Container as GridContainer, Row, Col } from 'react-grid-system'
-import useSpeechVoice from '../../../../../libs/hooks/lesson/edit/useSpeechVoice'
+import useHumanVoice from '../../../../../libs/hooks/lesson/edit/useHumanVoice'
 
 export default function HumanVoiceTab({ config, setConfig, switchTab }) {
-  const { deviceOptions, audioElapsedTime, audioDuration, audioCurrent, isMicReady, isPlaying, isRecording, handleMicChange, handleAudioPlay, handleRecording, handleSeek } = useSpeechVoice(config, setConfig)
+  const { deviceOptions, audioElapsedTime, audioDuration, audioCurrent, isMicReady, isPlaying, isRecording, handleMicChange, handleAudioPlay, handleRecording, handleSeek } = useHumanVoice(config, setConfig)
 
   return (
     <ContainerSpacer left='50' right='50'>

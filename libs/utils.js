@@ -93,3 +93,7 @@ export function inRange(left, right, value) {
   const max = Math.max(left, right)
   return min <= value && max >= value
 }
+
+export function isObjectURL(url) {
+  return url.startsWith('blob:')
+}

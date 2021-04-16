@@ -1,4 +1,4 @@
-export default function useSpeechTextEdit(setConfig) {
+export default function useSpeechTextEditor(setConfig) {
   function setSubtitle(e) {
     setConfig(config => {
       config.subtitle = e.target.value

@@ -11,10 +11,10 @@ import InputRange from '../../../../form/inputRange'
 import Select from '../../../../form/select'
 import InputText from '../../../../form/inputText'
 import { Container as GridContainer, Row, Col } from 'react-grid-system'
-import useSynthesisVoiceEdit from '../../../../../libs/hooks/lesson/edit/useSynthesisVoiceEdit'
+import useSynthesisVoiceEditor from '../../../../../libs/hooks/lesson/edit/useSynthesisVoiceEditor'
 
 export default function SynthesisVoiceTab({ config, setConfig, switchTab }) {
-  const { languageNames, voiceNames, setSubtitle, setLanguageCode, setName, setSpeakingRate, setPitch, setVolumeGainDb, playVoice, isSynthesing } = useSynthesisVoiceEdit(config, setConfig)
+  const { languageNames, voiceNames, setSubtitle, setLanguageCode, setName, setSpeakingRate, setPitch, setVolumeGainDb, playVoice, isSynthesizing } = useSynthesisVoiceEditor(config, setConfig)
 
   return (
     <ContainerSpacer left='50' right='50'>
@@ -38,7 +38,7 @@ export default function SynthesisVoiceTab({ config, setConfig, switchTab }) {
           <Col md={3}></Col>
           <Col md={1}>
             <Container width='35' height='35'>
-              <IconButton name='play' backgroundColor='var(--dark-gray)' borderColor='var(--border-dark-gray)' padding='10' onClick={playVoice} isProcessing={isSynthesing} />
+              <IconButton name='play' backgroundColor='var(--dark-gray)' borderColor='var(--border-dark-gray)' padding='10' onClick={playVoice} isProcessing={isSynthesizing} />
             </Container>
           </Col>
         </Row>

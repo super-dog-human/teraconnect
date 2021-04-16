@@ -4,8 +4,9 @@ import useVoiceRecorder from '../useVoiceRecorder'
 import useAudioPlayer from '../../useAudioPlayer'
 import { useRouter } from 'next/router'
 import { fetchWithAuth } from '../../../fetch'
+import { isObjectURL } from '../../../utils'
 
-export default function useSpeechVoice(config, setConfig) {
+export default function useHumanVoice(config, setConfig) {
   const router = useRouter()
   const [audioURL, setAudioURL] = useState('')
   const [isRecording, setIsRecording] = useState(false)
@@ -55,19 +56,24 @@ export default function useSpeechVoice(config, setConfig) {
   }, [deviceOptions])
 
   useEffect(() => {
-    createAudio(audioURL)
-    setConfig(config => {
-      config.url = audioURL
-      return { ...config }
-    })
-  }, [audioURL])
-
-  useEffect(() => {
     if (!voiceFile) return
 
     const url = URL.createObjectURL(voiceFile)
     setAudioURL(url)
   }, [voiceFile])
+
+  useEffect(() => {
+    createAudio(audioURL)
+
+    setConfig(config => {
+      if (config.url && isObjectURL(config.url)) {
+        URL.revokeObjectURL(config.url)
+      }
+
+      config.url = audioURL
+      return { ...config }
+    })
+  }, [audioURL])
 
   return { deviceOptions, audioElapsedTime, audioDuration, audioCurrent, isMicReady, isPlaying, isRecording, handleMicChange, handleAudioPlay, handleRecording, handleSeek }
 }

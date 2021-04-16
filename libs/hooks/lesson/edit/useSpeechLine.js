@@ -6,17 +6,19 @@ import { findNextElement } from '../../../utils'
 import { fetchWithAuth } from '../../../fetch'
 import { useRouter } from 'next/router'
 
-export default function useSpeechController({ speech, lineIndex, kindIndex }) {
+export default function useSpeechLine({ speech, lineIndex, kindIndex }) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
-  const { isPlaying, createAudio, switchAudio, audioRef } = useAudioPlayer()
+  const { isPlaying, createAudio, switchAudio } = useAudioPlayer()
   const { addSpeechLine, updateLine } = useLessonEditorContext()
   const { createSynthesisVoiceFile } = useSynthesisVoice()
 
   async function handleSpeechClick(text) {
-    setIsLoading(true)
-    await setAudioIfNeeded(text)
-    setIsLoading(false)
+    if (!isPlaying) {
+      setIsLoading(true)
+      await setAudioIfNeeded(text)
+      setIsLoading(false)
+    }
     switchAudio()
   }
 
@@ -32,8 +34,8 @@ export default function useSpeechController({ speech, lineIndex, kindIndex }) {
     const lessonID = parseInt(router.query.id)
 
     if (speech.url) {
-      if (!audioRef.current) createAudio(speech.url)
-    } else if (speech.isSynthesis && speech.text) {
+      createAudio(speech.url)
+    } else if (speech.isSynthesis && text) {
       speech.subtitle = text
       const voice = await createSynthesisVoiceFile(lessonID, speech)
       createAudio(voice.url)
@@ -54,7 +56,7 @@ export default function useSpeechController({ speech, lineIndex, kindIndex }) {
     if (e.keyCode != 13) return // Enter以外のキーや、Enterでも日本語の確定でキーを押下した場合はスキップ
 
     let current = e.target.parentNode
-    while(current.parentNode != null && current.parentNode != document.documentElement) {
+    while (current.parentNode != null && current.parentNode != document.documentElement) {
       if (current.draggable) break
       current = current.parentNode
     }
@@ -73,6 +75,8 @@ export default function useSpeechController({ speech, lineIndex, kindIndex }) {
     if (text === speech.subtitle) return
 
     speech.subtitle = text
+    if (speech.isSynthesis) speech.url = ''
+
     updateLine(lineIndex, kindIndex, 'speech', { ...speech })
   }
 

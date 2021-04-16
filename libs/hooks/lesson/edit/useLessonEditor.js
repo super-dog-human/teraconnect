@@ -171,6 +171,7 @@ export default function useLessonEditor() {
       const elapsedTime = sortedElapsedtimes(timeline)[lineIndex]
       timeline[elapsedTime][kind][kindIndex] = value
       return { ...timeline }
+      // durationが増減したなら自身以降のものも更新する必要がある
     })
 
     // TODO kindに応じて各stateも更新する(影響を受けた他kindも)

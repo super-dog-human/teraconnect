@@ -2,10 +2,10 @@ import React, { useRef, useState, useEffect } from 'react'
 import LessonEditSpeechButton from './speechButton'
 import LessonEditSpeechInputText from './speechInputText'
 import EditIcon from './editIcon'
-import useSpeechController from '../../../../libs/hooks/lesson/edit/useSpeechController'
+import useSpeechLine from '../../../../libs/hooks/lesson/edit/useSpeechLine'
 
 export default function LessonLineSpeech({ speech, lineIndex, kindIndex, isEditButtonShow, handleEditClick }) {
-  const { isLoading, isPlaying, handleSpeechClick, handleInputKeyDown, handleTextBlur } = useSpeechController({ speech, lineIndex, kindIndex })
+  const { isLoading, isPlaying, handleSpeechClick, handleInputKeyDown, handleTextBlur } = useSpeechLine({ speech, lineIndex, kindIndex })
   const inputRef = useRef()
   const [status, setStatus] = useState(true)
 
