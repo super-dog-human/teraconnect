@@ -11,8 +11,8 @@ export default function useLineConfig() {
   function handleEditButtonClick(e, kind, lineIndex, kindIndex, line) {
     if (kind === 'speech') {
       setMenuOption({
-        labels: ['編集', '分割', '行の追加', '削除'],
-        actions: [editLine, separeteSpeech, addNewLine, deleteCurrentLine],
+        labels: ['編集', '行の追加', '削除'],
+        actions: [editLine, addNewLine, deleteCurrentLine],
         position: { x: e.clientX, y: e.clientY },
       })
     } else {
@@ -26,12 +26,6 @@ export default function useLineConfig() {
     function editLine() {
       setLineConfig({
         action: 'config', kind, line, lineIndex, kindIndex, closeCallback
-      })
-    }
-
-    function separeteSpeech() {
-      setLineConfig({
-        action: 'separate', kind: 'speech', line, lineIndex, kindIndex, closeCallback
       })
     }
 
