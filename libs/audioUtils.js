@@ -1,6 +1,8 @@
 const numChannels = 1
+const lamejs = require('lamejs')
+import fetch from 'isomorphic-unfetch'
 
-export default function bufferToWavFile({ buffers, sampleRate }) {
+export function bufferToWavFile({ buffers, sampleRate }) {
   const mergedBuffers = mergeBuffers(buffers)
   const dataview = encodeWAV(mergedBuffers, sampleRate)
   return new Blob([dataview], { type: 'audio/wav' })
@@ -57,4 +59,34 @@ export default function bufferToWavFile({ buffers, sampleRate }) {
       output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7fff, true)
     }
   }
+}
+
+export async function wavURLToMp3(url) {
+  const response = await fetch(url)
+  const audioBuffer = await response.arrayBuffer()
+
+  const wav = lamejs.WavHeader.readHeader(new DataView(audioBuffer))
+  const samples = new Int16Array(audioBuffer, wav.dataOffset, wav.dataLen / 2)
+
+  const bitRate = 128
+  const numChannels = wav.channels
+  const sampleRate = wav.sampleRate
+  const mp3encoder = new lamejs.Mp3Encoder(numChannels, sampleRate, bitRate)
+
+  const mp3Data = []
+  const encodeBlockSize = 1152
+  for (var i = 0; i < samples.length; i += encodeBlockSize) {
+    const sampleChunk = samples.subarray(i, i + encodeBlockSize)
+    const mp3buf = mp3encoder.encodeBuffer(sampleChunk)
+    if (mp3buf.length > 0) {
+      mp3Data.push(mp3buf)
+    }
+  }
+
+  const mp3buf = mp3encoder.flush()
+  if (mp3buf.length > 0) {
+    mp3Data.push(mp3buf)
+  }
+
+  return new Blob(mp3Data, { type: 'audio/mpeg' })
 }

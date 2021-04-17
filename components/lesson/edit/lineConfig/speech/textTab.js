@@ -13,11 +13,11 @@ export default function TextTab({ config, setConfig }) {
 
   return (
     <ContainerSpacer top='30' left='50' right='50'>
-      <PlainText size='13' color='var(--soft-white)'>字幕</PlainText>
+      <PlainText size='13' color='var(--border-gray)'>字幕</PlainText>
       <Spacer height='13' />
       <SpeechInputText defaultValue={config.subtitle} onBlur={setSubtitle} />
       <Spacer height='50' />
-      <PlainText size='13' color='var(--soft-white)'>テロップ</PlainText>
+      <PlainText size='13' color='var(--border-gray)'>テロップ</PlainText>
       <Spacer height='13' />
       <SpeechInputText defaultValue={config.caption?.body} onBlur={setBody} />
       <ContainerSpacer top='10' left='20'>

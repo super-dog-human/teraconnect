@@ -22,9 +22,9 @@ export default function LessonLineSpeech({ speech, lineIndex, kindIndex, isEditB
   }
 
   useEffect(() => {
-    if (speech.isSynthesis && speech.subtitle?.length > 0) {
+    if (speech.isSynthesis && speech.subtitle) {
       setStatus(true)
-    } else if(!speech.isSynthesis && speech.voiceID) {
+    } else if(!speech.isSynthesis) {
       setStatus(true)
     } else {
       setStatus(false)

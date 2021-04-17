@@ -3,14 +3,19 @@ import { floatSecondsToMinutesFormat } from '../utils'
 
 export default function useAudioPlayer() {
   const audioRef = useRef()
-  const durationTime = useRef('')
+  const durationDisplayTime = useRef('')
   const [audioDuration, setAudioDuration] = useState(0)
   const [audioCurrent, setAudioCurrent] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
   const [audioElapsedTime, setAudioElapasedTime] = useState('')
 
-  function createAudio(voiceURL) {
+  function createAudio(voiceURL, onloadedCallback) {
     const audio = new Audio(voiceURL)
+    audio.onloadedmetadata = () => {
+      if (onloadedCallback) onloadedCallback(audio)
+      setAudioDuration(parseFloat(audio.duration.toFixed(3)))
+      durationDisplayTime.current = floatSecondsToMinutesFormat(audio.duration)
+    }
     audio.onended = () => {
       updateAudioElapsedtime() // タイミングによっては表示秒数が不足したまま再生終了になるので最後に更新する
       stop()
@@ -33,10 +38,6 @@ export default function useAudioPlayer() {
 
   function play() {
     audioRef.current.play()
-    // audioDurationはrangeのmaxに使用されるが、stepが0.1だと四捨五入した値で最後までシークバーの●が届かない場合があるので切り捨てる
-    setAudioDuration(Math.floor(audioRef.current.duration * 10) / 10)
-    durationTime.current = floatSecondsToMinutesFormat(audioRef.current.duration)
-
     setIsPlaying(true)
     updateAudioTimes()
   }
@@ -55,7 +56,7 @@ export default function useAudioPlayer() {
   }
 
   function updateAudioElapsedtime() {
-    const time = floatSecondsToMinutesFormat(audioRef.current.currentTime) + ' / ' + durationTime.current
+    const time = floatSecondsToMinutesFormat(audioRef.current.currentTime) + ' / ' + durationDisplayTime.current
     setAudioElapasedTime(time)
   }
 

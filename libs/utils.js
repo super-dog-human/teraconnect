@@ -94,6 +94,6 @@ export function inRange(left, right, value) {
   return min <= value && max >= value
 }
 
-export function isObjectURL(url) {
+export function isBlobURL(url) {
   return url.startsWith('blob:')
 }

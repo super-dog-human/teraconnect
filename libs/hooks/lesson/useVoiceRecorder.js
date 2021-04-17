@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import useMicrophone from '../useMicrophone'
 import { fetchToken } from '../../fetch'
-import bufferToWavFile from '../../bufferToWavFile'
+import { bufferToWavFile }  from '../../audioUtils'
 
 export default function useVoiceRecorder({ needsUpload=true, lessonID, isRecording, realElapsedTime }) {
   const recorderRef = useRef()

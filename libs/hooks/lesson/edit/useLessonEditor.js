@@ -110,11 +110,11 @@ export default function useLessonEditor() {
       if (newElapsedtime > 600.0) return timeline
 
       const newSpeech = {
-        voiceID: null,
+        voiceID: '',
         durationSec: 10.0,
         subtitle: '',
         caption: {},
-        url: null,
+        url: '',
         isSynthesis: !lessonRef.current.needsRecording,
         synthesisConfig: {},
       }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Tab, TabList, Tabs, TabPanel, resetIdCounter } from 'react-tabs'
 import TabListWithCloseButton from '../../../../tab/tabListWithCloseButton'
 import TabContainer from '../../../../tab/tabContainer'
@@ -9,33 +9,11 @@ import DragHandler from '../../../../dragHandler'
 import VoiceTab from './voiceTab'
 import TextTab from './textTab'
 import DialogFooter from '../configDialog/dialogFooter'
-import { useLessonEditorContext } from '../../../../../libs/contexts/lessonEditorContext'
-import { isObjectURL } from '../../../../../libs/utils'
+import useSpeechConfig from '../../../../../libs/hooks/lesson/edit/useSpeechConfig'
 import 'react-tabs/style/react-tabs.css'
 
-export default function Speech({ lineIndex, kindIndex, initialConfig, closeCallback }) {
-  // propsをタブの初期値としてstateにコピーし、確定時にコピー元を更新する
-  const [tabConfig, setTabConfig] = useState({ ...initialConfig, caption: { ...initialConfig.caption } })
-  const [isProcessing, setIsProcessing] = useState(false)
-  const { updateLine } = useLessonEditorContext()
-
-  function handleConfirm() {
-    setIsProcessing(true)
-    console.log(isObjectURL(tabConfig.url))
-    // 声を録音しててurlがdataURIならmp3にしてアップロードも必要
-    // duationも更新されているので自身以降も更新する必要がある
-    if (!tabConfig.isSynthesis) {
-    //      tabConfig.synthesisConfig = {} // 不要になった設定は空にする
-    //      setTabConfig()
-    }
-    updateLine(lineIndex, kindIndex, 'speech', tabConfig)
-    closeCallback()
-    setIsProcessing(false)
-  }
-
-  function handleClose() {
-    closeCallback()
-  }
+export default function Speech(props) {
+  const { isProcessing, tabConfig, setTabConfig, handleConfirm, handleClose } = useSpeechConfig(props)
 
   resetIdCounter()
 

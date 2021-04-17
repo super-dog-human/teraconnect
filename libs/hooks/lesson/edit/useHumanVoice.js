@@ -4,11 +4,12 @@ import useVoiceRecorder from '../useVoiceRecorder'
 import useAudioPlayer from '../../useAudioPlayer'
 import { useRouter } from 'next/router'
 import { fetchWithAuth } from '../../../fetch'
-import { isObjectURL } from '../../../utils'
+import { isBlobURL } from '../../../utils'
 
 export default function useHumanVoice(config, setConfig) {
   const router = useRouter()
   const [audioURL, setAudioURL] = useState('')
+  const [audioMax, setAudioMax] = useState(0)
   const [isRecording, setIsRecording] = useState(false)
   const { deviceOptions, requestMicPermission } = useAudioInputDevices()
   const { isMicReady, setMicDeviceID, voiceFile } = useVoiceRecorder({ needsUpload: false, isRecording })
@@ -63,10 +64,15 @@ export default function useHumanVoice(config, setConfig) {
   }, [voiceFile])
 
   useEffect(() => {
+    // audioMaxはrangeのmaxに使用されるが、stepが0.1だと四捨五入した値で最後までシークバーの●が届かない場合があるので切り捨てる
+    setAudioMax(Math.floor(audioDuration * 10) / 10)
+  }, [audioDuration])
+
+  useEffect(() => {
     createAudio(audioURL)
 
     setConfig(config => {
-      if (config.url && isObjectURL(config.url)) {
+      if (config.url && isBlobURL(config.url)) {
         URL.revokeObjectURL(config.url)
       }
 
@@ -75,5 +81,5 @@ export default function useHumanVoice(config, setConfig) {
     })
   }, [audioURL])
 
-  return { deviceOptions, audioElapsedTime, audioDuration, audioCurrent, isMicReady, isPlaying, isRecording, handleMicChange, handleAudioPlay, handleRecording, handleSeek }
+  return { deviceOptions, audioElapsedTime, audioMax, audioCurrent, isMicReady, isPlaying, isRecording, handleMicChange, handleAudioPlay, handleRecording, handleSeek }
 }

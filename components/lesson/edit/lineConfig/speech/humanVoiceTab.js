@@ -16,7 +16,7 @@ import { Container as GridContainer, Row, Col } from 'react-grid-system'
 import useHumanVoice from '../../../../../libs/hooks/lesson/edit/useHumanVoice'
 
 export default function HumanVoiceTab({ config, setConfig, switchTab }) {
-  const { deviceOptions, audioElapsedTime, audioDuration, audioCurrent, isMicReady, isPlaying, isRecording, handleMicChange, handleAudioPlay, handleRecording, handleSeek } = useHumanVoice(config, setConfig)
+  const { deviceOptions, audioElapsedTime, audioMax, audioCurrent, isMicReady, isPlaying, isRecording, handleMicChange, handleAudioPlay, handleRecording, handleSeek } = useHumanVoice(config, setConfig)
 
   return (
     <ContainerSpacer left='50' right='50'>
@@ -32,7 +32,7 @@ export default function HumanVoiceTab({ config, setConfig, switchTab }) {
           <Col md={11}>
             <Row>
               <Col md={11}>
-                <InputRange key={audioCurrent} defaultValue={audioCurrent} min='0' max={audioDuration} step='0.01' disabled={isRecording} onChange={handleSeek} />
+                <InputRange key={audioCurrent} defaultValue={audioCurrent} min='0' max={audioMax} step='0.01' disabled={isRecording} onChange={handleSeek} />
                 <AlignContainer textAlign='right'>
                   <Container height='14'>
                     <PlainText size='14' color='var(--soft-white)'>{audioElapsedTime}</PlainText>
