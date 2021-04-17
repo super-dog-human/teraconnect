@@ -23,7 +23,7 @@ export default function Speech(props) {
         <Tabs forceRenderTabPanel={true}>
           <DragHandler>
             <TabList>
-              <TabListWithCloseButton onClose={handleClose} color='var(--soft-white)'>
+              <TabListWithCloseButton onClose={handleClose} color='var(--soft-white)' disabled={isProcessing}>
                 <Tab><AlignContainer textAlign='center'>字幕・テロップ</AlignContainer></Tab>
                 <Tab><AlignContainer textAlign='center'>音声</AlignContainer></Tab>
               </TabListWithCloseButton>

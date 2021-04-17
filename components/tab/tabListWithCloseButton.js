@@ -4,7 +4,7 @@ import Container from '../container'
 import IconButton from '../button/iconButton'
 import { css } from '@emotion/core'
 
-export default function TabListWithCloseButton({ onClose, color, children }) {
+export default function TabListWithCloseButton({ onClose, color, disabled, children }) {
   const tabListStyle = css({
     '.react-tabs__tab': {
       border: 'none',
@@ -33,7 +33,7 @@ export default function TabListWithCloseButton({ onClose, color, children }) {
     <div css={tabListStyle}>
       {children}
       <Container width='36' height='36' display='inline-block'>
-        <IconButton name={'close'} padding='10' onClick={onClose} backgroundColor='var(--dark-gray)' borderColor='var(--dark-gray)' />
+        <IconButton name={'close'} padding='10' onClick={onClose} backgroundColor='var(--dark-gray)' borderColor='var(--dark-gray)' disabled={disabled} />
       </Container>
     </div>
   )
