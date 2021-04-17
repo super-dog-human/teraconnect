@@ -69,6 +69,8 @@ export default function useHumanVoice(config, setConfig) {
   }, [audioDuration])
 
   useEffect(() => {
+    if (!audioURL) return
+
     createAudio(audioURL)
 
     setConfig(config => {
