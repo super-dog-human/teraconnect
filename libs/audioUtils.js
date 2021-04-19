@@ -1,6 +1,5 @@
 const numChannels = 1
 const lamejs = require('lamejs')
-import fetch from 'isomorphic-unfetch'
 
 export function bufferToWavFile({ buffers, sampleRate }) {
   const mergedBuffers = mergeBuffers(buffers)
@@ -61,10 +60,8 @@ export function bufferToWavFile({ buffers, sampleRate }) {
   }
 }
 
-export async function wavURLToMp3(url) {
-  const response = await fetch(url)
-  const audioBuffer = await response.arrayBuffer()
-
+export async function wavToMp3(file) {
+  const audioBuffer = await file.arrayBuffer()
   const wav = lamejs.WavHeader.readHeader(new DataView(audioBuffer))
   const samples = new Int16Array(audioBuffer, wav.dataOffset, wav.dataLen / 2)
 

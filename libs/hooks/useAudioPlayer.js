@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 import { floatSecondsToMinutesFormat } from '../utils'
+import { isBlobURL } from '../utils'
 
 export default function useAudioPlayer() {
   const audioRef = useRef()
@@ -10,8 +11,11 @@ export default function useAudioPlayer() {
   const [audioElapsedTime, setAudioElapasedTime] = useState('')
 
   function createAudio(voiceURL, onloadedCallback) {
+    cleanupIfNeeded()
+
     const audio = new Audio(voiceURL)
     audio.onloadedmetadata = () => {
+      console.log(audio.src)
       if (onloadedCallback) onloadedCallback(audio)
       setAudioDuration(parseFloat(audio.duration.toFixed(3)))
       durationDisplayTime.current = floatSecondsToMinutesFormat(audio.duration)
@@ -21,6 +25,13 @@ export default function useAudioPlayer() {
       stop()
     }
     audioRef.current = audio
+
+    function cleanupIfNeeded() {
+      if (!audioRef.current) return
+      if (isPlaying) stop()
+      if (!isBlobURL(audioRef.current.src)) return
+      URL.revokeObjectURL(audioRef.current.src)
+    }
   }
 
   function switchAudio() {

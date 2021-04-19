@@ -1,4 +1,4 @@
-import { fetchWithAuth } from './fetch'
+import { fetchWithAuth, post } from './fetch'
 
 export function fetchVoiceFileURL(voiceID, lessonID) {
   return fetchWithAuth(`/voices/${voiceID}?lesson_id=${lessonID}`)
@@ -6,4 +6,8 @@ export function fetchVoiceFileURL(voiceID, lessonID) {
     .catch(e  => {
       console.error(e)
     })
+}
+
+export async function createVoice(elapsedtime, durationSec, lessonID) {
+  return await post('/voice', { elapsedtime, durationSec, lessonID })
 }

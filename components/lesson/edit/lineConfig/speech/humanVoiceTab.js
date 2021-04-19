@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import Flex from '../../../../flex'
 import Container from '../../../../container'
 import ContainerSpacer from '../../../../containerSpacer'
@@ -8,18 +8,27 @@ import FlipIconButton from '../../../../button/flipIconButton'
 import IconButton from '../../../../button/iconButton'
 import SVGButton from '../../../../button/svgButton'
 import Spacer from '../../../../spacer'
+import InputFile from '../../../../form/inputFile'
 import InputRange from '../../../../form/inputRange'
 import Select from '../../../../form/select'
 import RecordingIcon from '../../../../recordingIcon'
 import PlayButton from './playButton'
+import ContextMenu from '../../../../contextMenu'
 import { Container as GridContainer, Row, Col } from 'react-grid-system'
-import useHumanVoice from '../../../../../libs/hooks/lesson/edit/useHumanVoice'
+import useHumanVoicePlayer from '../../../../../libs/hooks/lesson/edit/useHumanVoicePlayer'
+import useHumanVoiceRecorder from '../../../../../libs/hooks/lesson/edit/useHumanVoiceRecorder'
+import useHumanVoiceFileController from '../../../../../libs/hooks/lesson/edit/useHumanVoiceFileController'
 
 export default function HumanVoiceTab({ config, setConfig, switchTab }) {
-  const { deviceOptions, audioElapsedTime, audioMax, audioCurrent, isMicReady, isPlaying, isRecording, handleMicChange, handleAudioPlay, handleRecording, handleSeek } = useHumanVoice(config, setConfig)
+  const inputFileRef = useRef(null)
+  const { audioElapsedTime, audioMax, audioCurrent, isPlaying, handlePlay, handleSeek } = useHumanVoicePlayer(config)
+  const { deviceOptions, isMicReady, isRecording, handleMicChange, handleRecording } = useHumanVoiceRecorder(config, setConfig)
+  const { contextMenu, handleMoreButtonClick, handleFileChange } = useHumanVoiceFileController(config, setConfig, inputFileRef)
 
   return (
     <ContainerSpacer left='50' right='50'>
+      <ContextMenu {...contextMenu} />
+      <InputFile accept='audio/mpeg' onChange={handleFileChange} ref={inputFileRef} />
       <Spacer height='10' />
       <Flex justifyContent='flex-end'>
         <Container width='30' height='30'>
@@ -42,14 +51,14 @@ export default function HumanVoiceTab({ config, setConfig, switchTab }) {
               <Col md={1}>
                 <Spacer width='10' />
                 <Container width='20'>
-                  <IconButton name='more' backgroundColor='var(--dark-gray)' borderColor='var(--dark-gray)' />
+                  <IconButton name='more' backgroundColor='var(--dark-gray)' borderColor='var(--dark-gray)' onClick={handleMoreButtonClick} />
                 </Container>
               </Col>
             </Row>
           </Col>
           <Col md={1}>
             <Container width='35' height='35'>
-              <PlayButton isPlaying={isPlaying} onClick={handleAudioPlay} disabled={!config.url || isRecording} />
+              <PlayButton isPlaying={isPlaying} onClick={handlePlay} disabled={!config.url || isRecording} />
             </Container>
           </Col>
         </Row>

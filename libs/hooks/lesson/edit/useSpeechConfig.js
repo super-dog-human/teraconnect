@@ -1,17 +1,18 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useLessonEditorContext } from '../../../contexts/lessonEditorContext'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 import useSynthesisVoice from '../../useSynthesisVoice'
 import useAudioPlayer from '../../useAudioPlayer'
 import { isBlobURL } from '../../../utils'
-import { post, putFile } from '../../../fetch'
-import { fetchVoiceFileURL } from '../../../fetchResource'
-import { wavURLToMp3 } from '../../../audioUtils'
+import fetch from 'isomorphic-unfetch'
+import { putFile } from '../../../fetch'
+import { fetchVoiceFileURL, createVoice } from '../../../fetchResource'
+import { wavToMp3 } from '../../../audioUtils'
 
 export default function useSpeechConfig({ lineIndex, kindIndex, initialConfig, closeCallback }) {
   const router = useRouter()
-  const lessonIDRef = useRef()
+  const lessonIDRef = useRef(parseInt(router.query.id))
   const { showError } = useErrorDialogContext()
   // propsをタブの初期値としてstateにコピーし、確定時にコピー元を更新する
   const [tabConfig, setTabConfig] = useState({ ...initialConfig, caption: { ...initialConfig.caption } })
@@ -65,7 +66,7 @@ export default function useSpeechConfig({ lineIndex, kindIndex, initialConfig, c
 
   function updateSpeechWithAudio(config) {
     // 音声の長さは読み込まないと分からないので以後の処理はコールバックになる
-    createAudio(config.url, async (audio) => {
+    createAudio(config.url, async audio => {
       audioCallback(audio).catch(e => {
         showError({
           message: '音声データの変換に失敗しました。',
@@ -84,6 +85,7 @@ export default function useSpeechConfig({ lineIndex, kindIndex, initialConfig, c
 
       if (isBlobURL(config.url)) {
         const voice = await createHumanVoice(config.url, config.elapsedtime, config.durationSec)
+        URL.revokeObjectURL(config.url)
         config.url = ''
         config.voiceID = parseInt(voice.fileID)
       }
@@ -93,25 +95,18 @@ export default function useSpeechConfig({ lineIndex, kindIndex, initialConfig, c
       closeCallback()
     }
 
-    async function createHumanVoice(objectURL, elapsedtime, durationSec) {
-      const mp3File = await wavURLToMp3(objectURL)
-      const voice = await createVoice(elapsedtime, durationSec)
+    async function createHumanVoice(blobURL, elapsedtime, durationSec) {
+      const file = await fetch(blobURL)
+      const mp3File = (file.type === 'audio/mpeg') ? file : await wavToMp3(file)
+      const voice = await createVoice(elapsedtime, durationSec, lessonIDRef.current)
       await putFile(voice.signedURL, mp3File, mp3File.type)
       return voice
-    }
-
-    async function createVoice(elapsedtime, durationSec) {
-      return await post('/voice', { elapsedtime, durationSec, lessonID: lessonIDRef.current })
     }
   }
 
   function handleClose() {
     closeCallback()
   }
-
-  useEffect(() => {
-    lessonIDRef.current = parseInt(router.query.id)
-  }, [])
 
   return { isProcessing, tabConfig, setTabConfig, handleConfirm, handleClose }
 }

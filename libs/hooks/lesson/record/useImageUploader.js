@@ -14,7 +14,7 @@ export default function useImageUploader(id, images, setImages, inputFileRef, se
     uploadImages(e.dataTransfer.files)
   }
 
-  function handleChangeFile(e) {
+  function handleFileChange(e) {
     uploadImages(e.target.files)
     e.target.value = ''
   }
@@ -140,5 +140,5 @@ export default function useImageUploader(id, images, setImages, inputFileRef, se
     imageCountRef.current = images.length
   }, [images])
 
-  return { handleDrop, handleChangeFile, handleUploadButtonClick }
+  return { handleDrop, handleFileChange, handleUploadButtonClick }
 }

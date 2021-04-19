@@ -5,6 +5,7 @@ import { Container, Row, Col } from 'react-grid-system'
 import useImageUploader from '../../../../libs/hooks/lesson/record/useImageUploader'
 import useImageController from '../../../../libs/hooks/lesson/record/useImageController'
 import { useLessonRecorderContext } from '../../../../libs/contexts/lessonRecorderContext'
+import InputFile from '../../../form/inputFile'
 import UploadingWideButton from './uploadingWideButton'
 import UploadingButton from './uploadingButton'
 import ScrollArrow from './scrollArrow'
@@ -15,15 +16,14 @@ export default function LessonRecordGraphicController({ id, setSelectedGraphic, 
   const selectImageBarRef = useRef(null)
   const inputFileRef = useRef(null)
   const { imageID, selectImage, removeImage, images, setImages, moveImage } = useImageController(setSelectedGraphic)
-  const { handleDragOver, handleDragLeave, handleDrop, handleChangeFile, handleUploadButtonClick } =
+  const { handleDragOver, handleDragLeave, handleDrop, handleFileChange, handleUploadButtonClick } =
     useImageUploader(id, images, setImages, inputFileRef, selectImageBarRef)
   const { isFinishing } = useLessonRecorderContext()
 
   return (
     <div css={bodyStyle}>
       <div css={controllerStyle}>
-        <input type="file" accept="image/jpeg,image/png,image/gif" multiple={true}
-          onChange={handleChangeFile} css={inputFileStyle} ref={inputFileRef} />
+        <InputFile accept="image/jpeg,image/png,image/gif" multiple={true} onChange={handleFileChange} ref={inputFileRef} />
 
         {images.length === 0 && (
           <UploadingWideButton hasDragOver={hasDragOver} onDragOver={handleDragOver} onDragLeave={handleDragLeave}
@@ -70,10 +70,6 @@ const controllerStyle = css({
   maxWidth: '1280px',
   height: '100%',
   margin: 'auto',
-})
-
-const inputFileStyle = css({
-  display: 'none',
 })
 
 const centeringStyle = css({
