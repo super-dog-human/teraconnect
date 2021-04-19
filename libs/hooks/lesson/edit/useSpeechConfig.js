@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useLessonEditorContext } from '../../../contexts/lessonEditorContext'
+import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 import useSynthesisVoice from '../../useSynthesisVoice'
 import useAudioPlayer from '../../useAudioPlayer'
 import { isBlobURL } from '../../../utils'
@@ -11,6 +12,7 @@ import { wavURLToMp3 } from '../../../audioUtils'
 export default function useSpeechConfig({ lineIndex, kindIndex, initialConfig, closeCallback }) {
   const router = useRouter()
   const lessonIDRef = useRef()
+  const { showError } = useErrorDialogContext()
   // propsをタブの初期値としてstateにコピーし、確定時にコピー元を更新する
   const [tabConfig, setTabConfig] = useState({ ...initialConfig, caption: { ...initialConfig.caption } })
   const [isProcessing, setIsProcessing] = useState(false)
@@ -21,6 +23,18 @@ export default function useSpeechConfig({ lineIndex, kindIndex, initialConfig, c
   async function handleConfirm() {
     setIsProcessing(true)
 
+    updateSpeech().catch(e => {
+      setIsProcessing(false)
+      showError({
+        message: '音声データのURL生成に失敗しました。',
+        original: e,
+        canDismiss: true,
+        callback: handleConfirm,
+      })
+    })
+  }
+
+  async function updateSpeech() {
     if (!tabConfig.url) {
       if (tabConfig.isSynthesis && tabConfig.subtitle) {
         const voice = await createSynthesisVoiceFile(lessonIDRef.current, tabConfig)
@@ -32,6 +46,7 @@ export default function useSpeechConfig({ lineIndex, kindIndex, initialConfig, c
       } else {
         // 合成だがsubtitleが未入力、または録音だがvoiceIDがない場合、声はなしになる
         tabConfig.voiceID = ''
+        tabConfig.durationSec = 0
       }
     }
 
@@ -43,7 +58,6 @@ export default function useSpeechConfig({ lineIndex, kindIndex, initialConfig, c
   }
 
   function updateSpeechWithoutAudio(config) {
-    config.durationSec = 0
     updateLine(lineIndex, kindIndex, 'speech', config)
     setIsProcessing(false)
     closeCallback()
@@ -52,6 +66,17 @@ export default function useSpeechConfig({ lineIndex, kindIndex, initialConfig, c
   function updateSpeechWithAudio(config) {
     // 音声の長さは読み込まないと分からないので以後の処理はコールバックになる
     createAudio(config.url, async (audio) => {
+      audioCallback(audio).catch(e => {
+        showError({
+          message: '音声データの変換に失敗しました。',
+          original: e,
+          canDismiss: true,
+          callback: () => updateSpeechWithAudio(config),
+        })
+      })
+    })
+
+    async function audioCallback(audio) {
       config.durationSec = parseFloat(audio.duration.toFixed(3))
       if (!config.isSynthesis) {
         config.synthesisConfig = {} // 不要な設定の削除
@@ -66,7 +91,7 @@ export default function useSpeechConfig({ lineIndex, kindIndex, initialConfig, c
       updateLine(lineIndex, kindIndex, 'speech', config)
       setIsProcessing(false)
       closeCallback()
-    })
+    }
 
     async function createHumanVoice(objectURL, elapsedtime, durationSec) {
       const mp3File = await wavURLToMp3(objectURL)
