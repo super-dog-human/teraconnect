@@ -3,7 +3,7 @@ import { useLessonEditorContext } from '../../../contexts/lessonEditorContext'
 import useAudioPlayer from '../../useAudioPlayer'
 import useSynthesisVoice from '../../useSynthesisVoice'
 import { findNextElement } from '../../../utils'
-import { fetchWithAuth } from '../../../fetch'
+import { fetchVoiceFileURL } from '../../../fetchResource'
 import { useRouter } from 'next/router'
 
 export default function useSpeechLine({ speech, lineIndex, kindIndex }) {
@@ -20,14 +20,6 @@ export default function useSpeechLine({ speech, lineIndex, kindIndex }) {
       setIsLoading(false)
     }
     switchAudio()
-  }
-
-  function fetchVoiceFileURL(voiceID, lessonID) {
-    return fetchWithAuth(`/voices/${voiceID}?lesson_id=${lessonID}`)
-      .then(result => result)
-      .catch(e  => {
-        console.error(e)
-      })
   }
 
   async function setAudioIfNeeded(text) {
@@ -75,7 +67,7 @@ export default function useSpeechLine({ speech, lineIndex, kindIndex }) {
     if (text === speech.subtitle) return
 
     speech.subtitle = text
-    if (speech.isSynthesis) speech.url = ''
+    if (speech.isSynthesis) speech.url = '' // テキストが更新されたら作成済みの音声も更新が必要なのでURLをクリア
 
     updateLine(lineIndex, kindIndex, 'speech', { ...speech })
   }

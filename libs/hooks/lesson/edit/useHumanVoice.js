@@ -3,7 +3,7 @@ import useAudioInputDevices from '../../useAudioInputDevices'
 import useVoiceRecorder from '../useVoiceRecorder'
 import useAudioPlayer from '../../useAudioPlayer'
 import { useRouter } from 'next/router'
-import { fetchWithAuth } from '../../../fetch'
+import { fetchVoiceFileURL } from '../../../fetchResource'
 import { isBlobURL } from '../../../utils'
 
 export default function useHumanVoice(config, setConfig) {
@@ -35,14 +35,6 @@ export default function useHumanVoice(config, setConfig) {
     const lessonID = parseInt(router.query.id)
     const voice = await fetchVoiceFileURL(config.voiceID, lessonID)
     setAudioURL(voice.url)
-
-    function fetchVoiceFileURL(voiceID, lessonID) {
-      return fetchWithAuth(`/voices/${voiceID}?lesson_id=${lessonID}`)
-        .then(result => result)
-        .catch(e  => {
-          console.error(e)
-        })
-    }
   }
 
   useEffect(() => {
