@@ -4,6 +4,7 @@ import LessonEdit from '../../../components/lesson/edit/'
 import requirePageAuth from '../../../libs/middlewares/requirePageAuth'
 import fetchLessonAsProps from '../../../libs/middlewares/fetchLessonAsProps'
 import Footer from '../../../components/footer'
+import { ContextMenuProvider } from '../../../libs/contexts/contextMenuContext'
 import { LessonEditorProvider } from '../../../libs/contexts/lessonEditorContext'
 
 const Page = ({ lesson }) => {
@@ -12,9 +13,11 @@ const Page = ({ lesson }) => {
       <Head>
         <title>{lesson.title}の編集 - TERACONNECT</title>
       </Head>
-      <LessonEditorProvider>
-        <LessonEdit lesson={lesson} />
-      </LessonEditorProvider>
+      <ContextMenuProvider>
+        <LessonEditorProvider>
+          <LessonEdit lesson={lesson} />
+        </LessonEditorProvider>
+      </ContextMenuProvider>
       <Footer />
     </>
   )

@@ -1,25 +1,27 @@
 import { useState } from 'react'
+import { useContextMenuContext } from '../../../contexts/contextMenuContext'
 import { useDialogContext } from '../../../contexts/dialogContext'
 import { useLessonEditorContext } from '../../../contexts/lessonEditorContext'
 
 export default function useLineConfig() {
-  const [menuOption, setMenuOption] = useState({})
   const [lineConfig, setLineConfig] = useState({})
   const { showDialog } = useDialogContext()
   const { deleteLine } = useLessonEditorContext()
+  const { setContextMenu } = useContextMenuContext()
 
   function handleEditButtonClick(e, kind, lineIndex, kindIndex, line) {
+    const targetRect = e.currentTarget.getBoundingClientRect()
     if (kind === 'speech') {
-      setMenuOption({
+      setContextMenu({
         labels: ['編集', '行の追加', '削除'],
         actions: [editLine, addNewLine, deleteCurrentLine],
-        position: { x: e.clientX, y: e.clientY },
+        position: { x: targetRect.x + 10, y: targetRect.y + window.scrollY + 30 },
       })
     } else {
-      setMenuOption({
+      setContextMenu({
         labels: ['編集', '行の追加', '削除'],
         actions: [editLine, addNewLine, deleteCurrentLine],
-        position: { x: e.clientX, y: e.clientY },
+        position: { x: targetRect.x + 10, y: targetRect.y + window.scrollY + 30 },
       })
     }
 
@@ -51,5 +53,5 @@ export default function useLineConfig() {
     }
   }
 
-  return { handleEditButtonClick, menuOption, lineConfig }
+  return { handleEditButtonClick, lineConfig }
 }

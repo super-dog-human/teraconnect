@@ -4,7 +4,6 @@ import { css } from '@emotion/core'
 import ContainerSpacer from '../../containerSpacer'
 import DragSwappable from '../../dragSwappable'
 import Elapsedtime from './line/elapsedtime'
-import ContextMenu from '../../contextMenu'
 import LineConfig from './lineConfig/'
 import DropLine from './line/dropLine'
 import LessonLine from './line/'
@@ -21,12 +20,11 @@ export default function Timeline() {
   const dropLineRef = useRef()
   const { timeline, swapLine } = useLessonEditorContext()
   const { dragStartIndex, handleDragStart, handleDragEnd, handleDragOver, handleDrop, handleChildDrop } = useSwappingLine({ dropLineRef, swapLine })
-  const { handleEditButtonClick, menuOption, lineConfig } = useLineConfig()
+  const { handleEditButtonClick, lineConfig } = useLineConfig()
 
   return (
     <div css={bodyStyle}>
       <DropLine ref={dropLineRef} onDrop={handleChildDrop} />
-      <ContextMenu {...menuOption} />
       <LineConfig config={lineConfig} />
       <DragSwappable onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd} onDrop={handleDrop}>
         {Object.keys(timeline).sort((a, b) => a - b).map((elapsedtime, i) => (

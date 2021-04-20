@@ -2,8 +2,10 @@
 import React, { useEffect } from 'react'
 import { css } from '@emotion/core'
 import { useScreenClass } from 'react-grid-system'
+import { useContextMenuContext } from '../../../libs/contexts/contextMenuContext'
 import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorContext'
 import { ImageViewerProvider } from '../../../libs/contexts/imageViewerContext'
+import ContextMenu from '../../contextMenu'
 import ImageViwer from '../../imageViewer'
 import LessonEditHeader from './header'
 import LessonEditPreview from './preview'
@@ -13,6 +15,7 @@ import Timeline from './timeline'
 
 const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
   const screenClass = useScreenClass()
+  const { contextMenu, handleDismiss } = useContextMenuContext()
   const { fetchResources } = useLessonEditorContext()
 
   const bodyStyle = css({
@@ -50,6 +53,7 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
 
   return (
     <>
+      <ContextMenu {...contextMenu} handleDismiss={handleDismiss} />
       <LessonEditHeader />
       <main css={mainStyle} ref={ref}>
         <ImageViewerProvider>

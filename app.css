@@ -165,6 +165,9 @@ button.light:hover {
   z-index: 10000;
 }
 .indicator-z {
+  z-index: 1100;
+}
+.context-menu-z {
   z-index: 1000;
 }
 .header-z {

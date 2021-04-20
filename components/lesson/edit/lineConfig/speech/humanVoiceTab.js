@@ -13,7 +13,6 @@ import InputRange from '../../../../form/inputRange'
 import Select from '../../../../form/select'
 import RecordingIcon from '../../../../recordingIcon'
 import PlayButton from './playButton'
-import ContextMenu from '../../../../contextMenu'
 import { Container as GridContainer, Row, Col } from 'react-grid-system'
 import useHumanVoicePlayer from '../../../../../libs/hooks/lesson/edit/useHumanVoicePlayer'
 import useHumanVoiceRecorder from '../../../../../libs/hooks/lesson/edit/useHumanVoiceRecorder'
@@ -23,11 +22,10 @@ export default function HumanVoiceTab({ config, setConfig, switchTab }) {
   const inputFileRef = useRef(null)
   const { audioElapsedTime, audioMax, audioCurrent, isPlaying, handlePlay, handleSeek } = useHumanVoicePlayer(config)
   const { deviceOptions, isMicReady, isRecording, handleMicChange, handleRecording } = useHumanVoiceRecorder(config, setConfig)
-  const { contextMenu, handleMoreButtonClick, handleFileChange } = useHumanVoiceFileController(config, setConfig, inputFileRef)
+  const { handleMoreButtonClick, handleFileChange } = useHumanVoiceFileController(config, setConfig, inputFileRef)
 
   return (
     <ContainerSpacer left='50' right='50'>
-      <ContextMenu {...contextMenu} />
       <InputFile accept='audio/mpeg' onChange={handleFileChange} ref={inputFileRef} />
       <Spacer height='10' />
       <Flex justifyContent='flex-end'>

@@ -2,18 +2,8 @@
 import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/core'
 
-export default function ContextMenu({ labels=[], actions=[], position={}, disableMenuIndexes=[] }) {
-  const[isShow, setIsShow] = useState(false)
-
-  const bodyStyle = css({
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100vw',
-    height: '100vh',
-    filter: 'drop-shadow(2px 2px 2px gray)',
-    display: isShow ? 'block' : 'none',
-  })
+export default function ContextMenu({ labels=[], actions=[], position={}, disableMenuIndexes=[], handleDismiss }) {
+  const [isShow, setIsShow] = useState(false)
 
   const menuStyle = css({
     position: 'absolute',
@@ -31,11 +21,11 @@ export default function ContextMenu({ labels=[], actions=[], position={}, disabl
     } else {
       setIsShow(false)
     }
-  }, [labels, actions, position])
+  }, [labels])
 
   return (
     <>
-      {isShow && <div css={bodyStyle} onClick={() => setIsShow(false)}>
+      {isShow && <div className='context-menu-z' css={bodyStyle} onClick={handleDismiss}>
         <div css={menuStyle}>
           {labels.length > 0 && labels.map((label, i) => {
             const disabled = disableMenuIndexes.includes(i)
@@ -67,3 +57,13 @@ export default function ContextMenu({ labels=[], actions=[], position={}, disabl
     </>
   )
 }
+
+const bodyStyle = css({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100vw',
+  height: '100vh',
+  filter: 'drop-shadow(2px 2px 2px gray)',
+  userSelect: 'none',
+})

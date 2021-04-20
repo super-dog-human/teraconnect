@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useContextMenuContext } from '../../../contexts/contextMenuContext'
 import { isBlobURL } from '../../../utils'
 import fetch from 'isomorphic-unfetch'
 import { wavToMp3 } from '../../../audioUtils'
@@ -7,14 +8,15 @@ const maxFileByteSize = 10485760 // 10MB
 
 export default function useHumanVoiceFileController(config, setConfig, inputFileRef) {
   const [isProcessing, setIsProcessing] = useState(false)
-  const [contextMenu, setContextMenu] = useState({})
   const [disableMenuIndexes, setDisableMenuIndexes] = useState([1]) // 初期状態では「ダウンロード」を選択できない
+  const { setContextMenu } = useContextMenuContext()
 
   function handleMoreButtonClick(e) {
+    const targetRect = e.currentTarget.getBoundingClientRect()
     setContextMenu({
       labels: ['アップロード', 'ダウンロード'],
       actions: [openFileSelector, downloadVoice],
-      position: { x: 0, y: e.currentTarget.getBoundingClientRect().top },
+      position: { x: targetRect.x, y: targetRect.y + targetRect.height + window.scrollY },
       disableMenuIndexes,
     })
 
@@ -80,5 +82,5 @@ export default function useHumanVoiceFileController(config, setConfig, inputFile
     setDisableMenuIndexes([]) // 録音によりaudioURLが発行されたら、「ダウンロード」が選択可能になる
   }, [config])
 
-  return { contextMenu, handleMoreButtonClick, handleFileChange }
+  return { handleMoreButtonClick, handleFileChange }
 }
