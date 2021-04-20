@@ -39,16 +39,18 @@ export default function HumanVoiceTab({ config, setConfig, switchTab }) {
           <Col md={11}>
             <Row>
               <Col md={11}>
-                <InputRange key={audioCurrent} defaultValue={audioCurrent} min='0' max={audioMax} step='0.01' disabled={isRecording} onChange={handleSeek} />
-                <AlignContainer textAlign='right'>
-                  <Container height='14'>
-                    <PlainText size='14' color='var(--soft-white)'>{audioElapsedTime}</PlainText>
-                  </Container>
-                </AlignContainer>
+                <Container height='30'>
+                  <InputRange key={audioCurrent} defaultValue={audioCurrent} min='0' max={audioMax} step='0.01' disabled={isRecording} onChange={handleSeek} />
+                  <AlignContainer textAlign='right'>
+                    <Container height='14'>
+                      <PlainText size='14' color='var(--soft-white)'>{audioElapsedTime}</PlainText>
+                    </Container>
+                  </AlignContainer>
+                </Container>
               </Col>
               <Col md={1}>
                 <Spacer width='10' />
-                <Container width='20'>
+                <Container width='20' height='38'>
                   <IconButton name='more' backgroundColor='var(--dark-gray)' borderColor='var(--dark-gray)' onClick={handleMoreButtonClick} />
                 </Container>
               </Col>

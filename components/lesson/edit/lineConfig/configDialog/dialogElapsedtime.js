@@ -3,7 +3,7 @@ import Container from '../../../../container'
 import InputText from '../../../../form/inputText'
 import { floatSecondsToMinutesFormat } from '../../../../../libs/utils'
 
-export default function DialogFooter({ elapsedtime }) {
+export default function DialogElapsedtime({ elapsedtime }) {
   const [displayTime, setDisplayTime] = useState('')
 
   useEffect(() => {
