@@ -15,7 +15,6 @@ export default function useAudioPlayer() {
 
     const audio = new Audio(voiceURL)
     audio.onloadedmetadata = () => {
-      console.log(audio.src)
       if (onloadedCallback) onloadedCallback(audio)
       setAudioDuration(parseFloat(audio.duration.toFixed(3)))
       durationDisplayTime.current = floatSecondsToMinutesFormat(audio.duration)

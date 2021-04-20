@@ -96,8 +96,8 @@ export default function useSpeechConfig({ lineIndex, kindIndex, initialConfig, c
     }
 
     async function createHumanVoice(blobURL, elapsedtime, durationSec) {
-      const file = await fetch(blobURL)
-      const mp3File = (file.type === 'audio/mpeg') ? file : await wavToMp3(file)
+      const file = await (await fetch(blobURL)).blob()
+      const mp3File = (file.type === 'audio/wav') ? await wavToMp3(file) : file
       const voice = await createVoice(elapsedtime, durationSec, lessonIDRef.current)
       await putFile(voice.signedURL, mp3File, mp3File.type)
       return voice

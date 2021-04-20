@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { isBlobURL } from '../../../utils'
 import fetch from 'isomorphic-unfetch'
 import { wavToMp3 } from '../../../audioUtils'
@@ -30,11 +30,17 @@ export default function useHumanVoiceFileController(config, setConfig, inputFile
       const link = document.createElement('a')
       link.download = 'voice'
 
-      const file = await fetch(config.url)
-      if (file.type === 'audio/mpeg') {
-        link.href = config.url
+      if (isBlobURL(config.url)) {
+        const file = await(await fetch(config.url)).blob()
+        if (file.type === 'audio/wav') { // 録音後、未確定のwav
+          const url = URL.createObjectURL(await wavToMp3(file))
+          link.href = url
+        } else {                         // アップロード後、未確定のmp3
+          link.href = config.url
+        }
       } else {
-        const url = URL.createObjectURL(await wavToMp3(file))
+        const file = await fetch(config.url) // 外部ドメインのファイルをクライアントでfetchすることで、ブラウザからのファイルDLを有効にする
+        const url = URL.createObjectURL(await file.blob())
         link.href = url
       }
       link.click()
@@ -52,6 +58,7 @@ export default function useHumanVoiceFileController(config, setConfig, inputFile
     if (isProcessing) return
 
     setIsProcessing(true)
+
     if (file.type != 'audio/mpeg') return
     if (file.size > maxFileByteSize) return
 
