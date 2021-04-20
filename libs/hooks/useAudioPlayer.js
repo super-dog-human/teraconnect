@@ -58,7 +58,7 @@ export default function useAudioPlayer() {
   }
 
   function updateAudioTimes() {
-    setAudioCurrent(audioRef.current.currentTime) // シークバーの●を動かすのに使用される
+    setAudioCurrent(audioRef.current.currentTime)
     updateAudioElapsedtime()
 
     if (isStopped()) return
