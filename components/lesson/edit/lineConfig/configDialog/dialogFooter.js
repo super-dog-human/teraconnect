@@ -4,10 +4,10 @@ import Flex from '../../../../flex'
 import DialogButton from './dialogButton'
 import DialogElapsedtime from './dialogElapsedtime'
 
-export default function DialogFooter({ elapsedtime, onCancel, onConfirm, isProcessing }) {
+export default function DialogFooter({ elapsedtime, setConfig, onCancel, onConfirm, isProcessing }) {
   return (
     <Flex justifyContent='space-between' alignItems='center'>
-      <DialogElapsedtime elapsedtime={elapsedtime} />
+      <DialogElapsedtime elapsedtime={elapsedtime} setConfig={setConfig} />
       <Flex justifyContent='space-between'>
         <DialogButton onClick={onCancel} disabled={isProcessing} kind="cancel" label='キャンセル' />
         <Spacer width='30' />

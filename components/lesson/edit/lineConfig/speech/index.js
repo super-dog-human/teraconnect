@@ -39,7 +39,7 @@ export default function Speech(props) {
       </TabContainer>
       <Container height='60'>
         <ContainerSpacer left='50' right ='50'>
-          <DialogFooter elapsedtime={tabConfig.elapsedtime} onConfirm={handleConfirm} onCancel={handleClose} isProcessing={isProcessing} />
+          <DialogFooter elapsedtime={tabConfig.elapsedtime} setConfig={setTabConfig} onConfirm={handleConfirm} onCancel={handleClose} isProcessing={isProcessing} />
         </ContainerSpacer>
       </Container>
     </>
