@@ -9,14 +9,6 @@ export default function ImageViwer() {
   const [loaded, setLoaded] = useState(false)
   const { image } = useImageViewerContext()
 
-  useEffect(() => {
-    if (Object.keys(image).length > 0) {
-      setIsShow(true)
-    } else {
-      setIsShow(false)
-    }
-  }, [image])
-
   function handleLoad(e) {
     setLoaded(true)
   }
@@ -60,6 +52,14 @@ export default function ImageViwer() {
     width: '175px',
     height: '100px',
   })
+
+  useEffect(() => {
+    if (Object.keys(image).length > 0) {
+      setIsShow(true)
+    } else {
+      setIsShow(false)
+    }
+  }, [image])
 
   return (
     <>

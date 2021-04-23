@@ -7,10 +7,10 @@ import { useImageViewerContext } from '../../../libs/contexts/imageViewerContext
 
 export default function LessonEditGraphicThumbnail({ url }) {
   const { setImage } = useImageViewerContext()
-  const [loaded, setLoaded] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(false)
 
   function handleLoad() {
-    setLoaded(true)
+    setIsLoaded(true)
   }
 
   function handleClick(e) {
@@ -19,31 +19,32 @@ export default function LessonEditGraphicThumbnail({ url }) {
     e.stopPropagation()
   }
 
-  const bodyStyle = css({
-    position: 'relative',
-    width: '175px',
-    height: '100px',
-  })
-
   const imageStyle = css({
-    opacity: loaded ? 1 : 0,
-    cursor: 'pointer',
+    opacity: isLoaded ? 1 : 0,
     fontSize: 0,
-  })
-
-  const loadingStyle = css({
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '175px',
-    height: '100px',
-    filter: 'contrast(20%)',
   })
 
   return (
     <div css={bodyStyle}>
       {url && <Image src={url} width="175" height="100" objectFit="contain" css={imageStyle} data-image-url={url} onClick={handleClick} onLoad={handleLoad} />}
-      {!loaded && <div css={loadingStyle}><LoadingIndicator size={50} /></div>}
+      {!isLoaded && <div css={loadingStyle}><LoadingIndicator size={50} /></div>}
     </div>
   )
 }
+
+const bodyStyle = css({
+  position: 'relative',
+  width: '175px',
+  height: '100px',
+})
+
+
+const loadingStyle = css({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '175px',
+  height: '100px',
+  filter: 'contrast(20%)',
+  cursor: 'auto',
+})
