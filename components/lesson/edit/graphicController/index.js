@@ -5,22 +5,22 @@ import useGraphicController from '../../../../libs/hooks/lesson/edit/useGraphicC
 import { useLessonEditorContext } from '../../../../libs/contexts/lessonEditorContext'
 import LessonEditGraphicThumbnail from '../graphicThumbnail'
 
-export default function LessonEditGraphicController({ lessonID }) {
-  const { graphics, setGraphics, updateLine } = useLessonEditorContext()
-  const { graphicURL, swapGraphic, removeGraphic } = useGraphicController({ lessonID, graphics, setGraphics, updateLine })
+export default function LessonEditGraphicController() {
+  const { graphics, graphicURLs, updateLine } = useLessonEditorContext()
+  const { swapGraphic, removeGraphic } = useGraphicController({ graphics, updateLine })
 
   return (
     <div css={bodyStyle}>
-      {Object.keys(graphicURL).length > 0 &&
+      {Object.keys(graphicURLs).length > 0 &&
       <>
         <div css={headerStyle}>
-          <div>アップロード済み ({Object.keys(graphicURL).length})</div>
+          <div>アップロード済み ({Object.keys(graphicURLs).length})</div>
           <hr />
         </div>
         <div css={containerStyle}>
-          {Object.keys(graphicURL).map(key => (
+          {Object.keys(graphicURLs).map(key => (
             <div css={thumbnailStyle} key={key}>
-              <LessonEditGraphicThumbnail url={graphicURL[key]} />
+              <LessonEditGraphicThumbnail url={graphicURLs[key]} />
             </div>
           ))}
         </div>

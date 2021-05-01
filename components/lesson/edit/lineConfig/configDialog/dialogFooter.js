@@ -2,12 +2,12 @@ import React from 'react'
 import Spacer from '../../../../spacer'
 import Flex from '../../../../flex'
 import DialogButton from './dialogButton'
-import DialogElapsedtime from './dialogElapsedtime'
+import DialogElapsedTime from './dialogElapsedTime'
 
-export default function DialogFooter({ elapsedtime, setConfig, onCancel, onConfirm, isProcessing }) {
+export default function DialogFooter({ elapsedTime, setConfig, onCancel, onConfirm, isProcessing }) {
   return (
     <Flex justifyContent='space-between' alignItems='center'>
-      <DialogElapsedtime elapsedtime={elapsedtime} setConfig={setConfig} />
+      <DialogElapsedTime elapsedTime={elapsedTime} setConfig={setConfig} />
       <Flex justifyContent='space-between'>
         <DialogButton onClick={onCancel} disabled={isProcessing} kind="cancel" label='キャンセル' />
         <Spacer width='30' />

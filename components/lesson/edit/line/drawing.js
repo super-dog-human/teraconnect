@@ -5,10 +5,10 @@ import LessonEditKindIcon from './kindIcon'
 import LessonEditActionLabel from './actionLabel'
 import EditIcon from './editIcon'
 
-export default function LessonLineDrawing({ drawing, lineIndex, kindIndex, isEditButtonShow, handleEditClick }) {
+export default function LessonLineDrawing({ drawing, index, isEditButtonShow, handleEditClick }) {
   function handleEditButtonClick(e) {
     e.stopPropagation()
-    handleEditClick(e, 'drawing', lineIndex, kindIndex, drawing)
+    handleEditClick(e, 'drawing', index, drawing)
   }
 
   return (

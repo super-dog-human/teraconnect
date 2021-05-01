@@ -4,12 +4,12 @@ import LessonEditSpeechInputText from './speechInputText'
 import EditIcon from './editIcon'
 import useSpeechLine from '../../../../libs/hooks/lesson/edit/useSpeechLine'
 
-export default function LessonLineSpeech({ speech, lineIndex, kindIndex, isEditButtonShow, handleEditClick }) {
-  const { isLoading, isPlaying, handleSpeechClick, handleInputKeyDown, handleTextBlur } = useSpeechLine({ speech, lineIndex, kindIndex })
+export default function LessonLineSpeech({ speech, index, isEditButtonShow, handleEditClick }) {
+  const { isLoading, isPlaying, handleSpeechClick, handleInputKeyDown, handleTextBlur } = useSpeechLine({ speech, index })
   const inputRef = useRef()
   const [status, setStatus] = useState(true)
 
-  function handleSpeechButtonClick(e) {
+  function handleSpeechButtonClick() {
     if (!status) return
     handleSpeechClick(inputRef.current.value)
   }
@@ -18,7 +18,7 @@ export default function LessonLineSpeech({ speech, lineIndex, kindIndex, isEditB
     e.stopPropagation()
 
     speech.subtitle = inputRef.current.value
-    handleEditClick(e, 'speech', lineIndex, kindIndex, speech)
+    handleEditClick(e, 'speech', index, speech)
   }
 
   useEffect(() => {

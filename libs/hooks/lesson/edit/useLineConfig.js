@@ -9,7 +9,7 @@ export default function useLineConfig() {
   const { deleteLine } = useLessonEditorContext()
   const { setContextMenu } = useContextMenuContext()
 
-  function handleEditButtonClick(e, kind, lineIndex, kindIndex, line) {
+  function handleEditButtonClick(e, kind, index, line) {
     const targetRect = e.currentTarget.getBoundingClientRect()
     if (kind === 'speech') {
       setContextMenu({
@@ -27,24 +27,25 @@ export default function useLineConfig() {
 
     function editLine() {
       setLineConfig({
-        action: 'config', kind, line, lineIndex, kindIndex, closeCallback
+        action: kind, line, index, closeCallback
       })
     }
 
     function addNewLine() {
       setLineConfig({
-        action: 'newLine', lineIndex, kindIndex, closeCallback
+        action: 'newLine', index, closeCallback
       })
     }
 
     function deleteCurrentLine() {
+      console.log(kind, line.elapsedTime)
       showDialog({
         title: '削除の確認',
         message: '行を削除しますか？',
         canDismiss: true,
         dismissName: 'キャンセル',
         callbackName: '削除する',
-        callback: () => deleteLine(lineIndex, kindIndex, kind),
+        callback: () => deleteLine(kind, index, line.elapsedTime),
       })
     }
 

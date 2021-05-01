@@ -3,10 +3,10 @@ import React from 'react'
 import { css } from '@emotion/core'
 import { floatSecondsToMinutesFormat } from '../../../../libs/utils'
 
-export default function Elapsedtime({ elapsedtime }) {
+export default function ElapsedTime({ elapsedTime }) {
   return (
     <div css={bodyStyle}>
-      {floatSecondsToMinutesFormat(elapsedtime)}
+      {floatSecondsToMinutesFormat(elapsedTime)}
     </div>
   )
 }

@@ -1,6 +1,12 @@
 import { useRef, useState, useEffect } from 'react'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 import { fetchMaterial }  from '../../../lessonEdit'
+import { createTimeline } from '../../../lessonLineUtils'
+import useAddingLine from './timeline/useAddingLine'
+import useUpdatingLine from './timeline/useUpdatingLine'
+import useDeletionLine from './timeline/useDeletionLine'
+import useSwappingLine from './timeline/useSwappingLine'
+import useLineUtils from './timeline/useLineUtils'
 
 export default function useLessonEditor() {
   const lessonRef = useRef()
@@ -11,14 +17,21 @@ export default function useLessonEditor() {
   const [avatars, setAvatars] = useState([])
   const [drawings, setDrawings] = useState([])
   const [graphics, setGraphics] = useState([])
+  const [graphicURLs, setGraphicURLs] = useState({})
   const [musics, setMusics] = useState([])
   const [speeches, setSpeeches] = useState([])
   const { showError } = useErrorDialogContext()
+  const { shiftElapsedTime, updateMaterial, deleteMaterial, lastTimeline, sortedElapsedTimes, maxDurationSecInLine, nextElapsedTime, calcTime, targetMaterials, allMaterialNames, allMaterials } =
+    useLineUtils({ avatars, drawings, graphics, musics, speeches, setAvatars, setDrawings, setGraphics, setSpeeches, setMusics, timeline })
+  const { addSpeechLineToLast } = useAddingLine({ lessonRef, maxDurationSecInLine, lastTimeline, targetMaterials })
+  const { updateLine } = useUpdatingLine({ shiftElapsedTime, updateMaterial, targetMaterials })
+  const { deleteLine } = useDeletionLine({ shiftElapsedTime, nextElapsedTime, deleteMaterial, targetMaterials, allMaterialNames })
+  const { swapLine } = useSwappingLine({ lastTimeline, sortedElapsedTimes, maxDurationSecInLine, calcTime, targetMaterials, allMaterialNames })
 
   async function fetchResources(lesson) {
     lessonRef.current = lesson
 
-    fetchMaterial({ lesson, setDurationSec, setVoiceSynthesisConfig, setAvatars, setDrawings, setGraphics, setMusics, setSpeeches })
+    fetchMaterial({ lesson, setDurationSec, setVoiceSynthesisConfig, setAvatars, setDrawings, setGraphics, setGraphicURLs, setMusics, setSpeeches })
       .then(timeline => {
         setTimeline(timeline)
         setIsLoading(false)
@@ -36,163 +49,32 @@ export default function useLessonEditor() {
       })
   }
 
-  function swapLine(fromIndex, toIndex) {
-    if (fromIndex === toIndex) return
-    if (fromIndex === toIndex + 1) return
+  function updateLessonDuration() {
+    const totalDurationSec = Math.max(...Object.keys(timeline).map(elapsedTime => {
+      const maxDurationSec = Math.max(...Object.keys(timeline[elapsedTime]).map(kind => (
+        Math.max(...timeline[elapsedTime][kind].map(m => m.durationSec || 0))
+      )))
+      return parseFloat(elapsedTime) + maxDurationSec
+    }))
 
-    setTimeline(timeline => {
-      const elapsedtimes = sortedElapsedtimes(timeline)
-
-      const fromElapsedtime = parseFloat(elapsedtimes[fromIndex])
-      const fromLine = timeline[fromElapsedtime]
-      delete timeline[fromElapsedtime]
-
-      let offsetTime
-      if (fromIndex === Object.keys(timeline).length) {
-        const durationSec = maxDurationSecInline(fromLine)
-        offsetTime = durationSec > 0 ? durationSec : 1.0 // 画像の切り替えなどでdurationSecを持たないものは便宜上1秒にする
-      } else {
-        const nextElapsedtime = parseFloat(elapsedtimes[fromIndex + 1])
-        offsetTime = parseFloat((nextElapsedtime - fromElapsedtime).toFixed(3))
-      }
-
-      if (fromIndex < toIndex) {
-        for(let i = fromIndex + 1; i <= toIndex; i++) {
-          const elapsedtime = parseFloat(elapsedtimes[i])
-          const line = timeline[elapsedtime]
-          delete timeline[elapsedtime]
-
-          const newElapsedtime = parseFloat((elapsedtime - offsetTime).toFixed(3))
-          timeline[newElapsedtime] = line
-        }
-
-        const lastElapsedtime = parseFloat(elapsedtimes[toIndex + 1])
-        const toElapsedtime = parseFloat((lastElapsedtime - offsetTime).toFixed(3))
-        timeline[toElapsedtime] = fromLine
-      } else {
-        for(let i = toIndex + 1; i < fromIndex; i++) {
-          const elapsedtime = parseFloat(elapsedtimes[i])
-          const line = timeline[elapsedtime]
-          delete timeline[elapsedtime]
-
-          const newElapsedtime = parseFloat((elapsedtime + offsetTime).toFixed(3))
-          timeline[newElapsedtime] = line
-
-          if (i === toIndex + 1) {
-            const toElapsedtime = parseFloat((newElapsedtime - offsetTime).toFixed(3))
-            timeline[toElapsedtime] = fromLine
-          }
-        }
-      }
-
-      return timeline
-    })
+    // タイムラインでは小数点以下の秒数を切り捨てで表示するが、合計収録時間は繰り上げで表示する
+    setDurationSec(Math.round(totalDurationSec))
   }
 
-  function sortedElapsedtimes(timeline) {
-    return Object.keys(timeline).sort((a, b) => a - b)
-  }
-
-  function maxDurationSecInline(line) {
-    return Math.max(Object.keys(line).flatMap(kind => line[kind].map(k => k.durationSec || 0)))
-  }
-
-  function addSpeechLine() {
-    setTimeline(timeline =>  {
-      const elapsedtimes = sortedElapsedtimes(timeline)
-      const lastElapsedtime = parseFloat(elapsedtimes[elapsedtimes.length - 1])
-      const lastLine = timeline[lastElapsedtime]
-
-      let durationSec = maxDurationSecInline(lastLine)
-      if (durationSec === 0) durationSec = 1.0
-
-      const newElapsedtime = parseFloat((lastElapsedtime + durationSec).toFixed(3))
-      if (newElapsedtime > 600.0) return timeline
-
-      const newSpeech = {
-        voiceID: '',
-        durationSec: 10.0,
-        subtitle: '',
-        caption: {},
-        url: '',
-        isSynthesis: !lessonRef.current.needsRecording,
-        synthesisConfig: {},
-      }
-
-      setSpeeches(speeches => {
-        speeches.push(newSpeech)
-        return speeches
-      })
-
-      newSpeech.isFocus = true
-      timeline[newElapsedtime] = { speech: [newSpeech] }
-
-      return { ...timeline }
-    })
-  }
-
-  function deleteLine(lineIndex, kindIndex, kind) {
-    setTimeline(timeline => {
-      const elapsedTimes = sortedElapsedtimes(timeline)
-      const elapsedTime = elapsedTimes[lineIndex]
-      timeline[elapsedTime][kind].splice(kindIndex, 1)
-
-      if (timeline[elapsedTime][kind].length === 0) {
-        delete timeline[elapsedTime][kind]
-      }
-
-      if (Object.keys(timeline[elapsedTime]).length === 0) {
-        delete timeline[elapsedTime]
-        const nextElapsedTime = parseFloat(elapsedTimes[lineIndex + 1])
-        const diffElapasedTime = parseFloat((nextElapsedTime - parseFloat(elapsedTime)).toFixed(3))
-        if (nextElapsedTime > 0) {
-          shiftTimeline(timeline, nextElapsedTime, diffElapasedTime)
-        }
-      }
-
-      return { ...timeline }
-    })
-
-    // TODO kindに応じて各stateも更新する(影響を受けた他kindも)
-  }
-
-  function shiftTimeline(timeline, startElapsedtime, offsetTime) {
-    sortedElapsedtimes(timeline).map(t => parseFloat(t)).filter(t => t >= startElapsedtime)
-      .forEach(elapsedtime => {
-        const line = timeline[elapsedtime]
-        delete timeline[elapsedtime]
-        const newElapsedtime = parseFloat((elapsedtime - offsetTime).toFixed(3))
-        timeline[newElapsedtime] = line
-      })
-  }
-
-  function updateLine(lineIndex, kindIndex, kind, value) {
-    setTimeline(timeline => {
-      const elapsedTime = sortedElapsedtimes(timeline)[lineIndex]
-      timeline[elapsedTime][kind][kindIndex] = value
-      return { ...timeline }
-      // durationが増減したなら自身以降のものも更新する必要がある
-    })
-
-    // TODO kindに応じて各stateも更新する(影響を受けた他kindも)
-  }
-
-  function updateDurationSec() {
-    const elapsedtimes = sortedElapsedtimes(timeline)
-    const lastElapsedtime = parseFloat(elapsedtimes[elapsedtimes.length - 1])
-
-    const durationSec = timeline[lastElapsedtime].durationSec || 0
-    const totalDurationSec = parseFloat((lastElapsedtime + durationSec).toFixed(3))
-
-    setDurationSec(totalDurationSec)
+  function updateTimeline() {
+    setTimeline(createTimeline({ avatars, drawings, graphics, musics, speeches }))
   }
 
   useEffect(() => {
     if (Object.keys(timeline).length === 0) return
-    updateDurationSec()
+    updateLessonDuration()
   }, [timeline])
 
+  useEffect(() => {
+    if (isLoading) return
+    updateTimeline()
+  }, allMaterials())
 
   return { fetchResources, isLoading, durationSec, timeline, voiceSynthesisConfig, setVoiceSynthesisConfig,
-    avatars, graphics, setGraphics, drawings, musics, speeches, updateLine, deleteLine, swapLine, addSpeechLine }
+    avatars, graphics, graphicURLs, drawings, musics, speeches, updateLine, deleteLine, swapLine, addSpeechLineToLast }
 }

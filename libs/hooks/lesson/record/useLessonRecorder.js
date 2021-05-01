@@ -41,7 +41,7 @@ export default function useLessonRecorder() {
       return
     case 'backgroundMusicID':
       lessonRef.current.musics = [{
-        elapsedtime: 0,
+        elapsedTime: 0,
         action: 'start',
         backgroundMusicID: record.value
       }]
@@ -49,7 +49,7 @@ export default function useLessonRecorder() {
     case 'avatarMoving': {
       const durationSec = record.durationMillisec * 0.001
       const avatar = {
-        elapsedtime: elapsedFloatTimeFromDuration(durationSec),
+        elapsedTime: elapsedFloatTimeFromDuration(durationSec),
         durationSec: parseFloat(durationSec.toFixed(3)),
         moving: record.value,
       }
@@ -65,7 +65,7 @@ export default function useLessonRecorder() {
     case 'graphic': {
       const graphic = {
         graphicID: parseInt(record.value),
-        elapsedtime: elapsedFloatTime(),
+        elapsedTime: elapsedFloatTime(),
         action: record.action,
       }
 
@@ -81,11 +81,11 @@ export default function useLessonRecorder() {
 
       if (record.action === 'draw') {
         const durationSec = record.durationMillisec * 0.001
-        newDrawing.elapsedtime = isRecording ? realElapsedTime() - durationSec : realElapsedTime()
+        newDrawing.elapsedTime = isRecording ? realElapsedTime() - durationSec : realElapsedTime()
         newDrawing.durationSec = isRecording ? durationSec : 0
         newDrawing.stroke = record.value
       } else {
-        newDrawing.elapsedtime = elapsedFloatTime()
+        newDrawing.elapsedTime = elapsedFloatTime()
       }
 
       if (isRecording) {
@@ -150,22 +150,22 @@ export default function useLessonRecorder() {
         drawings.push(d)
       } else if (['draw', 'undo'].includes(preAction)) {  // 線の描写で他の操作をまたがないものはunitsにまとめる
         const lastDrawing = drawings[drawings.length - 1]
-        lastDrawing.durationSec = d.elapsedtime + d.durationSec - lastDrawing.elapsedtime
+        lastDrawing.durationSec = d.elapsedTime + d.durationSec - lastDrawing.elapsedTime
         lastDrawing.units.push({
           action: d.action,
-          elapsedtime: d.elapsedtime,
+          elapsedTime: d.elapsedTime,
           durationSec: d.durationSec,
           stroke: d.stroke,
         })
       } else {
         drawings.push({
           action: d.action,
-          elapsedtime: d.elapsedtime,
+          elapsedTime: d.elapsedTime,
           durationSec: d.durationSec,
           units: [
             {
               action: d.action,
-              elapsedtime: d.elapsedtime,
+              elapsedTime: d.elapsedTime,
               durationSec: d.durationSec,
               stroke: d.stroke,
             }
@@ -178,10 +178,10 @@ export default function useLessonRecorder() {
 
     // 計算が終わってから不要な桁を丸める
     drawings.filter(d => d.action === 'draw').forEach(d => {
-      d.elapsedtime = parseFloat(d.elapsedtime.toFixed(3))
+      d.elapsedTime = parseFloat(d.elapsedTime.toFixed(3))
       d.durationSec = parseFloat((d.durationSec || 0).toFixed(3))
       d.units.forEach(u => {
-        u.elapsedtime = parseFloat(u.elapsedtime.toFixed(3))
+        u.elapsedTime = parseFloat(u.elapsedTime.toFixed(3))
         u.durationSec = parseFloat((u.durationSec || 0).toFixed(3))
       })
     })
@@ -194,7 +194,7 @@ export default function useLessonRecorder() {
 
     if (lessonInStoppingRef.current.avatarMoving) {
       lessonInStoppingRef.current.avatarMoving.durationSec = 0 // 停止中に移動したので移動に要した時間は0になる
-      lessonInStoppingRef.current.avatarMoving.elapsedtime = elapsedFloatTime()
+      lessonInStoppingRef.current.avatarMoving.elapsedTime = elapsedFloatTime()
       lessonRef.current.avatars.push(lessonInStoppingRef.current.avatarMoving)
       lessonInStoppingRef.current.avatarMoving = null
     }

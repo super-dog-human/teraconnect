@@ -17,10 +17,10 @@ export default function useAudioPlayer() {
     audio.onloadedmetadata = () => {
       if (onloadedCallback) onloadedCallback(audio)
       setAudioDuration(parseFloat(audio.duration.toFixed(3)))
-      durationDisplayTime.current = floatSecondsToMinutesFormat(audio.duration)
+      durationDisplayTime.current = floatSecondsToMinutesFormat(Math.round(audio.duration)) // 表示上は四捨五入した値を表示する
     }
     audio.onended = () => {
-      updateAudioElapsedtime() // タイミングによっては表示秒数が不足したまま再生終了になるので最後に更新する
+      updateAudioElapsedTime() // タイミングによっては表示秒数が不足したまま再生終了になるので最後に更新する
       stop()
     }
     audioRef.current = audio
@@ -59,20 +59,20 @@ export default function useAudioPlayer() {
 
   function updateAudioTimes() {
     setAudioCurrent(audioRef.current.currentTime)
-    updateAudioElapsedtime()
+    updateAudioElapsedTime()
 
     if (isStopped()) return
     requestAnimationFrame(updateAudioTimes)
   }
 
-  function updateAudioElapsedtime() {
+  function updateAudioElapsedTime() {
     const time = floatSecondsToMinutesFormat(audioRef.current.currentTime) + ' / ' + durationDisplayTime.current
     setAudioElapasedTime(time)
   }
 
   function seekAudio(toSeconds) {
     audioRef.current.currentTime = toSeconds
-    updateAudioElapsedtime()
+    updateAudioElapsedTime()
   }
 
   useEffect(() => {

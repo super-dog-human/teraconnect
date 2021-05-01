@@ -4,10 +4,10 @@ import LessonEditKindIcon from './kindIcon'
 import LessonEditActionLabel from './actionLabel'
 import EditIcon from './editIcon'
 
-export default function LessonLineAvatar({ avatar, lineIndex, kindIndex, isEditButtonShow, handleEditClick }) {
+export default function LessonLineAvatar({ avatar, index, isEditButtonShow, handleEditClick }) {
   function handleEditButtonClick(e) {
     e.stopPropagation()
-    handleEditClick(e, 'avatar', lineIndex, kindIndex, avatar)
+    handleEditClick(e, 'avatar', index, avatar)
   }
 
   return (

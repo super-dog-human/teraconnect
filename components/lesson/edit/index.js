@@ -62,7 +62,7 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
             <div css={leftSideStyle}>
               <LessonEditPreview />
               <LessonDurationTime />
-              <LessonEditGraphicController lessonID={lesson.id} />
+              <LessonEditGraphicController />
             </div>
             <div css={rightSideStyle}>
               <Timeline />

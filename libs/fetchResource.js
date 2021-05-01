@@ -8,6 +8,6 @@ export function fetchVoiceFileURL(voiceID, lessonID) {
     })
 }
 
-export async function createVoice(elapsedtime, durationSec, lessonID) {
-  return await post('/voice', { elapsedtime, durationSec, lessonID })
+export async function createVoice(elapsedTime, durationSec, lessonID) {
+  return await post('/voice', { elapsedTime, durationSec, lessonID })
 }

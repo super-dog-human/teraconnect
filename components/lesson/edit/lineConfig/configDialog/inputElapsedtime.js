@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import InputText from '../../../../form/inputText'
 
-export default function InputElapsedtime(props) {
+export default function InputElapsedTime(props) {
   const notNumericExp = new RegExp(/^\D$/)
   const { time, setTime, min, max, maxLength, ...inputProps } = props
   const selectedLengthRef = useRef(0)
@@ -47,7 +47,7 @@ export default function InputElapsedtime(props) {
   }
 
   return (
-    <InputText defaultValue={time} {...inputProps} maxLength={maxLength} onFocus={handleFocus} onKeyDown={handleKeyDown} onBlur={handleBlur}
+    <InputText key={time} defaultValue={time} {...inputProps} maxLength={maxLength} onFocus={handleFocus} onKeyDown={handleKeyDown} onBlur={handleBlur}
       size='17' color='var(--soft-white)' borderWidth='0 0 1px' borderColor='var(--text-gray)' textAlign='center' />
   )
 }

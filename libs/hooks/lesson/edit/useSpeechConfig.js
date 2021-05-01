@@ -10,7 +10,7 @@ import { putFile } from '../../../fetch'
 import { fetchVoiceFileURL, createVoice } from '../../../fetchResource'
 import { wavToMp3 } from '../../../audioUtils'
 
-export default function useSpeechConfig({ lineIndex, kindIndex, initialConfig, closeCallback }) {
+export default function useSpeechConfig({ index, initialConfig, closeCallback }) {
   const router = useRouter()
   const lessonIDRef = useRef(parseInt(router.query.id))
   const { showError } = useErrorDialogContext()
@@ -59,7 +59,7 @@ export default function useSpeechConfig({ lineIndex, kindIndex, initialConfig, c
   }
 
   function updateSpeechWithoutAudio(config) {
-    updateLine(lineIndex, kindIndex, 'speech', config)
+    updateLine('speech', index, initialConfig.elapsedTime, config)
     setIsProcessing(false)
     closeCallback()
   }
@@ -84,21 +84,21 @@ export default function useSpeechConfig({ lineIndex, kindIndex, initialConfig, c
       }
 
       if (isBlobURL(config.url)) {
-        const voice = await createHumanVoice(config.url, config.elapsedtime, config.durationSec)
+        const voice = await createHumanVoice(config.url, config.elapsedTime, config.durationSec)
         URL.revokeObjectURL(config.url)
         config.url = ''
         config.voiceID = parseInt(voice.fileID)
       }
 
-      updateLine(lineIndex, kindIndex, 'speech', config)
+      updateLine('speech', index, initialConfig.elapsedTime, config)
       setIsProcessing(false)
       closeCallback()
     }
 
-    async function createHumanVoice(blobURL, elapsedtime, durationSec) {
+    async function createHumanVoice(blobURL, elapsedTime, durationSec) {
       const file = await (await fetch(blobURL)).blob()
       const mp3File = (file.type === 'audio/wav') ? await wavToMp3(file) : file
-      const voice = await createVoice(elapsedtime, durationSec, lessonIDRef.current)
+      const voice = await createVoice(elapsedTime, durationSec, lessonIDRef.current)
       await putFile(voice.signedURL, mp3File, mp3File.type)
       return voice
     }

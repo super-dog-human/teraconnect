@@ -3,7 +3,7 @@ import React, { useRef } from 'react'
 import { css } from '@emotion/core'
 import ContainerSpacer from '../../containerSpacer'
 import DragSwappable from '../../dragSwappable'
-import Elapsedtime from './line/elapsedtime'
+import ElapsedTime from './line/elapsedTime'
 import LineConfig from './lineConfig/'
 import DropLine from './line/dropLine'
 import LessonLine from './line/'
@@ -27,19 +27,19 @@ export default function Timeline() {
       <DropLine ref={dropLineRef} onDrop={handleChildDrop} />
       <LineConfig config={lineConfig} />
       <DragSwappable onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd} onDrop={handleDrop}>
-        {Object.keys(timeline).sort((a, b) => a - b).map((elapsedtime, i) => (
+        {Object.keys(timeline).sort((a, b) => a - b).map((elapsedTime, i) => (
           <div key={i} css={dragStartIndex === i && focusedStyle}>
             <div css={lineStyle}>
-              <Elapsedtime elapsedtime={elapsedtime} />
+              <ElapsedTime elapsedTime={elapsedTime} />
               <div css={lineBodyStyle}>
-                {Object.keys(timeline[elapsedtime]).map(kind =>
-                  timeline[elapsedtime][kind].map((line, kindIndex) => (
-                    <LessonLine key={`${elapsedtime}-${kindIndex}`}>
-                      {kind === 'avatar'  && <LessonLineAvatar avatar={line} lineIndex={i} kindIndex={kindIndex} handleEditClick={handleEditButtonClick} />}
-                      {kind === 'drawing' && <LessonLineDrawing drawing={line} lineIndex={i} kindIndex={kindIndex} handleEditClick={handleEditButtonClick} />}
-                      {kind === 'graphic' && <LessonLineGraphic graphic={line} lineIndex={i} kindIndex={kindIndex} handleEditClick={handleEditButtonClick} />}
-                      {kind === 'music'   && <LessonLineMusic music={line} lineIndex={i} kindIndex={kindIndex} handleEditClick={handleEditButtonClick} />}
-                      {kind === 'speech'  && <LessonLineSpeech speech={line} lineIndex={i} kindIndex={kindIndex} handleEditClick={handleEditButtonClick} />}
+                {Object.keys(timeline[elapsedTime]).map(kind =>
+                  timeline[elapsedTime][kind].map((line, kindIndex) => (
+                    <LessonLine key={`${elapsedTime}-${kindIndex}`}>
+                      {kind === 'avatar'  && <LessonLineAvatar avatar={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
+                      {kind === 'drawing' && <LessonLineDrawing drawing={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
+                      {kind === 'graphic' && <LessonLineGraphic graphic={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
+                      {kind === 'music'   && <LessonLineMusic music={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
+                      {kind === 'speech'  && <LessonLineSpeech speech={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
                     </LessonLine>
                   ))
                 )}
@@ -49,7 +49,7 @@ export default function Timeline() {
           </div>
         ))}
       </DragSwappable>
-      {/*最後の要素のelapsedtime + durationが10分を超えていたら警告を出す*/}
+      {/*最後の要素のelapsedTime + durationが10分を超えていたら警告を出す*/}
     </div>
   )
 }

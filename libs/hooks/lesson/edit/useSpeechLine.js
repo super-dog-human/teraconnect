@@ -6,11 +6,11 @@ import { findNextElement } from '../../../utils'
 import { fetchVoiceFileURL } from '../../../fetchResource'
 import { useRouter } from 'next/router'
 
-export default function useSpeechLine({ speech, lineIndex, kindIndex }) {
+export default function useSpeechLine({ speech, index }) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const { isPlaying, createAudio, switchAudio } = useAudioPlayer()
-  const { addSpeechLine, updateLine } = useLessonEditorContext()
+  const { addSpeechLineToLast, updateLine } = useLessonEditorContext()
   const { createSynthesisVoiceFile } = useSynthesisVoice()
 
   async function handleSpeechClick(text) {
@@ -34,13 +34,13 @@ export default function useSpeechLine({ speech, lineIndex, kindIndex }) {
       speech.voiceID = voice.id
       speech.url = voice.url
 
-      updateLine(lineIndex, kindIndex, 'speech', speech)
+      updateLine('speech', index, speech.elapsedTime, speech)
     } else if (!speech.isSynthesis) {
       const voice = await fetchVoiceFileURL(speech.voiceID, lessonID)
       createAudio(voice.url)
       speech.url = voice.url
 
-      updateLine(lineIndex, kindIndex, 'speech', speech)
+      updateLine('speech', index, speech.elapsedTime, speech)
     }
   }
 
@@ -59,7 +59,7 @@ export default function useSpeechLine({ speech, lineIndex, kindIndex }) {
     })
 
     if (document.activeElement === e.target) {
-      addSpeechLine() // フォーカスが変わらなかったら最後の行なので、新しい行を追加する
+      addSpeechLineToLast() // フォーカスが変わらなかったら最後の行なので、新しい行を追加する
     }
   }
 
@@ -70,7 +70,7 @@ export default function useSpeechLine({ speech, lineIndex, kindIndex }) {
     speech.subtitle = text
     if (speech.isSynthesis) speech.url = '' // テキストが更新されたら作成済みの音声も更新が必要なのでURLをクリア
 
-    updateLine(lineIndex, kindIndex, 'speech', { ...speech })
+    updateLine('speech', index, speech.elapsedTime, speech)
   }
 
   return { isLoading, isPlaying, handleSpeechClick, handleInputKeyDown, handleTextBlur }

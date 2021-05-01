@@ -1,85 +1,67 @@
 import { fetchWithAuth } from './fetch'
+import { filterObject } from './utils'
+import { createTimeline } from './lessonLineUtils'
 
-const defaultSpeech = {
-  isSynthesis: false,
-}
-
-export async function fetchMaterial({ lesson, setDurationSec, setVoiceSynthesisConfig, setAvatars, setDrawings, setGraphics, setMusics, setSpeeches }) {
+export async function fetchMaterial({ lesson, setVoiceSynthesisConfig, setAvatars, setDrawings, setGraphics, setGraphicURLs, setMusics, setSpeeches }) {
   const material = await fetchWithAuth(`/lessons/${lesson.id}/materials`)
-  setDurationSec(material.durationSec)
   setVoiceSynthesisConfig(material.voiceSynthesisConfig)
   setAvatars(material.avatars || [])
-  setGraphics(material.graphics || [])
+  await setGraphicsWithURL(material.graphics || [])
   setDrawings(material.drawings || [])
   setMusics(material.musics || [])
-  setSpeeches(material.speeches || [])
-  return createNewTimelines()
+  await setSpeechWithVoice(material)
+  return createTimeline(filterObject(material, ['avatars', 'drawings', 'graphics', 'speeches', 'musics']))
 
-  function createNewTimelines() {
-    const timeline = {};
-    ['avatar', 'graphic', 'drawing', 'speech', 'music'].forEach(kind => {
-      if (!material[kind + 's']) return
+  async function setGraphicsWithURL(graphics) {
+    const graphicURLs = await fetchGraphicURLs()
+    setGraphicURLs(graphicURLs)
 
-      material[kind + 's'].forEach(m => {
-        const elapsedtime = m.elapsedtime
-        if (!timeline[elapsedtime]) {
-          timeline[elapsedtime] = {}
-        }
-        delete m.elapsedtime // キーにelapsedtimeが入るので不要
-        if (timeline[elapsedtime][kind]) {
-          timeline[elapsedtime][kind].push(m)
-        } else {
-          timeline[elapsedtime][kind] = [m]
-        }
-      })
+    const graphicsWithURLs = graphics.map(g => {
+      g.url = graphicURLs[g.graphicID] // ここでgraphicsの元のmaterialも更新されている
+      return g
     })
+    setGraphics(graphicsWithURLs)
+  }
 
+  async function setSpeechWithVoice(material) {
     const conditions = [!material.speeches, lesson.needsRecording, material.version === 1, material.created === material.updated]
     if (conditions.every(v => v)) {
-      return timelineWithVoices(timeline)
+      const voices = await fetchWithAuth(`/voices?lesson_id=${lesson.id}`)
+        .catch(e => {
+          if (e.response?.status === 404) return []
+          throw e
+        })
+      const speeches = []
+
+      voices.forEach(v => {
+        const newSpeech = {}
+        newSpeech.isSynthesis = false
+        newSpeech.caption = {}
+        newSpeech.voiceID = v.id
+        newSpeech.elapsedTime = v.elapsedTime
+        newSpeech.durationSec = v.durationSec
+        newSpeech.subtitle = v.text
+        newSpeech.synthesisConfig = {}
+
+        speeches.push({ ...newSpeech })
+      })
+      material.speeches = speeches
+      setSpeeches(speeches)
     } else {
-      return timeline
+      setSpeeches(material.speech || [])
     }
   }
 
-  async function timelineWithVoices(timeline) {
-    const voices = await fetchWithAuth(`/voices?lesson_id=${lesson.id}`)
+  async function fetchGraphicURLs() {
+    const results = await fetchWithAuth(`/graphics?lesson_id=${lesson.id}`)
       .catch(e => {
         if (e.response?.status === 404) return []
         throw e
       })
 
-    voices.forEach(v => {
-      if (!timeline[v.elapsedtime]) timeline[v.elapsedtime] = {}
-
-      const newSpeech = { ...defaultSpeech }
-      newSpeech.caption = {}
-      newSpeech.voiceID = v.id
-      newSpeech.durationSec = v.durationSec
-      newSpeech.subtitle = v.text
-      newSpeech.synthesisConfig = {}
-
-      timeline[v.elapsedtime].speech = [newSpeech]
-      setSpeeches(speeches => {
-        newSpeech.elapsedtime = v.elapsedtime
-        speeches.push(newSpeech)
-        return speeches
-      })
-    })
-
-    return timeline
+    return results.reduce((acc, r) => {
+      acc[r.id] = r.url
+      return acc
+    }, {})
   }
-}
-
-export async function fetchGraphicURLs(lessonID) {
-  const results = await fetchWithAuth(`/graphics?lesson_id=${lessonID}`)
-    .catch(e => {
-      if (e.response?.status === 404) return []
-      throw e
-    })
-
-  return results.reduce((acc, r) => {
-    acc[r.id] = r.url
-    return acc
-  }, {})
 }
