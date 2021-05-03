@@ -6,7 +6,7 @@ import useSynthesisVoice from '../../useSynthesisVoice'
 import useAudioPlayer from '../../useAudioPlayer'
 import { isBlobURL } from '../../../utils'
 import fetch from 'isomorphic-unfetch'
-import { putFile } from '../../../fetch'
+import useFetch from '../../useFetch'
 import { fetchVoiceFileURL, createVoice } from '../../../fetchResource'
 import { wavToMp3 } from '../../../audioUtils'
 
@@ -20,6 +20,7 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
   const { updateLine } = useLessonEditorContext()
   const { createSynthesisVoiceFile } = useSynthesisVoice()
   const { createAudio } = useAudioPlayer()
+  const { putFile } = useFetch()
 
   async function handleConfirm() {
     setIsProcessing(true)

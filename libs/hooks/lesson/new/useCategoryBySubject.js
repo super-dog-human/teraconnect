@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import useSWR from 'swr'
-import { fetch } from '../../../fetch'
+import useFetch from '../../useFetch'
 
 export default function useCategoryBySubject(setValue) {
   const [subjectID, setSubjectID] = useState()
+  const { fetch } = useFetch()
 
   const fetcher = async (sourceID) => {
     const result = {}

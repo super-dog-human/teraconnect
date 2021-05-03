@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import useTimeCounter from '../../useTimeCounter'
 import { useDialogContext } from '../../../contexts/dialogContext'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
-import { post } from '../../../fetch'
+import useFetch from '../../useFetch'
 
 export default function useLessonRecorder() {
   const router = useRouter()
@@ -27,6 +27,7 @@ export default function useLessonRecorder() {
   const { elapsedSeconds, realElapsedTime, switchCounter } = useTimeCounter()
   const { showDialog } = useDialogContext()
   const { showError } = useErrorDialogContext()
+  const { post } = useFetch()
 
   function setRecord(record) {
     switch (record.kind) {

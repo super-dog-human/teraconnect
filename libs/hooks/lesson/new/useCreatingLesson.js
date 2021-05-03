@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
-import { post } from '../../../fetch'
+import useFetch  from '../../useFetch'
 
 export default function useCreatingLesson() {
   const [isCreating, setIsCreating] = useState(false)
   const router = useRouter()
   const { showError } = useErrorDialogContext()
+  const { post } = useFetch()
 
   function onSubmit(form) {
     setIsCreating(true)

@@ -1,8 +1,9 @@
 import { useLessonEditorContext } from '../contexts/lessonEditorContext'
-import { post } from '../fetch'
+import useFetch from './useFetch'
 
 export default function useSynthesisVoice() {
   const { voiceSynthesisConfig } = useLessonEditorContext()
+  const { post } = useFetch()
 
   function createSynthesisVoiceFile(lessonID, speech) {
     const request = {

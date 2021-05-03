@@ -1,5 +1,5 @@
 import { useRef, useEffect } from 'react'
-import { post, putFile } from '../../../fetch'
+import useFetch from '../../useFetch'
 import { extentionNameTo3Chars } from '../../../utils'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 
@@ -9,6 +9,7 @@ const thumbnailMaxSize = { width: 150, height: 95 }
 export default function useImageUploader(id, images, setImages, inputFileRef, selectImageBarRef) {
   const imageCountRef = useRef(0)
   const { showError } = useErrorDialogContext()
+  const { post, putFile } = useFetch()
 
   function handleDrop(e) {
     uploadImages(e.dataTransfer.files)

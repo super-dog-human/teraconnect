@@ -7,6 +7,7 @@ import useUpdatingLine from './timeline/useUpdatingLine'
 import useDeletionLine from './timeline/useDeletionLine'
 import useSwappingLine from './timeline/useSwappingLine'
 import useLineUtils from './timeline/useLineUtils'
+import useFetch from '../../useFetch'
 
 export default function useLessonEditor() {
   const lessonRef = useRef()
@@ -20,6 +21,7 @@ export default function useLessonEditor() {
   const [graphicURLs, setGraphicURLs] = useState({})
   const [musics, setMusics] = useState([])
   const [speeches, setSpeeches] = useState([])
+  const { fetchWithAuth } = useFetch()
   const { showError } = useErrorDialogContext()
   const { shiftElapsedTime, updateMaterial, deleteMaterial, lastTimeline, sortedElapsedTimes, maxDurationSecInLine, nextElapsedTime, calcTime, targetMaterials, allMaterialNames, allMaterials } =
     useLineUtils({ avatars, drawings, graphics, musics, speeches, setAvatars, setDrawings, setGraphics, setSpeeches, setMusics, timeline })
@@ -31,7 +33,7 @@ export default function useLessonEditor() {
   async function fetchResources(lesson) {
     lessonRef.current = lesson
 
-    fetchMaterial({ lesson, setDurationSec, setVoiceSynthesisConfig, setAvatars, setDrawings, setGraphics, setGraphicURLs, setMusics, setSpeeches })
+    fetchMaterial({ lesson, fetchWithAuth, setDurationSec, setVoiceSynthesisConfig, setAvatars, setDrawings, setGraphics, setGraphicURLs, setMusics, setSpeeches })
       .then(timeline => {
         setTimeline(timeline)
         setIsLoading(false)

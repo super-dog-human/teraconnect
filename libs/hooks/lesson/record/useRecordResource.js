@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
-import { fetch, fetchWithAuth } from '../../../fetch'
+import useFetch from '../../useFetch'
 
 export default function useRecordResource(setBgImageURL) {
   const { showError } = useErrorDialogContext()
   const [bgImages, setBgImages] = useState([])
   const [avatars, setAvatars] = useState([])
   const [bgms, setBGMs] = useState([])
+  const { fetch, fetchWithAuth }  = useFetch()
 
   function loadBackgroundImages() {
     fetch('/background_images').then(r => {

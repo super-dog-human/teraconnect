@@ -1,8 +1,7 @@
-import { fetchWithAuth } from './fetch'
 import { filterObject } from './utils'
 import { createTimeline } from './lessonLineUtils'
 
-export async function fetchMaterial({ lesson, setVoiceSynthesisConfig, setAvatars, setDrawings, setGraphics, setGraphicURLs, setMusics, setSpeeches }) {
+export async function fetchMaterial({ lesson, fetchWithAuth, setVoiceSynthesisConfig, setAvatars, setDrawings, setGraphics, setGraphicURLs, setMusics, setSpeeches }) {
   const material = await fetchWithAuth(`/lessons/${lesson.id}/materials`)
   setVoiceSynthesisConfig(material.voiceSynthesisConfig)
   setAvatars(material.avatars || [])
