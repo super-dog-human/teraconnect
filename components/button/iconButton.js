@@ -3,18 +3,18 @@ import React from 'react'
 import { css } from '@emotion/core'
 import LoadingIndicator from '../loadingIndicator'
 
-export default function IconButton({ name, backgroundColor='inherit', color='inherit', borderColor='inherit', padding='0', disabled=false, isProcessing=false, onClick }) {
+export default function IconButton({ name, backgroundColor, color, borderColor, hoverFilter, padding, disabled, isProcessing, onClick }) {
   const bodyStyle = css({
     display: 'block',
     width: '100%',
     height: '100%',
-    padding: `${padding}px`,
+    padding: padding ? `${padding}px` : '0px',
     fontSize: 0,
-    borderColor,
-    backgroundColor,
-    color,
+    borderColor: borderColor || 'inherit',
+    backgroundColor: backgroundColor || 'inherit',
+    color: color || 'inherit',
     ':hover': {
-      filter: 'brightness(80%)',
+      filter: hoverFilter || 'brightness(80%)',
     },
     ':disabled': {
       opacity: 0.3,
