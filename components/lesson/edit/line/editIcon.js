@@ -1,23 +1,19 @@
-/** @jsxImportSource @emotion/react */
 import React from 'react'
-import Image from 'next/image'
-import { css } from '@emotion/core'
+import Flex from '../../../flex'
+import ContainerSpacer from '../../../containerSpacer'
+import Container from '../../../container'
+import IconButton from '../../../button/iconButton'
 
 export default function EditIcon({ onClick, isShow }) {
-  const bodyStyle = css({
-    display: 'flex',
-    visibility: isShow ? 'visible' : 'hidden',
-    justifyContent: 'center',
-    width: '25px',
-    marginLeft: '15px',
-    ':hover': {
-      filter: 'brightness(50%)',
-    }
-  })
-
   return (
-    <div css={bodyStyle}>
-      <Image src={'/img/icon/more.svg'} width={20} height={20} onClick={onClick} draggable={false} />
-    </div>
+    <Flex justifyContent='center' alignItems='center'>
+      <ContainerSpacer left='15'>
+        <Container width='25'>
+          <Container width='22' height='22' invisible={!isShow}>
+            <IconButton name='more' borderColor='none' hoverFilter='brightness(50%)' onClick={onClick} />
+          </Container>
+        </Container>
+      </ContainerSpacer>
+    </Flex>
   )
 }

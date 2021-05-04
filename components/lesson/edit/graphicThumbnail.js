@@ -2,10 +2,13 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import { css } from '@emotion/core'
-import LoadingIndicator from '../../../components/loadingIndicator'
+import LoadingIndicator from '../../loadingIndicator'
+import AbsoluteContainer from '../../absoluteContainer'
+import Container from '../../container'
+import ColorFilter from '../../colorFilter'
 import { useImageViewerContext } from '../../../libs/contexts/imageViewerContext'
 
-export default function LessonEditGraphicThumbnail({ url }) {
+export default function GraphicThumbnail({ url }) {
   const { setImage } = useImageViewerContext()
   const [isLoaded, setIsLoaded] = useState(false)
 
@@ -14,9 +17,8 @@ export default function LessonEditGraphicThumbnail({ url }) {
   }
 
   function handleClick(e) {
-    const url = e.currentTarget.dataset['imageUrl']
+    const url = e.currentTarget.dataset.imageUrl
     setImage({ url, widePer: 70 })
-    e.stopPropagation()
   }
 
   const imageStyle = css({
@@ -27,25 +29,22 @@ export default function LessonEditGraphicThumbnail({ url }) {
 
   return (
     <div css={bodyStyle}>
-      {url && <Image src={url} width="175" height="100" objectFit="contain" css={imageStyle} data-image-url={url} onClick={handleClick} onLoad={handleLoad} />}
-      {!isLoaded && <div css={loadingStyle}><LoadingIndicator size={50} /></div>}
+      {url &&
+        <Image src={url} width="175" height="100" objectFit="contain" draggable={false} css={imageStyle} data-image-url={url} onClick={handleClick} onLoad={handleLoad} />
+      }
+      {!isLoaded && <AbsoluteContainer top='0' left='0'>
+        <ColorFilter filter='contrast(20%)'>
+          <Container width='185' height='100'><LoadingIndicator size={50} /></Container>
+        </ColorFilter>
+      </AbsoluteContainer>
+      }
     </div>
   )
 }
 
 const bodyStyle = css({
   position: 'relative',
-  width: '175px',
+  width: '185px',
   height: '100px',
-})
-
-
-const loadingStyle = css({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  width: '175px',
-  height: '100px',
-  filter: 'contrast(20%)',
-  cursor: 'auto',
+  textAlign: 'center',
 })
