@@ -22,6 +22,7 @@ export default function LessonEditGraphicThumbnail({ url }) {
   const imageStyle = css({
     opacity: isLoaded ? 1 : 0,
     fontSize: 0,
+    cursor: 'pointer',
   })
 
   return (
