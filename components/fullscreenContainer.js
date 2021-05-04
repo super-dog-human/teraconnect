@@ -2,7 +2,7 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-export default function FullscreenContainer({ children, position='static', display='block', isShow=true, zKind, onClick }) {
+export default function FullscreenContainer({ children, position, display='block', isShow=true, zKind, onClick }) {
   const bodyStyle = css({
     position,
     display: isShow ? display : 'none',
