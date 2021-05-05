@@ -24,11 +24,11 @@ export default function LessonEditGraphicController() {
     if (e.target.files.length === 0) return // 画像を選択せずに閉じた場合は何もしない
 
     showDialog({
-      title: '入れ替えの確認',
-      message: '選択した画像で入れ替えますか？',
+      title: '差し替えの確認',
+      message: '選択した画像で差し替えますか？',
       canDismiss: true,
       dismissName: 'キャンセル',
-      callbackName: '入れ替える',
+      callbackName: '差し替える',
       callback: () => {
         swapGraphic(targetGraphicID.current, e.target.files[0])
         inputFileRef.current.value = ''
@@ -52,9 +52,8 @@ export default function LessonEditGraphicController() {
 
   return (
     <div css={bodyStyle}>
-      <Spacer height='100' />
+      <Spacer height='70' />
       <div css={headerStyle}>
-        <div>アップロード済み ({Object.keys(graphicURLs).length})</div>
         <hr />
       </div>
       <div css={containerStyle}>
@@ -72,7 +71,7 @@ export default function LessonEditGraphicController() {
 }
 
 const bodyStyle = css({
-  height: 'calc(100% - 253px - 20px - 45px - 100px)', // 自身の上に存在する要素分を差し引く
+  height: 'calc(100% - 253px - 45px - 70px)', // 自身の上に存在する要素分を差し引く
 })
 
 const headerStyle = css({

@@ -2,7 +2,7 @@ import { useRef, useEffect } from 'react'
 import { fetch as isoFetch, fetchToken as isoFetchToken, fetchWithAuth as isoFetchWithAuth, post as isoPost, putFile as isoPutFile } from '../fetch'
 import { fetchVoiceFileURL as isoFetchVoiceFileURL, createVoice as isoCreateVoice } from '../fetchResource'
 
-const FETCH_TIMEOUT = 1000 * 60
+const timeoutMillisec = 1000 * 60
 
 class TimeoutError extends Error {
   constructor(params) {
@@ -50,7 +50,7 @@ export default function useFetch() {
         reject(new TimeoutError('request timed out')) // タイムアウトでは専用のエラーにするため、rejectしてからabortする
         abortsRef.current[timeout].abort()
         delete abortsRef.current[timeout]
-      }, FETCH_TIMEOUT)
+      }, timeoutMillisec)
 
       abortsRef.current[timeout] = abortController
 
