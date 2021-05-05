@@ -1,15 +1,14 @@
 import { useRef, useEffect } from 'react'
 import useFetch from '../../useFetch'
-import { extentionNameTo3Chars } from '../../../utils'
+import { filterAvailableImages } from '../../../utils'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 
-const maxFileByteSize = 10485760 // 10MB
 const thumbnailMaxSize = { width: 150, height: 95 }
 
-export default function useImageUploader(id, images, setImages, inputFileRef, selectImageBarRef) {
+export default function useImageUploaderBar(id, images, setImages, inputFileRef, selectImageBarRef) {
   const imageCountRef = useRef(0)
   const { showError } = useErrorDialogContext()
-  const { post, putFile } = useFetch()
+  const { createGraphics, putFile } = useFetch()
 
   function handleDrop(e) {
     uploadImages(e.dataTransfer.files)
@@ -25,10 +24,7 @@ export default function useImageUploader(id, images, setImages, inputFileRef, se
   }
 
   async function uploadImages(files) {
-    const validFiles = Array.from(files)
-      .filter(f => ['image/jpeg', 'image/png', 'image/gif'].includes(f.type))
-      .filter(f => f.size <= maxFileByteSize)
-
+    const validFiles = filterAvailableImages(files)
     const temporaryIDs = validFiles.map(() => Math.random().toString(32).substring(2))
 
     let loadedCount = 0
@@ -59,8 +55,8 @@ export default function useImageUploader(id, images, setImages, inputFileRef, se
   }
 
   async function fetchURLsAndUpload(validFiles, temporaryIDs) {
-    fetchSignedURLs(validFiles).then(responses =>  {
-      responses.forEach((r, i) => {
+    createGraphics(id, validFiles).then(results => {
+      results.signedURLs.forEach((r, i) => {
         const tmpID = temporaryIDs[i]
 
         uploadImage(validFiles[i], tmpID, r.fileID, r.signedURL).catch(e => {
@@ -84,20 +80,6 @@ export default function useImageUploader(id, images, setImages, inputFileRef, se
       })
       console.error(e)
     })
-  }
-
-  async function fetchSignedURLs(files) {
-    const requests = files.map(file => {
-      return {
-        entity: 'graphic',
-        extension: extentionNameTo3Chars(file.type.substr(6)),
-        contentType: file.type
-      }
-    })
-
-    const request = { lessonID: id, fileRequests: requests }
-    const result = await post('/graphics', request)
-    return result.signedURLs
   }
 
   function resizedImageDataURL(original, callback) {

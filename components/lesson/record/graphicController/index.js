@@ -2,8 +2,8 @@
 import React, { useRef } from 'react'
 import { css } from '@emotion/core'
 import { Container, Row, Col } from 'react-grid-system'
-import useImageUploader from '../../../../libs/hooks/lesson/record/useImageUploader'
-import useImageController from '../../../../libs/hooks/lesson/record/useImageController'
+import useImageUploaderBar from '../../../../libs/hooks/lesson/record/useImageUploaderBar'
+import useImageControllerBar from '../../../../libs/hooks/lesson/record/useImageControllerBar'
 import { useLessonRecorderContext } from '../../../../libs/contexts/lessonRecorderContext'
 import InputFile from '../../../form/inputFile'
 import UploadingWideButton from './uploadingWideButton'
@@ -15,9 +15,9 @@ import DragSwappable from '../../../dragSwappable'
 export default function LessonRecordGraphicController({ id, setSelectedGraphic, hasDragOver }) {
   const selectImageBarRef = useRef(null)
   const inputFileRef = useRef(null)
-  const { imageID, selectImage, removeImage, images, setImages, moveImage } = useImageController(setSelectedGraphic)
+  const { imageID, selectImage, removeImage, images, setImages, moveImage } = useImageControllerBar(setSelectedGraphic)
   const { handleDragOver, handleDragLeave, handleDrop, handleFileChange, handleUploadButtonClick } =
-    useImageUploader(id, images, setImages, inputFileRef, selectImageBarRef)
+    useImageUploaderBar(id, images, setImages, inputFileRef, selectImageBarRef)
   const { isFinishing } = useLessonRecorderContext()
 
   return (

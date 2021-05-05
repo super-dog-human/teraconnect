@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useLessonRecorderContext } from '../../../contexts/lessonRecorderContext'
 
-export default function useImageController(setSelectedGraphic) {
+export default function useImageControllerBar(setSelectedGraphic) {
   const [isShow, setIsShow] = useState(false)
   const [imageID, setImageID] = useState()
   const [images, setImages] = useState([])
