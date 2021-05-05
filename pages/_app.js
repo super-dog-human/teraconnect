@@ -6,7 +6,7 @@ import { ErrorDialogContext, ErrorDialogProvider } from '../libs/contexts/errorD
 import ErrorBoundary from '../components/errorBoundary'
 import ErrorDialog from '../components/errorDialog'
 import { DialogProvider } from '../libs/contexts/dialogContext'
-import Dialog from '../components/dialog'
+import Dialog from '../components/dialog/'
 import * as gtag from '../libs/gtag'
 import '../app.css'
 

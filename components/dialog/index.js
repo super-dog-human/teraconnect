@@ -1,10 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
 import { css } from '@emotion/core'
-import { useDialogContext } from '../libs/contexts/dialogContext'
+import { useDialogContext } from '../../libs/contexts/dialogContext'
+import LoadingIndicator from '../loadingIndicator'
 
 export default function Dialog() {
-  const { dialog, dismissDialog } = useDialogContext()
+  const { dialog, isProcessing, dismissDialog } = useDialogContext()
 
   function handleDismiss() {
     dismissDialog(dialog.dismissCallback)
@@ -27,8 +28,8 @@ export default function Dialog() {
               {dialog.message}
             </div>
             <div css={footerStyle}>
-              {dialog.canDismiss && <button className="light" onClick={handleDismiss}>{dialog.dismissName || '閉じる' }</button>}
-              {dialog.callback && <button className="dark" onClick={handleCallback}>{dialog.callbackName || '実行'}</button>}
+              {dialog.canDismiss && <button className="light" onClick={handleDismiss} disabled={isProcessing}>{dialog.dismissName || '閉じる' }</button>}
+              {dialog.callback && <button className="dark" onClick={handleCallback} disabled={isProcessing}>{isProcessing ? <LoadingIndicator size='30' /> : dialog.callbackName || '実行'}</button>}
             </div>
           </div>
         </div>
