@@ -1,17 +1,18 @@
 /** @jsxImportSource @emotion/react */
 import React, { useRef } from 'react'
 import { css } from '@emotion/core'
-import useGraphicController from '../../../../libs/hooks/lesson/edit/useGraphicController'
-import { useLessonEditorContext } from '../../../../libs/contexts/lessonEditorContext'
+import Spacer from '../../../spacer'
 import ThumbnailController from './thumbnailController'
 import InputFile from '../../../form/inputFile'
+import useGraphicController from '../../../../libs/hooks/lesson/edit/useGraphicController'
+import { useLessonEditorContext } from '../../../../libs/contexts/lessonEditorContext'
 import { useDialogContext } from '../../../../libs/contexts/dialogContext'
 
 export default function LessonEditGraphicController() {
   const inputFileRef = useRef()
   const targetGraphicID = useRef('')
-  const { graphics, graphicURLs, updateLine } = useLessonEditorContext()
-  const { swapGraphic, removeGraphic } = useGraphicController({ graphics, updateLine })
+  const { setGraphics, graphicURLs, setGraphicURLs } = useLessonEditorContext()
+  const { swapGraphic, removeGraphic } = useGraphicController({ setGraphics, setGraphicURLs })
   const { showDialog } = useDialogContext()
 
   function uploadNewImage(currentGraphicID) {
@@ -23,7 +24,7 @@ export default function LessonEditGraphicController() {
     if (e.target.files.length === 0) return // 画像を選択せずに閉じた場合は何もしない
 
     showDialog({
-      title: '画像の入れ替え確認',
+      title: '入れ替えの確認',
       message: '選択した画像で入れ替えますか？',
       canDismiss: true,
       dismissName: 'キャンセル',
@@ -40,7 +41,7 @@ export default function LessonEditGraphicController() {
 
   function confirmRemovingGraphic(currentGraphicID) {
     showDialog({
-      title: '画像の削除確認',
+      title: '削除の確認',
       message: '画像を完全に削除しますか？',
       canDismiss: true,
       dismissName: 'キャンセル',
@@ -51,6 +52,7 @@ export default function LessonEditGraphicController() {
 
   return (
     <div css={bodyStyle}>
+      <Spacer height='100' />
       <div css={headerStyle}>
         <div>アップロード済み ({Object.keys(graphicURLs).length})</div>
         <hr />
@@ -71,7 +73,6 @@ export default function LessonEditGraphicController() {
 
 const bodyStyle = css({
   height: 'calc(100% - 253px - 20px - 45px - 100px)', // 自身の上に存在する要素分を差し引く
-  marginTop: '100px',
 })
 
 const headerStyle = css({
@@ -90,6 +91,6 @@ const containerStyle = css({
 })
 
 const thumbnailStyle = css({
-  flex: 'calc(50% - 40px)',
+  flex: 'calc(50% - 40px) 0',
   margin: '20px',
 })

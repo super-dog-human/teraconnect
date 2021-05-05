@@ -78,5 +78,5 @@ export default function useLessonEditor() {
   }, allMaterials())
 
   return { fetchResources, isLoading, durationSec, timeline, voiceSynthesisConfig, setVoiceSynthesisConfig,
-    avatars, graphics, graphicURLs, drawings, musics, speeches, updateLine, deleteLine, swapLine, addSpeechLineToLast }
+    avatars, graphics, graphicURLs, drawings, musics, speeches, setGraphics, setGraphicURLs, updateLine, deleteLine, swapLine, addSpeechLineToLast }
 }
