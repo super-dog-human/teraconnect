@@ -1,54 +1,20 @@
 /** @jsxImportSource @emotion/react */
-import React, { useRef } from 'react'
+import React from 'react'
 import { css } from '@emotion/core'
 import Spacer from '../../../spacer'
 import ThumbnailController from './thumbnailController'
 import InputFile from '../../../form/inputFile'
 import useGraphicController from '../../../../libs/hooks/lesson/edit/useGraphicController'
 import { useLessonEditorContext } from '../../../../libs/contexts/lessonEditorContext'
+import { useErrorDialogContext } from '../../../../libs/contexts/errorDialogContext'
 import { useDialogContext } from '../../../../libs/contexts/dialogContext'
 
 export default function LessonEditGraphicController() {
-  const inputFileRef = useRef()
-  const targetGraphicID = useRef('')
   const { setGraphics, graphicURLs, setGraphicURLs } = useLessonEditorContext()
-  const { swapGraphic, removeGraphic } = useGraphicController({ setGraphics, setGraphicURLs })
   const { showDialog } = useDialogContext()
-
-  function uploadNewImage(currentGraphicID) {
-    targetGraphicID.current = currentGraphicID
-    inputFileRef.current.click()
-  }
-
-  function confirmSwappingGraphic(e) {
-    if (e.target.files.length === 0) return // 画像を選択せずに閉じた場合は何もしない
-
-    showDialog({
-      title: '差し替えの確認',
-      message: '選択した画像で差し替えますか？',
-      canDismiss: true,
-      dismissName: 'キャンセル',
-      callbackName: '差し替える',
-      callback: () => {
-        swapGraphic(targetGraphicID.current, e.target.files[0])
-        inputFileRef.current.value = ''
-      },
-      dismissCallback: () => {
-        inputFileRef.current.value = ''
-      },
-    })
-  }
-
-  function confirmRemovingGraphic(currentGraphicID) {
-    showDialog({
-      title: '削除の確認',
-      message: '画像を完全に削除しますか？',
-      canDismiss: true,
-      dismissName: 'キャンセル',
-      callbackName: '削除',
-      callback: () => removeGraphic(currentGraphicID),
-    })
-  }
+  const { showError } = useErrorDialogContext()
+  const { inputFileRef, selectLocalImage, confirmSwappingGraphic, confirmRemovingGraphic } =
+    useGraphicController({ showDialog, showError, setGraphics, setGraphicURLs })
 
   return (
     <div css={bodyStyle}>
@@ -57,9 +23,9 @@ export default function LessonEditGraphicController() {
         <hr />
       </div>
       <div css={containerStyle}>
-        {Object.keys(graphicURLs).map(key => (
-          <div css={thumbnailStyle} key={key}>
-            <ThumbnailController graphicID={key} url={graphicURLs[key]} swapGraphic={uploadNewImage} removeGraphic={confirmRemovingGraphic} />
+        {Object.keys(graphicURLs).map(graphicID => (
+          <div css={thumbnailStyle} key={graphicID}>
+            <ThumbnailController graphicID={graphicID} url={graphicURLs[graphicID]} swapGraphic={selectLocalImage} removeGraphic={confirmRemovingGraphic} />
           </div>
         ))}
       </div>

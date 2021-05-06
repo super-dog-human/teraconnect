@@ -18,8 +18,8 @@ const ErrorDialogProvider = ({ children }) => {
     event('error', 'expected', err.message, 1)
   }
 
-  function resolveError(callback) {
-    if (callback) callback()
+  async function resolveError(callback) {
+    if (callback) await callback()
 
     errors.shift()
     setError(errors[0])

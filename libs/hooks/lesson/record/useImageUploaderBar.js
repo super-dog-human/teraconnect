@@ -1,9 +1,8 @@
 import { useRef, useEffect } from 'react'
 import useFetch from '../../useFetch'
-import { filterAvailableImages } from '../../../utils'
+import { generateRandomID } from '../../../utils'
+import { filterAvailableImages, imageToThumbnailURL } from '../../../graphicUtils'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
-
-const thumbnailMaxSize = { width: 150, height: 95 }
 
 export default function useImageUploaderBar(id, images, setImages, inputFileRef, selectImageBarRef) {
   const imageCountRef = useRef(0)
@@ -25,16 +24,16 @@ export default function useImageUploaderBar(id, images, setImages, inputFileRef,
 
   async function uploadImages(files) {
     const validFiles = filterAvailableImages(files)
-    const temporaryIDs = validFiles.map(() => Math.random().toString(32).substring(2))
+    const temporaryIDs = validFiles.map(() => generateRandomID())
 
     let loadedCount = 0
     validFiles.forEach((file, i) => {
       const reader = new FileReader()
       reader.readAsDataURL(file)
-      reader.onload = (async e => {
+      reader.onload = (e => {
         loadedCount += 1
 
-        resizedImageDataURL(e.target.result, (imageDataURL => {
+        imageToThumbnailURL(e.target.result, (imageDataURL => {
           setImages(images =>
             [...images, {
               src: e.target.result,
@@ -79,25 +78,6 @@ export default function useImageUploaderBar(id, images, setImages, inputFileRef,
         callback: () => { fetchURLsAndUpload(validFiles, temporaryIDs) },
       })
       console.error(e)
-    })
-  }
-
-  function resizedImageDataURL(original, callback) {
-    const image = new Image()
-    image.src = original
-    image.onload = (() => {
-      const ratio = Math.min(thumbnailMaxSize.width / image.naturalWidth, thumbnailMaxSize.height / image.naturalHeight) * window.devicePixelRatio
-      const canvas = document.createElement('canvas')
-      const ctx = canvas.getContext('2d')
-
-      const width = image.naturalWidth * ratio
-      const height = image.naturalHeight * ratio
-
-      canvas.width = width
-      canvas.height = height
-
-      ctx.drawImage(image, 0, 0, width, height)
-      callback(canvas.toDataURL())
     })
   }
 

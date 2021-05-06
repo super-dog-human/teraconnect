@@ -98,9 +98,6 @@ export function isBlobURL(url) {
   return url.startsWith('blob:')
 }
 
-export function filterAvailableImages(files) {
-  const maxFileByteSize = 10485760 // 10MB
-  return Array.from(files)
-    .filter(f => ['image/jpeg', 'image/png', 'image/gif'].includes(f.type))
-    .filter(f => f.size <= maxFileByteSize)
+export function generateRandomID() {
+  return Math.random().toString(32).substring(2)
 }
