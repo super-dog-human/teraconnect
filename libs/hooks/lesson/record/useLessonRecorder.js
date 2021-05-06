@@ -125,7 +125,7 @@ export default function useLessonRecorder() {
 
     updateLessonBody()
 
-    post(`/lessons/${lessonID}/materials`, lesson, 'POST')
+    post(`/lessons/${lessonID}/materials`, lessonRef.current, 'POST')
       .then(() => {
         router.push(`/lessons/${lessonID}/edit`)
       }).catch(e => {
