@@ -16,7 +16,7 @@ export async function fetchMaterial({ lesson, fetchWithAuth, setVoiceSynthesisCo
     setGraphicURLs(graphicURLs)
 
     const graphicsWithURLs = graphics.map(g => {
-      g.url = graphicURLs[g.graphicID] // ここでgraphicsの元のmaterialも更新されている
+      if (g.action === 'show') g.url = graphicURLs[g.graphicID] // ここでgraphicsの元のmaterialも更新されている
       return g
     })
     setGraphics(graphicsWithURLs)

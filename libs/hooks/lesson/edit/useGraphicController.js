@@ -72,7 +72,7 @@ export default function useGraphicController({ showDialog, showError, setGraphic
         graphics.forEach(graphic => {
           if (graphic.graphicID != currentGraphicID) return
           graphic.graphicID = id
-          graphic.url = url
+          if (graphic.action === 'show') graphic.url = url
         })
         return [...graphics]
       })
