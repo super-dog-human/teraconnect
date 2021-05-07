@@ -95,11 +95,6 @@ main {
 a {
   text-decoration: none;
 }
-hr {
-  height: 1px;
-  background-color: var(--border-gray);
-  border: none;
-}
 button {
   font-weight: 500;
   text-align: center;
