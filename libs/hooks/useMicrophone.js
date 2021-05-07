@@ -21,7 +21,7 @@ export default function useMicrophone() {
     } else {
       return new Promise(resolve => {
         showDialog({
-          title: 'マイク使用の確認',
+          title: 'マイクの使用',
           message: 'この画面では端末のマイクを使用します。よろしいですか？',
           canDismiss: true,
           dismissName: 'キャンセル',

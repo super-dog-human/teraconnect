@@ -22,7 +22,7 @@ export default function LessonNewForm(props) {
           <input type="radio" name="createMethod" value="useVoice" ref={register({ required: true })} />
             自分の声で授業を作成する。
         </label>
-        <hr className=""/>
+        <hr />
         <div>マイクを使って、自分の声を録音しながら授業を進めていきます。</div>
       </div>
       <div>

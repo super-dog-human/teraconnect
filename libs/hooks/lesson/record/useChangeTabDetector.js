@@ -15,7 +15,7 @@ export default function useLessonRecordChangeTabDetector() {
     switchCounter(false)
     setIsRecording(false)
     showDialog({
-      title: '収録を停止しました',
+      title: '授業収録',
       message: 'タブの切り替えを検出したため、収録を一時停止しました。',
       canDismiss: true,
     })

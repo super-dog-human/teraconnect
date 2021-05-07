@@ -63,7 +63,8 @@ export default function LessonEditActionLabel({ kind, action }) {
 }
 
 const bodyStyle = css({
-  color: 'var(--text-gray)',
+  color: 'var(--dark-gray)',
+  fontSize: '14px',
   lineHeight: '55px',
   width: '100%',
   height: '55px',

@@ -1,26 +1,20 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import Image from 'next/image'
 import { css } from '@emotion/core'
-import LoadingIndicator from '../../../loadingIndicator'
+import ContainerSpacer from '../../../containerSpacer'
+import Flex from '../../../flex'
 
-export default function LessonEditKindIcon({ kind, status=true, className, onClick }) {
+export default function KindIcon({ kind, status=true, onClick }) {
   const imageStyle = css({
+    width: '20px',
     filter: status ? 'grayscale(0)' : 'grayscale(1) brightness(130%)',
   })
 
   return (
-    <div css={bodyStyle} className={className}>
-      {kind === 'loading' && <LoadingIndicator />}
-      {kind != 'loading' && <Image src={`/img/icon/timeline-${kind}.svg`} width={20} height={20} css={imageStyle} onClick={onClick} draggable={false} />}
-    </div>
+    <ContainerSpacer left='15' right='15'>
+      <Flex>
+        <img src={`/img/icon/timeline-${kind}.svg`} css={imageStyle} onClick={onClick} draggable={false} />
+      </Flex>
+    </ContainerSpacer>
   )
 }
-
-const bodyStyle = css({
-  display: 'flex',
-  justifyContent: 'center',
-  width: '25px',
-  marginLeft: '15px',
-  marginRight: '20px',
-})

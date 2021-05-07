@@ -1,9 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
 import { css } from '@emotion/core'
+import Container from '../../../container'
+import AlignContent from '../../../alignContainer'
 import Spacer from '../../../spacer'
 import ThumbnailController from './thumbnailController'
 import InputFile from '../../../form/inputFile'
+import Hr from '../../../hr'
 import useGraphicController from '../../../../libs/hooks/lesson/edit/useGraphicController'
 import { useLessonEditorContext } from '../../../../libs/contexts/lessonEditorContext'
 import { useErrorDialogContext } from '../../../../libs/contexts/errorDialogContext'
@@ -19,9 +22,11 @@ export default function LessonEditGraphicController() {
   return (
     <div css={bodyStyle}>
       <Spacer height='70' />
-      <div css={headerStyle}>
-        <hr />
-      </div>
+      <Container height='50'>
+        <AlignContent textAlign='center'>
+          <Hr color='var(--border-gray)' />
+        </AlignContent>
+      </Container>
       <div css={containerStyle}>
         {Object.keys(graphicURLs).map(graphicID => (
           <div css={thumbnailStyle} key={graphicID}>
@@ -37,14 +42,7 @@ export default function LessonEditGraphicController() {
 }
 
 const bodyStyle = css({
-  height: 'calc(100% - 253px - 45px - 70px)', // 自身の上に存在する要素分を差し引く
-})
-
-const headerStyle = css({
-  height: '50px',
-  fontSize: '14px',
-  textAlign: 'center',
-  color: 'gray',
+  height: 'calc(100% - 253px - 20px - 45px - 70px)', // 自身の上に存在する要素分を差し引く
 })
 
 const containerStyle = css({
@@ -57,5 +55,5 @@ const containerStyle = css({
 
 const thumbnailStyle = css({
   flex: 'calc(50% - 40px) 0',
-  margin: '20px',
+  margin: '10px 20px',
 })

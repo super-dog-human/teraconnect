@@ -23,7 +23,7 @@ export default function useGraphicController({ showDialog, showError, setGraphic
 
     if (isAvailableFileSize(file)) {
       showDialog({
-        title: '差し替えの確認',
+        title: '画像の差し替え',
         message: '現在の画像を削除し、新しい画像と差し替えますか？',
         canDismiss: true,
         dismissName: 'キャンセル',
@@ -38,7 +38,7 @@ export default function useGraphicController({ showDialog, showError, setGraphic
       })
     } else {
       showDialog({
-        title: 'ファイルサイズの確認',
+        title: 'エラー',
         message: 'ファイルサイズが大きすぎます。10MB以内のファイルを選択してください。',
         canDismiss: true,
         callbackName: '閉じる',
@@ -48,7 +48,7 @@ export default function useGraphicController({ showDialog, showError, setGraphic
 
   function confirmRemovingGraphic(currentGraphicID) {
     showDialog({
-      title: '削除の確認',
+      title: '画像の削除',
       message: '画像を削除し、授業から取り除きますか？',
       canDismiss: true,
       dismissName: 'キャンセル',

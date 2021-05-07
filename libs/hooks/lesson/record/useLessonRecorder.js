@@ -109,7 +109,7 @@ export default function useLessonRecorder() {
 
   function finishRecording(lessonID) {
     showDialog({
-      title: '収録の完了',
+      title: '授業収録',
       message: '収録を完了します。よろしいですか？',
       canDismiss: true,
       dismissName: 'キャンセル',

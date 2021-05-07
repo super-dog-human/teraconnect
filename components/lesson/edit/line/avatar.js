@@ -1,6 +1,5 @@
-/** @jsxImportSource @emotion/react */
 import React from 'react'
-import LessonEditKindIcon from './kindIcon'
+import KindIcon from './kindIcon'
 import LessonEditActionLabel from './actionLabel'
 import EditIcon from './editIcon'
 
@@ -12,7 +11,7 @@ export default function LessonLineAvatar({ avatar, index, isEditButtonShow, hand
 
   return (
     <>
-      <LessonEditKindIcon kind="avatar" />
+      <KindIcon kind="avatar" />
       <LessonEditActionLabel kind="avatar" />
       <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} />
     </>

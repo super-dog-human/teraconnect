@@ -27,7 +27,7 @@ const bodyStyle = css({
 })
 
 const labelStyle = css({
-  fontSize: '15px',
+  fontSize: '13px',
 })
 
 const elapsedTimeStyle = css({

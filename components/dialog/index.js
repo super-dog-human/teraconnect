@@ -2,7 +2,13 @@
 import React from 'react'
 import { css } from '@emotion/core'
 import { useDialogContext } from '../../libs/contexts/dialogContext'
-import LoadingIndicator from '../loadingIndicator'
+import DismissButton from './dismissButton'
+import ConfirmButton from './confirmButton'
+import FullscreenContainer from '../fullscreenContainer'
+import Flex from '../flex'
+import Spacer from '../spacer'
+import Container from '../container'
+import PlainText from '../plainText'
 
 export default function Dialog() {
   const { dialog, isProcessing, dismissDialog } = useDialogContext()
@@ -18,32 +24,33 @@ export default function Dialog() {
   return (
     <>
       {dialog &&
-        <div css={backgroundStyle} className="fullscreen-dialog-z">
-          <div css={dialogStyle}>
-            <div css={headerStyle}>
-              <img src="/img/icon/information.svg" />
-              <span>{dialog.title || 'お知らせ'}</span>
+        <div className="fullscreen-dialog-z">
+          <FullscreenContainer position='fixed'>
+            <div css={dialogStyle}>
+              <div css={headerStyle}>
+                <Container height='50'>
+                  <Flex alignItems='center'>
+                    <Spacer width='15' height='50' />
+                    <img src="/img/icon/information.svg" css={iconStyle} />
+                    <Spacer width='20' height='50' />
+                    <PlainText color='var(--soft-white)' size='15'>{dialog.title || 'お知らせ'}</PlainText>
+                  </Flex>
+                </Container>
+              </div>
+              <div css={bodyStyle}>
+                <PlainText color='var(--border-dark-gray)' size='16'>{dialog.message}</PlainText>
+              </div>
+              <Flex justifyContent='space-around'>
+                {dialog.canDismiss && <DismissButton onClick={handleDismiss} isProcessing={isProcessing} name={dialog.dismissName} />}
+                {dialog.callback && <ConfirmButton onClick={handleCallback} isProcessing={isProcessing} name={dialog.callbackName} />}
+              </Flex>
             </div>
-            <div css={bodyStyle}>
-              {dialog.message}
-            </div>
-            <div css={footerStyle}>
-              {dialog.canDismiss && <button className="light" onClick={handleDismiss} disabled={isProcessing}>{dialog.dismissName || '閉じる' }</button>}
-              {dialog.callback && <button className="dark" onClick={handleCallback} disabled={isProcessing}>{isProcessing ? <LoadingIndicator size='30' /> : dialog.callbackName || '実行'}</button>}
-            </div>
-          </div>
+          </FullscreenContainer>
         </div>
       }
     </>
   )
 }
-
-const backgroundStyle = css({
-  position: 'fixed',
-  display: 'block',
-  width: '100%',
-  height: '100%',
-})
 
 const dialogStyle = ({
   backgroundColor: 'white',
@@ -57,23 +64,13 @@ const dialogStyle = ({
   marginTop: '5%',
 })
 
-const headerStyle = ({
-  width: '95%',
-  height: '50px',
-  borderBottom: '1px solid var(--soft-white)',
-  padding: '0px',
-  '>img': {
-    width: 'auto',
-    height: '24px',
-    verticalAlign: 'middle',
-    marginLeft: '20px',
-  },
-  '>span': {
-    color: 'var(--border-gray)',
-    fontSize: '16px',
-    lineHeight: '50px',
-    marginLeft: '15px',
-  }
+const headerStyle = css({
+  backgroundColor: 'var(--dark-gray)',
+})
+
+const iconStyle = css({
+  width: 'auto',
+  height: '24px',
 })
 
 const bodyStyle = css({
@@ -81,15 +78,5 @@ const bodyStyle = css({
   maxWidth: '650px',
   minHeight: '130px',
   maxHeight: '200px',
-  margin: 'auto',
-  marginTop: '10%',
-})
-
-const footerStyle = css({
-  display: 'flex',
-  justifyContent: 'space-around',
-  '>button': {
-    width: '100px',
-    fontSize: '15px',
-  }
+  margin: '10% auto auto',
 })

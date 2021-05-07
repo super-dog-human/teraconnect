@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
-import LessonEditSpeechButton from './speechButton'
-import LessonEditSpeechInputText from './speechInputText'
+import KindButton from './kindButton'
+import SpeechInputText from './speechInputText'
 import EditIcon from './editIcon'
 import useSpeechLine from '../../../../libs/hooks/lesson/edit/useSpeechLine'
 
@@ -33,8 +33,8 @@ export default function LessonLineSpeech({ speech, index, isEditButtonShow, hand
 
   return (
     <>
-      <LessonEditSpeechButton kind="speech" isLoading={isLoading} isPlaying={isPlaying} status={status} onClick={handleSpeechButtonClick} />
-      <LessonEditSpeechInputText onKeyDown={handleInputKeyDown} onBlur={handleTextBlur}
+      <KindButton kind='speech' isLoading={isLoading} isPlaying={isPlaying} status={status} onClick={handleSpeechButtonClick} />
+      <SpeechInputText onKeyDown={handleInputKeyDown} onBlur={handleTextBlur}
         defaultValue={speech.subtitle} readOnly={isLoading} draggable={false} isFocus={speech.isFocus} ref={inputRef} />
       <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} />
     </>

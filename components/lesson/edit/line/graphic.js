@@ -3,7 +3,7 @@ import React from 'react'
 import { css } from '@emotion/core'
 import ContainerSpacer from '../../../containerSpacer'
 import Spacer from '../../../spacer'
-import LessonEditKindIcon from './kindIcon'
+import KindIcon from './kindIcon'
 import LessonEditActionLabel from './actionLabel'
 import GraphicThumbnail from '../graphicThumbnail'
 import EditIcon from './editIcon'
@@ -16,7 +16,8 @@ export default function LessonLineGraphic({ graphic, index, isEditButtonShow, ha
 
   return (
     <>
-      <LessonEditKindIcon kind="graphic" status={graphic.action === 'show'} css={iconStyle} />
+      {graphic.action === 'show' && <Spacer width='15' />}
+      {graphic.action !== 'show' && <KindIcon kind="graphic" status={false} />}
       <div css={graphicContainerStyle}>
         {graphic.action === 'show' && <><Spacer height='20'/><GraphicThumbnail url={graphic.url} /><Spacer height='20'/></>}
         {graphic.action === 'hide' && <LessonEditActionLabel kind="graphic" action={'hide'} />}
@@ -27,11 +28,6 @@ export default function LessonLineGraphic({ graphic, index, isEditButtonShow, ha
     </>
   )
 }
-
-const iconStyle = css({
-  display: 'block',
-  marginTop: '20px',
-})
 
 const graphicContainerStyle = css({
   width: '100%',

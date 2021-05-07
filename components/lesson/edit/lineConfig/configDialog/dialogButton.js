@@ -10,7 +10,7 @@ export default function DialogButton({ label, kind, onClick, isProcessing=false,
 
   return (
     <Container width='100' height='40'>
-      <LabelButton size='15' backgroundColor={backgroundColor} color={color} borderColor={borderColor} onClick={onClick} disabled={disabled}>
+      <LabelButton fontSize='15' backgroundColor={backgroundColor} color={color} borderColor={borderColor} onClick={onClick} disabled={disabled}>
         {!isProcessing && label}
         {isProcessing && <LoadingIndicator size='80' />}
       </LabelButton>
