@@ -15,7 +15,7 @@ export default function LessonLineDrawing({ drawing, index, isEditButtonShow, ha
     <>
       <LessonEditKindIcon kind="drawing" status={['draw', 'show'].includes(drawing.action)} />
       <div css={drwaingContainerStyle}>
-        {drawing.action != 'draw' && <LessonEditActionLabel kind="drawing" action={drawing.action} status={['draw', 'show'].includes(drawing.action)} />}
+        {drawing.action != 'draw' && <LessonEditActionLabel kind="drawing" action={drawing.action} />}
       </div>
       <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} />
     </>
