@@ -6,6 +6,8 @@ import DragSwappable from '../../dragSwappable'
 import ElapsedTime from './line/elapsedTime'
 import LineConfig from './lineConfig/'
 import DropLine from './line/dropLine'
+import PlainText from '../../plainText'
+import Hr from '../../hr'
 import LessonLine from './line/'
 import LessonLineAvatar from './line/avatar'
 import LessonLineDrawing from './line/drawing'
@@ -18,7 +20,7 @@ import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorConte
 
 export default function Timeline() {
   const dropLineRef = useRef()
-  const { timeline, swapLine } = useLessonEditorContext()
+  const { durationSec, timeline, swapLine } = useLessonEditorContext()
   const { dragStartIndex, handleDragStart, handleDragEnd, handleDragOver, handleDrop, handleChildDrop } = useSwappingLine({ dropLineRef, swapLine })
   const { handleEditButtonClick, lineConfig } = useLineConfig()
 
@@ -45,11 +47,13 @@ export default function Timeline() {
                 )}
               </div>
             </div>
-            {Object.keys(timeline).length - 1 > i && <ContainerSpacer left='65'><hr css={hrStyle} /></ContainerSpacer>}
+            {Object.keys(timeline).length - 1 > i && <ContainerSpacer left='65'>
+              <Hr color='#dedede' />
+            </ContainerSpacer>}
           </div>
         ))}
       </DragSwappable>
-      {/*最後の要素のelapsedTime + durationが10分を超えていたら警告を出す*/}
+      { durationSec > 600 && <PlainText color='red'>収録時間が10分を超えています。</PlainText>}
     </div>
   )
 }
@@ -62,8 +66,8 @@ const bodyStyle = css({
 const lineStyle = css({
   cursor: 'pointer',
   display: 'flex',
-  paddingTop: '8px',
-  paddingBottom: '8px',
+  paddingTop: '5px',
+  paddingBottom: '5px',
 })
 
 const lineBodyStyle = css({
@@ -72,8 +76,4 @@ const lineBodyStyle = css({
 
 const focusedStyle = css({
   backgroundColor: '#eaeaea', // fixme
-})
-
-const hrStyle = css({
-  backgroundColor: '#dedede', // fixme
 })
