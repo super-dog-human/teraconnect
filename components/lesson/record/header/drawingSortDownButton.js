@@ -10,7 +10,7 @@ export default function DrawingSortDownButton({ isSelected, disabled, onMouseDow
       height: 'auto',
       verticalAlign: 'middle',
     },
-    backgroundColor: isSelected ? 'var(--back-movie-black)' : 'inherited',
+    backgroundColor: isSelected ? 'var(--back-movie-black)' : 'inherit',
     ':hover': {
       backgroundColor: isSelected ? 'var(--back-movie-black)' : 'var(--text-gray)',
     },

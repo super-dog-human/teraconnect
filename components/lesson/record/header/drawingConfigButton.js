@@ -9,7 +9,7 @@ export default function DrawingConfigButton({ isSelected, disabled, onClick, chi
       height: 'auto',
       verticalAlign: 'middle',
     },
-    backgroundColor: isSelected ? 'var(--back-movie-black)' : 'inherited',
+    backgroundColor: isSelected ? 'var(--back-movie-black)' : 'inherit',
     ':hover': {
       backgroundColor: isSelected ? 'var(--back-movie-black)' : 'var(--text-gray)',
     },
