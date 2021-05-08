@@ -9,7 +9,7 @@ export default function uploadingWideButton({ hasDragOver, onDragOver,onDragLeav
     width: '80%',
     maxWidth: '600px',
     minHeight: '60px',
-    backgroundColor: hasDragOver ? 'var(--dark-purple)' : 'inherited',
+    backgroundColor: hasDragOver ? 'var(--dark-purple)' : 'inherit',
     margin: 'auto',
     cursor: 'pointer',
     color: 'white',

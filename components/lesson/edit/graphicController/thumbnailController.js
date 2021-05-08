@@ -7,11 +7,12 @@ import IconButton from '../../../button/iconButton'
 import GraphicThumbnail from '../graphicThumbnail'
 import AbsoluteContainer from '../../../absoluteContainer'
 
-export default function ThumbnailController({ graphicID, url, swapGraphic, removeGraphic }) {
+export default function ThumbnailController({ graphicID, graphic, swapGraphic, removeGraphic }) {
   const { setContextMenu } = useContextMenuContext()
   const [isButtonShow, setIsButtonShow] = useState(false)
 
   function handleEnter() {
+    if (graphic.isUploading) return
     setIsButtonShow(true)
   }
 
@@ -29,7 +30,7 @@ export default function ThumbnailController({ graphicID, url, swapGraphic, remov
 
   return (
     <div css={bodyStyle} onMouseOver={handleEnter} onMouseLeave={handleLeave}>
-      <GraphicThumbnail url={url} />
+      <GraphicThumbnail url={graphic.url} isProcessing={graphic.isUploading} />
       {isButtonShow && <AbsoluteContainer right='3px' bottom='5px'>
         <Container width='22' height='22'>
           <IconButton name='more' borderColor='none' hoverFilter='brightness(50%)' onClick={handleMenuClick} />

@@ -5,7 +5,7 @@ import { css } from '@emotion/core'
 export default function PlainText({ children, size, color }) {
   const bodyStyle = css({
     color,
-    fontSize: `${size}px`,
+    fontSize: size ? `${size}px` : null,
   })
 
   return (

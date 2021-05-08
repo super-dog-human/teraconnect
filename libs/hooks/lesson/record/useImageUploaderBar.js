@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react'
 import useFetch from '../../useFetch'
 import { generateRandomID } from '../../../utils'
-import { filterAvailableImages, imageToThumbnailURL } from '../../../graphicUtils'
+import { filterAvailableImages, isAvailableFileSize, imageToThumbnailURL } from '../../../graphicUtils'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 
 export default function useImageUploaderBar(id, images, setImages, inputFileRef, selectImageBarRef) {
@@ -23,7 +23,7 @@ export default function useImageUploaderBar(id, images, setImages, inputFileRef,
   }
 
   async function uploadImages(files) {
-    const validFiles = filterAvailableImages(files)
+    const validFiles = filterAvailableImages(files).filter(f => isAvailableFileSize(f))
     const temporaryIDs = validFiles.map(() => generateRandomID())
 
     let loadedCount = 0
@@ -40,7 +40,6 @@ export default function useImageUploaderBar(id, images, setImages, inputFileRef,
               thumbnail: imageDataURL,
               id: temporaryIDs[i],
               isUploading: true,
-              isError: false,
             }]
           )
         }))

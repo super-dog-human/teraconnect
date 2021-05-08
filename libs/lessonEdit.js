@@ -12,11 +12,20 @@ export async function fetchMaterial({ lesson, fetchWithAuth, setVoiceSynthesisCo
   return createTimeline(filterObject(material, ['avatars', 'drawings', 'graphics', 'speeches', 'musics']))
 
   async function setGraphicsWithURL(graphics) {
-    const graphicURLs = await fetchGraphicURLs()
+    const graphicURLs = (await fetchGraphicURLs()).reduce((acc, r) => {
+      acc[r.id] = {
+        url: r.url,
+        isUploading: false,
+      }
+      return acc
+    }, {})
+
     setGraphicURLs(graphicURLs)
 
     const graphicsWithURLs = graphics.map(g => {
-      if (g.action === 'show') g.url = graphicURLs[g.graphicID] // ここでgraphicsの元のmaterialも更新されている
+      if (g.action === 'show') {
+        g.url = graphicURLs[g.graphicID].url // ここでgraphicsの元のmaterialも更新されている
+      }
       return g
     })
     setGraphics(graphicsWithURLs)
@@ -52,15 +61,10 @@ export async function fetchMaterial({ lesson, fetchWithAuth, setVoiceSynthesisCo
   }
 
   async function fetchGraphicURLs() {
-    const results = await fetchWithAuth(`/graphics?lesson_id=${lesson.id}`)
+    return fetchWithAuth(`/graphics?lesson_id=${lesson.id}`)
       .catch(e => {
         if (e.response?.status === 404) return []
         throw e
       })
-
-    return results.reduce((acc, r) => {
-      acc[r.id] = r.url
-      return acc
-    }, {})
   }
 }

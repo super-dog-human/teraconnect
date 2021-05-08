@@ -10,7 +10,7 @@ export function filterAvailableImages(files) {
 export function imageToThumbnailURL(original, callback) {
   const image = new Image()
   image.src = original
-  image.onload = (() => {
+  image.onload = (async () => {
     const ratio = Math.min(maxThumbnailSize.width / image.naturalWidth, maxThumbnailSize.height / image.naturalHeight) * window.devicePixelRatio
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
@@ -22,7 +22,7 @@ export function imageToThumbnailURL(original, callback) {
     canvas.height = height
 
     ctx.drawImage(image, 0, 0, width, height)
-    callback(canvas.toDataURL())
+    await callback(canvas.toDataURL())
   })
 }
 
