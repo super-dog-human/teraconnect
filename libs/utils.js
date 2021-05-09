@@ -13,6 +13,10 @@ export function filterObject(obj, keys) {
     }, {})
 }
 
+export function pickFromArray(array) {
+  return array[Math.floor(Math.random() * array.length)]
+}
+
 export function disableAllButtons() {
   Array.from(document.getElementsByTagName('button'), button => {
     button.disabled = true

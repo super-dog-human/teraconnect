@@ -5,6 +5,7 @@ import { useScreenClass } from 'react-grid-system'
 import { useContextMenuContext } from '../../../libs/contexts/contextMenuContext'
 import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorContext'
 import { ImageViewerProvider } from '../../../libs/contexts/imageViewerContext'
+import Loading from './loading'
 import ContextMenu from '../../contextMenu'
 import ImageViwer from '../../imageViewer'
 import LessonEditHeader from './header'
@@ -16,7 +17,7 @@ import Timeline from './timeline'
 const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
   const screenClass = useScreenClass()
   const { contextMenu, handleDismiss } = useContextMenuContext()
-  const { fetchResources } = useLessonEditorContext()
+  const { fetchResources, timeline } = useLessonEditorContext()
 
   const bodyStyle = css({
     margin: 'auto',
@@ -54,6 +55,7 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
   return (
     <>
       <ContextMenu {...contextMenu} handleDismiss={handleDismiss} />
+      <Loading timeline={timeline} />
       <LessonEditHeader />
       <main css={mainStyle} ref={ref}>
         <ImageViewerProvider>
