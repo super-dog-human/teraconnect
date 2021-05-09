@@ -26,7 +26,7 @@ export default function LessonEditGraphicController() {
   return (
     <div css={bodyStyle} onDragOver={handleDragOver} onDrop={handleDrop}>
       <Spacer height='70' />
-      <Container height='50'>
+      <Container height='20'>
         <AlignContent textAlign='center'>
           <Hr color='var(--border-gray)' />
         </AlignContent>
@@ -56,11 +56,11 @@ export default function LessonEditGraphicController() {
 }
 
 const bodyStyle = css({
-  height: 'calc(100% - 253px - 20px - 45px - 70px - 65px)', // 自身の上に存在する要素分を差し引く
+  height: 'calc(100% - 253px - 20px - 45px)', // プレビューエリアと収録時間の高さと余白を差し引く
 })
 
 const containerStyle = css({
-  height: 'calc(100% - 50px)',
+  height: 'calc(100% - 70px - 20px - 20px - 45px)', // 水平線・アップロードボタンの高さと余白を差し引く
   overflowX: 'scroll',
   display: 'flex',
   alignContent: 'flex-start',

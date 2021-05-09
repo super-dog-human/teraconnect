@@ -11,7 +11,7 @@ export default function KindIcon({ kind, status=true, onClick }) {
   })
 
   return (
-    <ContainerSpacer left='15' right='15'>
+    <ContainerSpacer left='20' right='15'>
       <Flex>
         <img src={`/img/icon/timeline-${kind}.svg`} css={imageStyle} onClick={onClick} draggable={false} />
       </Flex>
