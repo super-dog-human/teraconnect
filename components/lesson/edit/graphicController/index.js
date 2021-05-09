@@ -20,9 +20,8 @@ export default function LessonEditGraphicController() {
   const { setGraphics, graphicURLs, setGraphicURLs } = useLessonEditorContext()
   const { showDialog } = useDialogContext()
   const { showError } = useErrorDialogContext()
-  const { inputFileRef, selectLocalImage, confirmSwappingGraphic, confirmRemovingGraphic } =
-    useGraphicController({ showDialog, showError, setGraphics, setGraphicURLs })
-  const { inputMultiFileRef, handleFileChange, handleUploadButtonClick, handleDragOver, handleDrop } = useGraphicUploader({ setGraphicURLs })
+  const { inputFileRef, selectLocalImage, confirmSwappingGraphic, confirmRemovingGraphic } = useGraphicController({ showDialog, showError, setGraphics, setGraphicURLs })
+  const { graphicContainerRef, inputMultiFileRef, handleFileChange, handleUploadButtonClick, handleDragOver, handleDrop } = useGraphicUploader({ graphicURLs, setGraphicURLs })
 
   return (
     <div css={bodyStyle} onDragOver={handleDragOver} onDrop={handleDrop}>
@@ -32,7 +31,7 @@ export default function LessonEditGraphicController() {
           <Hr color='var(--border-gray)' />
         </AlignContent>
       </Container>
-      <div css={containerStyle}>
+      <div css={containerStyle} ref={graphicContainerRef}>
         {Object.keys(graphicURLs).map(graphicID => (
           <div css={thumbnailStyle} key={graphicID}>
             <ThumbnailController graphicID={graphicID} graphic={graphicURLs[graphicID]} swapGraphic={selectLocalImage} removeGraphic={confirmRemovingGraphic} />
