@@ -2,7 +2,7 @@ export default function useLineUtils({ avatars, drawings, graphics, musics, spee
   setAvatars, setDrawings, setGraphics, setSpeeches, setMusics, timeline }) {
 
   function shiftElapsedTime({ fromElapsedTime, toElapsedTime, offsetTime, skipKind }) {
-    allMaterialNames().filter(k => k != skipKind).forEach(kind => {
+    allMaterialNames().filter(k => k !== skipKind).forEach(kind => {
       targetMaterials(kind).setter(materials => {
         materials.forEach(m => {
           if (fromElapsedTime && m.elapsedTime < fromElapsedTime) return

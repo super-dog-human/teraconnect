@@ -76,7 +76,7 @@ class Recorder extends AudioWorkletProcessor {
       this.beginningSilenceTime = currentTime
     }
 
-    if (!isSilence && this.beginningSilenceTime != 0) {
+    if (!isSilence && this.beginningSilenceTime !== 0) {
       this.beginningSilenceTime = 0
     }
 

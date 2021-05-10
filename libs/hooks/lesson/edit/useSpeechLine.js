@@ -45,11 +45,11 @@ export default function useSpeechLine({ speech, index }) {
   }
 
   function handleInputKeyDown(e) {
-    if (e.keyCode != 13) return // Enter以外のキーや、Enterでも日本語の確定でキーを押下した場合はスキップ
+    if (e.keyCode !== 13) return // Enter以外のキーや、Enterでも日本語の確定でキーを押下した場合はスキップ
     // 'keyCode' はdeprecatedだがこれ以外の方法では日本語の確定を判断できなさそう
 
     let current = e.target.parentNode
-    while (current.parentNode != null && current.parentNode != document.documentElement) {
+    while (current.parentNode !== null && current.parentNode !== document.documentElement) {
       if (current.draggable) break
       current = current.parentNode
     }

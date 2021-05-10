@@ -205,7 +205,7 @@ export default function useLessonRecorder() {
 
       if (!lastGraphic) {
         lessonRef.current.graphics.push(lessonInStoppingRef.current.graphic)
-      } else if (lessonInStoppingRef.current.graphic.id === lastGraphic.id && lessonInStoppingRef.current.action != lastGraphic.action) {
+      } else if (lessonInStoppingRef.current.graphic.id === lastGraphic.id && lessonInStoppingRef.current.action !== lastGraphic.action) {
         lessonRef.current.graphics.push(lessonInStoppingRef.current.graphic)
       } else if (lessonInStoppingRef.current.graphic.id != lastGraphic.id && lessonInStoppingRef.current.action === 'show') {
         lessonRef.current.graphics.push(lessonInStoppingRef.current.graphic)

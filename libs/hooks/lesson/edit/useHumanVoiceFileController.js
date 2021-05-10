@@ -61,7 +61,7 @@ export default function useHumanVoiceFileController(config, setConfig, inputFile
 
     setIsProcessing(true)
 
-    if (file.type != 'audio/mpeg') return
+    if (file.type !== 'audio/mpeg') return
     if (file.size > maxFileByteSize) return
 
     if (config.url && isBlobURL(config.url)) {

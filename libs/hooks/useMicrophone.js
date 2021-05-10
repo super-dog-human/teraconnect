@@ -60,7 +60,7 @@ export default function useMicrophone() {
       micInputRef.current = null
     }
 
-    if (audioCtxRef.current && audioCtxRef.current.state != 'closed') {
+    if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') {
       await audioCtxRef.current.close()
     }
 

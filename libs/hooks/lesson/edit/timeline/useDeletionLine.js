@@ -25,7 +25,7 @@ export default function useDeletionLine({ shiftElapsedTime, nextElapsedTime, del
   }
 
   function includesElapsedTimeInAllMaterial(elapsedTime, skipMaterial) {
-    return allMaterialNames().filter(m => m != skipMaterial).some(kind => {
+    return allMaterialNames().filter(m => m !== skipMaterial).some(kind => {
       const { materials } = targetMaterials(kind)
       return includesElapsedTime(elapsedTime, materials)
     })
