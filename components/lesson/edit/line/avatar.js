@@ -1,6 +1,6 @@
 import React from 'react'
 import KindIcon from './kindIcon'
-import LessonEditActionLabel from './actionLabel'
+import ActionLabel from './actionLabel'
 import EditIcon from './editIcon'
 
 export default function LessonLineAvatar({ avatar, index, isEditButtonShow, handleEditClick }) {
@@ -12,7 +12,7 @@ export default function LessonLineAvatar({ avatar, index, isEditButtonShow, hand
   return (
     <>
       <KindIcon kind="avatar" />
-      <LessonEditActionLabel kind="avatar" />
+      <ActionLabel kind="avatar" />
       <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} />
     </>
   )

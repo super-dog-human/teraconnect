@@ -1,23 +1,27 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
 import { css } from '@emotion/core'
+import ContainerSpacer from '../../../containerSpacer'
+import DrawingPreview from './drawingPreview'
 import KindIcon from './kindIcon'
-import LessonEditActionLabel from './actionLabel'
+import ActionLabel from './actionLabel'
 import EditIcon from './editIcon'
 
-export default function LessonLineDrawing({ drawing, index, isEditButtonShow, handleEditClick }) {
+export default function LessonLineDrawing({ drawings, drawing, index, isEditButtonShow, handleEditClick }) {
   function handleEditButtonClick(e) {
-    e.stopPropagation()
     handleEditClick(e, 'drawing', index, drawing)
   }
 
   return (
     <>
-      <KindIcon kind="drawing" status={['draw', 'show'].includes(drawing.action)} />
+      {drawing.action !== 'draw' && <KindIcon kind="drawing" status={['draw', 'show'].includes(drawing.action)} />}
       <div css={drwaingContainerStyle}>
-        {drawing.action != 'draw' && <LessonEditActionLabel kind="drawing" action={drawing.action} />}
+        {drawing.action === 'draw' && <DrawingPreview drawings={drawings} startElapsedTime={drawing.elapsedTime} />}
+        {drawing.action !== 'draw' && <ActionLabel kind="drawing" action={drawing.action} />}
       </div>
-      <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} />
+      <ContainerSpacer top='20'>
+        <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} />
+      </ContainerSpacer>
     </>
   )
 }

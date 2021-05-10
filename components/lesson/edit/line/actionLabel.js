@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/core'
 
-export default function LessonEditActionLabel({ kind, action }) {
+export default function ActionLabel({ kind, action }) {
   const [label, setLabel] = useState('')
 
   useEffect(() => {

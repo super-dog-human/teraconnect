@@ -20,7 +20,7 @@ import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorConte
 
 export default function Timeline() {
   const dropLineRef = useRef()
-  const { durationSec, timeline, swapLine } = useLessonEditorContext()
+  const { durationSec, timeline, drawings, swapLine } = useLessonEditorContext()
   const { dragStartIndex, handleDragStart, handleDragEnd, handleDragOver, handleDrop, handleChildDrop } = useSwappingLine({ dropLineRef, swapLine })
   const { handleEditButtonClick, lineConfig } = useLineConfig()
 
@@ -38,7 +38,7 @@ export default function Timeline() {
                   timeline[elapsedTime][kind].map((line, kindIndex) => (
                     <LessonLine key={`${elapsedTime}-${kindIndex}`}>
                       {kind === 'avatar'  && <LessonLineAvatar avatar={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
-                      {kind === 'drawing' && <LessonLineDrawing drawing={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
+                      {kind === 'drawing' && <LessonLineDrawing drawings={drawings} drawing={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
                       {kind === 'graphic' && <LessonLineGraphic graphic={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
                       {kind === 'music'   && <LessonLineMusic music={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
                       {kind === 'speech'  && <LessonLineSpeech speech={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}

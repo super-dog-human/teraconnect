@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { useLessonRecorderContext } from '../../contexts/lessonRecorderContext'
 import { switchSwipable, mouseOrTouchPositions } from '../../utils'
+import { drawToCanvas, drawEdgeCircle, clearCanvas } from '../../drawingUtils'
 
 const histories = []
 
@@ -34,7 +35,7 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
       startDrawingTimeRef.current = new Date()
 
       const [x, y] = mouseOrTouchPositions(e, ['touchstart'])
-      drawEdgeCircle(x, y, color)
+      drawEdgeCircle(canvasCtxRef.current, x, y, color)
 
       canvasCtxRef.current.beginPath()
 
@@ -65,7 +66,7 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
 
       const [x, y] = mouseOrTouchPositions(e, ['touchend', 'touchcancel'])
       drawLine(x, y)
-      drawEdgeCircle(x, y, color)
+      drawEdgeCircle(canvasCtxRef.current, x, y, color)
 
       setRecord({
         kind: 'drawing',
@@ -80,14 +81,6 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
     }
   }
 
-  function drawEdgeCircle(x, y, currentColor) {
-    canvasCtxRef.current.beginPath()
-    canvasCtxRef.current.arc(x, y, canvasCtxRef.current.lineWidth / 2, 0, Math.PI * 2)
-    canvasCtxRef.current.fillStyle = currentColor
-    canvasCtxRef.current.fill()
-    canvasCtxRef.current.closePath()
-  }
-
   function drawLine(x, y) {
     if (isSamePosition(startPositionRef.current, { x, y })) return
 
@@ -100,42 +93,18 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
   }
 
   function redrawFromHistory() {
-    clearCanvas()
+    clearCanvas(canvasCtxRef.current)
 
-    histories.forEach(h => {
-      if (h.clear) {
-        clearCanvas()
+    histories.forEach(history => {
+      if (history.clear) {
+        clearCanvas(canvasCtxRef.current)
       } else {
-        canvasCtxRef.current.strokeStyle = h.color
-        canvasCtxRef.current.lineWidth = h.lineWidth
-        canvasCtxRef.current.globalCompositeOperation = h.eraser ? 'destination-out': 'source-over'
-        const coef = { x: canvasCtxRef.current.canvas.clientWidth / h.width, y: canvasCtxRef.current.canvas.clientHeight / h.height }
-
-        const circlePositions = calcResizePosition(coef, h.positions[0], h.positions[h.positions.length - 1])
-        drawEdgeCircle(circlePositions[0], circlePositions[1], h.color)
-
-        canvasCtxRef.current.beginPath()
-        h.positions.slice(1).forEach((d, i) => {
-          canvasCtxRef.current.quadraticCurveTo(...calcResizePosition(coef, h.positions[i], d))
-          canvasCtxRef.current.stroke()
-        })
-
-        drawEdgeCircle(circlePositions[2], circlePositions[3], h.color)
+        drawToCanvas(canvasCtxRef.current, history)
       }
     })
 
     canvasCtxRef.current.strokeStyle = color
     canvasCtxRef.current.lineWidth = lineWidth
-  }
-
-  function clearCanvas() {
-    canvasCtxRef.current.clearRect(0, 0, canvasCtxRef.current.canvas.clientWidth, canvasCtxRef.current.canvas.clientHeight)
-  }
-
-  function calcResizePosition(coefficient, fromPosition, toPosition) {
-    return [coefficient.x * fromPosition.x, coefficient.y * fromPosition.y, coefficient.x * toPosition.x, coefficient.y * toPosition.y].map(f => (
-      Math.round(f)
-    ))
   }
 
   function isSamePosition(oldPosition, newPosition) {
@@ -176,7 +145,7 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
     if (isClearedRef.current) return
 
     addClearHistory()
-    clearCanvas()
+    clearCanvas(canvasCtxRef.current)
     setRecord({ kind: 'drawing', action: 'clear' })
     isClearedRef.current = true
   }

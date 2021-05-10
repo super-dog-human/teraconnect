@@ -3,7 +3,7 @@ import React from 'react'
 import { css } from '@emotion/core'
 import LoadingIndicator from '../loadingIndicator'
 
-export default function IconButton({ name, backgroundColor, color, borderColor, hoverFilter, padding, disabled, isProcessing, onClick }) {
+export default function IconButton({ name, backgroundColor, borderColor, hoverFilter, padding, disabled, isProcessing, onClick }) {
   const bodyStyle = css({
     display: 'block',
     width: '100%',
@@ -12,7 +12,6 @@ export default function IconButton({ name, backgroundColor, color, borderColor, 
     fontSize: 0,
     borderColor: borderColor || 'inherit',
     backgroundColor: backgroundColor || 'inherit',
-    color: color || 'inherit',
     ':hover': {
       filter: hoverFilter || 'brightness(80%)',
     },

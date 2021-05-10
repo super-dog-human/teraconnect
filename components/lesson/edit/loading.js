@@ -39,11 +39,11 @@ export default function Loading({ timeline }) {
             <PlainText size='30'>{randomMaximRef.current.body}</PlainText>
           </AlignContainer>
           <AlignContainer textAlign='center'>
-            <PlainText size='18'>{randomMaximRef.current.author}</PlainText>
+            <PlainText size='18'> - {randomMaximRef.current.author}</PlainText>
           </AlignContainer>
           <Spacer height='20' />
           <AlignContainer textAlign='center'>
-            <PlainText size='13'>{randomMaximRef.current.source} より</PlainText>
+            <PlainText size='12'>{randomMaximRef.current.source} より</PlainText>
           </AlignContainer>
         </PlainText>
       </div>
