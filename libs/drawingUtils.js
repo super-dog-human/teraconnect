@@ -17,6 +17,7 @@ export function drawToCanvas(canvasCtx, history) {
 }
 
 function calcResizePosition(coefficient, fromPosition, toPosition) {
+  return [fromPosition.x, fromPosition.y, toPosition.x, toPosition.y]
   return [
     coefficient.x * fromPosition.x,
     coefficient.y * fromPosition.y,

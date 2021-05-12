@@ -2,24 +2,31 @@ import { useRef, useEffect } from 'react'
 import { drawToCanvas, clearCanvas } from '../../drawingUtils'
 import { Clock } from 'three'
 
-export default function useDrawingPlayer({ isPlaying, drawings, startElapsedTime, currentElapsedTime=0 }) {
+export default function useDrawingPlayer({ isPlaying, drawings, index, startElapsedTime, currentElapsedTime=0 }) {
   const canvasRef = useRef()
   const canvasCtxRef = useRef()
   const clockRef = useRef(0)
   const elapsedTimeRef = useRef(0)
 
   function initializeCanvas() {
-    currentDrawings().forEach(history => {
-      if (history.action !== 'draw') return
-      history.units.filter(u => u.action === 'draw').forEach(h => {
-        drawToCanvas(canvasCtxRef.current, h.stroke, true)
-      })
-    })
+    draw(currentDrawings())
   }
 
   function currentDrawings() {
-    const durationDrawings = drawings.filter(d => d.elapsedTime <= startElapsedTime)
-    reduceUndoDrawings(durationDrawings)
+    let preElapsedTime
+    let sameTimeIndex
+    const durationDrawings = drawings.filter(d => {
+      //      console.log(d === drawing)
+      if (d.elapsedTime === preElapsedTime) {
+        sameTimeIndex += 1
+      } else  {
+        sameTimeIndex = 0
+        preElapsedTime = d.elapsedTime
+      }
+      return d.elapsedTime < startElapsedTime || (d.elapsedTime === startElapsedTime && sameTimeIndex === index)
+    })
+
+    reduceUndoPair(durationDrawings)
 
     const lastClearIndex = [...durationDrawings].reverse().findIndex(d => d.action === 'clear')
     if (lastClearIndex >= 0) {
@@ -30,7 +37,7 @@ export default function useDrawingPlayer({ isPlaying, drawings, startElapsedTime
     return durationDrawings
   }
 
-  function reduceUndoDrawings(drawings) {
+  function reduceUndoPair(drawings) {
     let drawIndex, undoIndexInUnits
 
     drawings.some((drawing, i) => {
@@ -41,11 +48,11 @@ export default function useDrawingPlayer({ isPlaying, drawings, startElapsedTime
         drawIndex = i
         undoIndexInUnits = undoIndex
       }
+
       return undoIndexInUnits
     })
 
     if (!undoIndexInUnits) return // undoがなくなれば終了
-
     drawings[drawIndex].units.splice(undoIndexInUnits, 1) // undoを削除
 
     if (undoIndexInUnits === 0) {
@@ -68,27 +75,41 @@ export default function useDrawingPlayer({ isPlaying, drawings, startElapsedTime
       }
     }
 
-    reduceUndoDrawings(drawings) // undoがなくなるまで再帰
+    reduceUndoPair(drawings)
   }
 
-  function draw() {
+  function draw(drawings) {
+    drawings.forEach(history => {
+      switch(history.action) {
+      case 'draw':
+        history.units.forEach(u => {
+          if (u.action === 'draw') {
+            drawToCanvas(canvasCtxRef.current, u.stroke)
+          } else {
+            clearCanvas(canvasCtxRef.current)
+            // 一つ前の時点で描画し直す
+          }
+        })
+        return
+      case 'clear':
+        clearCanvas(canvasCtxRef.current)
+        return
+      case 'show':
+        canvasRef.current.style.opacity = 1
+        return
+      case 'hide':
+        canvasRef.current.style.opacity = 0
+        return
+      }
+    })
+  }
+
+  function animationDraw() {
     if (!isPlaying) return
+    const currentElapsedTime = clockRef.current.getDelta()
 
-    const history = {}
-    switch(history.action) {
-    case 'draw':
-      return
-    case 'clear':
-      clearCanvas(canvasCtxRef.current)
-      return
-    case 'show':
-      return
-    case 'hide':
-      return
-    }
-
-    elapsedTimeRef.current += clockRef.current.getDelta()
-    requestAnimationFrame(draw)
+    elapsedTimeRef.current += currentElapsedTime
+    requestAnimationFrame(animationDraw)
   }
 
   useEffect(() => {
@@ -106,7 +127,7 @@ export default function useDrawingPlayer({ isPlaying, drawings, startElapsedTime
       // currentElapsedTimeはシーク時に現在の描画のために使うかも
       clockRef.current = new Clock()
       clearCanvas(canvasCtxRef.current)
-      draw()
+      animationDraw()
     }
   }, [isPlaying])
 

@@ -6,7 +6,7 @@ import ContainerSpacer from '../../../containerSpacer'
 import IconButton from '../../../button/iconButton'
 import DrawingPlayer from '../../../lesson/player/drawing'
 
-export default function DrawingPreview({ drawings, startElapsedTime }) {
+export default function DrawingPreview({ drawings, index, startElapsedTime }) {
   const [isPlaying, setIsPlaying] = useState(false)
 
   function handlePlayButtonClick() {
@@ -23,7 +23,7 @@ export default function DrawingPreview({ drawings, startElapsedTime }) {
         <Container width='302' height='170' position='relative'>
           <Container width='302' height='170' position='absolute'>
             <div className='drawing-z'>
-              <DrawingPlayer isPlaying={isPlaying} drawings={drawings} startElapsedTime={startElapsedTime} />
+              <DrawingPlayer isPlaying={isPlaying} drawings={drawings} index={index} startElapsedTime={startElapsedTime} />
             </div>
           </Container>
           <Container position='absolute'>
