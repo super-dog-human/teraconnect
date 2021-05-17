@@ -6,9 +6,11 @@ import ContainerSpacer from '../../../containerSpacer'
 import DrawingPlayer from '../../../lesson/player/drawing'
 import useDrawingPLayer from '../../../../libs/hooks/lesson/useDrawingPlayer'
 
-export default function DrawingPreview({ drawings, drawing }) {
+export default function DrawingPreview({ drawings, drawing, sameTimeIndex }) {
   const [isPlaying, setIsPlaying] = useState(false)
-  const { canvasRef, elapsedTime } = useDrawingPLayer({ isPlaying, setIsPlaying, drawings, drawing, startElapsedTime: drawing.elapsedTime, endElapsedTime: drawing.elapsedTime + drawing.durationSec })
+  const { canvasRef, elapsedTime } = useDrawingPLayer({
+    isPlaying, setIsPlaying, drawings, drawing, sameTimeIndex, startElapsedTime: drawing.elapsedTime, endElapsedTime: drawing.elapsedTime + drawing.durationSec
+  })
 
   function handlePlayButtonClick() {
     setIsPlaying(p => !p)

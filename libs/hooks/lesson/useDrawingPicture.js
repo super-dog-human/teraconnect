@@ -1,11 +1,11 @@
 import { useRef, useEffect } from 'react'
 import { drawToCanvas } from '../../drawingUtils'
 
-export default function useDrawingPicture({ canvasRef, drawings }) {
+export default function useDrawingPicture({ canvasRef, drawings, startElapsedTime }) {
   const canvasCtxRef = useRef()
 
-  function drawPicture(startElapsedTime, currentDrawing) {
-    initialDrawings(startElapsedTime, currentDrawing).forEach(history => {
+  function drawPicture(currentDrawings) {
+    initialDrawings(currentDrawings).forEach(history => {
       switch(history.action) {
       // clearは削除済みなので登場しない
       case 'draw':
@@ -24,18 +24,16 @@ export default function useDrawingPicture({ canvasRef, drawings }) {
     })
   }
 
-  function initialDrawings(startElapsedTime, currentDrawing) {
-    const drawingsInDuration = drawings.filter(d => {
-      if (currentDrawing) {
-        return d.elapsedTime < startElapsedTime
-      } else {
-        return d.elapsedTime <= startElapsedTime
+  function initialDrawings(currentDrawings) {
+    let drawingsInDuration = drawings.filter(d => d.elapsedTime < startElapsedTime)
+    drawingsInDuration.push(...currentDrawings)
+    drawingsInDuration = drawingsInDuration.map(d => {
+      const drawing = { ...d }
+      if (drawing.units) {
+        drawing.units = d.units.map(u => ({ ...u })) // オブジェクトの配列のコピー
       }
+      return drawing
     })
-
-    if (currentDrawing) {
-      drawingsInDuration.push({ ...currentDrawing })
-    }
 
     removeUndoPair(drawingsInDuration)
 
@@ -48,13 +46,11 @@ export default function useDrawingPicture({ canvasRef, drawings }) {
     return drawingsInDuration
   }
 
-  function removeUndoPair(targetDrawing) {
+  function removeUndoPair(targetDrawings) {
     let drawIndex, undoIndexInUnits
 
-    targetDrawing.some((drawing, i) => {
+    targetDrawings.some((drawing, i) => {
       if (drawing.action !== 'draw') return
-
-      drawing.units = [...drawing.units]
 
       const undoIndex = drawing.units.findIndex(d => d.action === 'undo')
       if (undoIndex >= 0) {
@@ -66,32 +62,33 @@ export default function useDrawingPicture({ canvasRef, drawings }) {
     })
 
     if (!undoIndexInUnits) return // undoがなくなれば終了
-    targetDrawing[drawIndex].units.splice(undoIndexInUnits, 1) // undoを削除
+
+    targetDrawings[drawIndex].units.splice(undoIndexInUnits, 1) // undoを削除
 
     if (undoIndexInUnits === 0) {
       for (let i = drawIndex - 1; i >= 0; i--) {
         // 最初に出現するundoを上記で取得しているので、自身より前のdrawのunitsの最後の要素は必ずdrawになる
-        if (targetDrawing[i].action === 'draw') {
-          targetDrawing[i].units.pop()
-          if (targetDrawing[i].units.length === 0) {
-            targetDrawing.splice(i, 1)
+        if (targetDrawings[i].action === 'draw') {
+          targetDrawings[i].units.pop()
+          if (targetDrawings[i].units.length === 0) {
+            targetDrawings.splice(i, 1)
           }
           break
-        } else if (targetDrawing[i].action === 'clear'){
-          targetDrawing.splice(i, 1)
+        } else if (targetDrawings[i].action === 'clear'){
+          targetDrawings.splice(i, 1)
           break
         } else {
-          // actionがshow/hideの時はundoできないので何もしない。drawでもunitsが
+          // actionがshow/hideの時はundoできないので何もしない
         }
       }
     } else {
-      targetDrawing[drawIndex].units.splice(undoIndexInUnits - 1, 1)
-      if (targetDrawing[drawIndex].units.length === 0) {
-        targetDrawing.splice(drawIndex, 1)
+      targetDrawings[drawIndex].units.splice(undoIndexInUnits - 1, 1)
+      if (targetDrawings[drawIndex].units.length === 0) {
+        targetDrawings.splice(drawIndex, 1)
       }
     }
 
-    removeUndoPair(targetDrawing)
+    removeUndoPair(targetDrawings)
   }
 
   useEffect(() => {
