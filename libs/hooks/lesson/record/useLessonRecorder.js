@@ -85,6 +85,9 @@ export default function useLessonRecorder() {
         newDrawing.elapsedTime = isRecording ? realElapsedTime() - durationSec : realElapsedTime()
         newDrawing.durationSec = isRecording ? durationSec : 0
         newDrawing.stroke = record.value
+      } else if (record.action === 'undo') {
+        newDrawing.elapsedTime = elapsedFloatTime()
+        newDrawing.durationSec = 0
       } else {
         newDrawing.elapsedTime = elapsedFloatTime()
       }
@@ -147,18 +150,21 @@ export default function useLessonRecorder() {
     let preAction
     const drawings = []
     lessonRef.current.drawings.forEach(d => {
-      if (['clear', 'show', 'hide'].includes(d.action)) { // クリア/表示/非表示の操作はまとめる必要がない
+      if (['clear', 'show', 'hide'].includes(d.action)) {
+        // クリア/表示/非表示の操作はまとめる必要がない
         drawings.push(d)
-      } else if (['draw', 'undo'].includes(preAction)) {  // 線の描写で他の操作をまたがないものはunitsにまとめる
-        const lastDrawing = drawings[drawings.length - 1]
-        lastDrawing.durationSec = d.elapsedTime + d.durationSec - lastDrawing.elapsedTime
-        lastDrawing.units.push({
+      } else if (['draw', 'undo'].includes(preAction)) {
+        // 線の描写で他の操作をまたがないものはunitsにまとめる
+        const drawingGroup = drawings[drawings.length - 1]
+        drawingGroup.durationSec = d.elapsedTime + d.durationSec - drawingGroup.elapsedTime
+        drawingGroup.units.push({
           action: d.action,
           elapsedTime: d.elapsedTime,
           durationSec: d.durationSec,
           stroke: d.stroke,
         })
       } else {
+        // 他の操作をまたいだdraw/undoは新たな配列として格納する
         drawings.push({
           action: d.action,
           elapsedTime: d.elapsedTime,
