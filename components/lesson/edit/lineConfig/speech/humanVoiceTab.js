@@ -40,7 +40,7 @@ export default function HumanVoiceTab({ config, setConfig, switchTab }) {
             <Row>
               <Col md={11}>
                 <Container height='30'>
-                  <InputRange key={audioCurrent} defaultValue={audioCurrent} min='0' max={audioMax} step='0.01' disabled={isRecording} onChange={handleSeek} />
+                  <InputRange key={audioCurrent} defaultValue={audioCurrent} min='0' max={audioMax} step='0.01' disabled={isRecording} onInput={handleSeek} onChange={handleSeek} />
                   <AlignContainer textAlign='right'>
                     <Container height='14'>
                       <PlainText size='14' color='var(--soft-white)'>{audioElapsedTime}</PlainText>

@@ -47,7 +47,7 @@ export default function SynthesisVoiceTab({ config, setConfig, switchTab }) {
           <Col md={4}>
             <PlainText size='13' color='var(--soft-white)'>速度</PlainText>
             <ContainerSpacer left='10'>
-              <InputRange defaultValue={config.synthesisConfig.speakingRate || '1.2'} min='0.5' max='3.0' step='0.1' onChange={setSpeakingRate} />
+              <InputRange defaultValue={config.synthesisConfig.speakingRate || '1.2'} min='0.5' max='3.0' step='0.1' onInput={setSpeakingRate} onChange={setSpeakingRate} />
             </ContainerSpacer>
             <AlignContainer textAlign='right'>
               <PlainText size='12' color='var(--soft-white)'>{config.synthesisConfig.speakingRate || '1.2'}</PlainText>
@@ -56,7 +56,7 @@ export default function SynthesisVoiceTab({ config, setConfig, switchTab }) {
           <Col md={4}>
             <PlainText size='13' color='var(--soft-white)'>ピッチ</PlainText>
             <ContainerSpacer left='10'>
-              <InputRange defaultValue={config.synthesisConfig.pitch || '0'} min='-10.0' max='10.0' step='1' onChange={setPitch} />
+              <InputRange defaultValue={config.synthesisConfig.pitch || '0'} min='-10.0' max='10.0' step='1' onInput={setPitch} onChange={setPitch} />
             </ContainerSpacer>
             <AlignContainer textAlign='right'>
               <PlainText size='12' color='var(--soft-white)'>{config.synthesisConfig.pitch || '0'}</PlainText>
@@ -65,7 +65,7 @@ export default function SynthesisVoiceTab({ config, setConfig, switchTab }) {
           <Col md={4}>
             <PlainText size='13' color='var(--soft-white)'>音量調整</PlainText>
             <ContainerSpacer left='10'>
-              <InputRange defaultValue={config.synthesisConfig.volumeGainDb || '0'} min='-5.0' max='0' step='1' onChange={setVolumeGainDb} />
+              <InputRange defaultValue={config.synthesisConfig.volumeGainDb || '0'} min='-5.0' max='0' step='1' onInput={setVolumeGainDb} onChange={setVolumeGainDb} />
             </ContainerSpacer>
             <AlignContainer textAlign='right'>
               <PlainText size='12' color='var(--soft-white)'>{config.synthesisConfig.volumeGainDb || '0'}</PlainText>
