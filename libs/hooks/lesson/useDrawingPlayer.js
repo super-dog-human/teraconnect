@@ -1,135 +1,126 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { drawToCanvas, clearCanvas } from '../../drawingUtils'
 import { Clock } from 'three'
+import useDrawingPicture from './useDrawingPicture'
 
-export default function useDrawingPlayer({ isPlaying, drawings, index, startElapsedTime, currentElapsedTime=0 }) {
+export default function useDrawingPlayer({ isPlaying, setIsPlaying, drawings, drawing, startElapsedTime, endElapsedTime }) {
+  const drawingRef = useRef(drawing)
   const canvasRef = useRef()
   const canvasCtxRef = useRef()
+  const animationRequestRef = useRef()
   const clockRef = useRef(0)
-  const elapsedTimeRef = useRef(0)
+  const elapsedTimeRef = useRef(startElapsedTime)
+  const [playerElapsedTime, setPlayerElapsedTime] = useState(0)
+  const preStrokeRef = useRef({})
+  const { drawPicture } = useDrawingPicture({ canvasRef, drawings })
 
-  function initializeCanvas() {
-    draw(currentDrawings())
-  }
+  function draw(isOnce) {
+    const incrementalTime = clockRef.current.getDelta()
+    drawingRef.current.units.forEach((unit, unitIndex) => {
+      if (unit.action === 'draw') {
+        const preElapsedTime = elapsedTimeRef.current
+        const currentElapsedTime = preElapsedTime + incrementalTime
+        if (preElapsedTime > unit.elapsedTime + unit.durationSec) return
+        if (currentElapsedTime < unit.elapsedTime) return
 
-  function currentDrawings() {
-    let preElapsedTime
-    let sameTimeIndex
-    const durationDrawings = drawings.filter(d => {
-      //      console.log(d === drawing)
-      if (d.elapsedTime === preElapsedTime) {
-        sameTimeIndex += 1
-      } else  {
-        sameTimeIndex = 0
-        preElapsedTime = d.elapsedTime
-      }
-      return d.elapsedTime < startElapsedTime || (d.elapsedTime === startElapsedTime && sameTimeIndex === index)
-    })
-
-    reduceUndoPair(durationDrawings)
-
-    const lastClearIndex = [...durationDrawings].reverse().findIndex(d => d.action === 'clear')
-    if (lastClearIndex >= 0) {
-      // 直近のclearより前の描画は意味がないので削除。最後からのインデックスなので合計数から差し引く
-      durationDrawings.splice(0, durationDrawings.length - 1 - lastClearIndex)
-    }
-
-    return durationDrawings
-  }
-
-  function reduceUndoPair(drawings) {
-    let drawIndex, undoIndexInUnits
-
-    drawings.some((drawing, i) => {
-      if (drawing.action !== 'draw') return
-
-      const undoIndex = drawing.units.findIndex(d => d.action === 'undo')
-      if (undoIndex >= 0) {
-        drawIndex = i
-        undoIndexInUnits = undoIndex
-      }
-
-      return undoIndexInUnits
-    })
-
-    if (!undoIndexInUnits) return // undoがなくなれば終了
-    drawings[drawIndex].units.splice(undoIndexInUnits, 1) // undoを削除
-
-    if (undoIndexInUnits === 0) {
-      for (let i = drawIndex - 1; i >= 0; i--) {
-        if (drawings[i].action !== 'draw') continue
-
-        // 最初に出現するundoを上記で取得しているので、自身より前のdrawのunitsの最後の要素は必ずdrawになる
-        if (drawings[i].units.length > 0) {
-          drawings[i].units.pop()
-          if (drawings[i].units.length === 0) {
-            drawings.splice(i, 1)
-          }
-          break
+        let positionIndex
+        if (currentElapsedTime < unit.elapsedTime + unit.durationSec) {
+          // 経過時間がunitの途中までなら、時間を案分して描画するstrokeの数を求める
+          const timePerUnit = unit.stroke.positions.length / unit.durationSec
+          const diffTime = currentElapsedTime - unit.elapsedTime
+          positionIndex = Math.round(timePerUnit * diffTime) - 1
+        } else {
+          // 経過時間がunitの終端ちょうどか次のunitをまたいでいるなら、このunitのstrokeは全数が対象になる
+          positionIndex = unit.stroke.positions.length - 1
         }
-      }
-    } else {
-      drawings[drawIndex].units.splice(undoIndexInUnits - 1, 1)
-      if (drawings[drawIndex].units.length === 0) {
-        drawings.splice(drawIndex, 1)
-      }
-    }
-
-    reduceUndoPair(drawings)
-  }
-
-  function draw(drawings) {
-    drawings.forEach(history => {
-      switch(history.action) {
-      case 'draw':
-        history.units.forEach(u => {
-          if (u.action === 'draw') {
-            drawToCanvas(canvasCtxRef.current, u.stroke)
-          } else {
-            clearCanvas(canvasCtxRef.current)
-            // 一つ前の時点で描画し直す
-          }
-        })
-        return
-      case 'clear':
+        if (positionIndex > 0) {
+          drawStrokePart(unit.stroke, unitIndex, positionIndex)
+        }
+      } else {
         clearCanvas(canvasCtxRef.current)
-        return
-      case 'show':
-        canvasRef.current.style.opacity = 1
-        return
-      case 'hide':
-        canvasRef.current.style.opacity = 0
-        return
+        undo()
       }
     })
+
+    elapsedTimeRef.current += incrementalTime
+    setPlayerElapsedTime(parseFloat((elapsedTimeRef.current - startElapsedTime).toFixed(1)))
+
+    if (isOnce === true) return // 最後に実行される際はboolの引数になる
+
+    if (elapsedTimeRef.current >= endElapsedTime) {
+      setPlayerElapsedTime(parseFloat(drawing.durationSec.toFixed(1)))
+      finishPlaying()
+      return
+    }
+
+    animationRequestRef.current = requestAnimationFrame(draw)
   }
 
-  function animationDraw() {
-    if (!isPlaying) return
-    const currentElapsedTime = clockRef.current.getDelta()
+  function undo() {
+    // units内のdrawingなものを自身から遡って取得する
+    // drawPictureで直前の時間までのものを実行
+    // drawToCanvasで必要なもののみを実行
+  }
 
-    elapsedTimeRef.current += currentElapsedTime
-    requestAnimationFrame(animationDraw)
+  function drawStrokePart(stroke, unitIndex, positionIndex) {
+    if (unitIndex === preStrokeRef.current.unitIndex && positionIndex === preStrokeRef.current.positionIndex) return
+
+    const newStroke = { ...stroke }
+    newStroke.positions = stroke.positions.slice(0, positionIndex) // 線をつなげるため毎回0から描画する
+    drawToCanvas(canvasCtxRef.current, newStroke)
+
+    preStrokeRef.current.unitIndex = unitIndex
+    preStrokeRef.current.positionIndex = positionIndex
+  }
+
+  function drawAt(elapsedTime) {
+    // drawPicture(elapsedTime, []) // 今回の描画は空配列で実行する
+    // 同時刻のものがあれば一番最後のdrawingsを取得
+    // 手動でdrawToCanvasする
+  }
+
+  function stopDrawing() {
+    if (animationRequestRef.current) {
+      cancelAnimationFrame(animationRequestRef.current)
+      clockRef.current = 0
+    }
+  }
+
+  function finishPlaying() {
+    draw(true) // 経過時間が終端を大きくまたいで終了する際、残った描画を最後に実行
+    elapsedTimeRef.current = startElapsedTime
+    clockRef.current = null
+    preStrokeRef.current = {}
+    setIsPlaying(false)
   }
 
   useEffect(() => {
     canvasCtxRef.current = canvasRef.current.getContext('2d')
+    return stopDrawing
   }, [])
-
 
   useEffect(() => {
     if (!drawings) return
-    initializeCanvas()
+    drawPicture(startElapsedTime, drawing)
   }, [drawings])
 
   useEffect(() => {
+    drawingRef.current = drawing
+  }, [drawing])
+
+  useEffect(() => {
     if (isPlaying) {
-      // currentElapsedTimeはシーク時に現在の描画のために使うかも
       clockRef.current = new Clock()
-      clearCanvas(canvasCtxRef.current)
-      animationDraw()
+      if (elapsedTimeRef.current === startElapsedTime) {
+        setPlayerElapsedTime(0)
+        clearCanvas(canvasCtxRef.current)
+        // drawAt()
+      }
+      draw()
+    } else {
+      stopDrawing()
     }
   }, [isPlaying])
 
-  return { canvasRef }
+  return { canvasRef, elapsedTime: playerElapsedTime }
 }

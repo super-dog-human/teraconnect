@@ -16,7 +16,7 @@ export default function LessonLineDrawing({ drawings, drawing, index, isEditButt
     <>
       {drawing.action !== 'draw' && <KindIcon kind="drawing" status={['draw', 'show'].includes(drawing.action)} />}
       <div css={drwaingContainerStyle}>
-        {drawing.action === 'draw' && <DrawingPreview drawings={drawings} index={index} startElapsedTime={drawing.elapsedTime} />}
+        {drawing.action === 'draw' && <DrawingPreview drawings={drawings} drawing={drawing} />}
         {drawing.action !== 'draw' && <ActionLabel kind="drawing" action={drawing.action} />}
       </div>
       <ContainerSpacer top='20'>
