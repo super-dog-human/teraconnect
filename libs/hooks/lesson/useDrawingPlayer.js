@@ -156,5 +156,5 @@ export default function useDrawingPlayer({ isPlaying, setIsPlaying, drawings, dr
     }
   }, [isPlaying])
 
-  return { canvasRef, elapsedTime: playerElapsedTime, seekDrawing }
+  return { drawingRef: canvasRef, elapsedTime: playerElapsedTime, seekDrawing }
 }
