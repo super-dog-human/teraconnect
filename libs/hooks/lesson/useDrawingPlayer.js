@@ -36,10 +36,10 @@ export default function useDrawingPlayer({ isPlaying, setIsPlaying, drawings, dr
           // 経過時間がunitの途中までなら、時間を案分して描画するstrokeの数を求める
           const timePerUnit = unit.stroke.positions.length / unit.durationSec
           const diffTime = currentElapsedTime - unit.elapsedTime
-          positionIndex = Math.round(timePerUnit * diffTime) - 1
+          positionIndex = Math.round(timePerUnit * diffTime)
         } else {
           // 経過時間がunitの終端ちょうどか次のunitをまたいでいるなら、このunitのstrokeは全数が対象になる
-          positionIndex = unit.stroke.positions.length - 1
+          positionIndex = unit.stroke.positions.length
         }
         if (positionIndex > 0) {
           drawStrokePart(unit.stroke, unitIndex, positionIndex)
