@@ -6,7 +6,7 @@ import useLessonRecordChangeTabDetector from '../../../libs/hooks/lesson/record/
 import useRecordResource from '../../../libs/hooks/lesson/record/useRecordResource'
 import useDragOverDetector from '../../../libs/hooks/useDragOverDetector'
 import useLessonAvatar from '../../../libs/hooks/lesson/useAvatar'
-import useLessonDrawing from '../../../libs/hooks/lesson/useDrawing'
+import useDrawingRecorder from '../../../libs/hooks/lesson/useDrawingRecorder'
 import useVoiceRecorder from '../../../libs/hooks/lesson/useVoiceRecorder'
 import LessonRecordHeader from './header'
 import LessonRecordLoadingIndicator from './loadingIndicator'
@@ -33,7 +33,7 @@ const LessonRecord = React.forwardRef(function lessonRecord({ lesson, hasResize 
   const { isMicReady, isSpeaking, micDeviceID, setMicDeviceID, silenceThresholdSec, setSilenceThresholdSec } = useVoiceRecorder({ lessonID: lesson.id, isRecording, realElapsedTime })
   const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useLessonAvatar(setIsLoading, isSpeaking, hasResize)
   const { isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth,
-    startDrawing, inDrawing, endDrawing, drawingRef } = useLessonDrawing(hasResize, startDragging, inDragging, endDragging)
+    startDrawing, inDrawing, endDrawing, drawingRef } = useDrawingRecorder({ hasResize, startDragging, inDragging, endDragging })
 
   useEffect(() => {
     addPreventSwipeEvent()

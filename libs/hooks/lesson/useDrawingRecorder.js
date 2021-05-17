@@ -5,8 +5,9 @@ import { drawToCanvas, drawEdgeCircle, clearCanvas } from '../../drawingUtils'
 
 const histories = []
 
-export default function useLessonDrawing(hasResize, startDragging, inDragging, endDragging) {
+export default function useDrawingRecorder({ hasResize, startDragging, inDragging, endDragging }) {
   const canvasCtxRef = useRef()
+  const coefficientRef = useRef({ x: 0, y: 0 })
   const isMobileDeviceRef = useRef()
   const startPositionRef = useRef({})
   const startDrawingTimeRef = useRef()
@@ -19,13 +20,6 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
   const [lineWidth, setLineWidth] = useState(5)
   const { setRecord } = useLessonRecorderContext()
 
-  function resetCanvasSize() {
-    canvasCtxRef.current.canvas.width = canvasCtxRef.current.canvas.clientWidth
-    canvasCtxRef.current.canvas.height = canvasCtxRef.current.canvas.clientHeight
-
-    redrawFromHistory()
-  }
-
   function startDrawing(e) {
     if (isMobileDeviceRef.current && e.type === 'mousedown') return // モバイルではtouchstart後にmousedownが呼ばれるのでスキップ
     if (enablePen && !isDrawingHide) {
@@ -34,7 +28,7 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
       isDrawingRef.current = true
       startDrawingTimeRef.current = new Date()
 
-      const [x, y] = mouseOrTouchPositions(e, ['touchstart'])
+      const [x, y] = calcResizePosition(e, ['touchstart'])
       drawEdgeCircle(canvasCtxRef.current, x, y, color)
 
       canvasCtxRef.current.beginPath()
@@ -50,7 +44,7 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
     if (enablePen && !isDrawingHide) {
       if (!isDrawingRef.current) return
 
-      const [x, y] = mouseOrTouchPositions(e, ['touchmove'])
+      const [x, y] = calcResizePosition(e, ['touchmove'])
       drawLine(x, y)
       startPositionRef.current = { x, y }
     } else {
@@ -64,7 +58,7 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
       if (!isDrawingRef.current) return
       switchSwipable(true)
 
-      const [x, y] = mouseOrTouchPositions(e, ['touchend', 'touchcancel'])
+      const [x, y] = calcResizePosition(e, ['touchend', 'touchcancel'])
       drawLine(x, y)
       drawEdgeCircle(canvasCtxRef.current, x, y, color)
 
@@ -107,6 +101,11 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
     canvasCtxRef.current.lineWidth = lineWidth
   }
 
+  function calcResizePosition(e, positions) {
+    const [x, y] = mouseOrTouchPositions(e, positions)
+    return [coefficientRef.current.x * x, coefficientRef.current.y * y,].map(f => (Math.round(f)))
+  }
+
   function isSamePosition(oldPosition, newPosition) {
     return oldPosition.x === newPosition.x && oldPosition.y === newPosition.y
   }
@@ -114,8 +113,6 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
   function createNewHistory() {
     histories.push({
       clear: false,
-      width: canvasCtxRef.current.canvas.clientWidth,
-      height: canvasCtxRef.current.canvas.clientHeight,
       color: color,
       eraser: isEraser(),
       lineWidth: lineWidth,
@@ -166,7 +163,7 @@ export default function useLessonDrawing(hasResize, startDragging, inDragging, e
 
   useEffect(() => {
     if (!hasResize) return
-    resetCanvasSize()
+    coefficientRef.current = { x: 1280 / canvasCtxRef.current.canvas.clientWidth, y: 720 / canvasCtxRef.current.canvas.clientHeight }
   }, [hasResize])
 
   useEffect(() => {
