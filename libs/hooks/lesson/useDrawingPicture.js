@@ -25,7 +25,7 @@ export default function useDrawingPicture({ canvasRef, drawings }) {
   }
 
   function initialDrawings(startElapsedTime, currentDrawing) {
-    const durationDrawings = drawings.filter(d => {
+    const drawingsInDuration = drawings.filter(d => {
       if (currentDrawing) {
         return d.elapsedTime < startElapsedTime
       } else {
@@ -34,25 +34,27 @@ export default function useDrawingPicture({ canvasRef, drawings }) {
     })
 
     if (currentDrawing) {
-      durationDrawings.push(currentDrawing)
+      drawingsInDuration.push({ ...currentDrawing })
     }
 
-    reduceUndoPair(durationDrawings)
+    removeUndoPair(drawingsInDuration)
 
-    const lastClearIndex = [...durationDrawings].reverse().findIndex(d => d.action === 'clear')
+    const lastClearIndex = [...drawingsInDuration].reverse().findIndex(d => d.action === 'clear')
     if (lastClearIndex >= 0) {
       // 直近のclearより前の描画は意味がないので削除。最後からのインデックスなので合計数から差し引く
-      durationDrawings.splice(0, durationDrawings.length - 1 - lastClearIndex)
+      drawingsInDuration.splice(0, drawingsInDuration.length - 1 - lastClearIndex)
     }
 
-    return durationDrawings
+    return drawingsInDuration
   }
 
-  function reduceUndoPair(drawings) {
+  function removeUndoPair(targetDrawing) {
     let drawIndex, undoIndexInUnits
 
-    drawings.some((drawing, i) => {
+    targetDrawing.some((drawing, i) => {
       if (drawing.action !== 'draw') return
+
+      drawing.units = [...drawing.units]
 
       const undoIndex = drawing.units.findIndex(d => d.action === 'undo')
       if (undoIndex >= 0) {
@@ -64,32 +66,32 @@ export default function useDrawingPicture({ canvasRef, drawings }) {
     })
 
     if (!undoIndexInUnits) return // undoがなくなれば終了
-    drawings[drawIndex].units.splice(undoIndexInUnits, 1) // undoを削除
+    targetDrawing[drawIndex].units.splice(undoIndexInUnits, 1) // undoを削除
 
     if (undoIndexInUnits === 0) {
       for (let i = drawIndex - 1; i >= 0; i--) {
         // 最初に出現するundoを上記で取得しているので、自身より前のdrawのunitsの最後の要素は必ずdrawになる
-        if (drawings[i].action === 'draw') {
-          drawings[i].units.pop()
-          if (drawings[i].units.length === 0) {
-            drawings.splice(i, 1)
+        if (targetDrawing[i].action === 'draw') {
+          targetDrawing[i].units.pop()
+          if (targetDrawing[i].units.length === 0) {
+            targetDrawing.splice(i, 1)
           }
           break
-        } else if (drawings[i].action === 'clear'){
-          drawings.splice(i, 1)
+        } else if (targetDrawing[i].action === 'clear'){
+          targetDrawing.splice(i, 1)
           break
         } else {
           // actionがshow/hideの時はundoできないので何もしない。drawでもunitsが
         }
       }
     } else {
-      drawings[drawIndex].units.splice(undoIndexInUnits - 1, 1)
-      if (drawings[drawIndex].units.length === 0) {
-        drawings.splice(drawIndex, 1)
+      targetDrawing[drawIndex].units.splice(undoIndexInUnits - 1, 1)
+      if (targetDrawing[drawIndex].units.length === 0) {
+        targetDrawing.splice(drawIndex, 1)
       }
     }
 
-    reduceUndoPair(drawings)
+    removeUndoPair(targetDrawing)
   }
 
   useEffect(() => {

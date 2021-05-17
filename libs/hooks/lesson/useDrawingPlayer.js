@@ -4,7 +4,6 @@ import { Clock } from 'three'
 import useDrawingPicture from './useDrawingPicture'
 
 export default function useDrawingPlayer({ isPlaying, setIsPlaying, drawings, drawing, startElapsedTime, endElapsedTime }) {
-  const drawingRef = useRef(drawing)
   const canvasRef = useRef()
   const canvasCtxRef = useRef()
   const animationRequestRef = useRef()
@@ -16,13 +15,14 @@ export default function useDrawingPlayer({ isPlaying, setIsPlaying, drawings, dr
 
   function draw(isOnce) {
     const incrementalTime = clockRef.current.getDelta()
-    drawingRef.current.units.forEach((unit, unitIndex) => {
-      if (unit.action === 'draw') {
-        const preElapsedTime = elapsedTimeRef.current
-        const currentElapsedTime = preElapsedTime + incrementalTime
-        if (preElapsedTime > unit.elapsedTime + unit.durationSec) return
-        if (currentElapsedTime < unit.elapsedTime) return
+    drawing.units.forEach((unit, unitIndex) => {
+      const preElapsedTime = elapsedTimeRef.current
+      const currentElapsedTime = preElapsedTime + incrementalTime
 
+      if (preElapsedTime > unit.elapsedTime + unit.durationSec) return
+      if (currentElapsedTime < unit.elapsedTime) return
+
+      if (unit.action === 'draw') {
         let positionIndex
         if (currentElapsedTime < unit.elapsedTime + unit.durationSec) {
           // 経過時間がunitの途中までなら、時間を案分して描画するstrokeの数を求める
@@ -37,7 +37,6 @@ export default function useDrawingPlayer({ isPlaying, setIsPlaying, drawings, dr
           drawStrokePart(unit.stroke, unitIndex, positionIndex)
         }
       } else {
-        clearCanvas(canvasCtxRef.current)
         undo()
       }
     })
@@ -57,6 +56,7 @@ export default function useDrawingPlayer({ isPlaying, setIsPlaying, drawings, dr
   }
 
   function undo() {
+    clearCanvas(canvasCtxRef.current)
     // units内のdrawingなものを自身から遡って取得する
     // drawPictureで直前の時間までのものを実行
     // drawToCanvasで必要なもののみを実行
@@ -103,10 +103,6 @@ export default function useDrawingPlayer({ isPlaying, setIsPlaying, drawings, dr
     if (!drawings) return
     drawPicture(startElapsedTime, drawing)
   }, [drawings])
-
-  useEffect(() => {
-    drawingRef.current = drawing
-  }, [drawing])
 
   useEffect(() => {
     if (isPlaying) {
