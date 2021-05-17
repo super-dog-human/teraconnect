@@ -3,6 +3,7 @@ import Container from '../../../container'
 import ContainerSpacer from '../../../containerSpacer'
 import InputRange from '../../../form/inputRange'
 import ColorFilter from '../../../colorFilter'
+import PlainText from '../../../plainText'
 import DrawingPlayer from '../../../lesson/player/drawing'
 import useDrawingPLayer from '../../../../libs/hooks/lesson/useDrawingPlayer'
 
@@ -56,6 +57,9 @@ export default function DrawingPreview({ drawings, drawing, sameTimeIndex }) {
           </div>
         </Container>
       </Container>
+      {drawing.units && drawing.units.some(d => d.action === 'draw' && d.durationSec === 0) &&
+        <PlainText size='13' color='gray'>収録停止中に描かれた線は、アニメーションなしで表示されます。</PlainText>
+      }
     </ContainerSpacer>
   )
 }
