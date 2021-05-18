@@ -12,7 +12,7 @@ import useFetch from '../../useFetch'
 export default function useLessonEditor() {
   const lessonRef = useRef()
   const [isLoading, setIsLoading] = useState(true)
-  const [durationSec, setDurationSec] = useState()
+  const [durationSec, setDurationSec] = useState(0)
   const [timeline, setTimeline] = useState({})
   const [voiceSynthesisConfig, setVoiceSynthesisConfig] = useState({})
   const [bgImageURL, setBgImageURL] = useState('')

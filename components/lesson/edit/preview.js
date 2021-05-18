@@ -6,7 +6,7 @@ import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorConte
 import LessonPlayer from '../player'
 
 export default function LessonEditPreview() {
-  const { avatars, graphics, drawings, speeches } = useLessonEditorContext()
+  const { durationSec, bgImageURL, avatars, graphics, drawings, speeches } = useLessonEditorContext()
   const screenClass = useScreenClass()
 
   const bodyStyle = css({
@@ -17,7 +17,7 @@ export default function LessonEditPreview() {
 
   return (
     <div css={bodyStyle}>
-      <LessonPlayer avatars={avatars} graphics={graphics} drawings={drawings} speeches={speeches} />
+      <LessonPlayer durationSec={durationSec} bgImageURL={bgImageURL} avatars={avatars} graphics={graphics} drawings={drawings} speeches={speeches} />
     </div>
   )
 }
