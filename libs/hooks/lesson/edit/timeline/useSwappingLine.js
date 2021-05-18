@@ -24,25 +24,25 @@ export default function useSwappingLine({ lastTimeline, sortedElapsedTimes, maxD
           if (material.elapsedTime === selfElapsedTime) {
             let newElapsedTime
             if (fromIndex < toIndex && elapsedTimeByIndex(elapsedTimes, toIndex + 1)) {
-            // 移動先の直下に行があるなら、その行の開始時間から移動元の行の所要時間を引いたものを自身の開始時間とする
+              // 移動先の直下に行があるなら、その行の開始時間から移動元の行の所要時間を引いたものを自身の開始時間とする
               const nextElapsedTime = elapsedTimeByIndex(elapsedTimes, toIndex + 1)
               newElapsedTime = calcTime(nextElapsedTime, offsetTime)
             } else if (fromIndex < toIndex) {
-            // 移動先が一番下の行なら、その行の終了直後を自身のelapsedTimeとする
+              // 移動先が一番下の行なら、その行の終了直後を自身のelapsedTimeとする
               const lastElapsedTime = elapsedTimeByIndex(elapsedTimes, toIndex)
               const lastDurationSec = maxDurationSecInLine(lastTimeline())
               newElapsedTime = calcTime(lastElapsedTime, lastDurationSec)
             } else  {
-            // 移動先が移動元よりも上なら、移動先の直下の行のシフトする前の開始時間を移動元の開始時間とする
+              // 移動先が移動元よりも上なら、移動先の直下の行のシフトする前の開始時間を移動元の開始時間とする
               newElapsedTime = elapsedTimeByIndex(elapsedTimes, toIndex + 1)
             }
 
-            const diffTime = parseFloat((material.elapsedTime - newElapsedTime).toFixed(3))
+            const diffTime = parseFloat((newElapsedTime - material.elapsedTime).toFixed(3))
             material.elapsedTime = newElapsedTime
-            shiftDrawingElapsedTime(kind, material, diffTime)
+            if (kind === 'drawing') shiftDrawingElapsedTime(material, diffTime)
           } else if (material.elapsedTime >= fromElapsedTime && material.elapsedTime <= toElapsedTime) {
             material.elapsedTime = calcTime(material.elapsedTime, offsetTime)
-            shiftDrawingElapsedTime(kind, material, offsetTime)
+            if (kind === 'drawing') shiftDrawingElapsedTime(material, offsetTime)
           }
         })
 
@@ -66,12 +66,12 @@ export default function useSwappingLine({ lastTimeline, sortedElapsedTimes, maxD
     return parseFloat(parseFloat(elapsedTimes[index]).toFixed(3))
   }
 
-  function shiftDrawingElapsedTime(kind, material, offsetTime) {
-    if (kind === 'drawing' && material.units) {
-      material.units.forEach(unit => {
-        unit.elapsedTime = calcTime(unit.elapsedTime, offsetTime)
-      })
-    }
+  function shiftDrawingElapsedTime(material, offsetTime) {
+    if (!material.units) return
+    material.units.forEach(unit => {
+      console.log(unit.elapsedTime, offsetTime)
+      unit.elapsedTime = calcTime(unit.elapsedTime, offsetTime)
+    })
   }
 
   return { swapLine }
