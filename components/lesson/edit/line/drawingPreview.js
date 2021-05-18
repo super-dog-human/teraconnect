@@ -1,8 +1,7 @@
 import React from 'react'
 import Container from '../../../container'
 import ContainerSpacer from '../../../containerSpacer'
-import InputRange from '../../../form/inputRange'
-import ColorFilter from '../../../colorFilter'
+import SeekBar from '../../player/seekBar'
 import PlainText from '../../../plainText'
 import Drawing from '../../drawing'
 import useDrawingPreview from '../../../../libs/hooks/lesson/edit/useDrawingPreview'
@@ -22,13 +21,8 @@ export default function DrawingPreview({ drawings, drawing, sameTimeIndex }) {
             <div onClick={handlePlayButtonClick}>
               <Container width='302' height='140' />
             </div>
-            <Container width='302' height='30' invisible={!isPlayerHover}>
-              <ContainerSpacer left='15' right='15'>
-                <ColorFilter filter='drop-shadow(2px 2px 2px var(--dark-purple))'>
-                  <InputRange key={playerElapsedTime} defaultValue={playerElapsedTime} min='0' max={parseFloat((drawing.durationSec).toFixed(2))} step='0.01'
-                    onDragStart={handleDragStart} onInput={handleSeekChange} onChange={handleSeekChange} />
-                </ColorFilter>
-              </ContainerSpacer>
+            <Container width='302' height='30'>
+              <SeekBar invisible={!isPlayerHover} playerElapsedTime={playerElapsedTime} maxTime={parseFloat((drawing.durationSec).toFixed(2))} handleDragStart={handleDragStart} handleSeekChange={handleSeekChange} />
             </Container>
           </div>
         </Container>
