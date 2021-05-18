@@ -21,7 +21,7 @@ import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorConte
 export default function Timeline() {
   const dropLineRef = useRef()
   const { durationSec, timeline, drawings, swapLine } = useLessonEditorContext()
-  const { dragStartIndex, handleDragStart, handleDragEnd, handleDragOver, handleDrop, handleChildDrop } = useSwappingLine({ dropLineRef, swapLine })
+  const { handleDragStart, handleDragEnd, handleDragOver, handleDrop, handleChildDrop } = useSwappingLine({ dropLineRef, swapLine })
   const { handleEditButtonClick, lineConfig } = useLineConfig()
 
   return (
@@ -30,7 +30,7 @@ export default function Timeline() {
       <LineConfig config={lineConfig} />
       <DragSwappable onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd} onDrop={handleDrop}>
         {Object.keys(timeline).sort((a, b) => a - b).map((elapsedTime, i) => (
-          <div key={i} css={dragStartIndex === i && focusedStyle}>
+          <div key={i}>
             <div css={lineStyle}>
               <ElapsedTime elapsedTime={elapsedTime} />
               <div css={lineBodyStyle}>
@@ -72,8 +72,4 @@ const lineStyle = css({
 
 const lineBodyStyle = css({
   width: '100%',
-})
-
-const focusedStyle = css({
-  backgroundColor: '#eaeaea', // fixme
 })
