@@ -4,14 +4,13 @@ import Draggable from 'react-draggable'
 import { Tab, Tabs, TabList, TabPanel, resetIdCounter } from 'react-tabs'
 import useDraggableBounds from '../../../../libs/hooks/useDraggableBounds'
 import BgImageTab from './bgImageTab'
-import BGMTab from './bgmTab'
 import AvatarTab from './avatarTab'
 import VoiceRecorderTab from './voiceRecorderTab'
 import 'react-tabs/style/react-tabs.css'
 import { css } from '@emotion/core'
 
-export default function LessonRecordSettingPanel({ isShow, setIsShow, bgImages, setBgImageURL, avatars, setAvatarConfig,
-  bgms, setMicDeviceID, setSilenceThresholdSec, isShowVoiceSpectrum, silenceThresholdSec, setIsShowVoiceSpectrum }) {
+export default function SettingPanel({ isShow, setIsShow, bgImages, setBgImageURL, avatars, setAvatarConfig,
+  setMicDeviceID, setSilenceThresholdSec, isShowVoiceSpectrum, silenceThresholdSec, setIsShowVoiceSpectrum }) {
   const draggableRef = useRef(null)
   const { bounds, setBounds } = useDraggableBounds()
 
@@ -50,17 +49,12 @@ export default function LessonRecordSettingPanel({ isShow, setIsShow, bgImages, 
         <Tabs forceRenderTabPanel={true}>
           <TabList>
             <Tab>背景</Tab>
-            <Tab>BGM</Tab>
             <Tab>アバター</Tab>
             <Tab>マイク設定</Tab>
           </TabList>
 
           <TabPanel>
             <BgImageTab images={bgImages} setImageURL={setBgImageURL} />
-          </TabPanel>
-
-          <TabPanel>
-            <BGMTab bgms={bgms} />
           </TabPanel>
 
           <TabPanel>

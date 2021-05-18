@@ -6,7 +6,6 @@ export default function useRecordResource(setBgImageURL) {
   const { showError } = useErrorDialogContext()
   const [bgImages, setBgImages] = useState([])
   const [avatars, setAvatars] = useState([])
-  const [bgms, setBGMs] = useState([])
   const { fetch, fetchWithAuth }  = useFetch()
 
   function loadBackgroundImages() {
@@ -38,24 +37,11 @@ export default function useRecordResource(setBgImageURL) {
     })
   }
 
-  function loadBackgroundMusics() {
-    fetch('/background_musics').then(r => setBGMs(r)).catch(e => {
-      showError({
-        message: 'BGM情報の読み込みに失敗しました。',
-        original: e,
-        canDismiss: false,
-        callback: loadBackgroundMusics,
-      })
-      console.error(e)
-    })
-  }
-
   useEffect(() => {
     loadBackgroundImages()
     loadAvatars()
-    loadBackgroundMusics()
   }, [])
 
 
-  return { bgImages, avatars, bgms }
+  return { bgImages, avatars }
 }

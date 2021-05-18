@@ -10,7 +10,7 @@ import useDrawingRecorder from '../../../libs/hooks/lesson/useDrawingRecorder'
 import useVoiceRecorder from '../../../libs/hooks/lesson/useVoiceRecorder'
 import LessonRecordHeader from './header'
 import LessonRecordLoadingIndicator from './loadingIndicator'
-import LessonRecordSettingPanel from './settingPanel'
+import SettingPanel from './settingPanel'
 import LessonRecordGraphicController from './graphicController'
 import LessonBackgroundImage from '../backgroundImage'
 import LessonAvatar from '../avatar'
@@ -29,7 +29,7 @@ const LessonRecord = React.forwardRef(function lessonRecord({ lesson, hasResize 
   const [isShowVoiceSpectrum, setIsShowVoiceSpectrum] = useState(true)
   useLessonRecordChangeTabDetector()
   const { hasDragOver, handleAreaDragOver, handleAreaDragLeave, handleAreaDrop } = useDragOverDetector()
-  const { bgImages, avatars, bgms } = useRecordResource(setBgImageURL)
+  const { bgImages, avatars } = useRecordResource(setBgImageURL)
   const { isMicReady, isSpeaking, micDeviceID, setMicDeviceID, silenceThresholdSec, setSilenceThresholdSec } = useVoiceRecorder({ lessonID: lesson.id, isRecording, realElapsedTime })
   const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useLessonAvatar(setIsLoading, isSpeaking, hasResize)
   const { isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth,
@@ -56,8 +56,8 @@ const LessonRecord = React.forwardRef(function lessonRecord({ lesson, hasResize 
           <LessonAvatar ref={avatarRef} onMouseDown={startDragging} onMouseMove={inDragging} onMouseUp={endDragging} onMouseLeave={endDragging}
             onTouchStart={startDragging} onTouchMove={inDragging} onTouchEnd={endDragging} onTouchCancel={endDragging} />
           <LessonDrawing isHide={isDrawingHide} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing} drawingRef={drawingRef} zKind='drawing' />
-          <LessonRecordSettingPanel isShow={isShowControlPanel} setIsShow={setIsShowControlPanel} bgImages={bgImages} setBgImageURL={setBgImageURL}
-            avatars={avatars} setAvatarConfig={setAvatarConfig} bgms={bgms} setMicDeviceID={setMicDeviceID} silenceThresholdSec={silenceThresholdSec}
+          <SettingPanel isShow={isShowControlPanel} setIsShow={setIsShowControlPanel} bgImages={bgImages} setBgImageURL={setBgImageURL}
+            avatars={avatars} setAvatarConfig={setAvatarConfig} setMicDeviceID={setMicDeviceID} silenceThresholdSec={silenceThresholdSec}
             setSilenceThresholdSec={setSilenceThresholdSec} isShowVoiceSpectrum={isShowVoiceSpectrum} setIsShowVoiceSpectrum={setIsShowVoiceSpectrum} />
         </div>
         <LessonRecordGraphicController id={lesson.id} setSelectedGraphic={setSelectedGraphic} hasDragOver={hasDragOver} />
