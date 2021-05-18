@@ -1,49 +1,87 @@
 /** @jsxImportSource @emotion/react */
-import React from 'react'
-import TopLogoLink from '../../../topLogoLink'
+import React, { useState } from 'react'
 import { css } from '@emotion/core'
+import { useScreenClass } from 'react-grid-system'
+import Container from '../../../container'
+import Spacer from '../../../spacer'
+import Flex from '../../../flex'
+import PlainText from '../../../plainText'
+import TopLogoLink from '../../../topLogoLink'
+import MenuLink from './menuLink'
+import IconButton from '../../../button/iconButton'
+import { useContextMenuContext } from '../../../../libs/contexts/contextMenuContext'
 
-export default function LessonEditHeader({ isUploading }) {
+export default function Header({ currentPage }) {
+  const [isHover, setIsHover] = useState(false)
+  const { setContextMenu } = useContextMenuContext()
+  const screenClass = useScreenClass()
+
+  function handleMouseEnter() {
+    setIsHover(true)
+  }
+
+  function handleMouseLeave() {
+    setIsHover(false)
+  }
+
+  function handleSortDownClick(e) {
+    setContextMenu({
+      labels: ['上書き保存', '変更の破棄', '設定'],
+      actions: [() => {}, () => {}, () => {}],
+      position: { x: e.pageX, y: e.pageY },
+    })
+  }
+
   return (
     <header css={headerStyle} className="header-z">
       <div css={bodyStyle}>
-        <TopLogoLink color="white" />
-        <div css={flexItemStyle}>
+        <Flex justifyContent='space-between' alignItems='center'>
           <div>
-            編集 {isUploading ? 'loading' : 'ok'}
+            <TopLogoLink color="white" />
           </div>
-          <div>
-            レビュー
+          <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+            <Flex>
+              <MenuLink isHover={isHover} page='edit' currentPage={currentPage} path='/'>
+                <PlainText color='white' size='16' lineHeight='77' letterSpacing='15'>編集</PlainText>
+              </MenuLink>
+              {['lg', 'xl', 'xxl'].includes(screenClass) && <Spacer width='100' />}
+              <MenuLink isHover={isHover} page='review' currentPage={currentPage} path='/'>
+                <PlainText color='white' size='17' lineHeight='77' letterSpacing='2'>レビュー</PlainText>
+              </MenuLink>
+              {['lg', 'xl', 'xxl'].includes(screenClass) && <Spacer width='100' />}
+              <MenuLink isHover={isHover} page='publishing' currentPage={currentPage} path='/'>
+                <PlainText color='white' size='16' lineHeight='77'>公開設定</PlainText>
+              </MenuLink>
+            </Flex>
           </div>
-          <div>
-            公開設定
-          </div>
-        </div>
+          <Container width='100' height='40'>
+            <Flex>
+              <Container width='40' height='40'>
+                <IconButton name='save' borderColor='none' padding='10' />
+              </Container>
+              <Container width='10'>
+                <IconButton name='sort-down' borderColor='none' onClick={handleSortDownClick} />
+              </Container>
+            </Flex>
+          </Container>
+        </Flex>
       </div>
     </header>
   )
 }
 
 const headerStyle = css({
-  width: '100%',
-  backgroundColor: 'var(--dark-gray)',
   position: 'fixed',
+  width: '100%',
   top: 0,
   left: 0,
+  backgroundColor: 'var(--dark-gray)',
   userSelect: 'none',
 })
 
 const bodyStyle = css({
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
   maxWidth: '1280px',
   height: '77px',
   marginLeft: 'auto',
   marginRight: 'auto',
-})
-
-const flexItemStyle = css({
-  width: '100%',
-  textAlign: 'center',
 })

@@ -38,7 +38,9 @@ export default function LessonRecordHeader({ lessonID, isMicReady, isDrawingHide
   return (
     <header css={headerStyle} className="header-z">
       <div css={bodyStyle}>
-        <TopLogoLink color="white" />
+        <div css={logoStyle}>
+          <TopLogoLink color="white" />
+        </div>
         <div css={flexItemStyle}>
           <RecordingButton lessonID={lessonID} isMicReady={isMicReady} />
         </div>
@@ -87,16 +89,8 @@ const bodyStyle = css({
   marginRight: 'auto',
 })
 
-const logoItemStyle = css({
+const logoStyle = css({
   width: '100%',
-  textAlign: 'left',
-})
-
-const logoImageStyle = css({
-  width: '181px',
-  height: '25px',
-  verticalAlign: 'middle',
-  marginLeft: '20px',
 })
 
 const flexItemStyle = css({

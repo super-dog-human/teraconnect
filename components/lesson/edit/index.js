@@ -8,7 +8,7 @@ import { ImageViewerProvider } from '../../../libs/contexts/imageViewerContext'
 import Loading from './loading'
 import ContextMenu from '../../contextMenu'
 import ImageViwer from '../../imageViewer'
-import LessonEditHeader from './header'
+import Header from './header'
 import LessonEditPreview from './preview'
 import LessonDurationTime from './durationTime'
 import LessonEditGraphicController from './graphicController/'
@@ -56,7 +56,7 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
     <>
       <ContextMenu {...contextMenu} handleDismiss={handleDismiss} />
       <Loading timeline={timeline} />
-      <LessonEditHeader />
+      <Header currentPage='edit'/>
       <main css={mainStyle} ref={ref}>
         <ImageViewerProvider>
           <ImageViwer />

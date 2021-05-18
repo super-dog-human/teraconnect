@@ -12,8 +12,9 @@ export default function IconButton({ name, backgroundColor, borderColor, hoverFi
     fontSize: 0,
     borderColor: borderColor || 'inherit',
     backgroundColor: backgroundColor || 'inherit',
+    filter: 'brightness(80%)',
     ':hover': {
-      filter: hoverFilter || 'brightness(80%)',
+      filter: hoverFilter || 'brightness(100%)',
     },
     ':disabled': {
       opacity: 0.3,
