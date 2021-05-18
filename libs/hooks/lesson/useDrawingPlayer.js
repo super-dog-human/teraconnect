@@ -1,17 +1,12 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useEffect } from 'react'
 import { drawToCanvas, clearCanvas } from '../../drawingUtils'
-import { Clock } from 'three'
 import useDrawingPicture from './useDrawingPicture'
 
-export default function useDrawingPlayer({ isPlaying, setIsPlaying, drawings, sameTimeIndex=-1, startElapsedTime, durationSec }) {
+export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElapsedTime, elapsedTimeRef }) {
   const canvasRef = useRef()
   const canvasCtxRef = useRef()
-  const animationRequestRef = useRef(0)
-  const clockRef = useRef()
-  const elapsedTimeRef = useRef(startElapsedTime)
   const preStrokeRef = useRef({})
   const preUndoRef = useRef()
-  const [playerElapsedTime, setPlayerElapsedTime] = useState(0)
   const { drawPicture } = useDrawingPicture({ canvasRef, drawings, startElapsedTime })
 
   function setCompletedPicture() {
@@ -26,9 +21,7 @@ export default function useDrawingPlayer({ isPlaying, setIsPlaying, drawings, sa
     drawPicture(targetDrawings)
   }
 
-  function draw(isOnce=false) {
-    const incrementalTime = clockRef.current.getDelta()
-
+  function draw(incrementalTime) {
     const targetDrawings = []
     if (sameTimeIndex >= 0) {
       // 編集中の一部再生
@@ -61,18 +54,6 @@ export default function useDrawingPlayer({ isPlaying, setIsPlaying, drawings, sa
         }
       })
     })
-
-    if (isOnce) return
-
-    elapsedTimeRef.current += incrementalTime
-    updatePlayerElapsedTime()
-
-    if (elapsedTimeRef.current >= startElapsedTime + durationSec) {
-      finishPlaying()
-      return
-    }
-
-    animationRequestRef.current = requestAnimationFrame(() => draw())
   }
 
   function undo(unitIndex) {
@@ -99,59 +80,25 @@ export default function useDrawingPlayer({ isPlaying, setIsPlaying, drawings, sa
     preStrokeRef.current.positionIndex = positionIndex
   }
 
-  function seekDrawing(elapsedTime) {
-    stopDrawing()
+  function initialStartDrawing() {
+    setPictureBeforeDrawing()
+  }
+
+  function finishDrawing() {
+    draw(0) // 経過時間が終了時間に達した際、描写しきれなかったものが発生しうるので最後にもう一度描写する
+    preStrokeRef.current = {}
+    preUndoRef.current = null
+  }
+
+  function seekDrawing() {
     setPictureBeforeDrawing()
 
     preStrokeRef.current = {}
     preUndoRef.current = null
-    elapsedTimeRef.current = startElapsedTime + elapsedTime // プレイヤーからのelapsedTimeは相対時間なので開始時間を加算する
-
-    if (isPlaying) {
-      startDrawing()
-    } else {
-      draw(true)
-    }
-  }
-
-  function startDrawing() {
-    clockRef.current.start()
-    if (elapsedTimeRef.current === startElapsedTime) {
-      setPlayerElapsedTime(0)
-      setPictureBeforeDrawing()
-    }
-    draw()
-  }
-
-  function stopDrawing() {
-    clockRef.current.stop()
-    if (animationRequestRef.current > 0) {
-      cancelAnimationFrame(animationRequestRef.current)
-      animationRequestRef.current = 0
-    }
-  }
-
-  function finishPlaying() {
-    draw(true) // 経過時間が終了時間に達した際、描写しきれなかったものが発生しうるので最後にもう一度描写する
-    elapsedTimeRef.current = startElapsedTime
-    clockRef.current.stop()
-    clockRef.current = new Clock(false)
-    preStrokeRef.current = {}
-    preUndoRef.current = null
-    setIsPlaying(false)
-  }
-
-  function updatePlayerElapsedTime() {
-    // シークバーの精度として小数点以下3桁は細かすぎるため2桁に落とす
-    const realElapsedTime = parseFloat((elapsedTimeRef.current - startElapsedTime).toFixed(2))
-    const drawingDurationSec = parseFloat(durationSec.toFixed(2))
-    setPlayerElapsedTime(Math.min(realElapsedTime, drawingDurationSec)) // 実再生時間は収録時間を超える場合があるので小さい方を採用
   }
 
   useEffect(() => {
-    clockRef.current = new Clock(false)
     canvasCtxRef.current = canvasRef.current.getContext('2d')
-    return stopDrawing
   }, [])
 
   useEffect(() => {
@@ -159,13 +106,5 @@ export default function useDrawingPlayer({ isPlaying, setIsPlaying, drawings, sa
     setCompletedPicture()
   }, [drawings])
 
-  useEffect(() => {
-    if (isPlaying) {
-      startDrawing()
-    } else {
-      stopDrawing()
-    }
-  }, [isPlaying])
-
-  return { drawingRef: canvasRef, elapsedTime: playerElapsedTime, seekDrawing }
+  return { drawingRef: canvasRef, draw, initialStartDrawing, finishDrawing, seekDrawing }
 }

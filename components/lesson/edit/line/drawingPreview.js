@@ -1,38 +1,15 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Container from '../../../container'
 import ContainerSpacer from '../../../containerSpacer'
 import InputRange from '../../../form/inputRange'
 import ColorFilter from '../../../colorFilter'
 import PlainText from '../../../plainText'
 import Drawing from '../../drawing'
-import useDrawingPLayer from '../../../../libs/hooks/lesson/useDrawingPlayer'
+import useDrawingPreview from '../../../../libs/hooks/lesson/edit/useDrawingPreview'
 
 export default function DrawingPreview({ drawings, drawing, sameTimeIndex }) {
-  const [isHover, setIsHover] = useState(false)
-  const [isPlaying, setIsPlaying] = useState(false)
-  const { drawingRef, elapsedTime, seekDrawing } = useDrawingPLayer({ isPlaying, setIsPlaying, drawings, sameTimeIndex,
-    startElapsedTime: drawing.elapsedTime, durationSec: drawing.durationSec })
-
-  function handleMouseOver() {
-    setIsHover(true)
-  }
-
-  function handleMouseLeave() {
-    setIsHover(false)
-  }
-
-  function handlePlayButtonClick() {
-    setIsPlaying(p => !p)
-  }
-
-  function handleSeekChange(e) {
-    seekDrawing(parseFloat(e.target.value))
-  }
-
-  function handleDragStart(e) {
-    e.preventDefault() // 行ドラッグになってしまうのを防ぐ
-    e.stopPropagation()
-  }
+  const { drawingRef, handleMouseOver, handleMouseLeave, handlePlayButtonClick, isPlayerHover, playerElapsedTime, handleDragStart, handleSeekChange }
+    = useDrawingPreview({ startElapsedTime: drawing.elapsedTime, drawings, drawing, sameTimeIndex })
 
   return (
     <ContainerSpacer left='20' top='20' bottom='20'>
@@ -45,10 +22,10 @@ export default function DrawingPreview({ drawings, drawing, sameTimeIndex }) {
             <div onClick={handlePlayButtonClick}>
               <Container width='302' height='140' />
             </div>
-            <Container width='302' height='30' invisible={!isHover}>
+            <Container width='302' height='30' invisible={!isPlayerHover}>
               <ContainerSpacer left='15' right='15'>
                 <ColorFilter filter='drop-shadow(2px 2px 2px var(--dark-purple))'>
-                  <InputRange key={elapsedTime} defaultValue={elapsedTime} min='0' max={parseFloat((drawing.durationSec).toFixed(2))} step='0.01'
+                  <InputRange key={playerElapsedTime} defaultValue={playerElapsedTime} min='0' max={parseFloat((drawing.durationSec).toFixed(2))} step='0.01'
                     onDragStart={handleDragStart} onInput={handleSeekChange} onChange={handleSeekChange} />
                 </ColorFilter>
               </ContainerSpacer>
