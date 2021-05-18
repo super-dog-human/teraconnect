@@ -15,6 +15,7 @@ export default function useLessonEditor() {
   const [durationSec, setDurationSec] = useState()
   const [timeline, setTimeline] = useState({})
   const [voiceSynthesisConfig, setVoiceSynthesisConfig] = useState({})
+  const [bgImageURL, setBgImageURL] = useState('')
   const [avatars, setAvatars] = useState([])
   const [drawings, setDrawings] = useState([])
   const [graphics, setGraphics] = useState([])
@@ -33,7 +34,7 @@ export default function useLessonEditor() {
   async function fetchResources(lesson) {
     lessonRef.current = lesson
 
-    fetchMaterial({ lesson, fetchWithAuth, setDurationSec, setVoiceSynthesisConfig, setAvatars, setDrawings, setGraphics, setGraphicURLs, setMusics, setSpeeches })
+    fetchMaterial({ lesson, fetchWithAuth, setDurationSec, setVoiceSynthesisConfig, setBgImageURL, setAvatars, setDrawings, setGraphics, setGraphicURLs, setMusics, setSpeeches })
       .then(timeline => {
         setTimeline(timeline)
         setIsLoading(false)
@@ -77,6 +78,6 @@ export default function useLessonEditor() {
     updateTimeline()
   }, allMaterials())
 
-  return { fetchResources, isLoading, durationSec, timeline, voiceSynthesisConfig, setVoiceSynthesisConfig,
+  return { fetchResources, isLoading, durationSec, timeline, voiceSynthesisConfig, setVoiceSynthesisConfig, bgImageURL, setBgImageURL,
     avatars, graphics, graphicURLs, drawings, musics, speeches, setGraphics, setGraphicURLs, updateLine, deleteLine, swapLine, addSpeechLineToLast }
 }
