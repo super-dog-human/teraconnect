@@ -4,10 +4,9 @@ import { css } from '@emotion/core'
 import ContainerSpacer from '../../../containerSpacer'
 import Flex from '../../../flex'
 
-export default function KindIcon({ kind, status=true, onClick }) {
+export default function KindIcon({ kind, onClick }) {
   const imageStyle = css({
     width: '20px',
-    filter: status ? 'grayscale(0)' : 'grayscale(1)',
   })
 
   return (

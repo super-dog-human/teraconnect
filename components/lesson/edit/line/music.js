@@ -11,7 +11,7 @@ export default function LessonLineMusic({ music, index, isEditButtonShow, handle
 
   return (
     <>
-      <KindIcon kind="music" status={music.action === 'start'} />
+      <KindIcon kind="music" />
       <ActionLabel kind="music" action={music.action} />
       <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} />
     </>

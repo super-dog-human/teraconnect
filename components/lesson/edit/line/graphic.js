@@ -17,7 +17,7 @@ export default function LessonLineGraphic({ graphic, index, isEditButtonShow, ha
   return (
     <>
       {graphic.action === 'show' && <Spacer width='15' />}
-      {graphic.action !== 'show' && <KindIcon kind="graphic" status={false} />}
+      {graphic.action !== 'show' && <KindIcon kind="graphic" />}
       <div css={graphicContainerStyle}>
         {graphic.action === 'show' && <ContainerSpacer top='20' bottom='20'><GraphicThumbnail url={graphic.url} /></ContainerSpacer>}
         {graphic.action === 'hide' && <ActionLabel kind="graphic" action={'hide'} />}
