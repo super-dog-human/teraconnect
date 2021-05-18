@@ -2,7 +2,7 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-export default function LabelButton({ children, fontSize, backgroundColor, color, borderColor, hoverBackgroundColor, hoverColor, isDark, onClick, disabled }) {
+export default function LabelButton({ children, fontSize, backgroundColor, color, borderColor, hoverBackgroundColor, hoverColor, onClick, disabled }) {
   const bodyStyle = css({
     width: '100%',
     height: '100%',
@@ -15,10 +15,11 @@ export default function LabelButton({ children, fontSize, backgroundColor, color
     padding: '6px 12px',
     fontSize: fontSize ? `${fontSize}px` : null,
     color,
+    filter: 'brightness(80%)',
     ':hover': {
       backgroundColor: hoverBackgroundColor,
       color: hoverColor,
-      filter: isDark ? 'brightness(200%)' : 'brightness(80%)',
+      filter: 'brightness(100%)',
     },
     ':disabled': {
       filter: 'contrast(30%) brightness(160%)',
