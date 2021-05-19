@@ -5,14 +5,14 @@ import { css } from '@emotion/core'
 export default function Container({ children, width, height, minWidth, minHeight, maxWidth, maxHeight, display, invisible, position }) {
   const bodyStyle = css({
     display,
-    visibility: invisible ? 'hidden' : 'visible',
+    visibility: invisible && 'hidden',
     position,
-    width: width ? `${width}px` : 'auto',
-    height: height ? `${height}px` : 'auto',
-    minWidth: minWidth ? `${minWidth}px` : 'auto',
-    minHeight: minHeight ? `${minHeight}px` : 'auto',
-    maxWidth: maxWidth ? `${maxWidth}px` : 'none',
-    maxHeight: maxHeight ? `${maxHeight}px` : 'none',
+    width: width && `${width}px`,
+    height: height && `${height}px`,
+    minWidth: minWidth && `${minWidth}px`,
+    minHeight: minHeight && `${minHeight}px`,
+    maxWidth: maxWidth && `${maxWidth}px`,
+    maxHeight: maxHeight && `${maxHeight}px`,
   })
 
   return (

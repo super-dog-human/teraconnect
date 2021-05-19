@@ -13,7 +13,7 @@ export default function LabelButton({ children, fontSize, backgroundColor, color
 
   const labelStyle = css({
     padding: '6px 12px',
-    fontSize: fontSize ? `${fontSize}px` : null,
+    fontSize: fontSize && `${fontSize}px`,
     color,
     filter: 'brightness(80%)',
     ':hover': {
