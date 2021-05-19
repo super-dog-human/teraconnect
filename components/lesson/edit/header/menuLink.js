@@ -23,7 +23,7 @@ export default function MenuLink({ isHover, page, currentPage, path, children })
           <div css={hoverUnderLineStyle}>
             <Container width='120' height='77'>
               <AlignContainer textAlign='center'>
-                <ColorFilter filter='brightness(80%)' hoverFilter='brightness(100%)'>
+                <ColorFilter opacity='0.6' hoverOpacity='1'>
                   {children}
                 </ColorFilter>
               </AlignContainer>

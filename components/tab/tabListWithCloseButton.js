@@ -9,15 +9,15 @@ export default function TabListWithCloseButton({ onClose, color, disabled, child
     '.react-tabs__tab': {
       border: 'none',
       backgroundColor: 'inherit',
-      filter: 'brightness(70%)',
       // 24pxはタブのborderとpaddingの左右合計値
       width: `calc((100% - ${children.length * 24}px - 36px) / ${children.length})`,
       color,
+      opacity: 0.7,
     },
     '.react-tabs__tab--selected': {
       borderBottom: '1px solid',
       backdropFilter: 'none',
-      filter: 'none',
+      opacity: 1,
     },
     '.react-tabs__tab:focus': {
       boxShadow: 'none',

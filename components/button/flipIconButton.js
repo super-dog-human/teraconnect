@@ -22,8 +22,9 @@ export default function FlipIconButton({ name, flipName, backgroundColor='inheri
     borderColor,
     backgroundColor,
     color,
+    opacity: 0.7,
     ':hover': {
-      filter: 'brightness(80%)',
+      opacity: 1,
     },
   })
 

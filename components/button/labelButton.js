@@ -15,11 +15,11 @@ export default function LabelButton({ children, fontSize, backgroundColor, color
     padding: '6px 12px',
     fontSize: fontSize && `${fontSize}px`,
     color,
-    filter: 'brightness(80%)',
+    opacity: 0.7,
     ':hover': {
       backgroundColor: hoverBackgroundColor,
       color: hoverColor,
-      filter: 'brightness(100%)',
+      opacity: 1,
     },
     ':disabled': {
       filter: 'contrast(30%) brightness(160%)',

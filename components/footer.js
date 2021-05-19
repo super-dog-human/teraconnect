@@ -81,10 +81,11 @@ const bodyStyle = css({
   justifyContent: 'center',
   alignItems: 'center',
   a: {
-    color: 'var(--text-gray)',
+    color: 'var(--border-gray)',
+    opacity: 0.6,
   },
   'a:hover': {
-    filter: 'brightness(130%)',
+    opacity: 1,
   },
 })
 
@@ -105,8 +106,7 @@ const logoCopyStyle = css({
 })
 
 const categoryStyle = css({
-  color: 'var(--text-gray)',
-  filter: 'brightness(130%)',
+  color: 'var(--border-gray)',
   fontSize: '16px',
   fontWeight: 'bold',
   marginTop: '15px',

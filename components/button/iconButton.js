@@ -3,7 +3,7 @@ import React from 'react'
 import { css } from '@emotion/core'
 import LoadingIndicator from '../loadingIndicator'
 
-export default function IconButton({ name, backgroundColor, borderColor, hoverFilter, padding, disabled, isProcessing, onClick }) {
+export default function IconButton({ name, backgroundColor, borderColor, hoverFilter, padding, disabled, isToggle, isProcessing, onClick }) {
   const bodyStyle = css({
     display: 'block',
     width: '100%',

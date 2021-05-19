@@ -11,8 +11,9 @@ export default function SVGButton({ children, backgroundColor='inherit', color='
     borderColor,
     backgroundColor,
     color,
+    opacity: 0.7,
     ':hover': {
-      filter: 'brightness(80%)',
+      opacity: 1,
     },
     ':disabled': {
       opacity: 0.3,
