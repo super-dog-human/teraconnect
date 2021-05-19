@@ -1,8 +1,15 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from 'react'
-import Select from '../../../form/select'
+import { css } from '@emotion/core'
 import { RgbaColorPicker } from 'react-colorful'
 import 'react-colorful/dist/index.css'
+import Flex from '../../../flex'
+import Container from '../../../container'
+import ContainerSpacer from '../../../containerSpacer'
+import Spacer from '../../../spacer'
+import Select from '../../../form/select'
+import LabelButton from '../../../button/labelButton'
+import PlainText from '../../../plainText'
 import { useLessonRecorderContext } from '../../../../libs/contexts/lessonRecorderContext'
 
 export default function AvatarTab({ avatars, setConfig }) {
@@ -17,9 +24,14 @@ export default function AvatarTab({ avatars, setConfig }) {
   }
 
   function handleColorChange(color) {
+    console.log(color)
     setLightColor(color)
     setConfig({ lightColor: color })
     setRecord({ kind: 'avatarLightColor', value: color })
+  }
+
+  function setDefaultColor() {
+    handleColorChange({ r: 255, g: 255, b: 255, a: 1 })
   }
 
   useEffect(() => {
@@ -42,17 +54,29 @@ export default function AvatarTab({ avatars, setConfig }) {
   }, [avatars])
 
   return (
-    <>
-      <div>
-        <span>アバター</span>
-        <Select options={selectOptions} onChange={handleAvatarChange} topLabel={null} />
-        <span>アップロード</span>
-      </div>
-      <div>
-        <span>環境光</span>
-        <div css={{ backgroundColor: lightColor, width: '100px', height: '30px' }}></div>
-        <RgbaColorPicker color={lightColor} alpha={1.0} onChange={handleColorChange} />
-      </div>
-    </>
+    <ContainerSpacer top='30' left='50' right='50'>
+      <Select options={selectOptions} onChange={handleAvatarChange} topLabel={null} color='var(--soft-white)' />
+      <Spacer height='40' />
+      <Flex>
+        <PlainText size='13' color='var(--border-gray)'>環境光</PlainText>
+        <Spacer width='50' />
+        <div css={pickerStyle}>
+          <RgbaColorPicker color={lightColor} alpha={1.0} onChange={handleColorChange} />
+          <Spacer height='5' />
+          <Container width='70' height='30'>
+            <LabelButton fontSize='12' color='var(--soft-white)' onClick={setDefaultColor}>
+              リセット
+            </LabelButton>
+          </Container>
+        </div>
+      </Flex>
+    </ContainerSpacer>
   )
 }
+
+const pickerStyle = css({
+  '.react-colorful': {
+    width: '130px',
+    height: '130px',
+  },
+})

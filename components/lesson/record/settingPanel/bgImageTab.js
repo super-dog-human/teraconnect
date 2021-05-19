@@ -1,6 +1,6 @@
-/** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from 'react'
 import Select from '../../../form/select'
+import ContainerSpacer from '../../../containerSpacer'
 import { useLessonRecorderContext } from '../../../../libs/contexts/lessonRecorderContext'
 
 export default function BgImageTab(props) {
@@ -28,6 +28,8 @@ export default function BgImageTab(props) {
   }, [props.images])
 
   return (
-    <Select options={options} onChange={handleChange} topLabel={null} />
+    <ContainerSpacer top='30' left='50' right='50'>
+      <Select options={options} onChange={handleChange} topLabel={null} color='var(--soft-white)'/>
+    </ContainerSpacer>
   )
 }
