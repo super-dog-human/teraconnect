@@ -3,6 +3,10 @@ import React, { useState, useEffect } from 'react'
 import Draggable from 'react-draggable'
 import FullscreenContainer from '../../../fullscreenContainer'
 import { css } from '@emotion/core'
+import Avatar from './avatar/'
+import Drawing from './drawing/'
+import Graphic from './graphic/'
+import Music from './music/'
 import Speech from './speech/'
 
 export default function LineConfig({ config }) {
@@ -27,7 +31,11 @@ export default function LineConfig({ config }) {
         <Draggable handle=".drag-handle">
           <div css={bodyStyle}>
             {config.action === 'newLine' && <>行追加パネル</>}
-            {config.action === 'speech' && <Speech index={config.index} initialConfig={config.line} closeCallback={handleClose} />}
+            {config.action === 'avatar'  && <Avatar index={config.index} initialConfig={config.line} closeCallback={handleClose} />}
+            {config.action === 'drawing' && <Drawing index={config.index} initialConfig={config.line} closeCallback={handleClose} />}
+            {config.action === 'graphic' && <Graphic index={config.index} initialConfig={config.line} closeCallback={handleClose} />}
+            {config.action === 'music'   && <Music index={config.index} initialConfig={config.line} closeCallback={handleClose} />}
+            {config.action === 'speech'  && <Speech index={config.index} initialConfig={config.line} closeCallback={handleClose} />}
           </div>
         </Draggable>
       </FullscreenContainer>}
