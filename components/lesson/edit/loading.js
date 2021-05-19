@@ -36,7 +36,7 @@ export default function Loading({ timeline }) {
         <Spacer height='200'/>
         <PlainText color='#797979' fontFamily='serif'>
           <AlignContainer textAlign='center'>
-            <PlainText size='30'>{randomMaximRef.current.body}</PlainText>
+            <PlainText size='30'>〝{randomMaximRef.current.body}〟</PlainText>
           </AlignContainer>
           <AlignContainer textAlign='center'>
             <PlainText size='18'>{randomMaximRef.current.author}</PlainText>
