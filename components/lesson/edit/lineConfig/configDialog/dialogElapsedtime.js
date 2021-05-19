@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react'
 import Flex from '../../../../flex'
 import Container from '../../../../container'
 import AlignContainer from '../../../../alignContainer'
+import Spacer from '../../../../spacer'
 import PlainText from '../../../../plainText'
+import InputCheckbox from '../../../../form/inputCheckbox'
 import InputElapsedTime from './inputElapsedTime'
 
 export default function DialogElapsedTime({ elapsedTime, setConfig }) {
@@ -27,29 +29,35 @@ export default function DialogElapsedTime({ elapsedTime, setConfig }) {
   }, [minutesTime, secondsTime, millisecTime])
 
   return (
-    <Flex justifyContent='start' alignItems='center'>
-      <Container width='70'>
-        <PlainText size='13' color='var(--border-gray)'>開始時間</PlainText>
-      </Container>
-      <Container width='40'>
-        <InputElapsedTime time={minutesTime} setTime={setMinutesTime} min='0' max='9' maxLength='1' />
-      </Container>
-      <Container width='20'>
-        <AlignContainer textAlign='center'>
-          <PlainText size='13' color='var(--border-gray)'>分</PlainText>
-        </AlignContainer>
-      </Container>
-      <Container width='40'>
-        <InputElapsedTime time={secondsTime} setTime={setSecondsTime} min='0' max='59' maxLength='2' />
-      </Container>
-      <Container width='20'>
-        <AlignContainer textAlign='center'>
-          <PlainText size='13' color='var(--border-gray)'>秒</PlainText>
-        </AlignContainer>
-      </Container>
-      <Container width='50'>
-        <InputElapsedTime time={millisecTime} setTime={setMillisecTime} min='0' max='999' maxLength='3' />
-      </Container>
-    </Flex>
+    <div>
+      <Flex justifyContent='start' alignItems='center'>
+        <Container width='40'>
+          <InputElapsedTime time={minutesTime} setTime={setMinutesTime} min='0' max='9' maxLength='1' />
+        </Container>
+        <Container width='20'>
+          <AlignContainer textAlign='center'>
+            <PlainText size='13' color='var(--border-gray)'>分</PlainText>
+          </AlignContainer>
+        </Container>
+        <Container width='40'>
+          <InputElapsedTime time={secondsTime} setTime={setSecondsTime} min='0' max='59' maxLength='2' />
+        </Container>
+        <Container width='20'>
+          <AlignContainer textAlign='center'>
+            <PlainText size='13' color='var(--border-gray)'>秒</PlainText>
+          </AlignContainer>
+        </Container>
+        <Container width='50'>
+          <InputElapsedTime time={millisecTime} setTime={setMillisecTime} min='0' max='999' maxLength='3' />
+        </Container>
+        <Spacer width='10' />
+        <Flex>
+          <InputCheckbox id='involveAfteLinesCheckbox' size='18' borderColor='var(--border-gray)' checkColor='var(--soft-white)'>
+            <PlainText size='11' color='var(--border-gray)'>後続の行にも時間変更を波及</PlainText>
+          </InputCheckbox>
+        </Flex>
+      </Flex>
+      <Spacer height='5' />
+    </div>
   )
 }
