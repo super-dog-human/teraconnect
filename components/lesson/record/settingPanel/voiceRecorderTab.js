@@ -5,6 +5,7 @@ import ContainerSpacer from '../../../containerSpacer'
 import Spacer from '../../../spacer'
 import Select from '../../../form/select'
 import InputRange from '../../../form/inputRange'
+import InputCheckbox from '../../../form/inputCheckbox'
 import PlainText from '../../../plainText'
 import LabelButton from '../../../button/labelButton'
 import useAudioInputDevices from '../../../../libs/hooks/useAudioInputDevices'
@@ -59,16 +60,10 @@ export default function VoiceRecorderTab({ setMicDeviceID, setSilenceThresholdSe
         <Container width='120' height='30'>
           <PlainText size='13' color='var(--border-gray)' lineHeight='30'>スペアナ表示</PlainText>
         </Container>
-        <Container width='25' height='30'>
-          <Flex alignItems='center'>
-            <Spacer height='30' />
-            <input type="checkbox" id='spectrumCheckbox' checked={isShowVoiceSpectrum} onChange={handleSpectrumShowChange} />
-          </Flex>
-        </Container>
         <Container height='30'>
-          <label htmlFor='spectrumCheckbox'>
+          <InputCheckbox id='spectrumCheckbox' size='18' borderColor='var(--border-gray)' checkColor='var(--soft-white)' checked={isShowVoiceSpectrum} onChange={handleSpectrumShowChange}>
             <PlainText size='13' color='var(--border-gray)' lineHeight='30'>表示する</PlainText>
-          </label>
+          </InputCheckbox>
         </Container>
       </Flex>
 
