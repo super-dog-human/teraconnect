@@ -15,13 +15,13 @@ export default function useLineConfig() {
       setContextMenu({
         labels: ['編集', '行の追加', '削除'],
         actions: [editLine, addNewLine, deleteCurrentLine],
-        position: { x: targetRect.x + 10, y: targetRect.y + window.scrollY + 30 },
+        position: { fixed: false, x: targetRect.x + 10, y: targetRect.y + window.scrollY + 30 },
       })
     } else {
       setContextMenu({
         labels: ['編集', '行の追加', '削除'],
         actions: [editLine, addNewLine, deleteCurrentLine],
-        position: { x: targetRect.x + 10, y: targetRect.y + window.scrollY + 30 },
+        position: { fixed: false, x: targetRect.x + 10, y: targetRect.y + window.scrollY + 30 },
       })
     }
 

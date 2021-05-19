@@ -24,7 +24,7 @@ export default function ThumbnailController({ graphicID, graphic, swapGraphic, r
     setContextMenu({
       labels: ['差し替え', '削除'],
       actions: [() => swapGraphic(graphicID), () => removeGraphic(graphicID)],
-      position: { x: e.pageX, y: e.pageY },
+      position: { fixed: false, x: e.pageX, y: e.pageY },
     })
   }
 

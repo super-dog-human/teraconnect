@@ -16,7 +16,7 @@ export default function useHumanVoiceFileController(config, setConfig, inputFile
     setContextMenu({
       labels: ['アップロード', 'ダウンロード'],
       actions: [openFileSelector, downloadVoice],
-      position: { x: targetRect.x, y: targetRect.y + targetRect.height + window.scrollY },
+      position: { fixed: true, x: targetRect.x, y: targetRect.y + targetRect.height + window.scrollY },
       disableMenuIndexes,
     })
 

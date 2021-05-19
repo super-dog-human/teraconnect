@@ -28,7 +28,7 @@ export default function Header({ currentPage }) {
     setContextMenu({
       labels: ['上書き保存', '変更の破棄', '設定'],
       actions: [() => {}, () => {}, () => {}],
-      position: { x: e.pageX, y: e.pageY },
+      position: { fixed: true, x: e.pageX, y: e.pageY },
     })
   }
 

@@ -5,10 +5,20 @@ import { css } from '@emotion/core'
 export default function ContextMenu({ labels=[], actions=[], position={}, disableMenuIndexes=[], handleDismiss }) {
   const [isShow, setIsShow] = useState(false)
 
+  const bodyStyle = css({
+    position: position.fixed ? 'fixed' : 'absolute',
+    top: 0,
+    left: 0,
+    width: '100vw',
+    height: '100vh',
+    filter: 'drop-shadow(2px 2px 2px gray)',
+    userSelect: 'none',
+  })
+
   const menuStyle = css({
     position: 'absolute',
-    top: position?.y,
-    left: position?.x,
+    top: position.y,
+    left: position.x,
     borderRadius: '5px',
     backgroundColor: 'var(--dark-gray)',
     paddingTop: '5px',
@@ -57,13 +67,3 @@ export default function ContextMenu({ labels=[], actions=[], position={}, disabl
     </>
   )
 }
-
-const bodyStyle = css({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  width: '100vw',
-  height: '100vh',
-  filter: 'drop-shadow(2px 2px 2px gray)',
-  userSelect: 'none',
-})
