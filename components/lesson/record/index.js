@@ -8,6 +8,7 @@ import useDragOverDetector from '../../../libs/hooks/useDragOverDetector'
 import useLessonAvatar from '../../../libs/hooks/lesson/useAvatar'
 import useDrawingRecorder from '../../../libs/hooks/lesson/useDrawingRecorder'
 import useVoiceRecorder from '../../../libs/hooks/lesson/useVoiceRecorder'
+import Aspect16To9Container from '../../aspect16To9Container'
 import LessonRecordHeader from './header'
 import LessonRecordLoadingIndicator from './loadingIndicator'
 import SettingPanel from './settingPanel'
@@ -21,7 +22,7 @@ import VoiceSpectrum from '../../voiceSpectrum'
 import { addPreventSwipeEvent, removePreventSwipeEvent } from '../../../libs/utils'
 
 const LessonRecord = React.forwardRef(function lessonRecord({ lesson, hasResize }, ref) {
-  const { isRecording, realElapsedTime } = useLessonRecorderContext()
+  const { isRecording, realElapsedTime, setRecord } = useLessonRecorderContext()
   const [isLoading, setIsLoading] = useState(true)
   const [bgImageURL, setBgImageURL] = useState()
   const [selectedGraphic, setSelectedGraphic] = useState()
@@ -33,7 +34,7 @@ const LessonRecord = React.forwardRef(function lessonRecord({ lesson, hasResize 
   const { isMicReady, isSpeaking, micDeviceID, setMicDeviceID, silenceThresholdSec, setSilenceThresholdSec } = useVoiceRecorder({ lessonID: lesson.id, isRecording, realElapsedTime })
   const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useLessonAvatar(setIsLoading, isSpeaking, hasResize)
   const { isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth,
-    startDrawing, inDrawing, endDrawing, drawingRef } = useDrawingRecorder({ hasResize, startDragging, inDragging, endDragging })
+    startDrawing, inDrawing, endDrawing, drawingRef } = useDrawingRecorder({ hasResize, startDragging, inDragging, endDragging, setRecord })
 
   useEffect(() => {
     addPreventSwipeEvent()
@@ -49,16 +50,18 @@ const LessonRecord = React.forwardRef(function lessonRecord({ lesson, hasResize 
         setDrawingLineWidth={setDrawingLineWidth} setIsShowControlPanel={setIsShowControlPanel} />
       <main css={mainStyle} onDragOver={handleAreaDragOver} onDragLeave={handleAreaDragLeave} onDrop={handleAreaDrop} ref={ref}>
         <div css={bodyStyle}>
-          <LessonRecordLoadingIndicator isLoading={isLoading} size={15} />
-          <VoiceSpectrum micDeviceID={micDeviceID} isShow={isShowVoiceSpectrum} setIsShow={setIsShowVoiceSpectrum} />
-          <LessonBackgroundImage src={bgImageURL} />
-          <LessonGraphic graphic={selectedGraphic} />
-          <LessonAvatar ref={avatarRef} onMouseDown={startDragging} onMouseMove={inDragging} onMouseUp={endDragging} onMouseLeave={endDragging}
-            onTouchStart={startDragging} onTouchMove={inDragging} onTouchEnd={endDragging} onTouchCancel={endDragging} />
-          <LessonDrawing isHide={isDrawingHide} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing} drawingRef={drawingRef} zKind='drawing' />
-          <SettingPanel isShow={isShowControlPanel} setIsShow={setIsShowControlPanel} bgImages={bgImages} setBgImageURL={setBgImageURL}
-            avatars={avatars} setAvatarConfig={setAvatarConfig} setMicDeviceID={setMicDeviceID} silenceThresholdSec={silenceThresholdSec}
-            setSilenceThresholdSec={setSilenceThresholdSec} isShowVoiceSpectrum={isShowVoiceSpectrum} setIsShowVoiceSpectrum={setIsShowVoiceSpectrum} />
+          <Aspect16To9Container>
+            <LessonRecordLoadingIndicator isLoading={isLoading} size={15} />
+            <VoiceSpectrum micDeviceID={micDeviceID} isShow={isShowVoiceSpectrum} setIsShow={setIsShowVoiceSpectrum} />
+            <LessonBackgroundImage src={bgImageURL} />
+            <LessonGraphic graphic={selectedGraphic} />
+            <LessonAvatar ref={avatarRef} onMouseDown={startDragging} onMouseMove={inDragging} onMouseUp={endDragging} onMouseLeave={endDragging}
+              onTouchStart={startDragging} onTouchMove={inDragging} onTouchEnd={endDragging} onTouchCancel={endDragging} />
+            <LessonDrawing isHide={isDrawingHide} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing} drawingRef={drawingRef} zKind='drawing' />
+            <SettingPanel isShow={isShowControlPanel} setIsShow={setIsShowControlPanel} bgImages={bgImages} setBgImageURL={setBgImageURL}
+              avatars={avatars} setAvatarConfig={setAvatarConfig} setMicDeviceID={setMicDeviceID} silenceThresholdSec={silenceThresholdSec}
+              setSilenceThresholdSec={setSilenceThresholdSec} isShowVoiceSpectrum={isShowVoiceSpectrum} setIsShowVoiceSpectrum={setIsShowVoiceSpectrum} />
+          </Aspect16To9Container>
         </div>
         <LessonRecordGraphicController id={lesson.id} setSelectedGraphic={setSelectedGraphic} hasDragOver={hasDragOver} />
         <LessonRandomTips />
@@ -78,7 +81,6 @@ const mainStyle = css({
 })
 
 const bodyStyle = css({
-  position: 'relative',
   margin: 'auto',
   maxWidth: '1280px',
   maxHeight: '720px',

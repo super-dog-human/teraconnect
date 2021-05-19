@@ -1,6 +1,5 @@
-/** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import Aspect16To9Container from '../../aspect16To9Container'
 import AbsoluteContainer from '../../absoluteContainer'
 import BackgroundImage from '../backgroundImage'
 import Drawing from '../drawing'
@@ -12,7 +11,7 @@ export default function LessonPlayer({ durationSec, bgImageURL, avatars, graphic
 
 
   return (
-    <div css={bodyStyle}>
+    <Aspect16To9Container>
       <AbsoluteContainer top='0'>
         <BackgroundImage src={bgImageURL} />
         <Drawing drawingRef={drawingRef} zKind='drawing' />
@@ -24,14 +23,6 @@ export default function LessonPlayer({ durationSec, bgImageURL, avatars, graphic
         </div>
         <SeekBar invisible={!isPlayerHover} playerElapsedTime={playerElapsedTime} maxTime={parseFloat(durationSec.toFixed(2))} handleDragStart={handleDragStart} handleSeekChange={handleSeekChange} />
       </AbsoluteContainer>
-    </div>
+    </Aspect16To9Container>
   )
 }
-
-const bodyStyle = css({
-  position: 'relative',
-  width: '100%',
-  height: 'auto',
-  paddingTop: '56.25%',
-  backgroundColor: 'var(--back-movie-black)',
-})
