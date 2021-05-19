@@ -8,6 +8,7 @@ import TabListWithCloseButton from '../../../tab/tabListWithCloseButton'
 import TabContainer from '../../../tab/tabContainer'
 import DragHandler from '../../../dragHandler'
 import AlignContainer from '../../../alignContainer'
+import PlainText from '../../../plainText'
 import BgImageTab from './bgImageTab'
 import AvatarTab from './avatarTab'
 import VoiceRecorderTab from './voiceRecorderTab'
@@ -41,9 +42,9 @@ export default function SettingPanel({ isShow, setIsShow, bgImages, setBgImageUR
             <DragHandler>
               <TabList>
                 <TabListWithCloseButton onClose={handleClose} color='var(--soft-white)'>
-                  <Tab><AlignContainer textAlign='center'>背景</AlignContainer></Tab>
-                  <Tab><AlignContainer textAlign='center'>アバター</AlignContainer></Tab>
-                  <Tab><AlignContainer textAlign='center'>マイク設定</AlignContainer></Tab>
+                  <Tab><AlignContainer textAlign='center'><PlainText size='14'>背景</PlainText></AlignContainer></Tab>
+                  <Tab><AlignContainer textAlign='center'><PlainText size='14'>アバター</PlainText></AlignContainer></Tab>
+                  <Tab><AlignContainer textAlign='center'><PlainText size='14'>マイク設定</PlainText></AlignContainer></Tab>
                 </TabListWithCloseButton>
               </TabList>
             </DragHandler>

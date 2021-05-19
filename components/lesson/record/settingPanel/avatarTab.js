@@ -63,7 +63,7 @@ export default function AvatarTab({ avatars, setConfig }) {
         <div css={pickerStyle}>
           <RgbaColorPicker color={lightColor} alpha={1.0} onChange={handleColorChange} />
           <Spacer height='5' />
-          <Container width='70' height='30'>
+          <Container height='30'>
             <LabelButton fontSize='12' color='var(--soft-white)' onClick={setDefaultColor}>
               リセット
             </LabelButton>
