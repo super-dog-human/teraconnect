@@ -9,6 +9,7 @@ export default function LabelButton({ children, fontSize, backgroundColor, color
     padding: 0,
     borderColor,
     backgroundColor,
+    cursor: disabled ? 'auto' : 'pointer',
   })
 
   const labelStyle = css({
@@ -17,9 +18,9 @@ export default function LabelButton({ children, fontSize, backgroundColor, color
     color,
     opacity: 0.7,
     ':hover': {
-      backgroundColor: hoverBackgroundColor,
-      color: hoverColor,
-      opacity: 1,
+      backgroundColor: !disabled && hoverBackgroundColor,
+      color: !disabled && hoverColor,
+      opacity: !disabled && 1,
     },
     ':disabled': {
       filter: 'contrast(30%) brightness(160%)',
