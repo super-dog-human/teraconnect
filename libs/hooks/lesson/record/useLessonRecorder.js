@@ -4,6 +4,7 @@ import useTimeCounter from '../../useTimeCounter'
 import { useDialogContext } from '../../../contexts/dialogContext'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 import useFetch from '../../useFetch'
+import { reCalcDrawingsTime } from '../../../drawingUtils'
 
 export default function useLessonRecorder() {
   const router = useRouter()
@@ -126,7 +127,8 @@ export default function useLessonRecorder() {
   async function uploadLesson(lessonID) {
     setIsFinishing(true)
 
-    updateLessonBody()
+    lessonRef.current.durationSec = elapsedFloatTime()
+    lessonRef.current.drawings = reCalcDrawingsTime(lessonRef.current.drawings)
 
     post(`/lessons/${lessonID}/materials`, lessonRef.current, 'POST')
       .then(() => {
@@ -142,58 +144,6 @@ export default function useLessonRecorder() {
         })
         console.error(e)
       })
-  }
-
-  function updateLessonBody() {
-    lessonRef.current.durationSec = elapsedFloatTime()
-
-    let preAction
-    const drawings = []
-    lessonRef.current.drawings.forEach(d => {
-      if (['clear', 'show', 'hide'].includes(d.action)) {
-        // クリア/表示/非表示の操作はまとめる必要がない
-        drawings.push(d)
-      } else if (['draw', 'undo'].includes(preAction)) {
-        // 線の描写で他の操作をまたがないものはunitsにまとめる
-        const drawingGroup = drawings[drawings.length - 1]
-        drawingGroup.durationSec = d.elapsedTime + d.durationSec - drawingGroup.elapsedTime
-        drawingGroup.units.push({
-          action: d.action,
-          elapsedTime: d.elapsedTime,
-          durationSec: d.durationSec,
-          stroke: d.stroke,
-        })
-      } else {
-        // 他の操作をまたいだdraw/undoは新たな配列として格納する
-        drawings.push({
-          action: d.action,
-          elapsedTime: d.elapsedTime,
-          durationSec: d.durationSec,
-          units: [
-            {
-              action: d.action,
-              elapsedTime: d.elapsedTime,
-              durationSec: d.durationSec,
-              stroke: d.stroke,
-            }
-          ]
-        })
-      }
-
-      preAction = d.action
-    })
-
-    // 計算が終わってから不要な桁を丸める
-    drawings.filter(d => d.action === 'draw').forEach(d => {
-      d.elapsedTime = parseFloat(d.elapsedTime.toFixed(3))
-      d.durationSec = parseFloat((d.durationSec || 0).toFixed(3))
-      d.units.forEach(u => {
-        u.elapsedTime = parseFloat(u.elapsedTime.toFixed(3))
-        u.durationSec = parseFloat((u.durationSec || 0).toFixed(3))
-      })
-    })
-
-    lessonRef.current.drawings = drawings
   }
 
   useEffect(() => {
