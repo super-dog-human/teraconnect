@@ -1,14 +1,14 @@
 import React from 'react'
 import Container from '../../../container'
 import ContainerSpacer from '../../../containerSpacer'
-import SeekBar from '../../player/seekBar'
 import PlainText from '../../../plainText'
 import Drawing from '../../drawing'
-import useDrawingPreview from '../../../../libs/hooks/lesson/edit/useDrawingPreview'
+import PlayerController from '../../player/controller'
+import useLessonPlayer from '../../../../libs/hooks/lesson/useLessonPlayer'
 
 export default function DrawingPreview({ drawings, drawing, sameTimeIndex }) {
   const { drawingRef, handleMouseOver, handleMouseLeave, handlePlayButtonClick, isPlayerHover, playerElapsedTime, handleDragStart, handleSeekChange }
-    = useDrawingPreview({ startElapsedTime: drawing.elapsedTime, drawings, drawing, sameTimeIndex })
+    = useLessonPlayer({ startElapsedTime: drawing.elapsedTime, durationSec: drawing.durationSec, drawings, sameTimeIndex })
 
   return (
     <ContainerSpacer left='20' top='20' bottom='20'>
@@ -17,14 +17,9 @@ export default function DrawingPreview({ drawings, drawing, sameTimeIndex }) {
           <Drawing drawingRef={drawingRef} backgroundColor='lightgray' />
         </Container>
         <Container width='302' height='170' position='absolute'>
-          <div onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave}>
-            <div onClick={handlePlayButtonClick}>
-              <Container width='302' height='140' />
-            </div>
-            <Container width='302' height='30'>
-              <SeekBar invisible={!isPlayerHover} playerElapsedTime={playerElapsedTime} maxTime={parseFloat((drawing.durationSec).toFixed(2))} handleDragStart={handleDragStart} handleSeekChange={handleSeekChange} />
-            </Container>
-          </div>
+          <PlayerController onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onPlayButtonClick={handlePlayButtonClick}
+            invisible={!isPlayerHover} playerElapsedTime={playerElapsedTime} maxTime={parseFloat((drawing.durationSec).toFixed(2))}
+            onDragStart={handleDragStart} onSeekChange={handleSeekChange} />
         </Container>
       </Container>
       {drawing.units && drawing.units.some(d => d.action === 'draw' && d.durationSec === 0) &&

@@ -30,29 +30,43 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
       // フル再生
       targetDrawings.push(...drawings)
     }
-    targetDrawings.forEach(drawing => {
-      drawing.units.forEach((unit, unitIndex) => {
-        const currentElapsedTime = elapsedTimeRef.current + incrementalTime
-        if (currentElapsedTime < unit.elapsedTime) return
 
-        if (unit.action === 'draw') {
-          let positionIndex
-          if (currentElapsedTime < unit.elapsedTime + unit.durationSec) {
-            // 経過時間がunitの途中までなら、時間を案分して描画するstrokeの数を求める
-            const timePerUnit = unit.stroke.positions.length / unit.durationSec
-            const diffTime = currentElapsedTime - unit.elapsedTime
-            positionIndex = Math.round(timePerUnit * diffTime)
+    targetDrawings.forEach(drawing => {
+      switch(drawing.action) {
+      case 'draw':
+        drawing.units.forEach((unit, unitIndex) => {
+          const currentElapsedTime = elapsedTimeRef.current + incrementalTime
+          if (currentElapsedTime < unit.elapsedTime) return
+
+          if (unit.action === 'draw') {
+            let positionIndex
+            if (currentElapsedTime < unit.elapsedTime + unit.durationSec) {
+              // 経過時間がunitの途中までなら、時間を案分して描画するstrokeの数を求める
+              const timePerUnit = unit.stroke.positions.length / unit.durationSec
+              const diffTime = currentElapsedTime - unit.elapsedTime
+              positionIndex = Math.round(timePerUnit * diffTime)
+            } else {
+              // 経過時間がunitの終端ちょうどか次のunitをまたいでいるなら、このunitのstrokeは全数が対象になる
+              positionIndex = unit.stroke.positions.length
+            }
+            if (positionIndex > 0) {
+              drawStrokePart(unit.stroke, unitIndex, positionIndex)
+            }
           } else {
-            // 経過時間がunitの終端ちょうどか次のunitをまたいでいるなら、このunitのstrokeは全数が対象になる
-            positionIndex = unit.stroke.positions.length
+            undo(unitIndex)
           }
-          if (positionIndex > 0) {
-            drawStrokePart(unit.stroke, unitIndex, positionIndex)
-          }
-        } else {
-          undo(unitIndex)
-        }
-      })
+        })
+        return
+      case 'clear':
+        clearCanvas(canvasCtxRef.current)
+        return
+      case 'show':
+        canvasRef.current.style.opacity = 1
+        return
+      case 'hide':
+        canvasRef.current.style.opacity = 0
+        return
+      }
     })
   }
 

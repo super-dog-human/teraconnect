@@ -1,28 +1,22 @@
 import React from 'react'
 import Aspect16To9Container from '../../aspect16To9Container'
-import AbsoluteContainer from '../../absoluteContainer'
 import BackgroundImage from '../backgroundImage'
+import Avatar from '../avatar'
 import Drawing from '../drawing'
-import SeekBar from './seekBar'
-import useLessonPlayer from '../../../libs/hooks/lesson/useLessonPlayer'
+import Graphic from '../graphic'
+import Controller from './controller'
 
-export default function LessonPlayer({ durationSec, bgImageURL, avatars, graphics, drawings, speeches }) {
-  const { drawingRef, handleMouseOver, handleMouseLeave, handlePlayButtonClick, isPlayerHover, playerElapsedTime, handleDragStart, handleSeekChange } = useLessonPlayer({ durationSec, avatars, graphics, drawings, speeches })
-
+export default function LessonPlayer(props) {
+  const { isPreparing, durationSec, bgImageURL, avatars, graphics, drawings, speeches, drawingRef, startDrawing, inDrawing, endDrawing, isPlayerHover, ...controllerProps } = props
 
   return (
     <Aspect16To9Container>
-      <AbsoluteContainer top='0'>
-        <BackgroundImage src={bgImageURL} />
-        <Drawing drawingRef={drawingRef} zKind='drawing' />
-      </AbsoluteContainer>
-      <AbsoluteContainer top='0'>
-        <div onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave}>
-          <div onClick={handlePlayButtonClick}>
-          </div>
-        </div>
-        <SeekBar invisible={!isPlayerHover} playerElapsedTime={playerElapsedTime} maxTime={parseFloat(durationSec.toFixed(2))} handleDragStart={handleDragStart} handleSeekChange={handleSeekChange} />
-      </AbsoluteContainer>
+      {isPreparing && <div>声の準備中</div>}
+      {bgImageURL && <BackgroundImage src={bgImageURL} />}
+      {avatars && <Avatar />}
+      {drawings && <Drawing drawingRef={drawingRef} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing} zKind='drawing' />}
+      {graphics && <Graphic />}
+      <Controller invisible={!isPlayerHover} maxTime={parseFloat(durationSec.toFixed(2))} {...controllerProps} />
     </Aspect16To9Container>
   )
 }

@@ -4,7 +4,7 @@ import { drawToCanvas, drawEdgeCircle, clearCanvas } from '../../drawingUtils'
 
 const histories = []
 
-export default function useDrawingRecorder({ hasResize, startDragging, inDragging, endDragging, setRecord }) {
+export default function useDrawingRecorder({ hasResize, drawingRef, startDragging, inDragging, endDragging, setRecord }) {
   const canvasCtxRef = useRef()
   const coefficientRef = useRef({ x: 0, y: 0 })
   const isMobileDeviceRef = useRef()
@@ -12,7 +12,6 @@ export default function useDrawingRecorder({ hasResize, startDragging, inDraggin
   const startDrawingTimeRef = useRef()
   const isDrawingRef = useRef(false)
   const isClearedRef = useRef(true)
-  const drawingRef = useRef()
   const [isDrawingHide, setIsDrawingHide] = useState(false)
   const [enablePen, setEnablePen] = useState(false)
   const [color, setColor] = useState('#ff0000')
@@ -180,6 +179,6 @@ export default function useDrawingRecorder({ hasResize, startDragging, inDraggin
   return {
     isDrawingHide, setIsDrawingHide: hideDrawing, enablePen, setEnablePen, undoDrawing, clearDrawing,
     drawingColor: color, setDrawingColor: setColor, setDrawingLineWidth: setLineWidth,
-    startDrawing, inDrawing, endDrawing, drawingRef
+    startDrawing, inDrawing, endDrawing
   }
 }

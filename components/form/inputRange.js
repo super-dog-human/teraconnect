@@ -4,7 +4,7 @@ import { css } from '@emotion/core'
 
 const InputRange = React.forwardRef(function inputRange(props, ref) {
   return (
-    <input type="range" draggable="false" {...props} ref={ref} css={bodyStyle} />
+    <input type="range" draggable="true" {...props} ref={ref} css={bodyStyle} />
   )
 })
 

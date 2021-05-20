@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { css } from '@emotion/core'
 import { useLessonRecorderContext } from '../../../libs/contexts/lessonRecorderContext'
 import useLessonRecordChangeTabDetector from '../../../libs/hooks/lesson/record/useChangeTabDetector'
@@ -22,19 +22,20 @@ import VoiceSpectrum from '../../voiceSpectrum'
 import { addPreventSwipeEvent, removePreventSwipeEvent } from '../../../libs/utils'
 
 const LessonRecord = React.forwardRef(function lessonRecord({ lesson, hasResize }, ref) {
-  const { isRecording, realElapsedTime, setRecord } = useLessonRecorderContext()
+  const drawingRef = useRef()
   const [isLoading, setIsLoading] = useState(true)
   const [bgImageURL, setBgImageURL] = useState()
   const [selectedGraphic, setSelectedGraphic] = useState()
   const [isShowControlPanel, setIsShowControlPanel] = useState(false)
   const [isShowVoiceSpectrum, setIsShowVoiceSpectrum] = useState(true)
   useLessonRecordChangeTabDetector()
+  const { isRecording, realElapsedTime, setRecord } = useLessonRecorderContext()
   const { hasDragOver, handleAreaDragOver, handleAreaDragLeave, handleAreaDrop } = useDragOverDetector()
   const { bgImages, avatars } = useRecordResource(setBgImageURL)
   const { isMicReady, isSpeaking, micDeviceID, setMicDeviceID, silenceThresholdSec, setSilenceThresholdSec } = useVoiceRecorder({ lessonID: lesson.id, isRecording, realElapsedTime })
   const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useLessonAvatar(setIsLoading, isSpeaking, hasResize)
   const { isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth,
-    startDrawing, inDrawing, endDrawing, drawingRef } = useDrawingRecorder({ hasResize, startDragging, inDragging, endDragging, setRecord })
+    startDrawing, inDrawing, endDrawing } = useDrawingRecorder({ hasResize, drawingRef, startDragging, inDragging, endDragging, setRecord })
 
   useEffect(() => {
     addPreventSwipeEvent()
