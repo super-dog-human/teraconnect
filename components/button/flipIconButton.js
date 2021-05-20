@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import { css } from '@emotion/core'
 
-export default function FlipIconButton({ name, flipName, backgroundColor='inherit', color='inherit', borderColor='inherit', padding='0', onClick }) {
+export default function FlipIconButton({ name, flipName, backgroundColor, color, borderColor, padding='0', onClick }) {
   const [isHover, setIsHover] = useState(false)
 
   function handleMouseEnter() {

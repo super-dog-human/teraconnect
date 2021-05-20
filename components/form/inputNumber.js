@@ -10,7 +10,7 @@ const InputNumber = React.forwardRef(function inputNumber(props, ref) {
     fontSize: `${size}px`,
     lineHeight: `${size}px`,
     color,
-    backgroundColor: backgroundColor || 'inherit',
+    backgroundColor,
     borderColor,
     borderWidth,
     borderStyle: 'solid',
