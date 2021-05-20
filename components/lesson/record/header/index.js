@@ -8,12 +8,18 @@ import TopLogoLink from '../../../topLogoLink'
 import RecordingButton from './recordingButton'
 import DrawingConfigPanel from '../drawingController/drawingConfigPanel'
 import DrawingConfigButton from '../drawingController/drawingConfigButton'
-import useDrawingController from '../../../../libs/hooks/lesson/useDrawingController'
 
 export default function LessonRecordHeader({ lessonID, isMicReady, isDrawingHide, setIsDrawingHide, enablePen, setEnablePen,
   undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth, isShowControlPanel, setIsShowControlPanel }) {
   const { isFinishing } = useLessonRecorderContext()
-  const { handleDrawingHide, handlePen } = useDrawingController({ setIsDrawingHide, setEnablePen })
+
+  function handleDrawingHide() {
+    setIsDrawingHide(state => !state)
+  }
+
+  function handlePen() {
+    setEnablePen(state => !state)
+  }
 
   function handleSettingPanel() {
     setIsShowControlPanel(state => !state)
