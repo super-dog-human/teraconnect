@@ -10,7 +10,7 @@ export default function EditIcon({ onClick, isShow }) {
       <ContainerSpacer left='15'>
         <Container width='25'>
           <Container width='22' height='22' invisible={!isShow}>
-            <IconButton name='more' borderColor='none' hoverFilter='brightness(50%)' onClick={onClick} />
+            <IconButton name='more' onClick={onClick} />
           </Container>
         </Container>
       </ContainerSpacer>

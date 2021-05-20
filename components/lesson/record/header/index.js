@@ -2,13 +2,15 @@
 import React from 'react'
 import { css } from '@emotion/core'
 import { useLessonRecorderContext } from '../../../../libs/contexts/lessonRecorderContext'
+import Flex from '../../../flex'
+import Spacer from '../../../spacer'
 import TopLogoLink from '../../../topLogoLink'
 import RecordingButton from './recordingButton'
-import DrawingConfigPanel from './drawingConfigPanel'
-import DrawingConfigButton from './drawingConfigButton'
+import DrawingConfigPanel from '../drawingController/drawingConfigPanel'
+import DrawingConfigButton from '../drawingController/drawingConfigButton'
 
 export default function LessonRecordHeader({ lessonID, isMicReady, isDrawingHide, setIsDrawingHide, enablePen, setEnablePen,
-  undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth, setIsShowControlPanel }) {
+  undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth, isShowControlPanel, setIsShowControlPanel }) {
   const { isFinishing } = useLessonRecorderContext()
 
   function handleDrawingHide() {
@@ -31,40 +33,31 @@ export default function LessonRecordHeader({ lessonID, isMicReady, isDrawingHide
     setIsShowControlPanel(state => !state)
   }
 
-  const settingButtonStyle = css({
-    textAlign: 'right',
-  })
-
   return (
     <header css={headerStyle} className="header-z">
       <div css={bodyStyle}>
-        <div css={logoStyle}>
+        <div css={fullWidthStyle}>
           <TopLogoLink color="white" />
         </div>
-        <div css={flexItemStyle}>
+        <div css={fullWidthStyle}>
           <RecordingButton lessonID={lessonID} isMicReady={isMicReady} />
         </div>
-        <div css={drawingButtonsLineStyle}>
-          <DrawingConfigButton disabled={isFinishing} onClick={handleDrawingHide} isSelected={isDrawingHide}>
-            <img src="/img/icon/hide.svg" />
-          </DrawingConfigButton>
-          <DrawingConfigButton disabled={isDrawingHide || isFinishing} isSelected={!isDrawingHide && enablePen} onClick={handlePen}>
-            <img src="/img/icon/drawing.svg" />
-          </DrawingConfigButton>
-          <DrawingConfigPanel disabled={isDrawingHide || isFinishing} color={drawingColor} setColor={setDrawingColor} setLineWidth={setDrawingLineWidth}
-            setEnablePen={setEnablePen} />
-          <DrawingConfigButton disabled={isDrawingHide || isFinishing} onClick={handleDrawingUndo}>
-            <img src="/img/icon/undo.svg" />
-          </DrawingConfigButton>
-          <DrawingConfigButton disabled={isDrawingHide || isFinishing} onClick={handleDrawingClear}>
-            <img src="/img/icon/trash.svg" />
-          </DrawingConfigButton>
+        <div css={fullWidthStyle}>
+          <Flex justifyContent='center' alignItems='center'>
+            <DrawingConfigButton name='hide' disabled={isFinishing} onClick={handleDrawingHide} isSelected={isDrawingHide} />
+            <Spacer width='15' />
+            <DrawingConfigButton name='drawing' disabled={isDrawingHide || isFinishing} isSelected={!isDrawingHide && enablePen} onClick={handlePen} />
+            <DrawingConfigPanel disabled={isDrawingHide || isFinishing} color={drawingColor} setColor={setDrawingColor} setLineWidth={setDrawingLineWidth} setEnablePen={setEnablePen} />
+            <Spacer width='10' />
+            <DrawingConfigButton name='undo' disabled={isDrawingHide || isFinishing} onClick={handleDrawingUndo} />
+            <Spacer width='15' />
+            <DrawingConfigButton name='trash' disabled={isDrawingHide || isFinishing} onClick={handleDrawingClear} />
+          </Flex>
         </div>
-        <div css={settingButtonStyle}>
-          <DrawingConfigButton  disabled={isFinishing} onClick={handleSettingPanel}>
-            <img src="/img/icon/settings.svg" />
-          </DrawingConfigButton>
+        <div>
+          <DrawingConfigButton name='settings' disabled={isFinishing} isSelected={isShowControlPanel} onClick={handleSettingPanel} />
         </div>
+        <Spacer width='20' />
       </div>
     </header>
   )
@@ -89,17 +82,6 @@ const bodyStyle = css({
   marginRight: 'auto',
 })
 
-const logoStyle = css({
+const fullWidthStyle = css({
   width: '100%',
-})
-
-const flexItemStyle = css({
-  width: '100%',
-  textAlign: 'center',
-})
-
-const drawingButtonsLineStyle = css({
-  width: '100%',
-  textAlign: 'center',
-  whiteSpace: 'nowrap',
 })

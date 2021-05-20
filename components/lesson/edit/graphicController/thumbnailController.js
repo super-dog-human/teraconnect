@@ -33,7 +33,7 @@ export default function ThumbnailController({ graphicID, graphic, swapGraphic, r
       <GraphicThumbnail url={graphic.url} isProcessing={graphic.isUploading} />
       {isButtonShow && <AbsoluteContainer right='3px' bottom='5px'>
         <Container width='22' height='22'>
-          <IconButton name='more' borderColor='none' hoverFilter='brightness(50%)' onClick={handleMenuClick} />
+          <IconButton name='more' onClick={handleMenuClick} />
         </Container>
       </AbsoluteContainer>}
     </div>

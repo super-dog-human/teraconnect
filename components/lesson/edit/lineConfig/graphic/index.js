@@ -27,7 +27,7 @@ export default function Graphic(props) {
       <DragHandler>
         <AlignContainer textAlign='right'>
           <Container width='36' height='36' display='inline-block'>
-            <IconButton name={'close'} padding='10' onClick={handleClose} borderColor='none' disabled={isProcessing} />
+            <IconButton name={'close'} padding='10' onClick={handleClose} disabled={isProcessing} />
           </Container>
         </AlignContainer>
       </DragHandler>

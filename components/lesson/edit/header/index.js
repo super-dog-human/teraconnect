@@ -57,10 +57,10 @@ export default function Header({ currentPage }) {
           <Container width='100' height='40'>
             <Flex>
               <Container width='40' height='40'>
-                <IconButton name='save' borderColor='none' padding='10' />
+                <IconButton name='save' padding='10' />
               </Container>
               <Container width='10'>
-                <IconButton name='sort-down' borderColor='none' onClick={handleSortDownClick} />
+                <IconButton name='sort-down' onClick={handleSortDownClick} />
               </Container>
             </Flex>
           </Container>
