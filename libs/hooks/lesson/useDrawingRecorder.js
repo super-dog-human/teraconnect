@@ -1,11 +1,10 @@
 import { useRef, useState, useEffect } from 'react'
-import { useLessonRecorderContext } from '../../contexts/lessonRecorderContext'
 import { switchSwipable, mouseOrTouchPositions } from '../../utils'
 import { drawToCanvas, drawEdgeCircle, clearCanvas } from '../../drawingUtils'
 
 const histories = []
 
-export default function useDrawingRecorder({ hasResize, startDragging, inDragging, endDragging }) {
+export default function useDrawingRecorder({ hasResize, startDragging, inDragging, endDragging, setRecord }) {
   const canvasCtxRef = useRef()
   const coefficientRef = useRef({ x: 0, y: 0 })
   const isMobileDeviceRef = useRef()
@@ -18,7 +17,6 @@ export default function useDrawingRecorder({ hasResize, startDragging, inDraggin
   const [enablePen, setEnablePen] = useState(false)
   const [color, setColor] = useState('#ff0000')
   const [lineWidth, setLineWidth] = useState(5)
-  const { setRecord } = useLessonRecorderContext()
 
   function startDrawing(e) {
     if (isMobileDeviceRef.current && e.type === 'mousedown') return // モバイルではtouchstart後にmousedownが呼ばれるのでスキップ
@@ -35,7 +33,7 @@ export default function useDrawingRecorder({ hasResize, startDragging, inDraggin
 
       startPositionRef.current = { x, y }
       createNewHistory()
-    } else {
+    } else if (startDragging) {
       startDragging(e) // ペンが有効でない時はアバターを操作する
     }
   }
@@ -47,7 +45,7 @@ export default function useDrawingRecorder({ hasResize, startDragging, inDraggin
       const [x, y] = calcResizePosition(e, ['touchmove'])
       drawLine(x, y)
       startPositionRef.current = { x, y }
-    } else {
+    } else if (inDragging) {
       inDragging(e) // ペンが有効でない時はアバターを操作する
     }
   }
@@ -70,7 +68,7 @@ export default function useDrawingRecorder({ hasResize, startDragging, inDraggin
       })
 
       isDrawingRef.current = false
-    } else {
+    } else if (endDragging) {
       endDragging(e) // ペンが有効でない時はアバターを操作する
     }
   }

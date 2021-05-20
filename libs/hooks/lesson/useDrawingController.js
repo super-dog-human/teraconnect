@@ -1,4 +1,8 @@
-export default function useDrawingController({ setIsDrawingHide, setEnablePen, undoDrawing, clearDrawing }) {
+export default function useDrawingController({ setIsRecording, setIsDrawingHide, setEnablePen }) {
+  function handleDrawingStart() {
+    setIsRecording(state => !state)
+  }
+
   function handleDrawingHide() {
     setIsDrawingHide(state => !state)
   }
@@ -7,13 +11,5 @@ export default function useDrawingController({ setIsDrawingHide, setEnablePen, u
     setEnablePen(state => !state)
   }
 
-  function handleDrawingUndo() {
-    undoDrawing()
-  }
-
-  function handleDrawingClear() {
-    clearDrawing()
-  }
-
-  return { handleDrawingHide, handlePen, handleDrawingUndo, handleDrawingClear }
+  return { handleDrawingStart, handleDrawingHide, handlePen }
 }

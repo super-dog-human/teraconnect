@@ -13,8 +13,7 @@ import useDrawingController from '../../../../libs/hooks/lesson/useDrawingContro
 export default function LessonRecordHeader({ lessonID, isMicReady, isDrawingHide, setIsDrawingHide, enablePen, setEnablePen,
   undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth, isShowControlPanel, setIsShowControlPanel }) {
   const { isFinishing } = useLessonRecorderContext()
-  const { handleDrawingHide, handlePen, handleDrawingUndo, handleDrawingClear } =
-    useDrawingController({ setIsDrawingHide, setEnablePen, undoDrawing, clearDrawing })
+  const { handleDrawingHide, handlePen } = useDrawingController({ setIsDrawingHide, setEnablePen })
 
   function handleSettingPanel() {
     setIsShowControlPanel(state => !state)
@@ -36,9 +35,9 @@ export default function LessonRecordHeader({ lessonID, isMicReady, isDrawingHide
             <DrawingConfigButton name='drawing' disabled={isDrawingHide || isFinishing} isSelected={!isDrawingHide && enablePen} onClick={handlePen} />
             <DrawingConfigPanel disabled={isDrawingHide || isFinishing} color={drawingColor} setColor={setDrawingColor} setLineWidth={setDrawingLineWidth} setEnablePen={setEnablePen} />
             <Spacer width='10' />
-            <DrawingConfigButton name='undo' disabled={isDrawingHide || isFinishing} onClick={handleDrawingUndo} />
+            <DrawingConfigButton name='undo' disabled={isDrawingHide || isFinishing} onClick={undoDrawing} />
             <Spacer width='15' />
-            <DrawingConfigButton name='trash' disabled={isDrawingHide || isFinishing} onClick={handleDrawingClear} />
+            <DrawingConfigButton name='trash' disabled={isDrawingHide || isFinishing} onClick={clearDrawing} />
           </Flex>
         </div>
         <div>
