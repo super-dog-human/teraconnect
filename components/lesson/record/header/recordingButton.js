@@ -2,6 +2,9 @@
 import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/core'
 import { useLessonRecorderContext } from '../../../../libs/contexts/lessonRecorderContext'
+import Flex from '../../../flex'
+import Container from '../../../container'
+import PlainText from '../../../plainText'
 import RecordingIcon from '../../../recordingIcon'
 import ElapsedTime from './elapsedTime'
 
@@ -70,35 +73,30 @@ export default function RecordingButton({ lessonID, isMicReady }) {
   })
 
   return (
-    <div css={bodyStyle}>
+    <Flex justifyContent='center'>
       <div css={sideRecordingButtonStyle} onClick={handleFinishRecordingClick}>
         <div css={finishRecordingStyle}>
           <button css={buttonStyle} disabled={isRecording || !hasRecordingStarted || isFinishing}>
-            <div css={recordingIconStyle}>
+            <Container width='26' height='26'>
               <img src="/img/icon/tick.svg" />
-            </div>
+            </Container>
           </button>
-          <span css={finishRecordTextStyle}>収録を終わる</span>
+          <PlainText size='12' lineHeight='40' color='lightGray'>収録を終わる</PlainText>
         </div>
       </div>
       <div onClick={handleSwitchRecordingClick}>
         <button css={buttonStyle} disabled={!isRecordable || isFinishing}>
-          <div css={recordingIconStyle}>
+          <Container width='26' height='26'>
             <RecordingIcon isRecording={isRecording} />
-          </div>
+          </Container>
         </button>
       </div>
       <div css={elapsedTimeStyle} onClick={handleSwitchRecordingClick}>
         <ElapsedTime elapsedSeconds={elapsedSeconds} />
       </div>
-    </div>
+    </Flex>
   )
 }
-
-const bodyStyle = css({
-  display: 'flex',
-  justifyContent: 'center',
-})
 
 const buttonStyle = css({
   'img': {
@@ -114,15 +112,4 @@ const buttonStyle = css({
     cursor: 'default',
     backgroundColor: 'var(--dark-gray)',
   },
-})
-
-const recordingIconStyle = css({
-  width: '26px',
-  height: '26px',
-})
-
-const finishRecordTextStyle = css({
-  fontSize: '12px',
-  lineHeight: '40px',
-  color: 'lightGray',
 })

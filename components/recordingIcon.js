@@ -2,7 +2,7 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-export default function RecordingIcon(props) {
+export default function RecordingIcon({ isRecording }) {
   const recordingStyle = css({
     animation: 'gradation 1s ease-in infinite alternate',
     '@keyframes gradation':  {
@@ -14,7 +14,7 @@ export default function RecordingIcon(props) {
   return (
     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
       <circle cx="50" cy="50" r="44.5" strokeWidth="11" stroke="white" fill="none" />
-      <circle cx="50" cy="50" r="24" fill="white" css={props.isRecording && recordingStyle} />
+      <circle cx="50" cy="50" r="24" fill="white" css={isRecording && recordingStyle} />
     </svg>
   )
 }

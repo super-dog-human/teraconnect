@@ -2,7 +2,7 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-export default function SVGButton({ children, backgroundColor='inherit', color='inherit', borderColor='inherit', padding='0', disabled=false, onClick }) {
+export default function SVGButton({ children, backgroundColor, color, borderColor, padding='0', disabled=false, onClick }) {
   const bodyStyle = css({
     display: 'block',
     width: '100%',
