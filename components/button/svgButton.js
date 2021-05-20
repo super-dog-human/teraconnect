@@ -2,12 +2,12 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-export default function SVGButton({ children, backgroundColor, color, borderColor, padding='0', disabled=false, onClick }) {
+export default function SVGButton({ children, backgroundColor, color, borderColor, padding, disabled, onClick }) {
   const bodyStyle = css({
     display: 'block',
     width: '100%',
     height: '100%',
-    padding: `${padding}px`,
+    padding: padding && `${padding}px`,
     borderColor,
     backgroundColor,
     color,
