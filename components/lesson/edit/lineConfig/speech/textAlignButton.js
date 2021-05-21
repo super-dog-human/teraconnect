@@ -19,11 +19,9 @@ export default function TextAlignButton({ align, value, onClick }) {
     }
   }, [value])
 
-  const backgroundColor = isSelected ? 'var(--text-gray)' : 'var(--dark-gray)'
-
   return (
     <Container width='28' height='28'>
-      <IconButton name={`align-${align}`} borderColor={backgroundColor} backgroundColor={backgroundColor} padding='5' onClick={handleClick} />
+      <IconButton name={`align-${align}`} backgroundColor={isSelected ? 'var(--text-gray)' : 'var(--dark-gray)'} toggledBackgroundColor={'var(--text-gray)'} isToggle={isSelected} padding='5' onClick={handleClick} />
     </Container>
   )
 }
