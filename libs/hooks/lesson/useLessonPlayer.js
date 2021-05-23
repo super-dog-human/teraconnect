@@ -5,17 +5,20 @@ import useDrawingPlayer from './useDrawingPlayer'
 export default function useLessonPlayer({ startElapsedTime=0, durationSec, avatars, graphics, drawings, speeches, sameTimeIndex }) {
   const animationRequestRef = useRef(0)
   const elapsedTimeRef = useRef(startElapsedTime)
+  const [isPreparing, setIsPreparing] = useState(false)
   const { isPlayerHover, isPlaying, setIsPlaying, playerElapsedTime, setPlayerElapsedTime, deltaTime, resetClock, switchClock,
     handleMouseOver, handleMouseLeave, handlePlayButtonClick, handleDragStart } = usePlayerController()
-  const [isPreparing, setIsPreparing] = useState(false)
   const { drawingRef, draw, initialStartDrawing, seekDrawing, finishDrawing } = useDrawingPlayer({ drawings, sameTimeIndex, startElapsedTime, elapsedTimeRef })
 
   function animation() {
-    const incrementalTime = deltaTime()
+    let incrementalTime = deltaTime()
+    if (elapsedTimeRef.current + incrementalTime - startElapsedTime > durationSec) {
+      incrementalTime = startElapsedTime + durationSec - elapsedTimeRef.current // 経過時間の積算が収録時間を超えてしまう場合の調整
+    }
 
     if (drawings) draw(incrementalTime)
-    elapsedTimeRef.current += incrementalTime
 
+    elapsedTimeRef.current += incrementalTime
     updatePlayerElapsedTime()
 
     if (elapsedTimeRef.current >= startElapsedTime + durationSec) {
@@ -29,8 +32,12 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
   function startPlaying() {
     switchClock(true)
 
-    if (elapsedTimeRef.current === startElapsedTime) {
+    if (elapsedTimeRef.current >= startElapsedTime + durationSec) {
+      elapsedTimeRef.current = startElapsedTime
       setPlayerElapsedTime(0)
+    }
+
+    if (elapsedTimeRef.current === startElapsedTime) {
       if (drawings) initialStartDrawing()
     }
 
@@ -50,7 +57,8 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
     stopPlaying()
     if (drawings) seekDrawing()
 
-    elapsedTimeRef.current = startElapsedTime + parseFloat(e.target.value) // プレイヤーからのelapsedTimeは相対時間なので開始時間を加算する
+    // プレイヤーからのelapsedTimeは相対時間なので開始時間を加算する
+    elapsedTimeRef.current = startElapsedTime + parseFloat(e.target.value)
 
     if (isPlaying) {
       startPlaying()
@@ -62,7 +70,6 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
   function finishPlaying() {
     if (drawings) finishDrawing()
 
-    elapsedTimeRef.current = startElapsedTime
     switchClock(false)
     resetClock()
     setIsPlaying(false)
@@ -70,9 +77,12 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
 
   function updatePlayerElapsedTime() {
     // シークバーの精度として小数点以下3桁は細かすぎるため、2桁に落とす
-    const realElapsedTime = parseFloat((elapsedTimeRef.current - startElapsedTime).toFixed(2))
-    const drawingDurationSec = parseFloat(durationSec.toFixed(2))
-    setPlayerElapsedTime(Math.min(realElapsedTime, drawingDurationSec)) // 実再生時間は収録時間を超える場合があるので小さい方を採用
+    const durationSec = parseFloat((elapsedTimeRef.current - startElapsedTime).toFixed(2))
+    setPlayerElapsedTime(durationSec)
+  }
+
+  function getElapsedTime() {
+    return elapsedTimeRef.current
   }
 
   useEffect(() => {
@@ -82,11 +92,13 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
   useEffect(() => {
     if (isPlaying) {
       // 再生前の声準備でローディング入れる
+      // setIsPreparing(true)
+      // setIsPreparing(false)
       startPlaying()
     } else {
       stopPlaying()
     }
   }, [isPlaying])
 
-  return { drawingRef, isPlaying, isPreparing, isPlayerHover, playerElapsedTime, handleMouseOver, handleMouseLeave, handlePlayButtonClick, handleDragStart, handleSeekChange }
+  return { drawingRef, isPlaying, setIsPlaying, isPreparing, isPlayerHover, getElapsedTime, playerElapsedTime, handleMouseOver, handleMouseLeave, handlePlayButtonClick, handleDragStart, handleSeekChange }
 }
