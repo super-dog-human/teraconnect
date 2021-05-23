@@ -13,6 +13,7 @@
     "@emotion/styled": "^10.0.27",
     "@pixiv/three-vrm": "^0.6.2",
     "@welldone-software/why-did-you-render": "^6.0.5",
+    "clone-deep": "^4.0.1",
     "isomorphic-unfetch": "^3.1.0",
     "lamejs": "^1.2.0",
     "next": "~10",

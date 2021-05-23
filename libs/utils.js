@@ -1,6 +1,7 @@
 import ReactGA from 'react-ga'
 import { GA_TRACKING_ID } from './constants'
 ReactGA.initialize(GA_TRACKING_ID)
+const cloneDeep = require('clone-deep')
 
 export function filterObject(obj, keys) {
   return Object.keys(obj)
@@ -15,6 +16,10 @@ export function filterObject(obj, keys) {
 
 export function pickFromArray(array) {
   return array[Math.floor(Math.random() * array.length)]
+}
+
+export function deepCopy(obj) {
+  return cloneDeep(obj)
 }
 
 export function disableAllButtons() {
