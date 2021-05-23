@@ -14,7 +14,7 @@ export default function LessonEditPreview() {
     <div css={bodyStyle}>
       <LessonPlayer durationSec={durationSec} bgImageURL={bgImageURL} graphics={graphics} drawings={drawings}
         onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onPlayButtonClick={handlePlayButtonClick}
-        invisible={!isPlayerHover} maxTime={parseFloat(durationSec.toFixed(2))} onDragStart={handleDragStart} onSeekChange={handleSeekChange}
+        controllerInvisible={!isPlayerHover} maxTime={parseFloat(durationSec.toFixed(2))} onDragStart={handleDragStart} onSeekChange={handleSeekChange}
         {...playerProps} />
     </div>
   )

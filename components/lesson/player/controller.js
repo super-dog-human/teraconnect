@@ -4,7 +4,7 @@ import { css } from '@emotion/core'
 import SeekBar from './seekBar'
 
 export default function Controller(props) {
-  const { onMouseOver, onMouseLeave, onPlayButtonClick, ...seekBarProps } = props
+  const { onMouseOver, onMouseLeave, onPlayButtonClick, disabledControl, controllerInvisible, ...seekBarProps } = props
 
   const bodyStyle = css({
     position: 'absolute',
@@ -15,12 +15,16 @@ export default function Controller(props) {
   })
 
   return (
-    <div css={bodyStyle} onMouseOver={onMouseOver} onMouseLeave={onMouseLeave} className='overay-ui-z'>
-      <div css={playButtonStyle} onClick={onPlayButtonClick} />
-      <div css={seekBarStyle}>
-        <SeekBar {...seekBarProps} />
+    <>
+      {!disabledControl &&
+      <div css={bodyStyle} onMouseOver={onMouseOver} onMouseLeave={onMouseLeave} className='overay-ui-z'>
+        <div css={playButtonStyle} onClick={onPlayButtonClick} />
+        <div css={seekBarStyle}>
+          <SeekBar invisible={controllerInvisible} {...seekBarProps} />
+        </div>
       </div>
-    </div>
+      }
+    </>
   )
 }
 

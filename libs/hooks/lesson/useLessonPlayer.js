@@ -77,8 +77,7 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
 
   function updatePlayerElapsedTime() {
     // シークバーの精度として小数点以下3桁は細かすぎるため、2桁に落とす
-    const durationSec = parseFloat((elapsedTimeRef.current - startElapsedTime).toFixed(2))
-    setPlayerElapsedTime(durationSec)
+    setPlayerElapsedTime(parseFloat((elapsedTimeRef.current - startElapsedTime).toFixed(2)))
   }
 
   function getElapsedTime() {

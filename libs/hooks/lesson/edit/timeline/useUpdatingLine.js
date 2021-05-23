@@ -11,6 +11,12 @@ export default function useUpdatingLine({ shiftElapsedTime, updateMaterial, targ
       const offsetTime = newValue.durationSec - currentValue.durationSec
       shiftElapsedTime({ fromElapsedTime: newValue.elapsedTime, skipKind: kind, offsetTime })
     }
+
+    // elapsedTimeが更新されていて、なおかつ自身以降もシフトするフラグが欲しい
+
+    // elapsedTimeがかぶっていたら配列の最後に追加する
+
+    // kindに応じてdurationの重複チェックを実行し、timelineを更新する
   }
 
   return { updateLine }
