@@ -26,7 +26,7 @@ export default function Header({ currentPage }) {
 
   function handleSortDownClick(e) {
     setContextMenu({
-      labels: ['上書き保存', '変更の破棄', '設定'],
+      labels: ['上書き保存', '変更の破棄', 'その他の設定'],
       actions: [() => {}, () => {}, () => {}],
       position: { fixed: true, x: e.pageX, y: e.pageY },
     })

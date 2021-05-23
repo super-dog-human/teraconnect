@@ -8,7 +8,7 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
   const [isPreparing, setIsPreparing] = useState(false)
   const { isPlayerHover, isPlaying, setIsPlaying, playerElapsedTime, setPlayerElapsedTime, deltaTime, resetClock, switchClock,
     handleMouseOver, handleMouseLeave, handlePlayButtonClick, handleDragStart } = usePlayerController()
-  const { drawingRef, draw, initialStartDrawing, seekDrawing, finishDrawing } = useDrawingPlayer({ drawings, sameTimeIndex, startElapsedTime, elapsedTimeRef })
+  const { drawingRef, draw, initialStartDrawing, resetForSeekDrawing, finishDrawing } = useDrawingPlayer({ drawings, sameTimeIndex, startElapsedTime, elapsedTimeRef })
 
   function animation() {
     let incrementalTime = deltaTime()
@@ -55,7 +55,7 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
 
   function handleSeekChange(e) {
     stopPlaying()
-    if (drawings) seekDrawing()
+    if (drawings) resetForSeekDrawing()
 
     // プレイヤーからのelapsedTimeは相対時間なので開始時間を加算する
     elapsedTimeRef.current = startElapsedTime + parseFloat(e.target.value)

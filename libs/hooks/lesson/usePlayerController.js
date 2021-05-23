@@ -20,7 +20,7 @@ export default function usePlayerController() {
   }
 
   function handleDragStart(e) {
-    e.preventDefault() // 行ドラッグになってしまうのを防ぐ
+    e.preventDefault() // シークが行ドラッグになってしまうのを防ぐ
     e.stopPropagation()
   }
 

@@ -104,7 +104,7 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
     preUndoRef.current = null
   }
 
-  function seekDrawing() {
+  function resetForSeekDrawing() {
     setPictureBeforeDrawing()
 
     preStrokeRef.current = {}
@@ -120,5 +120,5 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
     setCompletedPicture()
   }, [drawings])
 
-  return { drawingRef: canvasRef, draw, initialStartDrawing, finishDrawing, seekDrawing }
+  return { drawingRef: canvasRef, draw, initialStartDrawing, finishDrawing, resetForSeekDrawing }
 }

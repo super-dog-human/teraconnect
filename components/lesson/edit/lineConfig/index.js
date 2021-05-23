@@ -31,11 +31,11 @@ export default function LineConfig({ config }) {
         <Draggable handle=".drag-handle">
           <div css={bodyStyle}>
             {config.action === 'newLine' && <>行追加パネル</>}
-            {config.action === 'avatar'  && <Avatar index={config.index} initialConfig={config.line} closeCallback={handleClose} />}
+            {config.action === 'avatar'  && <Avatar  index={config.index} initialConfig={config.line} closeCallback={handleClose} />}
             {config.action === 'drawing' && <Drawing index={config.index} initialConfig={config.line} closeCallback={handleClose} />}
             {config.action === 'graphic' && <Graphic index={config.index} initialConfig={config.line} closeCallback={handleClose} />}
-            {config.action === 'music'   && <Music index={config.index} initialConfig={config.line} closeCallback={handleClose} />}
-            {config.action === 'speech'  && <Speech index={config.index} initialConfig={config.line} closeCallback={handleClose} />}
+            {config.action === 'music'   && <Music   index={config.index} initialConfig={config.line} closeCallback={handleClose} />}
+            {config.action === 'speech'  && <Speech  index={config.index} initialConfig={config.line} closeCallback={handleClose} />}
           </div>
         </Draggable>
       </FullscreenContainer>}
