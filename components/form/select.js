@@ -13,7 +13,7 @@ const Select = React.forwardRef((props, ref) => {
     border: 'none',
     borderBottom: '1px solid var(--text-gray)',
     color: color,
-    backgroundColor: backgroundColor,
+    backgroundColor: backgroundColor || 'inherit',
     ':active': {
       outline: 'none',
     },
