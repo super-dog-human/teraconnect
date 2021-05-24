@@ -1,9 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useRef, useEffect } from 'react'
-import { HexColorPicker } from 'react-colorful'
 import { css } from '@emotion/core'
-import InputText from './form/inputText'
-import Container from './container'
+import ColorPicker from './colorPicker'
 import Spacer from './spacer'
 import useUnmountRef from '../libs/hooks/useUnmountRef'
 import 'react-colorful/dist/index.css'
@@ -11,7 +9,6 @@ import 'react-colorful/dist/index.css'
 export default function ColorPickerCube({ initialColor, isBorder=false, size=0, onChange }) {
   const [color, setColor] = useState(initialColor)
   const clickEventRef = useRef()
-  const buttonRef = useRef()
   const [isPickerShow, setIsPickerShow] = useState(false)
   const unmountRef = useUnmountRef()
 
@@ -33,10 +30,7 @@ export default function ColorPickerCube({ initialColor, isBorder=false, size=0, 
 
   function handleColorChange(color) {
     setColor(color)
-  }
-
-  function handleTextBlur(e) {
-    setColor(e.target.value)
+    onChange(color)
   }
 
   useEffect(() => {
@@ -44,10 +38,6 @@ export default function ColorPickerCube({ initialColor, isBorder=false, size=0, 
       window.removeEventListener('click', handleBackgroundClick)
     }
   }, [])
-
-  useEffect(() => {
-    onChange(color)
-  }, [color])
 
   const buttonStyle = css({
     backgroundColor: isBorder ? 'white' : color,
@@ -60,14 +50,11 @@ export default function ColorPickerCube({ initialColor, isBorder=false, size=0, 
 
   return (
     <div>
-      <button css={buttonStyle} onClick={handlePickerClick} ref={buttonRef} />
+      <button css={buttonStyle} onClick={handlePickerClick} />
       <Spacer height='10' />
       {isPickerShow &&
         <div css={pickerStyle} onClick={e => e.stopPropagation()} className='overay-ui-z'>
-          <HexColorPicker color={color} onChange={handleColorChange} />
-          <Container width='100' height='30'>
-            <InputText size='15' borderWidth='0' textAlign='center' color='var(--text-gray)' key={color} defaultValue={color} onBlur={handleTextBlur} />
-          </Container>
+          <ColorPicker initialColor={initialColor} size='100' onChange={handleColorChange} />
         </div>
       }
     </div>
