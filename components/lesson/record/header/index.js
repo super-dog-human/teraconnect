@@ -42,8 +42,12 @@ export default function LessonRecordHeader({ lessonID, isMicReady, isDrawingHide
           <Flex justifyContent='center' alignItems='center'>
             <DrawingConfigButton name='hide' disabled={isFinishing} onClick={handleDrawingHide} isSelected={isDrawingHide} />
             <Spacer width='15' />
-            <DrawingConfigButton name='drawing' disabled={isDrawingHide || isFinishing} isSelected={!isDrawingHide && enablePen} onClick={handlePen} />
-            <DrawingConfigPanel disabled={isDrawingHide || isFinishing} color={drawingColor} setColor={setDrawingColor} setLineWidth={setDrawingLineWidth} handleEraser={handleEraser} />
+            {enableEraser ?
+              <DrawingConfigButton name='eraser' disabled={isDrawingHide || isFinishing} isSelected={!isDrawingHide && enableEraser} onClick={handleEraser} /> :
+              <DrawingConfigButton name='drawing' disabled={isDrawingHide || isFinishing} isSelected={!isDrawingHide && enablePen} onClick={handlePen} />
+            }
+            <DrawingConfigPanel disabled={isDrawingHide || isFinishing} color={drawingColor} setColor={setDrawingColor}
+              lineWidth={drawingLineWidth} setLineWidth={setDrawingLineWidth} enablePen={enablePen} handlePen={handlePen} enableEraser={enableEraser} handleEraser={handleEraser} />
             <Spacer width='10' />
             <DrawingConfigButton name='undo' disabled={isDrawingHide || isFinishing} onClick={undoDrawing} />
             <Spacer width='15' />
