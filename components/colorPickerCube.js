@@ -4,7 +4,6 @@ import { css } from '@emotion/core'
 import ColorPicker from './colorPicker'
 import Spacer from './spacer'
 import useUnmountRef from '../libs/hooks/useUnmountRef'
-import 'react-colorful/dist/index.css'
 
 export default function ColorPickerCube({ initialColor, isBorder=false, size=0, onChange }) {
   const [color, setColor] = useState(initialColor)
@@ -66,8 +65,4 @@ const pickerStyle = css({
   backgroundColor: 'var(--dark-gray)',
   borderRadius: '5px',
   filter: 'drop-shadow(2px 2px 2px gray)',
-  '.react-colorful': {
-    width: '100px',
-    height: '100px',
-  },
 })
