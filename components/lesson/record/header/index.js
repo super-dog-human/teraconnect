@@ -9,7 +9,7 @@ import RecordingButton from './recordingButton'
 import DrawingConfigPanel from '../drawingController/drawingConfigPanel'
 import DrawingConfigButton from '../drawingController/drawingConfigButton'
 
-export default function LessonRecordHeader({ lessonID, isMicReady, isDrawingHide, setIsDrawingHide, enablePen, setEnablePen,
+export default function LessonRecordHeader({ lessonID, isMicReady, isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, enableEraser, setEnableEraser,
   undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth, isShowControlPanel, setIsShowControlPanel }) {
   const { isFinishing } = useLessonRecorderContext()
 
@@ -19,6 +19,10 @@ export default function LessonRecordHeader({ lessonID, isMicReady, isDrawingHide
 
   function handlePen() {
     setEnablePen(state => !state)
+  }
+
+  function handleEraser() {
+    setEnableEraser(state => !state)
   }
 
   function handleSettingPanel() {
@@ -39,7 +43,7 @@ export default function LessonRecordHeader({ lessonID, isMicReady, isDrawingHide
             <DrawingConfigButton name='hide' disabled={isFinishing} onClick={handleDrawingHide} isSelected={isDrawingHide} />
             <Spacer width='15' />
             <DrawingConfigButton name='drawing' disabled={isDrawingHide || isFinishing} isSelected={!isDrawingHide && enablePen} onClick={handlePen} />
-            <DrawingConfigPanel disabled={isDrawingHide || isFinishing} color={drawingColor} setColor={setDrawingColor} setLineWidth={setDrawingLineWidth} setEnablePen={setEnablePen} />
+            <DrawingConfigPanel disabled={isDrawingHide || isFinishing} color={drawingColor} setColor={setDrawingColor} setLineWidth={setDrawingLineWidth} handleEraser={handleEraser} />
             <Spacer width='10' />
             <DrawingConfigButton name='undo' disabled={isDrawingHide || isFinishing} onClick={undoDrawing} />
             <Spacer width='15' />

@@ -2,6 +2,8 @@ import { useRef, useState, useEffect } from 'react'
 import { switchSwipable, mouseOrTouchPositions } from '../../utils'
 import { drawToCanvas, drawEdgeCircle, clearCanvas } from '../../drawingUtils'
 
+const initialColor = '#ff0000'
+
 export default function useDrawingRecorder({ hasResize, drawingRef, startDragging, inDragging, endDragging, setRecord }) {
   const canvasCtxRef = useRef()
   const coefficientRef = useRef({ x: 0, y: 0 })
@@ -13,12 +15,13 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
   const historiesRef = useRef([])
   const [isDrawingHide, setIsDrawingHide] = useState(false)
   const [enablePen, setEnablePen] = useState(false)
-  const [color, setColor] = useState('#ff0000')
+  const [enableEraser, setEnableEraser] = useState(false)
+  const [color, setColor] = useState(initialColor)
   const [lineWidth, setLineWidth] = useState(5)
 
   function startDrawing(e) {
     if (isMobileDeviceRef.current && e.type === 'mousedown') return // モバイルではtouchstart後にmousedownが呼ばれるのでスキップ
-    if (enablePen && !isDrawingHide) {
+    if ((enablePen || enableEraser) && !isDrawingHide) {
       switchSwipable(false)
       isClearedRef.current = false
       isDrawingRef.current = true
@@ -37,7 +40,7 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
   }
 
   function inDrawing(e) {
-    if (enablePen && !isDrawingHide) {
+    if ((enablePen || enableEraser) && !isDrawingHide) {
       if (!isDrawingRef.current) return
 
       const [x, y] = calcResizePosition(e, ['touchmove'])
@@ -50,7 +53,7 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
 
   function endDrawing(e) {
     if (isMobileDeviceRef.current && e.type === 'mouseup') return // モバイルではtouchend後にmouseupが呼ばれるのでスキップ
-    if (enablePen && !isDrawingHide) {
+    if ((enablePen || enableEraser) && !isDrawingHide) {
       if (!isDrawingRef.current) return
       switchSwipable(true)
 
@@ -83,7 +86,7 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
   function drawLine(x, y) {
     if (isSamePosition(startPositionRef.current, { x, y })) return
 
-    canvasCtxRef.current.globalCompositeOperation = isEraser() ? 'destination-out': 'source-over'
+    canvasCtxRef.current.globalCompositeOperation = enableEraser ? 'destination-out': 'source-over'
     // カーブの終点をマウスの動く前の座標に、頂点を動いた後の座標にすると滑らかな線が描画できる
     canvasCtxRef.current.quadraticCurveTo(startPositionRef.current.x, startPositionRef.current.y, x, y)
     canvasCtxRef.current.stroke()
@@ -105,10 +108,6 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
     setIsDrawingHide(isHide)
   }
 
-  function isEraser() {
-    return color === 'eraser'
-  }
-
   function calcResizePosition(e, positions) {
     const [x, y] = mouseOrTouchPositions(e, positions)
     return [coefficientRef.current.x * x, coefficientRef.current.y * y,].map(f => (Math.round(f)))
@@ -121,8 +120,8 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
   function createNewHistory() {
     historiesRef.current.push({
       clear: false,
-      color: color,
-      eraser: isEraser(),
+      color: enableEraser ? '' : color,
+      eraser: enableEraser,
       lineWidth: lineWidth,
       positions: [startPositionRef.current],
     })
@@ -163,21 +162,33 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
   }, [hasResize])
 
   useEffect(() => {
-    if (isEraser()) {
+    if (enablePen) {
+      setEnableEraser(false)
+    }
+  }, [enablePen])
+
+  useEffect(() => {
+    if (enableEraser) {
+      setEnablePen(false)
+    }
+  }, [enableEraser])
+
+  useEffect(() => {
+    if (enableEraser) {
       canvasCtxRef.current.globalCompositeOperation = 'destination-out'
     } else {
       canvasCtxRef.current.globalCompositeOperation = 'source-over'
       canvasCtxRef.current.strokeStyle = color
     }
-  }, [color])
+  }, [color, enableEraser])
 
   useEffect(() => {
     canvasCtxRef.current.lineWidth = lineWidth
   }, [lineWidth])
 
   return {
-    isDrawingHide, setIsDrawingHide: hideDrawing, enablePen, setEnablePen, undoDrawing, clearDrawing,
-    drawingColor: color, setDrawingColor: setColor, setDrawingLineWidth: setLineWidth,
-    startDrawing, inDrawing, endDrawing
+    isDrawingHide, setIsDrawingHide: hideDrawing, enablePen, setEnablePen, enableEraser, setEnableEraser,
+    undoDrawing, clearDrawing, drawingColor: color, setDrawingColor: setColor,
+    setDrawingLineWidth: setLineWidth, startDrawing, inDrawing, endDrawing
   }
 }

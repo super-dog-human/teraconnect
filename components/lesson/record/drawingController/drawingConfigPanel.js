@@ -5,7 +5,7 @@ import { HexColorInput } from 'react-colorful'
 import DrawingSortDownButton from './drawingSortDownButton'
 import 'react-colorful/dist/index.css'
 
-export default function DrawingConfigPanel({ disabled, color, setColor, setLineWidth, setEnablePen }) {
+export default function DrawingConfigPanel({ disabled, color, setColor, setLineWidth, handleEraser }) {
   const [showDrawingConfig, setShowDrawingConfig] = useState(false)
   const [panelPosition, setPanelposition] = useState({ top: 0, left: 0 })
 
@@ -14,20 +14,13 @@ export default function DrawingConfigPanel({ disabled, color, setColor, setLineW
     setShowDrawingConfig(!showDrawingConfig)
   }
 
-  function handleEraser() {
-    setColor('eraser')
-    setEnablePen(true)
-  }
-
   function handleColorChange(e) {
     const color = (typeof e === 'string') ? e : e.target.dataset.color
     setColor(color)
-    setEnablePen(true)
   }
 
   function handleWidthChange(e) {
     setLineWidth(e.target.dataset.width)
-    setEnablePen(true)
   }
 
   const backgroundStyle = css({

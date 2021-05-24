@@ -1,20 +1,20 @@
 import { useRef, useEffect } from 'react'
 import { deepCopy } from '../../../utils'
 
+const maxLessonDurationSec = 600
+
 export default function useDrawingEditor({ isRecording, setIsRecording, isPlaying, setIsPlaying, sameTimeIndex, startElapsedTime, getElapsedTime,
-  previewDurationSecRef, fullDurationSec, setConfig, previewDrawings, setPreviewDrawings }) {
+  previewDurationSecRef, setConfig, previewDrawings, setPreviewDrawings }) {
   const hasStartRecording = useRef(false)
   const drawingUnitsRef = useRef([])
   const drawingDurationSecRef = useRef(previewDurationSecRef.current)
 
   function startRecording() {
-    const elapsedTime = getElapsedTime()
-
-    reduceDrawingsUntilElapsedTime(elapsedTime)
     hasStartRecording.current = true
+    previewDurationSecRef.current = maxLessonDurationSec - startElapsedTime
 
-    // 収録中は音声や画像を最後まで再生する
-    previewDurationSecRef.current = fullDurationSec - startElapsedTime
+    const elapsedTime = getElapsedTime()
+    reduceDrawingsUntilElapsedTime(elapsedTime)
   }
 
   function reduceDrawingsUntilElapsedTime(elapsedTime) {
@@ -112,7 +112,7 @@ export default function useDrawingEditor({ isRecording, setIsRecording, isPlayin
   }, [isRecording])
 
   useEffect(() => {
-    if (!isPlaying && getElapsedTime() >= fullDurationSec) {
+    if (!isPlaying && getElapsedTime() >= maxLessonDurationSec) {
       setIsRecording(false) // 最後まで再生されたら収録も停止する
     }
   }, [isPlaying])
