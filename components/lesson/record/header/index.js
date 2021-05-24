@@ -10,7 +10,7 @@ import DrawingConfigPanel from '../drawingController/drawingConfigPanel'
 import DrawingConfigButton from '../drawingController/drawingConfigButton'
 
 export default function LessonRecordHeader({ lessonID, isMicReady, isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, enableEraser, setEnableEraser,
-  undoDrawing, clearDrawing, drawingColor, setDrawingColor, setDrawingLineWidth, isShowControlPanel, setIsShowControlPanel }) {
+  undoDrawing, clearDrawing, drawingColor, setDrawingColor, drawingLineWidth, setDrawingLineWidth, isShowControlPanel, setIsShowControlPanel }) {
   const { isFinishing } = useLessonRecorderContext()
 
   function handleDrawingHide() {

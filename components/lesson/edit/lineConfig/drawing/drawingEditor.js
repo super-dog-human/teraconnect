@@ -1,6 +1,4 @@
-/** @jsxImportSource @emotion/react */
 import React, { useState, useRef, useEffect } from 'react'
-import { css } from '@emotion/core'
 import Flex from '../../../../flex'
 import Spacer from '../../../../spacer'
 import Container from '../../../../container'
@@ -9,6 +7,7 @@ import SVGButton from '../../../../button/svgButton'
 import Player from '../../../../lesson/player/'
 import RecordingIcon from '../../../../recordingIcon'
 import DrawingConfigButton from '../../../record/drawingController/drawingConfigButton'
+import DrawingLineSelector from '../../../record/drawingController/drawingLineWidthSelector'
 import { useLessonEditorContext } from '../../../../../libs/contexts/lessonEditorContext'
 import useResizeDetector from '../../../../../libs/hooks/useResizeDetector'
 import useLessonPlayer from '../../../../../libs/hooks/lesson/useLessonPlayer'
@@ -28,7 +27,7 @@ export default function DrawingEditor({ config, setConfig, sameTimeIndex, isReco
     useLessonPlayer({ startElapsedTime: config.elapsedTime, durationSec: previewDurationSecRef.current, drawings: previewDrawings, speeches, sameTimeIndex })
   const { setRecord } = useDrawingEditor({ isRecording, setIsRecording, isPlaying, setIsPlaying, sameTimeIndex, startElapsedTime: config.elapsedTime, getElapsedTime, previewDurationSecRef,
     setConfig, previewDrawings, setPreviewDrawings })
-  const { enablePen, setEnablePen, enableEraser, setEnableEraser, undoDrawing, drawingColor, setDrawingColor, setDrawingLineWidth, startDrawing, inDrawing, endDrawing } = useDrawingRecorder({ hasResize, drawingRef, setRecord })
+  const { enablePen, setEnablePen, enableEraser, setEnableEraser, undoDrawing, drawingColor, setDrawingColor, drawingLineWidth, setDrawingLineWidth, startDrawing, inDrawing, endDrawing } = useDrawingRecorder({ hasResize, drawingRef, setRecord })
 
   function handleDrawingStart() {
     setIsRecording(state => !state)
@@ -84,20 +83,12 @@ export default function DrawingEditor({ config, setConfig, sameTimeIndex, isReco
               <Spacer width='38' />
               <DrawingConfigButton name='undo' disabled={!isRecording} onClick={handleUndo} />
             </Flex>
-            <Spacer height='20' />
+            <Spacer height='15' />
             <Flex justifyContent='center'>
               <Container width='70'>
-                <Container height='3'>
-                  <button css={lineSelectorStyle} onClick={handleWidthChange} data-width="5" />
-                </Container>
-                <Spacer height='20' />
-                <Container height='5'>
-                  <button css={lineSelectorStyle} onClick={handleWidthChange} data-width="10" />
-                </Container>
-                <Spacer height='20' />
-                <Container height='10'>
-                  <button css={lineSelectorStyle} onClick={handleWidthChange} data-width="20" />
-                </Container>
+                <DrawingLineSelector height='2' lineWidth='5' selected={drawingLineWidth === '5'} onClick={handleWidthChange} />
+                <DrawingLineSelector height='4' lineWidth='10' selected={drawingLineWidth === '10'} onClick={handleWidthChange} />
+                <DrawingLineSelector height='7' lineWidth='20' selected={drawingLineWidth === '20'} onClick={handleWidthChange} />
               </Container>
             </Flex>
             <Spacer height='20' />
@@ -112,11 +103,3 @@ export default function DrawingEditor({ config, setConfig, sameTimeIndex, isReco
     </div>
   )
 }
-
-const lineSelectorStyle = css({
-  width: '100%',
-  height: '100%',
-  padding: 0,
-  borderRadius: 0,
-  backgroundColor: 'var(--soft-white)',
-})
