@@ -10,13 +10,13 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
   const { drawPicture } = useDrawingPicture({ canvasRef, drawings, startElapsedTime })
 
   function setCompletedPicture() {
-    clearCanvas(canvasCtxRef.current)
+    clearDrawing()
     const targetDrawings = drawings.filter(d => d.elapsedTime === startElapsedTime).filter((_, i) => i <= sameTimeIndex)
     drawPicture(targetDrawings)
   }
 
   function setPictureBeforeDrawing() {
-    clearCanvas(canvasCtxRef.current)
+    clearDrawing()
     const targetDrawings = drawings.filter(d => d.elapsedTime === startElapsedTime).filter((_, i) => i < sameTimeIndex)
     drawPicture(targetDrawings)
   }
@@ -58,7 +58,7 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
         })
         return
       case 'clear':
-        clearCanvas(canvasCtxRef.current)
+        clearDrawing()
         return
       case 'show':
         canvasRef.current.style.opacity = 1
@@ -73,7 +73,7 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
   function undo(unitIndex) {
     if (unitIndex <= preUndoRef.current) return
 
-    clearCanvas(canvasCtxRef.current)
+    clearDrawing()
     const drawingsToUndo = drawings.filter(d => d.elapsedTime === startElapsedTime).filter((_, i) => i <= sameTimeIndex)
     const lastDrawing = drawingsToUndo[drawingsToUndo.length - 1]
     lastDrawing.units = lastDrawing.units.slice(0, unitIndex + 1)
@@ -104,11 +104,15 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
     preUndoRef.current = null
   }
 
-  function resetForSeekDrawing() {
+  function resetBeforeDrawing() {
     setPictureBeforeDrawing()
 
     preStrokeRef.current = {}
     preUndoRef.current = null
+  }
+
+  function clearDrawing() {
+    clearCanvas(canvasCtxRef.current)
   }
 
   useEffect(() => {
@@ -120,5 +124,5 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
     setCompletedPicture()
   }, [drawings])
 
-  return { drawingRef: canvasRef, draw, initialStartDrawing, finishDrawing, resetForSeekDrawing }
+  return { drawingRef: canvasRef, draw, initialStartDrawing, finishDrawing, resetBeforeDrawing }
 }

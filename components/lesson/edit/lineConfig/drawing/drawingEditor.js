@@ -1,4 +1,6 @@
+/** @jsxImportSource @emotion/react */
 import React, { useState, useRef, useEffect } from 'react'
+import { css } from '@emotion/core'
 import Flex from '../../../../flex'
 import Spacer from '../../../../spacer'
 import Container from '../../../../container'
@@ -7,13 +9,15 @@ import SVGButton from '../../../../button/svgButton'
 import Player from '../../../../lesson/player/'
 import RecordingIcon from '../../../../recordingIcon'
 import DrawingConfigButton from '../../../record/drawingController/drawingConfigButton'
-import DrawingConfigPanel from '../../../record/drawingController/drawingConfigPanel'
 import { useLessonEditorContext } from '../../../../../libs/contexts/lessonEditorContext'
 import useResizeDetector from '../../../../../libs/hooks/useResizeDetector'
 import useLessonPlayer from '../../../../../libs/hooks/lesson/useLessonPlayer'
 import useDrawingEditor from '../../../../../libs/hooks/lesson/edit/useDrawingEditor'
 import useDrawingRecorder from '../../../../../libs/hooks/lesson/useDrawingRecorder'
+import { clearCanvas } from '../../../../../libs/drawingUtils'
 import { deepCopy } from '../../../../../libs/utils'
+
+import ColorPickerCube from '../../../../colorPickerCube'
 
 export default function DrawingEditor({ config, setConfig, sameTimeIndex, isRecording, setIsRecording }) {
   const previewDurationSecRef = useRef(config.durationSec) // プレビューではdrawingsの時間だけ再生し、収録中はフル再生する
@@ -21,7 +25,7 @@ export default function DrawingEditor({ config, setConfig, sameTimeIndex, isReco
   const [previewDrawings, setPreviewDrawings] = useState(deepCopy(drawings))
   const containerRef = useRef()
   const { hasResize } = useResizeDetector(containerRef)
-  const { drawingRef, isPlaying, setIsPlaying, isPreparing, isPlayerHover, getElapsedTime, playerElapsedTime, handleMouseOver, handleMouseLeave, handlePlayButtonClick, handleDragStart, handleSeekChange } =
+  const { drawingRef, isPlaying, setIsPlaying, isPreparing, isPlayerHover, getElapsedTime, playerElapsedTime, resetBeforeDrawing, handleMouseOver, handleMouseLeave, handlePlayButtonClick, handleDragStart, handleSeekChange } =
     useLessonPlayer({ startElapsedTime: config.elapsedTime, durationSec: previewDurationSecRef.current, drawings: previewDrawings, speeches, sameTimeIndex })
   const { setRecord } = useDrawingEditor({ isRecording, setIsRecording, isPlaying, setIsPlaying, sameTimeIndex, startElapsedTime: config.elapsedTime, getElapsedTime, previewDurationSecRef, fullDurationSec,
     setConfig, previewDrawings, setPreviewDrawings })
@@ -36,8 +40,17 @@ export default function DrawingEditor({ config, setConfig, sameTimeIndex, isReco
     }
   }
 
+  function handleUndo() {
+    resetBeforeDrawing()
+    undoDrawing(true) // canvasをクリアせずに続きを描写する
+  }
+
   function handlePen() {
     setEnablePen(state => !state)
+  }
+
+  function handleWidthChange(e) {
+    setDrawingLineWidth(e.target.dataset.width)
   }
 
   useEffect(() => {
@@ -58,21 +71,55 @@ export default function DrawingEditor({ config, setConfig, sameTimeIndex, isReco
               maxTime={parseFloat(previewDurationSecRef.current.toFixed(2))} onDragStart={handleDragStart} onSeekChange={handleSeekChange} />
           </Container>
           <ContainerSpacer top='30' left='20'>
-            <Container width='28' height='28'>
-              <SVGButton padding='3' disabled={isPlaying && !isRecording} onClick={handleDrawingStart}>
-                <RecordingIcon isRecording={isRecording} />
-              </SVGButton>
-            </Container>
-            <Spacer height='15' />
             <Flex>
-              <DrawingConfigButton name='drawing' disabled={!isRecording} isSelected={enablePen} onClick={handlePen} />
-              <DrawingConfigPanel disabled={!isRecording} color={drawingColor} setColor={setDrawingColor} setLineWidth={setDrawingLineWidth} setEnablePen={setEnablePen} />
+              <Container width='28' height='28'>
+                <SVGButton padding='3' disabled={isPlaying && !isRecording} onClick={handleDrawingStart}>
+                  <RecordingIcon isRecording={isRecording} />
+                </SVGButton>
+              </Container>
+              <Spacer width= '10' />
+              <Flex>
+                <DrawingConfigButton name='drawing' disabled={!isRecording} isSelected={enablePen} onClick={handlePen} />
+              </Flex>
             </Flex>
-            <Spacer height='15' />
-            <DrawingConfigButton name='undo' disabled={!isRecording} onClick={undoDrawing} />
+            <Spacer height='10' />
+            <Flex>
+              <Spacer width='38' />
+              <DrawingConfigButton name='undo' disabled={!isRecording} onClick={handleUndo} />
+            </Flex>
+            {isRecording && <>
+              <Spacer height='20' />
+              <Flex justifyContent='center'>
+                <Container width='70'>
+                  <Container height='3'>
+                    <button css={lineSelectorStyle} onClick={handleWidthChange} data-width="5" />
+                  </Container>
+                  <Spacer height='20' />
+                  <Container height='5'>
+                    <button css={lineSelectorStyle} onClick={handleWidthChange} data-width="10" />
+                  </Container>
+                  <Spacer height='20' />
+                  <Container height='10'>
+                    <button css={lineSelectorStyle} onClick={handleWidthChange} data-width="20" />
+                  </Container>
+                </Container>
+              </Flex>
+              <Spacer height='20' />
+              <Flex>
+                <ColorPickerCube initialColor={drawingColor} onChange={setDrawingColor} size='20' />
+              </Flex>
+            </>}
           </ContainerSpacer>
         </Flex>
       </ContainerSpacer>
     </div>
   )
 }
+
+const lineSelectorStyle = css({
+  width: '100%',
+  height: '100%',
+  padding: 0,
+  borderRadius: 0,
+  backgroundColor: 'var(--soft-white)',
+})

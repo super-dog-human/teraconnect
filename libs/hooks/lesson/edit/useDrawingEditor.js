@@ -89,7 +89,7 @@ export default function useDrawingEditor({ isRecording, setIsRecording, isPlayin
   function setPreviewDurationSecByDrawing() {
     if (drawingUnitsRef.current.length > 0) {
       const lastUnit = drawingUnitsRef.current[drawingUnitsRef.current.length - 1]
-      const drawingDurationSec = lastUnit.elapsedTime + lastUnit.durationSec - startElapsedTime
+      const drawingDurationSec = parseFloat((lastUnit.elapsedTime + lastUnit.durationSec - startElapsedTime).toFixed(3))
       previewDurationSecRef.current = drawingDurationSec
     } else {
       previewDurationSecRef.current = drawingDurationSecRef.current

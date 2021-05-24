@@ -2,8 +2,6 @@ import { useRef, useState, useEffect } from 'react'
 import { switchSwipable, mouseOrTouchPositions } from '../../utils'
 import { drawToCanvas, drawEdgeCircle, clearCanvas } from '../../drawingUtils'
 
-const histories = []
-
 export default function useDrawingRecorder({ hasResize, drawingRef, startDragging, inDragging, endDragging, setRecord }) {
   const canvasCtxRef = useRef()
   const coefficientRef = useRef({ x: 0, y: 0 })
@@ -12,6 +10,7 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
   const startDrawingTimeRef = useRef()
   const isDrawingRef = useRef(false)
   const isClearedRef = useRef(true)
+  const historiesRef = useRef([])
   const [isDrawingHide, setIsDrawingHide] = useState(false)
   const [enablePen, setEnablePen] = useState(false)
   const [color, setColor] = useState('#ff0000')
@@ -63,13 +62,22 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
         kind: 'drawing',
         action: 'draw',
         durationMillisec: new Date() - startDrawingTimeRef.current,
-        value: histories[histories.length - 1],
+        value: historiesRef.current[historiesRef.current.length - 1],
       })
 
       isDrawingRef.current = false
     } else if (endDragging) {
       endDragging(e) // ペンが有効でない時はアバターを操作する
     }
+  }
+
+  function undoDrawing(keepCurrent=false) {
+    if (historiesRef.current.length === 0) return
+
+    historiesRef.current.pop()
+    redrawFromHistory(keepCurrent)
+    setRecord({ kind: 'drawing', action: 'undo' })
+    isClearedRef.current = false
   }
 
   function drawLine(x, y) {
@@ -83,19 +91,22 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
     addHistory({ x, y })
   }
 
-  function redrawFromHistory() {
+  function clearDrawing() {
+    if (isClearedRef.current) return
+
+    addClearHistory()
     clearCanvas(canvasCtxRef.current)
+    setRecord({ kind: 'drawing', action: 'clear' })
+    isClearedRef.current = true
+  }
 
-    histories.forEach(history => {
-      if (history.clear) {
-        clearCanvas(canvasCtxRef.current)
-      } else {
-        drawToCanvas(canvasCtxRef.current, history)
-      }
-    })
+  function hideDrawing(isHide) {
+    setRecord({ kind: 'drawing', action: isHide ? 'hide': 'show' })
+    setIsDrawingHide(isHide)
+  }
 
-    canvasCtxRef.current.strokeStyle = color
-    canvasCtxRef.current.lineWidth = lineWidth
+  function isEraser() {
+    return color === 'eraser'
   }
 
   function calcResizePosition(e, positions) {
@@ -108,7 +119,7 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
   }
 
   function createNewHistory() {
-    histories.push({
+    historiesRef.current.push({
       clear: false,
       color: color,
       eraser: isEraser(),
@@ -118,39 +129,27 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
   }
 
   function addHistory(drawing) {
-    histories[histories.length - 1].positions.push(drawing)
+    historiesRef.current[historiesRef.current.length - 1].positions.push(drawing)
   }
 
   function addClearHistory() {
-    if (histories.length === 0) return
-    histories.push({ clear: true })
+    if (historiesRef.current.length === 0) return
+    historiesRef.current.push({ clear: true })
   }
 
-  function undoDrawing() {
-    if (histories.length === 0) return
+  function redrawFromHistory(keepCurrent=false) {
+    if (!keepCurrent) clearCanvas(canvasCtxRef.current)
 
-    histories.pop()
-    redrawFromHistory()
-    setRecord({ kind: 'drawing', action: 'undo' })
-    isClearedRef.current = false
-  }
+    historiesRef.current.forEach(history => {
+      if (history.clear) {
+        clearCanvas(canvasCtxRef.current)
+      } else {
+        drawToCanvas(canvasCtxRef.current, history)
+      }
+    })
 
-  function clearDrawing() {
-    if (isClearedRef.current) return
-
-    addClearHistory()
-    clearCanvas(canvasCtxRef.current)
-    setRecord({ kind: 'drawing', action: 'clear' })
-    isClearedRef.current = true
-  }
-
-  function isEraser() {
-    return color === 'eraser'
-  }
-
-  function hideDrawing(isHide) {
-    setRecord({ kind: 'drawing', action: isHide ? 'hide': 'show' })
-    setIsDrawingHide(isHide)
+    canvasCtxRef.current.strokeStyle = color
+    canvasCtxRef.current.lineWidth = lineWidth
   }
 
   useEffect(() => {
