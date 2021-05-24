@@ -86,6 +86,7 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
   function drawLine(x, y) {
     if (isSamePosition(startPositionRef.current, { x, y })) return
 
+    canvasCtxRef.current.strokeStyle = color
     canvasCtxRef.current.globalCompositeOperation = enableEraser ? 'destination-out': 'source-over'
     // カーブの終点をマウスの動く前の座標に、頂点を動いた後の座標にすると滑らかな線が描画できる
     canvasCtxRef.current.quadraticCurveTo(startPositionRef.current.x, startPositionRef.current.y, x, y)
@@ -178,7 +179,6 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
       canvasCtxRef.current.globalCompositeOperation = 'destination-out'
     } else {
       canvasCtxRef.current.globalCompositeOperation = 'source-over'
-      canvasCtxRef.current.strokeStyle = color
     }
   }, [color, enableEraser])
 
