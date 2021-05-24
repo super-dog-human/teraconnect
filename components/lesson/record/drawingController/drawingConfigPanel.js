@@ -31,7 +31,7 @@ export default function DrawingConfigPanel({ disabled, color, setColor, lineWidt
 
   const contextMenuStyle = css({
     position: 'absolute',
-    top: panelPosition.top + 10,
+    top: panelPosition.top + 5,
     left: panelPosition.left + 10,
     borderRadius: '5px',
     width: '180px',
