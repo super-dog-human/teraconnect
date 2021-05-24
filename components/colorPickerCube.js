@@ -61,19 +61,24 @@ export default function ColorPickerCube({ initialColor, isBorder=false, size=0, 
   return (
     <div>
       <button css={buttonStyle} onClick={handlePickerClick} ref={buttonRef} />
-      {isPickerShow && <div css={pickerStyle} onClick={e => e.stopPropagation()}>
-        <Spacer height='10' />
-        <HexColorPicker color={color} onChange={handleColorChange} />
-        <Container width='100' height='15'>
-          <InputText size='15' borderWidth='0' color='var(--text-gray)' key={color} defaultValue={color} onBlur={handleTextBlur} />
-        </Container>
-      </div>}
+      <Spacer height='10' />
+      {isPickerShow &&
+        <div css={pickerStyle} onClick={e => e.stopPropagation()} className='overay-ui-z'>
+          <HexColorPicker color={color} onChange={handleColorChange} />
+          <Container width='100' height='30'>
+            <InputText size='15' borderWidth='0' textAlign='center' color='var(--text-gray)' key={color} defaultValue={color} onBlur={handleTextBlur} />
+          </Container>
+        </div>
+      }
     </div>
   )
 }
 
 const pickerStyle = css({
   position: 'absolute',
+  backgroundColor: 'var(--dark-gray)',
+  borderRadius: '5px',
+  filter: 'drop-shadow(2px 2px 2px gray)',
   '.react-colorful': {
     width: '100px',
     height: '100px',
