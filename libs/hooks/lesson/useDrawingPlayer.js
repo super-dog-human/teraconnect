@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react'
 import { drawToCanvas, clearCanvas } from '../../drawingUtils'
 import useDrawingPicture from './useDrawingPicture'
+import { deepCopy } from '../../utils'
 
 export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElapsedTime, elapsedTimeRef }) {
   const canvasRef = useRef()
@@ -74,10 +75,11 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
     if (unitIndex <= preUndoRef.current) return
 
     clearDrawing()
-    const drawingsToUndo = drawings.filter(d => d.elapsedTime === startElapsedTime).filter((_, i) => i <= sameTimeIndex)
+    const preUndoDrawings = drawings.filter(d => d.elapsedTime < startElapsedTime)
+    const drawingsToUndo = deepCopy(drawings.filter(d => d.elapsedTime === startElapsedTime).filter((_, i) => i <= sameTimeIndex))
     const lastDrawing = drawingsToUndo[drawingsToUndo.length - 1]
     lastDrawing.units = lastDrawing.units.slice(0, unitIndex + 1)
-    drawPicture(drawingsToUndo)
+    drawPicture([...preUndoDrawings, ...drawingsToUndo])
 
     preUndoRef.current = unitIndex
   }
