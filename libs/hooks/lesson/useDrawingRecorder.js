@@ -27,6 +27,7 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
       isDrawingRef.current = true
       startDrawingTimeRef.current = new Date()
 
+      canvasCtxRef.current.lineWidth = lineWidth
       const [x, y] = calcResizePosition(e, ['touchstart'])
       drawEdgeCircle(canvasCtxRef.current, x, y, color)
 
@@ -87,6 +88,7 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
     if (isSamePosition(startPositionRef.current, { x, y })) return
 
     canvasCtxRef.current.strokeStyle = color
+    canvasCtxRef.current.lineWidth = lineWidth
     canvasCtxRef.current.globalCompositeOperation = enableEraser ? 'destination-out': 'source-over'
     // カーブの終点をマウスの動く前の座標に、頂点を動いた後の座標にすると滑らかな線が描画できる
     canvasCtxRef.current.quadraticCurveTo(startPositionRef.current.x, startPositionRef.current.y, x, y)
@@ -181,10 +183,6 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
       canvasCtxRef.current.globalCompositeOperation = 'source-over'
     }
   }, [color, enableEraser])
-
-  useEffect(() => {
-    canvasCtxRef.current.lineWidth = lineWidth
-  }, [lineWidth])
 
   return {
     isDrawingHide, setIsDrawingHide: hideDrawing, enablePen, setEnablePen, enableEraser, setEnableEraser,
