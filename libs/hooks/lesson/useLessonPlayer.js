@@ -8,7 +8,7 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
   const [isPreparing, setIsPreparing] = useState(false)
   const { isPlayerHover, isPlaying, setIsPlaying, playerElapsedTime, setPlayerElapsedTime, deltaTime, resetClock, switchClock,
     handleMouseOver, handleMouseLeave, handlePlayButtonClick, handleDragStart } = usePlayerController()
-  const { drawingRef, draw, initialStartDrawing, resetBeforeDrawing, finishDrawing } = useDrawingPlayer({ drawings, sameTimeIndex, startElapsedTime, elapsedTimeRef })
+  const { drawingRef, draw, initializeDrawing, finishDrawing, resetBeforeSeeking, resetBeforeUndo } = useDrawingPlayer({ drawings, sameTimeIndex, startElapsedTime, elapsedTimeRef })
 
   function animation() {
     animationRequestRef.current = requestAnimationFrame(animation)
@@ -38,7 +38,7 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
     }
 
     if (elapsedTimeRef.current === startElapsedTime) {
-      if (drawings) initialStartDrawing()
+      if (drawings) initializeDrawing()
     }
 
     animation()
@@ -55,7 +55,7 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
 
   function handleSeekChange(e) {
     stopPlaying()
-    if (drawings) resetBeforeDrawing()
+    if (drawings) resetBeforeSeeking()
 
     // プレイヤーからのelapsedTimeは相対時間なので開始時間を加算する
     elapsedTimeRef.current = startElapsedTime + parseFloat(e.target.value)
@@ -100,5 +100,5 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
   }, [isPlaying])
 
   return { drawingRef, isPlaying, setIsPlaying, isPreparing, isPlayerHover, getElapsedTime, playerElapsedTime,
-    resetBeforeDrawing, handleMouseOver, handleMouseLeave, handlePlayButtonClick, handleDragStart, handleSeekChange }
+    resetBeforeSeeking, resetBeforeUndo, handleMouseOver, handleMouseLeave, handlePlayButtonClick, handleDragStart, handleSeekChange }
 }

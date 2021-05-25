@@ -10,15 +10,15 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
   const preUndoRef = useRef()
   const { drawPicture } = useDrawingPicture({ canvasRef, drawings, startElapsedTime })
 
-  function setCompletedPicture() {
-    clearDrawing()
-    const targetDrawings = drawings.filter(d => d.elapsedTime === startElapsedTime).filter((_, i) => i <= sameTimeIndex)
-    drawPicture(targetDrawings)
-  }
-
   function setPictureBeforeDrawing() {
     clearDrawing()
     const targetDrawings = drawings.filter(d => d.elapsedTime === startElapsedTime).filter((_, i) => i < sameTimeIndex)
+    drawPicture(targetDrawings)
+  }
+
+  function setCompletedPicture() {
+    clearDrawing()
+    const targetDrawings = drawings.filter(d => d.elapsedTime === startElapsedTime).filter((_, i) => i <= sameTimeIndex)
     drawPicture(targetDrawings)
   }
 
@@ -96,8 +96,12 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
     preStrokeRef.current.positionIndex = positionIndex
   }
 
-  function initialStartDrawing() {
-    setPictureBeforeDrawing()
+  function initializeDrawing() {
+    if (sameTimeIndex >= 0) {
+      setPictureBeforeDrawing()
+    } else {
+      clearDrawing()
+    }
   }
 
   function finishDrawing() {
@@ -106,7 +110,7 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
     preUndoRef.current = null
   }
 
-  function resetBeforeDrawing() {
+  function resetBeforeSeeking() {
     setPictureBeforeDrawing()
 
     preStrokeRef.current = {}
@@ -123,8 +127,8 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
 
   useEffect(() => {
     if (!drawings) return
-    setCompletedPicture()
+    setPictureBeforeDrawing()
   }, [drawings])
 
-  return { drawingRef: canvasRef, draw, initialStartDrawing, finishDrawing, resetBeforeDrawing }
+  return { drawingRef: canvasRef, draw, initializeDrawing, finishDrawing, resetBeforeSeeking, resetBeforeUndo: setCompletedPicture }
 }

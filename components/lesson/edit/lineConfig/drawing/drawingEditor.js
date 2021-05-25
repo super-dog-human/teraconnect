@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import Flex from '../../../../flex'
 import Spacer from '../../../../spacer'
 import Container from '../../../../container'
@@ -23,18 +23,23 @@ export default function DrawingEditor({ config, setConfig, sameTimeIndex, isReco
   const [previewDrawings, setPreviewDrawings] = useState(deepCopy(drawings))
   const containerRef = useRef()
   const { hasResize } = useResizeDetector(containerRef)
-  const { drawingRef, isPlaying, setIsPlaying, isPreparing, isPlayerHover, getElapsedTime, playerElapsedTime, resetBeforeDrawing, handleMouseOver, handleMouseLeave, handlePlayButtonClick, handleDragStart, handleSeekChange } =
+  const { drawingRef, isPlaying, setIsPlaying, isPreparing, isPlayerHover, getElapsedTime, playerElapsedTime, resetBeforeUndo, handleMouseOver, handleMouseLeave, handlePlayButtonClick, handleDragStart, handleSeekChange } =
     useLessonPlayer({ startElapsedTime: config.elapsedTime, durationSec: previewDurationSecRef.current, drawings: previewDrawings, speeches, sameTimeIndex })
   const { setRecord } = useDrawingEditor({ isRecording, setIsRecording, isPlaying, setIsPlaying, sameTimeIndex, startElapsedTime: config.elapsedTime, getElapsedTime, previewDurationSecRef,
     setConfig, previewDrawings, setPreviewDrawings })
-  const { enablePen, setEnablePen, enableEraser, setEnableEraser, undoDrawing, drawingColor, setDrawingColor, drawingLineWidth, setDrawingLineWidth, startDrawing, inDrawing, endDrawing } = useDrawingRecorder({ hasResize, drawingRef, setRecord })
+  const { enablePen, setEnablePen, enableEraser, setEnableEraser, undoDrawing, drawingColor, setDrawingColor, drawingLineWidth, setDrawingLineWidth, startDrawing, inDrawing, endDrawing, resetHistories } = useDrawingRecorder({ hasResize, drawingRef, setRecord })
 
-  function handleDrawingStart() {
-    setIsRecording(state => !state)
+  function handleRecording() {
+    if (isRecording) {
+      setIsRecording(false)
+    } else {
+      setIsRecording(true)
+      resetHistories()
+    }
   }
 
   function handleUndo() {
-    resetBeforeDrawing()
+    resetBeforeUndo()
     undoDrawing(true) // canvasをクリアせずに続きを描写する
   }
 
@@ -64,7 +69,7 @@ export default function DrawingEditor({ config, setConfig, sameTimeIndex, isReco
           <ContainerSpacer top='30' left='20'>
             <Flex>
               <Container width='28' height='28'>
-                <SVGButton padding='3' disabled={isPlaying && !isRecording} onClick={handleDrawingStart}>
+                <SVGButton padding='3' disabled={isPlaying && !isRecording} onClick={handleRecording}>
                   <RecordingIcon isRecording={isRecording} />
                 </SVGButton>
               </Container>

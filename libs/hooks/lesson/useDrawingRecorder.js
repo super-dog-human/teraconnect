@@ -154,6 +154,10 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
     canvasCtxRef.current.lineWidth = lineWidth
   }
 
+  function resetHistories() {
+    historiesRef.current = []
+  }
+
   useEffect(() => {
     isMobileDeviceRef.current = window.ontouchstart !== undefined
     canvasCtxRef.current = drawingRef.current.getContext('2d')
@@ -187,6 +191,6 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
   return {
     isDrawingHide, setIsDrawingHide: hideDrawing, enablePen, setEnablePen, enableEraser, setEnableEraser,
     undoDrawing, clearDrawing, drawingColor: color, setDrawingColor: setColor,
-    drawingLineWidth: lineWidth, setDrawingLineWidth: setLineWidth, startDrawing, inDrawing, endDrawing
+    drawingLineWidth: lineWidth, setDrawingLineWidth: setLineWidth, startDrawing, inDrawing, endDrawing, resetHistories
   }
 }

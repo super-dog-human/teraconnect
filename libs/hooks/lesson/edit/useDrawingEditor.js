@@ -80,7 +80,7 @@ export default function useDrawingEditor({ isRecording, setIsRecording, isPlayin
       currentDrawing.units.push(...newUnits)
       currentDrawing.durationSec = parseFloat(previewDurationSecRef.current.toFixed(3))
 
-      return drawings
+      return [...drawings]
     })
 
     drawingUnitsRef.current = []
