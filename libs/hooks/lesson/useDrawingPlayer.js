@@ -102,17 +102,20 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
     } else {
       clearDrawing()
     }
+    clearPreHistory()
   }
 
   function finishDrawing() {
     draw(0) // 経過時間が終了時間に達した際、描写しきれなかったものが発生しうるので最後にもう一度描写する
-    preStrokeRef.current = {}
-    preUndoRef.current = null
+    clearPreHistory()
   }
 
   function resetBeforeSeeking() {
     setPictureBeforeDrawing()
+    clearPreHistory()
+  }
 
+  function clearPreHistory() {
     preStrokeRef.current = {}
     preUndoRef.current = null
   }
