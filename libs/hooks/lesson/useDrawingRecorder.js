@@ -17,7 +17,7 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
   const [enablePen, setEnablePen] = useState(false)
   const [enableEraser, setEnableEraser] = useState(false)
   const [color, setColor] = useState(initialColor)
-  const [lineWidth, setLineWidth] = useState('5')
+  const [lineWidth, setLineWidth] = useState(5)
 
   function startDrawing(e) {
     if (isMobileDeviceRef.current && e.type === 'mousedown') return // モバイルではtouchstart後にmousedownが呼ばれるのでスキップ

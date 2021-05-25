@@ -23,7 +23,7 @@ export default function DrawingEditor({ config, setConfig, sameTimeIndex, isReco
   const [previewDrawings, setPreviewDrawings] = useState(deepCopy(drawings))
   const containerRef = useRef()
   const { hasResize } = useResizeDetector(containerRef)
-  const { drawingRef, isPlaying, setIsPlaying, isPreparing, isPlayerHover, getElapsedTime, playerElapsedTime, resetBeforeUndo, handleMouseOver, handleMouseLeave, handlePlayButtonClick, handleDragStart, handleSeekChange } =
+  const { drawingRef, isPlaying, setIsPlaying, isPreparing, isPlayerHover, getElapsedTime, playerElapsedTime, resetBeforeUndo, handleMouseOver, handleMouseLeave, handlePlayButtonClick, handleDragStart, handleSeekChange, } =
     useLessonPlayer({ startElapsedTime: config.elapsedTime, durationSec: previewDurationSecRef.current, drawings: previewDrawings, speeches, sameTimeIndex })
   const { setRecord } = useDrawingEditor({ isRecording, setIsRecording, isPlaying, setIsPlaying, sameTimeIndex, startElapsedTime: config.elapsedTime, getElapsedTime, previewDurationSecRef,
     setConfig, previewDrawings, setPreviewDrawings })
@@ -52,7 +52,7 @@ export default function DrawingEditor({ config, setConfig, sameTimeIndex, isReco
   }
 
   function handleWidthChange(e) {
-    setDrawingLineWidth(e.target.dataset.width)
+    setDrawingLineWidth(parseInt(e.target.dataset.width))
   }
 
   return (
@@ -91,9 +91,9 @@ export default function DrawingEditor({ config, setConfig, sameTimeIndex, isReco
             <Spacer height='15' />
             <Flex justifyContent='center'>
               <Container width='70'>
-                <DrawingLineSelector height='2' lineWidth='5' selected={drawingLineWidth === '5'} onClick={handleWidthChange} />
-                <DrawingLineSelector height='4' lineWidth='10' selected={drawingLineWidth === '10'} onClick={handleWidthChange} />
-                <DrawingLineSelector height='7' lineWidth='20' selected={drawingLineWidth === '20'} onClick={handleWidthChange} />
+                <DrawingLineSelector height='2' lineWidth='5' selected={drawingLineWidth === 5} onClick={handleWidthChange} />
+                <DrawingLineSelector height='4' lineWidth='10' selected={drawingLineWidth === 10} onClick={handleWidthChange} />
+                <DrawingLineSelector height='7' lineWidth='20' selected={drawingLineWidth === 20} onClick={handleWidthChange} />
               </Container>
             </Flex>
             <Spacer height='20' />

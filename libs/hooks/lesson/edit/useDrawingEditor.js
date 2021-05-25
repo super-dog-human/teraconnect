@@ -18,38 +18,36 @@ export default function useDrawingEditor({ isRecording, setIsRecording, isPlayin
   }
 
   function reduceDrawingsUntilElapsedTime(elapsedTime) {
-    setPreviewDrawings(drawings => {
-      const reducedDrawings = deepCopy(drawings.filter(d => d.elapsedTime <= startElapsedTime))
+    const reducedDrawings = deepCopy(previewDrawings.filter(d => d.elapsedTime <= startElapsedTime))
 
-      const currentDrawing = currentTargetDrawing(reducedDrawings)
-      const units = []
+    const currentDrawing = currentTargetDrawing(reducedDrawings)
+    const units = []
 
-      currentDrawing.units.forEach(unit => {
-        if (unit.elapsedTime > elapsedTime) return
+    currentDrawing.units.forEach(unit => {
+      if (unit.elapsedTime > elapsedTime) return
 
-        if (unit.elapsedTime + unit.durationSec <= elapsedTime || unit.action === 'undo') {
-          units.push(deepCopy(unit))
-          return
-        }
+      if (unit.elapsedTime + unit.durationSec <= elapsedTime || unit.action === 'undo') {
+        units.push(deepCopy(unit))
+        return
+      }
 
-        const timePerUnit = unit.stroke.positions.length / unit.durationSec
-        const diffTime = elapsedTime - unit.elapsedTime
-        const strokePositionIndex = Math.round(timePerUnit * diffTime)
+      const timePerUnit = unit.stroke.positions.length / unit.durationSec
+      const diffTime = elapsedTime - unit.elapsedTime
+      const strokePositionIndex = Math.round(timePerUnit * diffTime)
 
-        currentDrawing.durationSec = parseFloat((elapsedTime - startElapsedTime).toFixed(3))
-        drawingDurationSecRef.current = currentDrawing.durationSec
+      currentDrawing.durationSec = parseFloat((elapsedTime - startElapsedTime).toFixed(3))
+      drawingDurationSecRef.current = currentDrawing.durationSec
 
-        if (strokePositionIndex > 0) { // 対象の描画がある場合のみunitを格納
-          const reducedUnit = deepCopy(unit)
-          reducedUnit.durationSec = parseFloat(diffTime.toFixed(3))
-          reducedUnit.stroke.positions.splice(strokePositionIndex)
-          units.push(reducedUnit)
-        }
-      })
-      currentDrawing.units = units // 新しいunitsが空でもそのまま入れ替える
-
-      return reducedDrawings
+      if (strokePositionIndex > 0) { // 対象の描画がある場合のみunitを格納
+        const reducedUnit = deepCopy(unit)
+        reducedUnit.durationSec = parseFloat(diffTime.toFixed(3))
+        reducedUnit.stroke.positions.splice(strokePositionIndex)
+        units.push(reducedUnit)
+      }
     })
+    currentDrawing.units = units // 新しいunitsが空でもそのまま入れ替える
+
+    setPreviewDrawings(reducedDrawings)
   }
 
   function setRecord(record) {
