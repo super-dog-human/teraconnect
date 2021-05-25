@@ -186,7 +186,7 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
     } else {
       canvasCtxRef.current.globalCompositeOperation = 'source-over'
     }
-  }, [color, enableEraser])
+  }, [enableEraser])
 
   return {
     isDrawingHide, setIsDrawingHide: hideDrawing, enablePen, setEnablePen, enableEraser, setEnableEraser,
