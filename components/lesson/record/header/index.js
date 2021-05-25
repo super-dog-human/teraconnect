@@ -21,6 +21,10 @@ export default function LessonRecordHeader({ lessonID, isMicReady, isDrawingHide
     setEnablePen(state => !state)
   }
 
+  function handleUndo() {
+    undoDrawing(false)
+  }
+
   function handleEraser() {
     setEnableEraser(state => !state)
   }
@@ -49,7 +53,7 @@ export default function LessonRecordHeader({ lessonID, isMicReady, isDrawingHide
             <DrawingConfigPanel disabled={isDrawingHide || isFinishing} color={drawingColor} setColor={setDrawingColor}
               lineWidth={drawingLineWidth} setLineWidth={setDrawingLineWidth} enablePen={enablePen} handlePen={handlePen} enableEraser={enableEraser} handleEraser={handleEraser} />
             <Spacer width='10' />
-            <DrawingConfigButton name='undo' disabled={isDrawingHide || isFinishing} onClick={undoDrawing} />
+            <DrawingConfigButton name='undo' disabled={isDrawingHide || isFinishing} onClick={handleUndo} />
             <Spacer width='15' />
             <DrawingConfigButton name='trash' disabled={isDrawingHide || isFinishing} onClick={clearDrawing} />
           </Flex>
