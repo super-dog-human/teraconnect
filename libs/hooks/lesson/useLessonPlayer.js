@@ -11,6 +11,8 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
   const { drawingRef, draw, initialStartDrawing, resetBeforeDrawing, finishDrawing } = useDrawingPlayer({ drawings, sameTimeIndex, startElapsedTime, elapsedTimeRef })
 
   function animation() {
+    animationRequestRef.current = requestAnimationFrame(animation)
+
     let incrementalTime = deltaTime()
     if (elapsedTimeRef.current + incrementalTime - startElapsedTime > durationSec) {
       incrementalTime = startElapsedTime + durationSec - elapsedTimeRef.current // 経過時間の積算が収録時間を超えてしまう場合の調整
@@ -25,8 +27,6 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
       finishPlaying()
       return
     }
-
-    animationRequestRef.current = requestAnimationFrame(() => animation())
   }
 
   function startPlaying() {
@@ -47,7 +47,7 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
   function stopPlaying() {
     switchClock(false)
 
-    if (animationRequestRef.current > 0) {
+    if (animationRequestRef.current !== 0) {
       cancelAnimationFrame(animationRequestRef.current)
       animationRequestRef.current = 0
     }
