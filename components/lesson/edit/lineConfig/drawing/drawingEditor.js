@@ -15,15 +15,14 @@ import useLessonPlayer from '../../../../../libs/hooks/lesson/useLessonPlayer'
 import useDrawingEditor from '../../../../../libs/hooks/lesson/edit/useDrawingEditor'
 import useDrawingRecorder from '../../../../../libs/hooks/lesson/useDrawingRecorder'
 
-export default function DrawingEditor({ config, sameTimeIndex, isRecording, setIsRecording, drawings, setDrawings }) {
-  const startElapsedTimeRef = useRef(config.elapsedTime)   // フッターの開始時間変更の影響は受けない
+export default function DrawingEditor({ config, startElapsedTime, sameTimeIndex, isRecording, setIsRecording, drawings, setDrawings }) {
   const previewDurationSecRef = useRef(config.durationSec) // プレビューではdrawingsの時間だけ再生し、収録中はフル再生する
   const { bgImageURL, graphics, speeches } = useLessonEditorContext()
   const containerRef = useRef()
   const { hasResize } = useResizeDetector(containerRef)
   const { drawingRef, isPlaying, setIsPlaying, isPreparing, isPlayerHover, getElapsedTime, playerElapsedTime, resetBeforeUndo, handleMouseOver, handleMouseLeave, handlePlayButtonClick, handleDragStart, handleSeekChange, } =
-    useLessonPlayer({ startElapsedTime: startElapsedTimeRef.current, durationSec: previewDurationSecRef.current, drawings, speeches, sameTimeIndex })
-  const { setRecord } = useDrawingEditor({ isRecording, setIsRecording, isPlaying, setIsPlaying, sameTimeIndex, startElapsedTime: startElapsedTimeRef.current, getElapsedTime, previewDurationSecRef, drawings, setDrawings })
+    useLessonPlayer({ startElapsedTime, durationSec: previewDurationSecRef.current, drawings, speeches, sameTimeIndex })
+  const { setRecord } = useDrawingEditor({ isRecording, setIsRecording, isPlaying, setIsPlaying, sameTimeIndex, startElapsedTime, getElapsedTime, previewDurationSecRef, drawings, setDrawings })
   const { enablePen, setEnablePen, enableEraser, setEnableEraser, undoDrawing, drawingColor, setDrawingColor, drawingLineWidth, setDrawingLineWidth, startDrawing, inDrawing, endDrawing, resetHistories } = useDrawingRecorder({ hasResize, drawingRef, setRecord })
 
   function handleRecording() {

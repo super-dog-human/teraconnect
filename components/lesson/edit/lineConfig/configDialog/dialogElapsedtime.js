@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Flex from '../../../../flex'
 import Container from '../../../../container'
 import AlignContainer from '../../../../alignContainer'
@@ -11,6 +11,7 @@ export default function DialogElapsedTime({ elapsedTime, setConfig }) {
   const [minutesTime, setMinutesTime] = useState('')
   const [secondsTime, setSecondsTime] = useState('')
   const [millisecTime, setMillisecTime] = useState('')
+  const [hasChangedElapsedTime, setHasChangedElapsedTime] = useState(false)
 
   useEffect(() => {
     const minutes = Math.floor(elapsedTime / 60) % 60
@@ -24,11 +25,14 @@ export default function DialogElapsedTime({ elapsedTime, setConfig }) {
   useEffect(() => {
     if ([minutesTime, secondsTime, millisecTime].includes('')) return
 
-    setConfig(config => {
-      const elapsedTime = parseInt(minutesTime) * 60 + parseInt(secondsTime) + (parseInt(millisecTime) /  1000)
-      config.elapsedTime = parseFloat(elapsedTime.toFixed(3))
-      return { ...config }
-    })
+    const newElapsedTime = parseFloat((parseInt(minutesTime) * 60 + parseInt(secondsTime) + (parseInt(millisecTime) /  1000)).toFixed(3))
+    if (elapsedTime !== newElapsedTime) {
+      setHasChangedElapsedTime(true)
+      setConfig(config => {
+        config.elapsedTime = newElapsedTime
+        return { ...config }
+      })
+    }
   }, [minutesTime, secondsTime, millisecTime])
 
   return (
@@ -54,11 +58,13 @@ export default function DialogElapsedTime({ elapsedTime, setConfig }) {
           <InputElapsedTime time={millisecTime} setTime={setMillisecTime} min='0' max='999' maxLength='3' />
         </Container>
         <Spacer width='10' />
-        <Flex>
-          <InputCheckbox id='involveAfteLinesCheckbox' size='18' borderColor='var(--border-gray)' checkColor='var(--soft-white)'>
-            <PlainText size='11' color='var(--border-gray)'>後続の行にも時間変更を波及</PlainText>
-          </InputCheckbox>
-        </Flex>
+        {hasChangedElapsedTime &&
+          <Flex>
+            <InputCheckbox id='involveAfteLinesCheckbox' size='18' borderColor='var(--border-gray)' checkColor='var(--soft-white)'>
+              <PlainText size='11' color='var(--border-gray)'>後続の行にも時間変更を波及</PlainText>
+            </InputCheckbox>
+          </Flex>
+        }
       </Flex>
       <Spacer height='5' />
     </div>

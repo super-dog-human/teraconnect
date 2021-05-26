@@ -10,7 +10,7 @@ import DrawingEditor from './drawingEditor'
 import useDrawingConfig from '../../../../../libs/hooks/lesson/edit/useDrawingConfig'
 
 export default function Drawing({ index, initialConfig, closeCallback }) {
-  const { config, setConfig, previewDrawings, setPreviewDrawings, isRecording, setIsRecording, handleConfirm } = useDrawingConfig({ index, initialConfig, closeCallback })
+  const { config, setConfig, startElapsedTimeRef, previewDrawings, setPreviewDrawings, isRecording, setIsRecording, handleConfirm } = useDrawingConfig({ index, initialConfig, closeCallback })
 
   return (
     <>
@@ -22,7 +22,7 @@ export default function Drawing({ index, initialConfig, closeCallback }) {
         </AlignContainer>
       </DragHandler>
 
-      <DrawingEditor config={config} sameTimeIndex={index} isRecording={isRecording} setIsRecording={setIsRecording} drawings={previewDrawings} setDrawings={setPreviewDrawings} />
+      <DrawingEditor config={config} startElapsedTime={startElapsedTimeRef.current} sameTimeIndex={index} isRecording={isRecording} setIsRecording={setIsRecording} drawings={previewDrawings} setDrawings={setPreviewDrawings} />
       <Spacer height='30' />
 
       <Container height='60'>
