@@ -4,7 +4,7 @@ import { deepCopy } from '../../../utils'
 const maxLessonDurationSec = 600
 
 export default function useDrawingEditor({ isRecording, setIsRecording, isPlaying, setIsPlaying, sameTimeIndex, startElapsedTime, getElapsedTime,
-  previewDurationSecRef, setConfig, previewDrawings, setPreviewDrawings }) {
+  previewDurationSecRef, drawings, setDrawings }) {
   const hasStartRecording = useRef(false)
   const drawingUnitsRef = useRef([])
   const drawingDurationSecRef = useRef(previewDurationSecRef.current)
@@ -20,7 +20,7 @@ export default function useDrawingEditor({ isRecording, setIsRecording, isPlayin
   }
 
   function reduceDrawingsUntilElapsedTime(elapsedTime) {
-    const reducedDrawings = deepCopy(previewDrawings.filter(d => d.elapsedTime <= startElapsedTime))
+    const reducedDrawings = deepCopy(drawings.filter(d => d.elapsedTime <= startElapsedTime))
 
     const currentDrawing = currentTargetDrawing(reducedDrawings)
     const units = []
@@ -49,7 +49,7 @@ export default function useDrawingEditor({ isRecording, setIsRecording, isPlayin
     })
     currentDrawing.units = units // 新しいunitsが空でもそのまま入れ替える
 
-    setPreviewDrawings(reducedDrawings)
+    setDrawings(reducedDrawings)
   }
 
   function setRecord(record) {
@@ -75,7 +75,7 @@ export default function useDrawingEditor({ isRecording, setIsRecording, isPlayin
     if (drawingUnitsRef.current.length === 0) return // 収録中に何も描かなかった場合
 
     const newUnits = deepCopy(drawingUnitsRef.current)
-    setPreviewDrawings(drawings => {
+    setDrawings(drawings => {
       const currentDrawing = currentTargetDrawing(drawings)
       currentDrawing.units.push(...newUnits)
       currentDrawing.durationSec = parseFloat(previewDurationSecRef.current.toFixed(3))
@@ -115,10 +115,6 @@ export default function useDrawingEditor({ isRecording, setIsRecording, isPlayin
       setIsRecording(false) // 最後まで再生されたら収録も停止する
     }
   }, [isPlaying])
-
-  useEffect(() => {
-    setConfig(deepCopy(currentTargetDrawing(previewDrawings)))
-  }, [previewDrawings])
 
   return { setRecord }
 }
