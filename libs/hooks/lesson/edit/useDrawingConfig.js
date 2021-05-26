@@ -12,7 +12,7 @@ export default function useDrawingConfig({ index, initialConfig, closeCallback }
   }
 
   function updateDrawing() {
-    updateLine('drawing', index, config.elapsedTime, config)
+    updateLine('drawing', index, initialConfig.elapsedTime, config)
   }
 
   return { config, setConfig, isRecording, setIsRecording, handleConfirm }
