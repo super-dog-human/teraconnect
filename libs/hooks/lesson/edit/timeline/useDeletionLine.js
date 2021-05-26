@@ -20,7 +20,7 @@ export default function useDeletionLine({ shiftElapsedTime, nextElapsedTime, del
       // 同じ時間でどのmaterialsにも行がなく、それ以降に行が存在する場合、削除した分のoffsetが発生する
       deleteMaterial(setter, elapsedTime, index)
       const offsetTime = parseFloat((elapsedTime - nextTime).toFixed(3))
-      shiftElapsedTime({ fromElapsedTime: nextTime, skipKind: kind, offsetTime })
+      shiftElapsedTime({ fromElapsedTime: elapsedTime, offsetTime })
     }
   }
 

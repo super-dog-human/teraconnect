@@ -7,9 +7,9 @@ export default function useUpdatingLine({ shiftElapsedTime, updateMaterial, targ
       updateMaterial(setter, currentValue, newValue)
     } else {
       updateMaterial(setter, currentValue, newValue)
-      // durationが変わっていたら自身以降の全てのelapsedTimeを更新しなければならない
+      // durationが変わっていたら自身から後の全てのelapsedTimeを更新しなければならない
       const offsetTime = newValue.durationSec - currentValue.durationSec
-      shiftElapsedTime({ fromElapsedTime: newValue.elapsedTime, skipKind: kind, offsetTime })
+      shiftElapsedTime({ fromElapsedTime: newValue.elapsedTime, offsetTime })
     }
 
     // elapsedTimeが更新されていて、なおかつ自身以降もシフトするフラグが欲しい
