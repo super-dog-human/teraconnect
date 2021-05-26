@@ -9,12 +9,12 @@ export default function useDrawingConfig({ index, initialConfig, closeCallback }
   const [config, setConfig] = useState(initialConfig)
   const [previewDrawings, setPreviewDrawings] = useState(deepCopy(drawings))
 
-  function handleConfirm() {
-    updateDrawing()
+  function handleConfirm(changeAfterLineElapsedTime) {
+    updateDrawing(changeAfterLineElapsedTime)
     closeCallback()
   }
 
-  function updateDrawing() {
+  function updateDrawing(changeAfterLineElapsedTime) {
     const drawing = previewDrawings.filter(d => d.elapsedTime === startElapsedTimeRef.current)[index]
 
     // フッターで開始時間が変更されている場合、再収録した各untisの各時間にも反映する
@@ -26,7 +26,7 @@ export default function useDrawingConfig({ index, initialConfig, closeCallback }
     config.units = drawing.units
     config.durationSec = drawing.durationSec
 
-    updateLine('drawing', index, startElapsedTimeRef.current, config)
+    updateLine({ kind: 'drawing', index, elapsedTime: startElapsedTimeRef.current, newValue: config, changeAfterLineElapsedTime })
   }
 
   return { config, setConfig, startElapsedTimeRef, previewDrawings, setPreviewDrawings, isRecording, setIsRecording, handleConfirm }

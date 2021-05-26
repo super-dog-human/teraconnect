@@ -23,10 +23,10 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
   const { createAudio } = useAudioPlayer()
   const { putFile } = useFetch()
 
-  async function handleConfirm() {
+  async function handleConfirm(changeAfterLineElapsedTime) {
     setIsProcessing(true)
 
-    updateSpeech().catch(e => {
+    updateSpeech(changeAfterLineElapsedTime).catch(e => {
       setIsProcessing(false)
       showError({
         message: '音声データのURL生成に失敗しました。',
@@ -37,7 +37,7 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
     })
   }
 
-  async function updateSpeech() {
+  async function updateSpeech(changeAfterLineElapsedTime) {
     if (!tabConfig.url) {
       if (tabConfig.isSynthesis && tabConfig.subtitle) {
         const voice = await createSynthesisVoiceFile(lessonIDRef.current, tabConfig)
@@ -54,19 +54,19 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
     }
 
     if (tabConfig.url) {
-      updateSpeechWithAudio(tabConfig)
+      updateSpeechWithAudio(tabConfig, changeAfterLineElapsedTime)
     } else {
-      updateSpeechWithoutAudio(tabConfig)
+      updateSpeechWithoutAudio(tabConfig, changeAfterLineElapsedTime)
     }
   }
 
-  function updateSpeechWithoutAudio(config) {
-    updateLine('speech', index, initialConfig.elapsedTime, config)
+  function updateSpeechWithoutAudio(config, changeAfterLineElapsedTime) {
+    updateLine({ kind: 'speech', index, elapsedTime: initialConfig.elapsedTime, newValue: config, changeAfterLineElapsedTime })
     setIsProcessing(false)
     closeCallback()
   }
 
-  function updateSpeechWithAudio(config) {
+  function updateSpeechWithAudio(config, changeAfterLineElapsedTime) {
     // 音声の長さは読み込まないと分からないので以後の処理はコールバックになる
     createAudio(config.url, async audio => {
       audioCallback(audio).catch(e => {
@@ -74,7 +74,7 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
           message: '音声データの変換に失敗しました。',
           original: e,
           canDismiss: true,
-          callback: () => updateSpeechWithAudio(config),
+          callback: () => updateSpeechWithAudio(config, changeAfterLineElapsedTime),
         })
       })
     })
@@ -92,7 +92,7 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
         config.voiceID = parseInt(voice.fileID)
       }
 
-      updateLine('speech', index, initialConfig.elapsedTime, config)
+      updateLine({ kind: 'speech', index, elapsedTime: initialConfig.elapsedTime, newValue: config, changeAfterLineElapsedTime })
       setIsProcessing(false)
       closeCallback()
     }

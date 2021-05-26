@@ -34,13 +34,13 @@ export default function useSpeechLine({ speech, index }) {
       speech.voiceID = voice.id
       speech.url = voice.url
 
-      updateLine('speech', index, speech.elapsedTime, speech)
+      updateLine({ kind: 'speech', index, elapsedTime: speech.elapsedTime, newValue: speech })
     } else if (!speech.isSynthesis) {
       const voice = await fetchVoiceFileURL(speech.voiceID, lessonID)
       createAudio(voice.url)
       speech.url = voice.url
 
-      updateLine('speech', index, speech.elapsedTime, speech)
+      updateLine({ kind: 'speech', index, elapsedTime: speech.elapsedTime, newValue: speech })
     }
   }
 
@@ -70,7 +70,7 @@ export default function useSpeechLine({ speech, index }) {
     speech.subtitle = text
     if (speech.isSynthesis) speech.url = '' // テキストが更新されたら作成済みの音声も更新が必要なのでURLをクリア
 
-    updateLine('speech', index, speech.elapsedTime, speech)
+    updateLine({ kind: 'speech', index, elapsedTime: speech.elapsedTime, newValue: speech })
   }
 
   return { isLoading, isPlaying, handleSpeechClick, handleInputKeyDown, handleTextBlur }

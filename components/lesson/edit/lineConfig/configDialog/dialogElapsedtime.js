@@ -7,7 +7,7 @@ import PlainText from '../../../../plainText'
 import InputCheckbox from '../../../../form/inputCheckbox'
 import InputElapsedTime from './inputElapsedTime'
 
-export default function DialogElapsedTime({ elapsedTime, setConfig }) {
+const DialogElapsedTime = React.forwardRef(function dialogElapsedTime({ elapsedTime, setConfig }, ref) {
   const [minutesTime, setMinutesTime] = useState('')
   const [secondsTime, setSecondsTime] = useState('')
   const [millisecTime, setMillisecTime] = useState('')
@@ -60,7 +60,7 @@ export default function DialogElapsedTime({ elapsedTime, setConfig }) {
         <Spacer width='10' />
         {hasChangedElapsedTime &&
           <Flex>
-            <InputCheckbox id='involveAfteLinesCheckbox' size='18' borderColor='var(--border-gray)' checkColor='var(--soft-white)'>
+            <InputCheckbox id='involveAfteLinesCheckbox' size='18' borderColor='var(--border-gray)' checkColor='var(--soft-white)' ref={ref}>
               <PlainText size='11' color='var(--border-gray)'>後続の行にも時間変更を波及</PlainText>
             </InputCheckbox>
           </Flex>
@@ -69,4 +69,6 @@ export default function DialogElapsedTime({ elapsedTime, setConfig }) {
       <Spacer height='5' />
     </div>
   )
-}
+})
+
+export default DialogElapsedTime
