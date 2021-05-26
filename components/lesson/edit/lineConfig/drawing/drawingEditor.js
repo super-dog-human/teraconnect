@@ -5,6 +5,7 @@ import Container from '../../../../container'
 import ContainerSpacer from '../../../../containerSpacer'
 import SVGButton from '../../../../button/svgButton'
 import Player from '../../../../lesson/player/'
+import ColorPickerCube from '../../../../colorPickerCube'
 import RecordingIcon from '../../../../recordingIcon'
 import DrawingConfigButton from '../../../record/drawingController/drawingConfigButton'
 import DrawingLineSelector from '../../../record/drawingController/drawingLineWidthSelector'
@@ -15,17 +16,16 @@ import useDrawingEditor from '../../../../../libs/hooks/lesson/edit/useDrawingEd
 import useDrawingRecorder from '../../../../../libs/hooks/lesson/useDrawingRecorder'
 import { deepCopy } from '../../../../../libs/utils'
 
-import ColorPickerCube from '../../../../colorPickerCube'
-
 export default function DrawingEditor({ config, setConfig, sameTimeIndex, isRecording, setIsRecording }) {
+  const startElapsedTimeRef = useRef(config.elapsedTime)   // フッターの開始時間変更の影響は受けない
   const previewDurationSecRef = useRef(config.durationSec) // プレビューではdrawingsの時間だけ再生し、収録中はフル再生する
   const { bgImageURL, graphics, drawings, speeches } = useLessonEditorContext()
   const [previewDrawings, setPreviewDrawings] = useState(deepCopy(drawings))
   const containerRef = useRef()
   const { hasResize } = useResizeDetector(containerRef)
   const { drawingRef, isPlaying, setIsPlaying, isPreparing, isPlayerHover, getElapsedTime, playerElapsedTime, resetBeforeUndo, handleMouseOver, handleMouseLeave, handlePlayButtonClick, handleDragStart, handleSeekChange, } =
-    useLessonPlayer({ startElapsedTime: config.elapsedTime, durationSec: previewDurationSecRef.current, drawings: previewDrawings, speeches, sameTimeIndex })
-  const { setRecord } = useDrawingEditor({ isRecording, setIsRecording, isPlaying, setIsPlaying, sameTimeIndex, startElapsedTime: config.elapsedTime, getElapsedTime, previewDurationSecRef,
+    useLessonPlayer({ startElapsedTime: startElapsedTimeRef.current, durationSec: previewDurationSecRef.current, drawings: previewDrawings, speeches, sameTimeIndex })
+  const { setRecord } = useDrawingEditor({ isRecording, setIsRecording, isPlaying, setIsPlaying, sameTimeIndex, startElapsedTime: startElapsedTimeRef.current, getElapsedTime, previewDurationSecRef,
     setConfig, previewDrawings, setPreviewDrawings })
   const { enablePen, setEnablePen, enableEraser, setEnableEraser, undoDrawing, drawingColor, setDrawingColor, drawingLineWidth, setDrawingLineWidth, startDrawing, inDrawing, endDrawing, resetHistories } = useDrawingRecorder({ hasResize, drawingRef, setRecord })
 
