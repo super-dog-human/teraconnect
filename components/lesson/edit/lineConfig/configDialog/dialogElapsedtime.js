@@ -22,8 +22,11 @@ export default function DialogElapsedTime({ elapsedTime, setConfig }) {
   }, [])
 
   useEffect(() => {
+    if ([minutesTime, secondsTime, millisecTime].includes('')) return
+
     setConfig(config => {
-      config.elapsedTime = parseInt(minutesTime) * 60 + parseInt(secondsTime) + (parseInt(millisecTime) /  1000)
+      const elapsedTime = parseInt(minutesTime) * 60 + parseInt(secondsTime) + (parseInt(millisecTime) /  1000)
+      config.elapsedTime = parseFloat(elapsedTime.toFixed(3))
       return { ...config }
     })
   }, [minutesTime, secondsTime, millisecTime])
