@@ -4,6 +4,7 @@ import useDrawingPicture from './useDrawingPicture'
 import { deepCopy } from '../../utils'
 
 export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElapsedTime, elapsedTimeRef }) {
+  const hasInitialized = useRef(false)
   const canvasRef = useRef()
   const canvasCtxRef = useRef()
   const preStrokeRef = useRef({})
@@ -130,7 +131,9 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
 
   useEffect(() => {
     if (!drawings) return
+    if (hasInitialized.current) return
     setPictureBeforeDrawing()
+    hasInitialized.current = true
   }, [drawings])
 
   return { drawingRef: canvasRef, draw, initializeDrawing, finishDrawing, resetBeforeSeeking, resetBeforeUndo: setCompletedPicture }
