@@ -9,13 +9,14 @@ import fetch from 'isomorphic-unfetch'
 import useFetch from '../../useFetch'
 import { fetchVoiceFileURL, createVoice } from '../../../fetchResource'
 import { wavToMp3 } from '../../../audioUtils'
+import { deepCopy } from '../../../utils'
 
 export default function useSpeechConfig({ index, initialConfig, closeCallback }) {
   const router = useRouter()
   const lessonIDRef = useRef(parseInt(router.query.id))
   const { showError } = useErrorDialogContext()
   // propsをタブの初期値としてstateにコピーし、確定時にコピー元を更新する
-  const [tabConfig, setTabConfig] = useState({ ...initialConfig, caption: { ...initialConfig.caption } })
+  const [tabConfig, setTabConfig] = useState(deepCopy(initialConfig))
   const [isProcessing, setIsProcessing] = useState(false)
   const { updateLine } = useLessonEditorContext()
   const { createSynthesisVoiceFile } = useSynthesisVoice()
