@@ -11,10 +11,12 @@ export default function useDrawingEditor({ isRecording, setIsRecording, isPlayin
 
   function startRecording() {
     hasStartRecording.current = true
-    previewDurationSecRef.current = maxLessonDurationSec - startElapsedTime
+
+    previewDurationSecRef.current = parseFloat((maxLessonDurationSec - startElapsedTime).toFixed(3))
 
     const elapsedTime = getElapsedTime()
     reduceDrawingsUntilElapsedTime(elapsedTime)
+    setIsPlaying(true) // 音声や画像を再生しながら収録を行う
   }
 
   function reduceDrawingsUntilElapsedTime(elapsedTime) {
@@ -101,7 +103,6 @@ export default function useDrawingEditor({ isRecording, setIsRecording, isPlayin
   useEffect(() => {
     if (isRecording) {
       startRecording()
-      setIsPlaying(true) // 音声や画像を再生しながら収録を行う
     } else {
       if (!hasStartRecording.current) return // 初回読み込み時は何もしない
       setIsPlaying(false)
