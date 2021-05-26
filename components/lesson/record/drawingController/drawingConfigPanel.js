@@ -26,7 +26,7 @@ export default function DrawingConfigPanel({ disabled, color, setColor, lineWidt
   }
 
   function handleWidthChange(e) {
-    setLineWidth(e.target.dataset.width)
+    setLineWidth(parseInt(e.target.dataset.width))
   }
 
   const contextMenuStyle = css({
@@ -64,9 +64,9 @@ export default function DrawingConfigPanel({ disabled, color, setColor, lineWidt
               <Container width='120'>
                 <Spacer height='20' />
                 <Container width='100'>
-                  <DrawingLineSelector height='2' lineWidth='5' selected={lineWidth === '5'} onClick={handleWidthChange} />
-                  <DrawingLineSelector height='4' lineWidth='10' selected={lineWidth === '10'} onClick={handleWidthChange} />
-                  <DrawingLineSelector height='7' lineWidth='20' selected={lineWidth === '20'} onClick={handleWidthChange} />
+                  <DrawingLineSelector height='2' lineWidth='5' selected={lineWidth === 5} onClick={handleWidthChange} />
+                  <DrawingLineSelector height='4' lineWidth='10' selected={lineWidth === 10} onClick={handleWidthChange} />
+                  <DrawingLineSelector height='7' lineWidth='20' selected={lineWidth === 20} onClick={handleWidthChange} />
                 </Container>
                 <Spacer height='20' />
                 {!enableEraser &&
