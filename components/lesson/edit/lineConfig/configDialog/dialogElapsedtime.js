@@ -18,7 +18,7 @@ export default function DialogElapsedTime({ elapsedTime, setConfig }) {
     setMinutesTime(minutes.toString())
     const seconds = Math.floor(elapsedTime - minutes * 60).toString()
     setSecondsTime(seconds.padStart(2, '0'))
-    const milliSeconds = (elapsedTime.toString().split('.')[1] || 0).toString()
+    const milliSeconds = (parseFloat((elapsedTime - Math.floor(elapsedTime)).toFixed(3)) * 1000).toString()
     setMillisecTime(milliSeconds.padStart(3, '0'))
   }, [])
 
