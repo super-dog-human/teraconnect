@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import Container from '../../../../container'
 import ContainerSpacer from '../../../../containerSpacer'
 import AlignContainer from '../../../../alignContainer'
@@ -7,10 +7,12 @@ import IconButton from '../../../../button/iconButton'
 import DragHandler from '../../../../dragHandler'
 import DialogFooter from '../configDialog/dialogFooter'
 import DrawingEditor from './drawingEditor'
+import DrawingActionEditor from './drawingActionEditor'
 import useDrawingConfig from '../../../../../libs/hooks/lesson/edit/useDrawingConfig'
 
 export default function Drawing({ index, initialConfig, closeCallback }) {
-  const { config, setConfig, startElapsedTimeRef, previewDrawings, setPreviewDrawings, isRecording, setIsRecording, handleConfirm } = useDrawingConfig({ index, initialConfig, closeCallback })
+  const { config, setConfig, selectedAction, setSelectedAction, startElapsedTimeRef, previewDrawings, setPreviewDrawings, isRecording, setIsRecording, handleConfirm } = useDrawingConfig({ index, initialConfig, closeCallback })
+  const initialActionRef = useRef(selectedAction)
 
   return (
     <>
@@ -22,7 +24,13 @@ export default function Drawing({ index, initialConfig, closeCallback }) {
         </AlignContainer>
       </DragHandler>
 
-      <DrawingEditor config={config} startElapsedTime={startElapsedTimeRef.current} sameTimeIndex={index} isRecording={isRecording} setIsRecording={setIsRecording} drawings={previewDrawings} setDrawings={setPreviewDrawings} />
+      {initialActionRef.current === 'draw' &&
+        <DrawingEditor config={config} selectedAction={selectedAction} setSelectedAction={setSelectedAction} startElapsedTime={startElapsedTimeRef.current} sameTimeIndex={index}
+          isRecording={isRecording} setIsRecording={setIsRecording} drawings={previewDrawings} setDrawings={setPreviewDrawings} />
+      }
+      {initialActionRef.current !== 'draw' &&
+        <DrawingActionEditor initialAction={initialActionRef.current} selectedAction={selectedAction} setSelectedAction={setSelectedAction} />
+      }
       <Spacer height='30' />
 
       <Container height='60'>

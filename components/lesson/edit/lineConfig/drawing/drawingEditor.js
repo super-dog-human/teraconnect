@@ -9,13 +9,14 @@ import ColorPickerCube from '../../../../colorPickerCube'
 import RecordingIcon from '../../../../recordingIcon'
 import DrawingConfigButton from '../../../record/drawingController/drawingConfigButton'
 import DrawingLineSelector from '../../../record/drawingController/drawingLineWidthSelector'
+import ActionSelector from './actionSelector'
 import { useLessonEditorContext } from '../../../../../libs/contexts/lessonEditorContext'
 import useResizeDetector from '../../../../../libs/hooks/useResizeDetector'
 import useLessonPlayer from '../../../../../libs/hooks/lesson/useLessonPlayer'
 import useDrawingEditor from '../../../../../libs/hooks/lesson/edit/useDrawingEditor'
 import useDrawingRecorder from '../../../../../libs/hooks/lesson/useDrawingRecorder'
 
-export default function DrawingEditor({ config, startElapsedTime, sameTimeIndex, isRecording, setIsRecording, drawings, setDrawings }) {
+export default function DrawingEditor({ config, selectedAction, setSelectedAction, startElapsedTime, sameTimeIndex, isRecording, setIsRecording, drawings, setDrawings }) {
   const previewDurationSecRef = useRef(config.durationSec) // プレビューではdrawingsの時間だけ再生し、収録中はフル再生する
   const { bgImageURL, graphics, speeches } = useLessonEditorContext()
   const containerRef = useRef()
@@ -54,52 +55,58 @@ export default function DrawingEditor({ config, startElapsedTime, sameTimeIndex,
   return (
     <div ref={containerRef}>
       <ContainerSpacer left='50' right='50'>
-        <Flex>
-          <Container width='500' height='281'>
-            <Player isPreparing={isPreparing} durationSec={previewDurationSecRef.current} bgImageURL={bgImageURL} graphics={graphics} drawings={drawings}
-              drawingRef={drawingRef} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing}
-              isPlayerHover={isPlayerHover} controllerInvisible={!isPlayerHover} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onPlayButtonClick={handlePlayButtonClick}
-              disabledControl={isRecording} playerElapsedTime={playerElapsedTime}
-              maxTime={parseFloat(previewDurationSecRef.current.toFixed(2))} onDragStart={handleDragStart} onSeekChange={handleSeekChange} />
-          </Container>
-          <ContainerSpacer top='30' left='20'>
-            <Flex>
-              <Container width='28' height='28'>
-                <SVGButton padding='3' disabled={isPlaying && !isRecording} onClick={handleRecording}>
-                  <RecordingIcon isRecording={isRecording} />
-                </SVGButton>
-              </Container>
-              <Spacer width= '10' />
+        <Container width='500'>
+          <ActionSelector initialAction='draw' selectedAction={selectedAction} setSelectedAction={setSelectedAction} disabled={isRecording} />
+        </Container>
+        <Spacer height= '25' />
+        <Container invisible={selectedAction !== 'draw'}>
+          <Flex>
+            <Container width='500' height='281'>
+              <Player isPreparing={isPreparing} durationSec={previewDurationSecRef.current} bgImageURL={bgImageURL} graphics={graphics} drawings={drawings}
+                drawingRef={drawingRef} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing}
+                isPlayerHover={isPlayerHover} controllerInvisible={!isPlayerHover} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onPlayButtonClick={handlePlayButtonClick}
+                disabledControl={isRecording} playerElapsedTime={playerElapsedTime}
+                maxTime={parseFloat(previewDurationSecRef.current.toFixed(2))} onDragStart={handleDragStart} onSeekChange={handleSeekChange} />
+            </Container>
+            <ContainerSpacer top='10' left='20'>
               <Flex>
-                <DrawingConfigButton name='drawing' disabled={!isRecording} isSelected={enablePen && isRecording} onClick={handlePen} />
+                <Container width='28' height='28'>
+                  <SVGButton padding='3' disabled={isPlaying && !isRecording} onClick={handleRecording}>
+                    <RecordingIcon isRecording={isRecording} />
+                  </SVGButton>
+                </Container>
+                <Spacer width= '10' />
+                <Flex>
+                  <DrawingConfigButton name='drawing' disabled={!isRecording} isSelected={enablePen && isRecording} onClick={handlePen} />
+                </Flex>
               </Flex>
-            </Flex>
-            <Spacer height='10' />
-            <Flex>
-              <Spacer width='38' />
-              <DrawingConfigButton name='eraser' disabled={!isRecording} isSelected={enableEraser && isRecording} onClick={handleEraser} />
-            </Flex>
-            <Spacer height='10' />
-            <Flex>
-              <Spacer width='38' />
-              <DrawingConfigButton name='undo' disabled={!isRecording} onClick={handleUndo} />
-            </Flex>
-            <Spacer height='15' />
-            <Flex justifyContent='center'>
-              <Container width='70'>
-                <DrawingLineSelector height='2' lineWidth='5' selected={drawingLineWidth === 5} onClick={handleWidthChange} />
-                <DrawingLineSelector height='4' lineWidth='10' selected={drawingLineWidth === 10} onClick={handleWidthChange} />
-                <DrawingLineSelector height='7' lineWidth='20' selected={drawingLineWidth === 20} onClick={handleWidthChange} />
-              </Container>
-            </Flex>
-            <Spacer height='20' />
-            <Flex>
-              {!enableEraser &&
-                <ColorPickerCube initialColor={drawingColor} onChange={setDrawingColor} size='20' />
-              }
-            </Flex>
-          </ContainerSpacer>
-        </Flex>
+              <Spacer height='10' />
+              <Flex>
+                <Spacer width='38' />
+                <DrawingConfigButton name='eraser' disabled={!isRecording} isSelected={enableEraser && isRecording} onClick={handleEraser} />
+              </Flex>
+              <Spacer height='10' />
+              <Flex>
+                <Spacer width='38' />
+                <DrawingConfigButton name='undo' disabled={!isRecording} onClick={handleUndo} />
+              </Flex>
+              <Spacer height='30' />
+              <Flex justifyContent='center'>
+                <Container width='70'>
+                  <DrawingLineSelector height='2' lineWidth='5' selected={drawingLineWidth === 5} onClick={handleWidthChange} />
+                  <DrawingLineSelector height='4' lineWidth='10' selected={drawingLineWidth === 10} onClick={handleWidthChange} />
+                  <DrawingLineSelector height='7' lineWidth='20' selected={drawingLineWidth === 20} onClick={handleWidthChange} />
+                </Container>
+              </Flex>
+              <Spacer height='20' />
+              <Flex>
+                {!enableEraser &&
+                  <ColorPickerCube initialColor={drawingColor} onChange={setDrawingColor} size='20' />
+                }
+              </Flex>
+            </ContainerSpacer>
+          </Flex>
+        </Container>
       </ContainerSpacer>
     </div>
   )
