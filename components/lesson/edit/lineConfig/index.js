@@ -8,12 +8,17 @@ import Drawing from './drawing/'
 import Graphic from './graphic/'
 import Music from './music/'
 import Speech from './speech/'
+import { useLessonEditorContext } from '../../../../libs/contexts/lessonEditorContext'
 
 export default function LineConfig({ config }) {
   const[isShow, setIsShow] = useState(false)
+  const { deleteLine } = useLessonEditorContext()
 
   function handleClose() {
     setIsShow(false)
+    if (config.action !== 'newLine' && config.isPending) {
+      deleteLine(config.action, config.index, config.line.elapsedTime)
+    }
     config.closeCallback()
   }
 
