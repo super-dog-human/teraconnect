@@ -4,7 +4,7 @@ import { css } from '@emotion/core'
 
 const InputRadio = React.forwardRef(function inputRadio(props, ref) {
   const { id, size, color, children, ...inputProps } = props
-  const checkedCirclePx = parseInt(size * 0.6)
+  const checkedCirclePx = parseInt(size * 0.5)
 
   const pseudoRadioButtonStyle = css({
     boxSizing: 'border-box',
@@ -13,17 +13,17 @@ const InputRadio = React.forwardRef(function inputRadio(props, ref) {
     position: 'relative',
     paddingLeft: children ? `${size * 1.5}px` : `${size}px`,
     lineHeight: `${size}px`,
-    width: 'auto',
     ':before': {
       border: `1px solid ${color}`,
       borderRadius: '50%',
       content: '""',
       display: 'block',
       position: 'absolute',
-      top: 0,
+      top: '50%',
       left: 0,
-      width: `${size}px`,
-      height: `${size}px`,
+      marginTop: `-${(size - 2) / 2}px`,
+      width: `${size - 2}px`,
+      height: `${size - 2}px`,
     },
     ':after': {
       border: 'none',
@@ -32,8 +32,9 @@ const InputRadio = React.forwardRef(function inputRadio(props, ref) {
       content: '""',
       display: 'block',
       position: 'absolute',
-      top: `calc(50% - ${(size - checkedCirclePx) / 2 + 1}px)`, // border1pxを加算
-      left: `${(size - checkedCirclePx) / 2 + 1}px`,            // 同上
+      top: '50%',
+      left: `${(size - checkedCirclePx) / 2}px`,
+      marginTop: `-${(checkedCirclePx - 2) / 2}px`,
       opacity: 0,
       width: `${checkedCirclePx}px`,
       height: `${checkedCirclePx}px`,
