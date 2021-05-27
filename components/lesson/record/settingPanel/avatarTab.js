@@ -24,7 +24,6 @@ export default function AvatarTab({ avatars, setConfig }) {
   }
 
   function handleColorChange(color) {
-    console.log(color)
     setLightColor(color)
     setConfig({ lightColor: color })
     setRecord({ kind: 'avatarLightColor', value: color })

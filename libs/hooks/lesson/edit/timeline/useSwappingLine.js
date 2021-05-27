@@ -69,7 +69,6 @@ export default function useSwappingLine({ lastTimeline, sortedElapsedTimes, maxD
   function shiftDrawingElapsedTime(material, offsetTime) {
     if (!material.units) return
     material.units.forEach(unit => {
-      console.log(unit.elapsedTime, offsetTime)
       unit.elapsedTime = calcTime(unit.elapsedTime, offsetTime)
     })
   }

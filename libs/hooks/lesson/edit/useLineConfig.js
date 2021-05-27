@@ -38,7 +38,6 @@ export default function useLineConfig() {
     }
 
     function deleteCurrentLine() {
-      console.log(kind, line.elapsedTime)
       showDialog({
         title: '行の削除',
         message: '行を削除しますか？',
