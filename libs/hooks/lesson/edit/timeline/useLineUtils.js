@@ -22,11 +22,11 @@ export default function useLineUtils({ avatars, drawings, embeddings, graphics, 
 
   function updateMaterial(setter, currentValue, newValue) {
     setter(materials => {
-      materials.map(m => (m === currentValue) ? { ...newValue } : m)
+      const updatedMaterials = materials.map(m => (m === currentValue) ? { ...newValue } : m)
       if (currentValue.elapsedTime === newValue.elapsedTime) {
-        return [...materials]
+        return updatedMaterials
       } else {
-        return [...materials.sort((a, b) => a.elapsedTime - b.elapsedTime)]
+        return updatedMaterials.sort((a, b) => a.elapsedTime - b.elapsedTime)
       }
     })
   }
