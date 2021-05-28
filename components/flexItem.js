@@ -4,7 +4,7 @@ import { css } from '@emotion/core'
 
 export default function FlexItem({ children, column, flex, flexShrink, flexGrow, flexBasis }) {
   const bodyStyle = css({
-    width: `calc(100% / ${column})`,
+    width: column && `calc(100% / ${column})`,
     flex,
     flexShrink,
     flexGrow,
