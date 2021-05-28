@@ -1,71 +1,79 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/core'
+import PlainText from '../../../plainText'
 
 export default function ActionLabel({ kind, action }) {
   const [label, setLabel] = useState('')
 
   useEffect(() => {
-    switch(kind) {
-    case 'avatar':
-      avatarLabel()
-      return
-    case 'drawing':
-      drawingLabel()
-      return
-    case 'graphic':
-      graphicLabel()
-      return
-    case 'music':
-      musicLabel()
-      return
-    }
+    setLabel(labelByKind())
   }, [kind, action])
 
+  function labelByKind() {
+    switch(kind) {
+    case 'avatar':
+      return avatarLabel()
+    case 'drawing':
+      return drawingLabel()
+    case 'embedding':
+      return embeddingLabel()
+    case 'graphic':
+      return graphicLabel()
+    case 'music':
+      return musicLabel()
+    }
+  }
+
   function avatarLabel() {
-    setLabel('アバター移動')
+    return 'アバター移動'
   }
 
   function drawingLabel() {
     switch(action) {
     case 'clear':
-      setLabel('板書のクリア')
-      return
+      return '板書のクリア'
     case 'show':
-      setLabel('板書の再表示')
-      return
+      return '板書の再表示'
     case 'hide':
-      setLabel('板書の非表示')
-      return
+      return '板書の非表示'
+    }
+  }
+
+  function embeddingLabel() {
+    switch(action) {
+    case 'show':
+      return '埋め込み動画の再生'
+    case 'hide':
+      return '埋め込み動画の停止'
     }
   }
 
   function graphicLabel() {
     if (action === 'hide') {
-      setLabel('画像の非表示')
+      return '画像の非表示'
+    } else {
+      return ''
     }
   }
 
   function musicLabel() {
     switch(action) {
     case 'start':
-      setLabel('BGMの開始')
-      return
+      return 'BGMの開始'
     case 'stop':
-      setLabel('BGMの停止')
-      return
+      return 'BGMの停止'
     }
   }
 
   return (
-    <div css={bodyStyle}><span>{label}</span></div>
+    <div css={bodyStyle}>
+      <PlainText color='var(--dark-gray)' size='14' lineHeight='55'>{label}</PlainText>
+    </div>
   )
 }
 
 const bodyStyle = css({
-  color: 'var(--dark-gray)',
-  fontSize: '14px',
-  lineHeight: '55px',
   width: '100%',
   height: '55px',
 })
