@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import { css } from '@emotion/core'
 import InputText from '../../../form/inputText'
 
-const SpeechInputText = React.forwardRef(function SpeechInputText({ defaultValue, onKeyDown, onBlur, readOnly, isFocus }, ref) {
+const SpeechInputText = React.forwardRef(function speechInputText({ defaultValue, onKeyDown, onBlur, readOnly, isFocus }, ref) {
   useEffect(() => {
     if (!isFocus) return
     ref.current.focus()
