@@ -19,7 +19,7 @@ export default function ActionSelector({ initialAction, selectedAction, setSelec
   return (
     <Flex>
       {labels.filter(l => initialAction === 'draw' ? l : l.action !== 'draw').map((label, i) => (
-        <div key={i}>
+        <React.Fragment key={i}>
           <Flex alignItems='center'>
             <InputRadio id={`drawing${label.action}`} name='drawingLine' data-action={label.action} size='16' color='var(--soft-white)'
               checked={selectedAction === label.action} disabled={disabled} onChange={handleChange}>
@@ -27,7 +27,7 @@ export default function ActionSelector({ initialAction, selectedAction, setSelec
             </InputRadio>
             <Spacer width='30' />
           </Flex>
-        </div>
+        </React.Fragment>
       ))}
     </Flex>
   )

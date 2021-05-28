@@ -31,7 +31,7 @@ export default function Timeline() {
       <LineConfig lineConfig={lineConfig} setLineConfig={setLineConfig} />
       <DragSwappable onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd} onDrop={handleDrop}>
         {Object.keys(timeline).sort((a, b) => a - b).map((elapsedTime, i) => (
-          <div key={i}>
+          <React.Fragment key={i}>
             <div css={lineStyle}>
               <ElapsedTime elapsedTime={elapsedTime} />
               <div css={lineBodyStyle}>
@@ -52,7 +52,7 @@ export default function Timeline() {
             {Object.keys(timeline).length - 1 > i && <ContainerSpacer left='65'>
               <Hr color='#dedede' />
             </ContainerSpacer>}
-          </div>
+          </React.Fragment>
         ))}
       </DragSwappable>
       { durationSec > 600 && <PlainText color='red'>収録時間が10分を超えています。</PlainText>}
