@@ -37,10 +37,10 @@ export default function useDrawingPicture({ canvasRef, drawings, startElapsedTim
 
     removeUndoPair(drawingsInDuration)
 
-    const lastClearIndex = [...drawingsInDuration].reverse().findIndex(d => d.action === 'clear')
+    const lastClearIndex = [...drawingsInDuration].slice().reverse().findIndex(d => d.action === 'clear')
     if (lastClearIndex >= 0) {
       // 直近のclearより前の描画は意味がないので削除。最後からのインデックスなので合計数から差し引く
-      drawingsInDuration.splice(0, drawingsInDuration.length - 1 - lastClearIndex)
+      drawingsInDuration.splice(0, drawingsInDuration.length - lastClearIndex)
     }
 
     return drawingsInDuration
