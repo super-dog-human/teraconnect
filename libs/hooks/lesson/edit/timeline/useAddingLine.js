@@ -55,7 +55,7 @@ export default function useAddingLine({ lessonRef, maxDurationSecInLine, lastTim
     return {
       voiceID: '',
       elapsedTime,
-      durationSec: 10.0,
+      durationSec: 0,
       subtitle: '',
       caption: {},
       url: '',
