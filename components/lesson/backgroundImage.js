@@ -3,10 +3,10 @@ import React from 'react'
 import Image from 'next/image'
 import { css } from '@emotion/core'
 
-export default function LessonBackgroundImage({ src }) {
+export default function LessonBackgroundImage({ url }) {
   return (
     <div css={bodyStyle} className="bg-image-z">
-      {src && <Image src={src} width={1280} height={720} />}
+      {url && <Image src={url} width={1280} height={720} />}
     </div>
   )
 }

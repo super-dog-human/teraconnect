@@ -54,7 +54,7 @@ const LessonRecord = React.forwardRef(function lessonRecord({ lesson, hasResize 
           <Aspect16To9Container>
             <LessonRecordLoadingIndicator isLoading={isLoading} size={15} />
             <VoiceSpectrum micDeviceID={micDeviceID} isShow={isShowVoiceSpectrum} setIsShow={setIsShowVoiceSpectrum} />
-            <LessonBackgroundImage src={bgImageURL} />
+            <LessonBackgroundImage url={bgImageURL} />
             <LessonGraphic graphic={selectedGraphic} />
             <LessonAvatar ref={avatarRef} onMouseDown={startDragging} onMouseMove={inDragging} onMouseUp={endDragging} onMouseLeave={endDragging}
               onTouchStart={startDragging} onTouchMove={inDragging} onTouchEnd={endDragging} onTouchCancel={endDragging} />
