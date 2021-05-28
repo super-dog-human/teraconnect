@@ -78,7 +78,7 @@ export default function useAddingLine({ lessonRef, maxDurationSecInLine, lastTim
 
     let sameTimeIndex
     targetMaterials(kind).setter(materials => {
-      const sameTimeLastIndex = materials.reverse().findIndex(m => m.elapsedTime === newLine.elapsedTime)
+      const sameTimeLastIndex = materials.slice().reverse().findIndex(m => m.elapsedTime === newLine.elapsedTime)
       if (sameTimeLastIndex >= 0) {
         sameTimeIndex = materials.length - sameTimeLastIndex
         materials.splice(sameTimeIndex, 0, newLine) // 同じ時間帯があればその一番最後に要素を追加する
