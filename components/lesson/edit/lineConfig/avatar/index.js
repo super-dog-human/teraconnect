@@ -1,21 +1,19 @@
 import React from 'react'
 import Container from '../../../../container'
 import ContainerSpacer from '../../../../containerSpacer'
-import AlignContainer from '../../../../alignContainer'
-import IconButton from '../../../../button/iconButton'
-import DragHandler from '../../../../dragHandler'
+import DialogHeader from '../configDialog/dialogHeader'
 import DialogFooter from '../configDialog/dialogFooter'
 
-export default function Avatar(props) {
+export default function Avatar({ index, initialConfig, closeCallback }) {
   const tabConfig = { elapsedTime: 0 }
   const isProcessing = false
 
   function handleCancel() {
-    props.closeCallback(true)
+    closeCallback(true)
   }
 
   function handleConfirm() {
-    props.closeCallback()
+    closeCallback()
   }
 
   function setConfig() {
@@ -24,13 +22,8 @@ export default function Avatar(props) {
 
   return (
     <>
-      <DragHandler>
-        <AlignContainer textAlign='right'>
-          <Container width='36' height='36' display='inline-block'>
-            <IconButton name={'close'} padding='10' onClick={handleCancel} disabled={isProcessing} />
-          </Container>
-        </AlignContainer>
-      </DragHandler>
+      <DialogHeader onCloseClick={handleCancel} closeButtonDisabled={isProcessing} />
+
       <Container height='60'>
         <ContainerSpacer left='50' right='50'>
           <DialogFooter elapsedTime={tabConfig.elapsedTime} setConfig={setConfig} onConfirm={handleConfirm} onCancel={handleCancel} isProcessing={isProcessing} />

@@ -8,8 +8,7 @@ import FlexItem from '../../../../flexItem'
 import PlainText from '../../../../plainText'
 import LabelButton from '../../../../button/labelButton'
 import Icon from '../../../../icon'
-import IconButton from '../../../../button/iconButton'
-import DragHandler from '../../../../dragHandler'
+import DialogHeader from '../configDialog/dialogHeader'
 import useAddingNewLing from '../../../../../libs/hooks/lesson/edit/timeline/useAddingNewLine'
 
 export default function NewLine({ elapsedTime, setLineConfig }) {
@@ -17,13 +16,7 @@ export default function NewLine({ elapsedTime, setLineConfig }) {
 
   return (
     <>
-      <DragHandler>
-        <AlignContainer textAlign='right'>
-          <Container width='36' height='36' display='inline-block'>
-            <IconButton name={'close'} padding='10' onClick={handleCancel} />
-          </Container>
-        </AlignContainer>
-      </DragHandler>
+      <DialogHeader onCloseClick={handleCancel} />
       <ContainerSpacer top='0' left='130' right='130'>
         <Flex flexWrap='wrap'>
           {addLineButtons.map((b, i) => (

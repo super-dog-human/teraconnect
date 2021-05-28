@@ -1,10 +1,8 @@
 import React, { useRef } from 'react'
 import Container from '../../../../container'
 import ContainerSpacer from '../../../../containerSpacer'
-import AlignContainer from '../../../../alignContainer'
 import Spacer from '../../../../spacer'
-import IconButton from '../../../../button/iconButton'
-import DragHandler from '../../../../dragHandler'
+import DialogHeader from '../configDialog/dialogHeader'
 import DialogFooter from '../configDialog/dialogFooter'
 import DrawingEditor from './drawingEditor'
 import DrawingActionEditor from './drawingActionEditor'
@@ -16,13 +14,7 @@ export default function Drawing({ index, initialConfig, closeCallback }) {
 
   return (
     <>
-      <DragHandler>
-        <AlignContainer textAlign='right'>
-          <Container width='36' height='36' display='inline-block'>
-            <IconButton name={'close'} padding='10' onClick={handleCancel} disabled={isRecording} />
-          </Container>
-        </AlignContainer>
-      </DragHandler>
+      <DialogHeader onCloseClick={handleCancel} closeButtonDisabled={isRecording} />
 
       {initialActionRef.current === 'draw' &&
         <DrawingEditor config={config} selectedAction={selectedAction} setSelectedAction={setSelectedAction} startElapsedTime={startElapsedTimeRef.current} sameTimeIndex={index}
