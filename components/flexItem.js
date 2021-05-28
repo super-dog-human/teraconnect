@@ -2,11 +2,13 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-export default function FlexItem({ children, shrink='1', grow='0', basis='auto' }) {
+export default function FlexItem({ children, column, flex, flexShrink, flexGrow, flexBasis }) {
   const bodyStyle = css({
-    flexShrink: shrink,
-    flexGrow: grow,
-    flexBasis: basis,
+    width: `calc(100% / ${column})`,
+    flex,
+    flexShrink,
+    flexGrow,
+    flexBasis,
   })
 
   return (
