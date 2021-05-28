@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Container from '../../../../container'
 import ContainerSpacer from '../../../../containerSpacer'
 import AlignContainer from '../../../../alignContainer'
@@ -10,70 +10,26 @@ import LabelButton from '../../../../button/labelButton'
 import Icon from '../../../../icon'
 import IconButton from '../../../../button/iconButton'
 import DragHandler from '../../../../dragHandler'
-import { useLessonEditorContext } from '../../../../../libs/contexts/lessonEditorContext'
+import useAddingNewLing from '../../../../../libs/hooks/lesson/edit/timeline/useAddingNewLine'
 
-const buttons = [
-  { kind: 'speech',   label: '音声',      description: 'マイクで音声を録音したり、合成音声を作成します。' },
-  { kind: 'graphic',  label: '画像',      description: 'アップロードした画像を表示・非表示します。' },
-  { kind: 'drawing',  label: '板書',      description: '自由な線を描いたり消したりします。' },
-  { kind: 'avatar',   label: 'アバター',   description: 'アバターの位置や大きさを変更します。' },
-  { kind: 'embedding', label: '外部リンク', description: 'YouTubeやGeoGebraを埋め込みます。' },
-  { kind: 'music',    label: 'BGM',      description: '音楽を再生・停止します。' },
-]
-
-export default function NewLine({ elapsedTime, closeCallback }) {
-  const [description, setDescription] = useState('')
-  const { addAvatarLine, addDrawingLine, addEmbedding, addGraphicLine, addMusicLine, addSpeechLine } = useLessonEditorContext()
-
-  function handleMouseEnter(e) {
-    setDescription(buttons[e.currentTarget.dataset.index].description)
-  }
-
-  function handleMouseLeave() {
-    setDescription('')
-  }
-
-  function handleClick(e) {
-    const kind = buttons[e.currentTarget.dataset.index].kind
-    switch(kind) {
-    case 'avatar':
-      addAvatarLine(elapsedTime)
-      break
-    case 'drawing':
-      addDrawingLine(elapsedTime)
-      break
-    case 'embedding':
-      addEmbedding(elapsedTime)
-      break
-    case 'graphic':
-      addGraphicLine(elapsedTime)
-      break
-    case 'music':
-      addMusicLine(elapsedTime)
-      break
-    case 'speech':
-      addSpeechLine(elapsedTime)
-      break
-    }
-
-    closeCallback()
-  }
+export default function NewLine({ elapsedTime, setLineConfig }) {
+  const { addLineButtons, buttonDescription, handleMouseEnter, handleMouseLeave, handleButtonClick, handleCancel } = useAddingNewLing({ elapsedTime, setLineConfig })
 
   return (
     <>
       <DragHandler>
         <AlignContainer textAlign='right'>
           <Container width='36' height='36' display='inline-block'>
-            <IconButton name={'close'} padding='10' onClick={closeCallback} />
+            <IconButton name={'close'} padding='10' onClick={handleCancel} />
           </Container>
         </AlignContainer>
       </DragHandler>
       <ContainerSpacer top='0' left='130' right='130'>
         <Flex flexWrap='wrap'>
-          {buttons.map((b, i) => (
-            <>
+          {addLineButtons.map((b, i) => (
+            <React.Fragment key={i}>
               <FlexItem column='3' flexGrow='2'>
-                <LabelButton hoverBorderColor='var(--text-gray)' data-index={i} onClick={handleClick} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                <LabelButton hoverBorderColor='var(--text-gray)' data-index={i} onClick={handleButtonClick} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                   <Flex>
                     <Container width='20'>
                       <Icon name={'timeline-' + b.kind} />
@@ -93,14 +49,14 @@ export default function NewLine({ elapsedTime, closeCallback }) {
                   <Spacer height='10' />
                 </FlexItem>
               }
-            </>
+            </React.Fragment>
           ))}
         </Flex>
       </ContainerSpacer>
       <ContainerSpacer top='20' bottom='30' left='60' right='60'>
         <Container height='30'>
           <AlignContainer textAlign='center'>
-            <PlainText size='13' color='var(--soft-white)'>{description}</PlainText>
+            <PlainText size='13' color='var(--soft-white)'>{buttonDescription}</PlainText>
           </AlignContainer>
         </Container>
       </ContainerSpacer>

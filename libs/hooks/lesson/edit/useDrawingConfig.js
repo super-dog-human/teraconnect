@@ -10,6 +10,10 @@ export default function useDrawingConfig({ index, initialConfig, closeCallback }
   const [config, setConfig] = useState(initialConfig)
   const [previewDrawings, setPreviewDrawings] = useState(deepCopy(drawings))
 
+  function handleCancel() {
+    closeCallback(true)
+  }
+
   function handleConfirm(changeAfterLineElapsedTime) {
     updateDrawing(changeAfterLineElapsedTime)
     closeCallback()
@@ -37,5 +41,5 @@ export default function useDrawingConfig({ index, initialConfig, closeCallback }
     updateLine({ kind: 'drawing', index, elapsedTime: startElapsedTimeRef.current, newValue: config, changeAfterLineElapsedTime })
   }
 
-  return { config, setConfig, selectedAction, setSelectedAction, startElapsedTimeRef, previewDrawings, setPreviewDrawings, isRecording, setIsRecording, handleConfirm }
+  return { config, setConfig, selectedAction, setSelectedAction, startElapsedTimeRef, previewDrawings, setPreviewDrawings, isRecording, setIsRecording, handleConfirm, handleCancel }
 }

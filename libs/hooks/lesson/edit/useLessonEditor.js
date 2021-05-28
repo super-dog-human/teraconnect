@@ -20,13 +20,15 @@ export default function useLessonEditor() {
   const [drawings, setDrawings] = useState([])
   const [graphics, setGraphics] = useState([])
   const [graphicURLs, setGraphicURLs] = useState({})
+  const [embeddings, setEmbeddings] = useState([])
   const [musics, setMusics] = useState([])
   const [speeches, setSpeeches] = useState([])
   const { fetchWithAuth } = useFetch()
   const { showError } = useErrorDialogContext()
   const { shiftElapsedTime, updateMaterial, deleteMaterial, lastTimeline, sortedElapsedTimes, maxDurationSecInLine, nextElapsedTime, calcTime, targetMaterials, allMaterialNames, allMaterials } =
-    useLineUtils({ avatars, drawings, graphics, musics, speeches, setAvatars, setDrawings, setGraphics, setSpeeches, setMusics, timeline })
-  const { addAvatarLine, addDrawingLine, addEmbedding, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast } = useAddingLine({ lessonRef, maxDurationSecInLine, lastTimeline, targetMaterials })
+    useLineUtils({ avatars, drawings, embeddings, graphics, musics, speeches, setAvatars, setDrawings, setEmbeddings, setGraphics, setSpeeches, setMusics, timeline })
+  const { addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast } =
+    useAddingLine({ lessonRef, maxDurationSecInLine, lastTimeline, targetMaterials })
   const { updateLine } = useUpdatingLine({ shiftElapsedTime, updateMaterial, targetMaterials })
   const { deleteLine } = useDeletionLine({ shiftElapsedTime, nextElapsedTime, deleteMaterial, targetMaterials, allMaterialNames })
   const { swapLine } = useSwappingLine({ lastTimeline, sortedElapsedTimes, maxDurationSecInLine, calcTime, targetMaterials, allMaterialNames })
@@ -34,7 +36,7 @@ export default function useLessonEditor() {
   async function fetchResources(lesson) {
     lessonRef.current = lesson
 
-    fetchMaterial({ lesson, fetchWithAuth, setDurationSec, setVoiceSynthesisConfig, setBgImageURL, setAvatars, setDrawings, setGraphics, setGraphicURLs, setMusics, setSpeeches })
+    fetchMaterial({ lesson, fetchWithAuth, setDurationSec, setVoiceSynthesisConfig, setBgImageURL, setAvatars, setDrawings, setEmbeddings, setGraphics, setGraphicURLs, setMusics, setSpeeches })
       .then(timeline => {
         setTimeline(timeline)
         setIsLoading(false)
@@ -65,7 +67,7 @@ export default function useLessonEditor() {
   }
 
   function updateTimeline() {
-    setTimeline(createTimeline({ avatars, drawings, graphics, musics, speeches }))
+    setTimeline(createTimeline({ avatars, drawings, embeddings, graphics, musics, speeches }))
   }
 
   useEffect(() => {
@@ -79,6 +81,6 @@ export default function useLessonEditor() {
   }, allMaterials())
 
   return { fetchResources, isLoading, durationSec, timeline, voiceSynthesisConfig, setVoiceSynthesisConfig, bgImageURL, setBgImageURL,
-    avatars, graphics, graphicURLs, drawings, musics, speeches, setGraphics, setGraphicURLs, updateLine, deleteLine, swapLine,
-    addAvatarLine, addDrawingLine, addEmbedding, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast }
+    avatars, drawings, embeddings, graphics, graphicURLs, musics, speeches, setEmbeddings, setGraphics, setGraphicURLs, updateLine, deleteLine, swapLine,
+    addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast }
 }

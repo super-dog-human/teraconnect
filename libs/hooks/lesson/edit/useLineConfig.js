@@ -27,13 +27,13 @@ export default function useLineConfig() {
 
     function editLine() {
       setLineConfig({
-        action: kind, line, index, closeCallback
+        action: kind, line, index
       })
     }
 
     function addNewLine() {
       setLineConfig({
-        action: 'newLine', elapsedTime: line.elapsedTime, index, closeCallback
+        action: 'newLine', elapsedTime: line.elapsedTime
       })
     }
 
@@ -47,11 +47,7 @@ export default function useLineConfig() {
         callback: () => deleteLine(kind, index, line.elapsedTime),
       })
     }
-
-    function closeCallback() {
-      setLineConfig({})
-    }
   }
 
-  return { handleEditButtonClick, lineConfig }
+  return { handleEditButtonClick, lineConfig, setLineConfig }
 }

@@ -11,7 +11,7 @@ import DrawingActionEditor from './drawingActionEditor'
 import useDrawingConfig from '../../../../../libs/hooks/lesson/edit/useDrawingConfig'
 
 export default function Drawing({ index, initialConfig, closeCallback }) {
-  const { config, setConfig, selectedAction, setSelectedAction, startElapsedTimeRef, previewDrawings, setPreviewDrawings, isRecording, setIsRecording, handleConfirm } = useDrawingConfig({ index, initialConfig, closeCallback })
+  const { config, setConfig, selectedAction, setSelectedAction, startElapsedTimeRef, previewDrawings, setPreviewDrawings, isRecording, setIsRecording, handleConfirm, handleCancel } = useDrawingConfig({ index, initialConfig, closeCallback })
   const initialActionRef = useRef(selectedAction)
 
   return (
@@ -19,7 +19,7 @@ export default function Drawing({ index, initialConfig, closeCallback }) {
       <DragHandler>
         <AlignContainer textAlign='right'>
           <Container width='36' height='36' display='inline-block'>
-            <IconButton name={'close'} padding='10' onClick={closeCallback} disabled={isRecording} />
+            <IconButton name={'close'} padding='10' onClick={handleCancel} disabled={isRecording} />
           </Container>
         </AlignContainer>
       </DragHandler>
@@ -35,7 +35,7 @@ export default function Drawing({ index, initialConfig, closeCallback }) {
 
       <Container height='60'>
         <ContainerSpacer left='50' right='50'>
-          <DialogFooter elapsedTime={initialConfig.elapsedTime} setConfig={setConfig} onConfirm={handleConfirm} onCancel={closeCallback} disabled={isRecording} />
+          <DialogFooter elapsedTime={initialConfig.elapsedTime} setConfig={setConfig} onConfirm={handleConfirm} onCancel={handleCancel} disabled={isRecording} />
         </ContainerSpacer>
       </Container>
     </>

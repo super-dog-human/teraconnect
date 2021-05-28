@@ -106,9 +106,9 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
     }
   }
 
-  function handleClose() {
-    closeCallback()
+  function handleCancel() {
+    closeCallback(true)
   }
 
-  return { isProcessing, tabConfig, setTabConfig, handleConfirm, handleClose }
+  return { isProcessing, tabConfig, setTabConfig, handleConfirm, handleCancel }
 }

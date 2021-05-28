@@ -1,11 +1,10 @@
 export default function useAddingLine({ lessonRef, maxDurationSecInLine, lastTimeline, targetMaterials }) {
-
   function addAvatarLine(elapsedTime) {
     const avatar = {
       durationSec: 0,
       moving: { x: 0, y: 0, z: 0 },
     }
-    addLine(elapsedTime, 'avatar', avatar)
+    return addNewLine(elapsedTime, 'avatar', avatar)
   }
 
   function addDrawingLine(elapsedTime) {
@@ -14,37 +13,28 @@ export default function useAddingLine({ lessonRef, maxDurationSecInLine, lastTim
       action: 'draw',
       units: [],
     }
-    addLine(elapsedTime, 'drawing', drawing)
+    return addNewLine(elapsedTime, 'drawing', drawing)
   }
 
-  function addEmbedding(elapsedTime) {
+  function addEmbeddingLine(elapsedTime) {
     const embedding = {
       action: 'show',
       type: 'YouTube',
       resourceID: '',
     }
-    addLine(elapsedTime, 'embedding', embedding)
+    return addNewLine(elapsedTime, 'embedding', embedding)
   }
 
   function addGraphicLine(elapsedTime) {
     const graphic = {
       action: 'show',
     }
-    addLine(elapsedTime, 'graphic', graphic)
+    return addNewLine(elapsedTime, 'graphic', graphic)
   }
 
   function addSpeechLine(elapsedTime) {
-    const speech = {
-      voiceID: '',
-      durationSec: 10.0,
-      subtitle: '',
-      caption: {},
-      url: '',
-      isSynthesis: !lessonRef.current.needsRecording,
-      synthesisConfig: {},
-      isFocus: true,
-    }
-    addLine(elapsedTime, 'speech', speech)
+    const speech = newBlankSpeech(elapsedTime)
+    return addNewLine(elapsedTime, 'speech', speech)
   }
 
   function addSpeechLineToLast() {
@@ -57,9 +47,14 @@ export default function useAddingLine({ lessonRef, maxDurationSecInLine, lastTim
     const newElapsedTime = parseFloat((lastElapsedTime + durationSec).toFixed(3))
     if (newElapsedTime > 600.0) return
 
-    const newSpeech = {
+    const newSpeech = newBlankSpeech(newElapsedTime)
+    targetMaterials('speech').setter(speeches => [...speeches, newSpeech])
+  }
+
+  function newBlankSpeech(elapsedTime) {
+    return {
       voiceID: '',
-      elapsedTime: newElapsedTime,
+      elapsedTime,
       durationSec: 10.0,
       subtitle: '',
       caption: {},
@@ -68,27 +63,27 @@ export default function useAddingLine({ lessonRef, maxDurationSecInLine, lastTim
       synthesisConfig: {},
       isFocus: true,
     }
-
-    targetMaterials('speech').setter(speeches => [...speeches, newSpeech])
   }
 
   function addMusicLine(elapsedTime) {
     const music = {
       action: 'start',
     }
-    addLine(elapsedTime, 'music', music)
+    return addNewLine(elapsedTime, 'music', music)
   }
 
-  function addLine(elapsedTime, kind, newLine) {
+  function addNewLine(elapsedTime, kind, newLine) {
     const nextElapsedTime = Math.floor(elapsedTime + 1.0)
     newLine.elapsedTime = nextElapsedTime
-    newLine.isPending = true
 
+    let sameTimeIndex
     targetMaterials(kind).setter(materials => {
-      const sameTimeIndex = materials.reverse().findIndex(m => m.elapsedTime === newLine.elapsedTime)
-      if (sameTimeIndex >= 0) {
+      const sameTimeLastIndex = materials.reverse().findIndex(m => m.elapsedTime === newLine.elapsedTime)
+      if (sameTimeLastIndex >= 0) {
+        sameTimeIndex = materials.length - sameTimeLastIndex
         materials.splice(sameTimeIndex, 0, newLine) // 同じ時間帯があればその一番最後に要素を追加する
       } else {
+        sameTimeIndex = 0
         const nextTimeIndex = materials.findIndex(a => a.elapsedTime > newLine.elapsedTime)
         if (nextTimeIndex >= 0) {
           materials.splice(nextTimeIndex, 0, newLine)
@@ -100,7 +95,8 @@ export default function useAddingLine({ lessonRef, maxDurationSecInLine, lastTim
       return [...materials]
     })
 
+    return { index: sameTimeIndex, newLine }
   }
 
-  return { addAvatarLine, addDrawingLine, addEmbedding, addGraphicLine, addSpeechLine, addSpeechLineToLast, addMusicLine }
+  return { addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addSpeechLine, addSpeechLineToLast, addMusicLine }
 }

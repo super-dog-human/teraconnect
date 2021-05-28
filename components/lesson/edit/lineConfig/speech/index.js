@@ -13,7 +13,7 @@ import useSpeechConfig from '../../../../../libs/hooks/lesson/edit/useSpeechConf
 import 'react-tabs/style/react-tabs.css'
 
 export default function Speech(props) {
-  const { isProcessing, tabConfig, setTabConfig, handleConfirm, handleClose } = useSpeechConfig(props)
+  const { isProcessing, tabConfig, setTabConfig, handleConfirm, handleCancel } = useSpeechConfig(props)
 
   resetIdCounter()
 
@@ -23,7 +23,7 @@ export default function Speech(props) {
         <Tabs forceRenderTabPanel={true}>
           <DragHandler>
             <TabList>
-              <TabListWithCloseButton onClose={handleClose} color='var(--soft-white)' disabled={isProcessing}>
+              <TabListWithCloseButton onClose={handleCancel} color='var(--soft-white)' disabled={isProcessing}>
                 <Tab><AlignContainer textAlign='center'>字幕・テロップ</AlignContainer></Tab>
                 <Tab><AlignContainer textAlign='center'>音声</AlignContainer></Tab>
               </TabListWithCloseButton>
@@ -39,7 +39,7 @@ export default function Speech(props) {
       </TabContainer>
       <Container height='60'>
         <ContainerSpacer left='50' right='50'>
-          <DialogFooter elapsedTime={tabConfig.elapsedTime} setConfig={setTabConfig} onConfirm={handleConfirm} onCancel={handleClose} isProcessing={isProcessing} />
+          <DialogFooter elapsedTime={tabConfig.elapsedTime} setConfig={setTabConfig} onConfirm={handleConfirm} onCancel={handleCancel} isProcessing={isProcessing} />
         </ContainerSpacer>
       </Container>
     </>

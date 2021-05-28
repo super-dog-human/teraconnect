@@ -11,6 +11,7 @@ import Hr from '../../hr'
 import LessonLine from './line/'
 import LessonLineAvatar from './line/avatar'
 import LessonLineDrawing from './line/drawing'
+import LessonLineEmbedding from './line/embedding'
 import LessonLineGraphic from './line/graphic'
 import LessonLineMusic from './line/music'
 import LessonLineSpeech from './line/speech'
@@ -22,12 +23,12 @@ export default function Timeline() {
   const dropLineRef = useRef()
   const { durationSec, timeline, drawings, swapLine } = useLessonEditorContext()
   const { handleDragStart, handleDragEnd, handleDragOver, handleDrop, handleChildDrop } = useSwappingLine({ dropLineRef, swapLine })
-  const { handleEditButtonClick, lineConfig } = useLineConfig()
+  const { handleEditButtonClick, lineConfig, setLineConfig } = useLineConfig()
 
   return (
     <div css={bodyStyle}>
       <DropLine ref={dropLineRef} onDrop={handleChildDrop} />
-      <LineConfig config={lineConfig} />
+      <LineConfig lineConfig={lineConfig} setLineConfig={setLineConfig} />
       <DragSwappable onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd} onDrop={handleDrop}>
         {Object.keys(timeline).sort((a, b) => a - b).map((elapsedTime, i) => (
           <div key={i}>
@@ -37,11 +38,12 @@ export default function Timeline() {
                 {Object.keys(timeline[elapsedTime]).map(kind =>
                   timeline[elapsedTime][kind].map((line, kindIndex) => (
                     <LessonLine key={`${elapsedTime}-${kindIndex}`}>
-                      {kind === 'avatar'  && <LessonLineAvatar avatar={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
-                      {kind === 'drawing' && <LessonLineDrawing drawings={drawings} drawing={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
-                      {kind === 'graphic' && <LessonLineGraphic graphic={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
-                      {kind === 'music'   && <LessonLineMusic music={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
-                      {kind === 'speech'  && <LessonLineSpeech speech={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
+                      {kind === 'avatar'    && <LessonLineAvatar avatar={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
+                      {kind === 'drawing'   && <LessonLineDrawing drawings={drawings} drawing={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
+                      {kind === 'embedding' && <LessonLineEmbedding embedding={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
+                      {kind === 'graphic'   && <LessonLineGraphic graphic={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
+                      {kind === 'music'     && <LessonLineMusic music={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
+                      {kind === 'speech'    && <LessonLineSpeech speech={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
                     </LessonLine>
                   ))
                 )}

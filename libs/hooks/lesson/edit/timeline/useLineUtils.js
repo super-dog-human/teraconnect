@@ -1,5 +1,5 @@
-export default function useLineUtils({ avatars, drawings, graphics, musics, speeches,
-  setAvatars, setDrawings, setGraphics, setSpeeches, setMusics, timeline }) {
+export default function useLineUtils({ avatars, drawings, embeddings, graphics, musics, speeches,
+  setAvatars, setDrawings, setEmbeddings, setGraphics, setSpeeches, setMusics, timeline }) {
 
   function shiftElapsedTime({ fromElapsedTime, toElapsedTime, offsetTime }) {
     allMaterialNames().forEach(kind => {
@@ -68,6 +68,8 @@ export default function useLineUtils({ avatars, drawings, graphics, musics, spee
       return { materials: avatars, setter: setAvatars }
     case 'drawing':
       return { materials: drawings, setter: setDrawings }
+    case 'embedding':
+      return { materials: embeddings, setter: setEmbeddings }
     case 'graphic':
       return { materials: graphics, setter: setGraphics }
     case 'speech':
@@ -78,11 +80,11 @@ export default function useLineUtils({ avatars, drawings, graphics, musics, spee
   }
 
   function allMaterialNames() {
-    return ['avatar', 'drawing', 'graphic', 'music', 'speech']
+    return ['avatar', 'drawing', 'embedding', 'graphic', 'music', 'speech']
   }
 
   function allMaterials() {
-    return [avatars, drawings, graphics, musics, speeches]
+    return [avatars, drawings, embeddings, graphics, musics, speeches]
   }
 
   return { shiftElapsedTime, updateMaterial, deleteMaterial, lastTimeline, sortedElapsedTimes, maxDurationSecInLine,

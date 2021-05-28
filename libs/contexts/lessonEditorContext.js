@@ -11,10 +11,13 @@ const LessonEditorContext = React.createContext({
   bgImageURL: '',
   setBgImageURL: () => {},
   avatars: [],
+  embeddings: [],
   graphics: [],
   graphicURLs: [],
   drawings: [],
+  musics: [],
   speeches: [],
+  setEmbeddings: () => {},
   setGraphics: () => {},
   setGraphicURLs: () => {},
   updateLine: () => {},
@@ -22,7 +25,7 @@ const LessonEditorContext = React.createContext({
   swapLine: () => {},
   addAvatarLine: () => {},
   addDrawingLine: () => {},
-  addEmbedding: () => {},
+  addEmbeddingLine: () => {},
   addGraphicLine: () => {},
   addMusicLine: () => {},
   addSpeechLine: () => {},
@@ -31,14 +34,14 @@ const LessonEditorContext = React.createContext({
 
 const LessonEditorProvider = ({ children }) => {
   const { fetchResources, isLoading, durationSec, timeline, voiceSynthesisConfig, setVoiceSynthesisConfig, bgImageURL, setBgImageURL,
-    avatars, graphics, graphicURLs, drawings, speeches, setGraphics, setGraphicURLs, updateLine, deleteLine, swapLine,
-    addAvatarLine, addDrawingLine, addEmbedding, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast } = useLessonEditor()
+    avatars, embeddings, graphics, graphicURLs, drawings, musics, speeches, setEmbeddings, setGraphics, setGraphicURLs, updateLine, deleteLine, swapLine,
+    addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast } = useLessonEditor()
 
   return (
     <LessonEditorContext.Provider value={{
       fetchResources, isLoading, durationSec, timeline, voiceSynthesisConfig, setVoiceSynthesisConfig, bgImageURL, setBgImageURL,
-      avatars, graphics, graphicURLs, drawings, speeches, setGraphics, setGraphicURLs, updateLine, deleteLine, swapLine,
-      addAvatarLine, addDrawingLine, addEmbedding, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast
+      avatars, embeddings, graphics, graphicURLs, drawings, musics, speeches, setEmbeddings, setGraphics, setGraphicURLs, updateLine, deleteLine, swapLine,
+      addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast
     }}>
       {children}
     </LessonEditorContext.Provider>
