@@ -33,7 +33,7 @@ export default function useLineConfig() {
 
     function addNewLine() {
       setLineConfig({
-        action: 'newLine', index, closeCallback
+        action: 'newLine', elapsedTime: line.elapsedTime, index, closeCallback
       })
     }
 

@@ -26,7 +26,7 @@ export default function useLessonEditor() {
   const { showError } = useErrorDialogContext()
   const { shiftElapsedTime, updateMaterial, deleteMaterial, lastTimeline, sortedElapsedTimes, maxDurationSecInLine, nextElapsedTime, calcTime, targetMaterials, allMaterialNames, allMaterials } =
     useLineUtils({ avatars, drawings, graphics, musics, speeches, setAvatars, setDrawings, setGraphics, setSpeeches, setMusics, timeline })
-  const { addSpeechLineToLast } = useAddingLine({ lessonRef, maxDurationSecInLine, lastTimeline, targetMaterials })
+  const { addAvatarLine, addDrawingLine, addEmbedding, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast } = useAddingLine({ lessonRef, maxDurationSecInLine, lastTimeline, targetMaterials })
   const { updateLine } = useUpdatingLine({ shiftElapsedTime, updateMaterial, targetMaterials })
   const { deleteLine } = useDeletionLine({ shiftElapsedTime, nextElapsedTime, deleteMaterial, targetMaterials, allMaterialNames })
   const { swapLine } = useSwappingLine({ lastTimeline, sortedElapsedTimes, maxDurationSecInLine, calcTime, targetMaterials, allMaterialNames })
@@ -79,5 +79,6 @@ export default function useLessonEditor() {
   }, allMaterials())
 
   return { fetchResources, isLoading, durationSec, timeline, voiceSynthesisConfig, setVoiceSynthesisConfig, bgImageURL, setBgImageURL,
-    avatars, graphics, graphicURLs, drawings, musics, speeches, setGraphics, setGraphicURLs, updateLine, deleteLine, swapLine, addSpeechLineToLast }
+    avatars, graphics, graphicURLs, drawings, musics, speeches, setGraphics, setGraphicURLs, updateLine, deleteLine, swapLine,
+    addAvatarLine, addDrawingLine, addEmbedding, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast }
 }

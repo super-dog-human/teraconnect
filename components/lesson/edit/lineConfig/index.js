@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import Draggable from 'react-draggable'
 import FullscreenContainer from '../../../fullscreenContainer'
 import { css } from '@emotion/core'
+import NewLine from './newLine/'
 import Avatar from './avatar/'
 import Drawing from './drawing/'
 import Graphic from './graphic/'
@@ -30,12 +31,23 @@ export default function LineConfig({ config }) {
     }
   }, [config])
 
+  const dialogStyle = css({
+    backgroundColor: 'var(--dark-gray)',
+    position: 'absolute',
+    top: '30%',
+    left: 'calc(50% - 100px)',
+    borderRadius: '5px',
+    filter: 'drop-shadow(2px 2px 2px gray)',
+    width: '80%',
+    maxWidth: config.action === 'newLine' ? '600px' : '700px',
+  })
+
   return (
     <>
       {isShow && <FullscreenContainer position='fixed' zKind='modal-panel'>
         <Draggable handle=".drag-handle">
-          <div css={bodyStyle}>
-            {config.action === 'newLine' && <>行追加パネル</>}
+          <div css={dialogStyle}>
+            {config.action === 'newLine' && <NewLine elapsedTime={config.elapsedTime} closeCallback={handleClose} /> }
             {config.action === 'avatar'  && <Avatar  index={config.index} initialConfig={config.line} closeCallback={handleClose} />}
             {config.action === 'drawing' && <Drawing index={config.index} initialConfig={config.line} closeCallback={handleClose} />}
             {config.action === 'graphic' && <Graphic index={config.index} initialConfig={config.line} closeCallback={handleClose} />}
@@ -47,14 +59,3 @@ export default function LineConfig({ config }) {
     </>
   )
 }
-
-const bodyStyle = css({
-  backgroundColor: 'var(--dark-gray)',
-  position: 'absolute',
-  top: '30%',
-  left: 'calc(50% - 100px)',
-  width: '80%',
-  maxWidth: '700px',
-  borderRadius: '5px',
-  filter: 'drop-shadow(2px 2px 2px gray)',
-})
