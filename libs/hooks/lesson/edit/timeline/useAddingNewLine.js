@@ -7,7 +7,7 @@ export default function useAddingNewLine({ elapsedTime, setLineConfig }) {
     { kind: 'graphic',   label: '画像',      description: 'アップロードした画像を表示・非表示します。' },
     { kind: 'drawing',   label: '板書',      description: '自由な線を描いたり消したりします。' },
     { kind: 'avatar',    label: 'アバター',   description: 'アバターの位置や大きさを変更します。' },
-    { kind: 'embedding', label: '埋め込み',   description: 'YouTubeやGeoGebraを表示します。' },
+    { kind: 'embedding', label: '埋め込み',   description: 'YouTubeやGeoGebraを授業内で再生します。' },
     { kind: 'music',     label: 'BGM',       description: '音楽を再生・停止します。' },
   ]
   const newLineRef = useRef({})
