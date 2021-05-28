@@ -46,7 +46,7 @@ export default function useSwappingLine({ lastTimeline, sortedElapsedTimes, maxD
           }
         })
 
-        return [...materials]
+        return [...materials.sort((a, b) => a.elapsedTime - b.elapsedTime)]
       })
     })
   }

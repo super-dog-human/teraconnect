@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react'
 import { drawToCanvas } from '../../drawingUtils'
+import { deepCopy } from '../../utils'
 
 export default function useDrawingPicture({ canvasRef, drawings, startElapsedTime }) {
   const canvasCtxRef = useRef()
@@ -25,19 +26,11 @@ export default function useDrawingPicture({ canvasRef, drawings, startElapsedTim
   }
 
   function initialDrawings(currentDrawings) {
-    let drawingsInDuration = drawings.filter(d => d.elapsedTime < startElapsedTime)
-    drawingsInDuration.push(...currentDrawings)
-    drawingsInDuration = drawingsInDuration.map(d => {
-      const drawing = { ...d }
-      if (drawing.units) {
-        drawing.units = d.units.map(u => ({ ...u })) // オブジェクトの配列のコピー
-      }
-      return drawing
-    })
-
+    let drawingsInDuration = deepCopy(drawings.filter(d => d.elapsedTime < startElapsedTime))
+    drawingsInDuration.push(...deepCopy(currentDrawings))
     removeUndoPair(drawingsInDuration)
 
-    const lastClearIndex = [...drawingsInDuration].slice().reverse().findIndex(d => d.action === 'clear')
+    const lastClearIndex = drawingsInDuration.slice().reverse().findIndex(d => d.action === 'clear')
     if (lastClearIndex >= 0) {
       // 直近のclearより前の描画は意味がないので削除。最後からのインデックスなので合計数から差し引く
       drawingsInDuration.splice(0, drawingsInDuration.length - lastClearIndex)

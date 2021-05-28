@@ -14,15 +14,21 @@ export default function useLineUtils({ avatars, drawings, embeddings, graphics, 
             })
           }
         })
-        return [...materials]
+
+        return [...materials.sort((a, b) => a.elapsedTime - b.elapsedTime)]
       })
     })
   }
 
   function updateMaterial(setter, currentValue, newValue) {
-    setter(materials => (
+    setter(materials => {
       materials.map(m => (m === currentValue) ? { ...newValue } : m)
-    ))
+      if (currentValue.elapsedTime === newValue.elapsedTime) {
+        return [...materials]
+      } else {
+        return [...materials.sort((a, b) => a.elapsedTime - b.elapsedTime)]
+      }
+    })
   }
 
   function deleteMaterial(setter, elapsedTime, index) {
