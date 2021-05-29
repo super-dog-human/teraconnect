@@ -4,7 +4,7 @@ export default function useUpdatingLine({ shiftElapsedTime, updateMaterial, targ
     const currentValue = materials.filter(m => m.elapsedTime === elapsedTime)[index]
     updateMaterial(setter, currentValue, newValue)
 
-    const durationDiff = newValue.durationSec - currentValue.durationSec
+    const durationDiff = ['embedding', 'graphic', 'music'].includes(kind) ? 0 : newValue.durationSec - currentValue.durationSec
     const elapsedDiff = newValue.elapsedTime - currentValue.elapsedTime
 
     if (durationDiff + elapsedDiff === 0) return

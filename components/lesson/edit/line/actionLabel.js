@@ -43,9 +43,9 @@ export default function ActionLabel({ kind, action }) {
   function embeddingLabel() {
     switch(action) {
     case 'show':
-      return '埋め込み動画の再生'
+      return '埋め込み動画の表示'
     case 'hide':
-      return '埋め込み動画の停止'
+      return '埋め込み動画の非表示'
     }
   }
 

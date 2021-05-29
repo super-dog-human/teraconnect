@@ -1,41 +1,76 @@
 import React from 'react'
+import Spacer from '../../../../spacer'
 import Container from '../../../../container'
 import ContainerSpacer from '../../../../containerSpacer'
-import AlignContainer from '../../../../alignContainer'
-import IconButton from '../../../../button/iconButton'
-import DragHandler from '../../../../dragHandler'
+import Flex from '../../../../flex'
+import PlainText from '../../../../plainText'
+import Select from '../../../../form/select'
+import InputText from '../../../../form/inputText'
+import DialogHeader from '../configDialog/dialogHeader'
 import DialogFooter from '../configDialog/dialogFooter'
+import ActionSelector from './actionSelector'
+import useEmbeddingConfig from '../../../../../libs/hooks/lesson/edit/useEmbeddingConfig'
 
 export default function Embedding(props) {
-  const tabConfig = { elapsedTime: 0 }
-  const isProcessing = false
-
-  function handleCancel() {
-    props.closeCallback(true)
-  }
-
-  function handleConfirm() {
-    props.closeCallback()
-  }
-
-  function setConfig() {
-
-  }
+  const { config, setConfig, action, setAction, serviceName, serviceOptions, isInvalidInput, handleServiceChange, handleContentIDChange, handleConfirm, handleCancel } = useEmbeddingConfig(props)
 
   return (
     <>
-      <DragHandler>
-        <AlignContainer textAlign='right'>
-          <Container width='36' height='36' display='inline-block'>
-            <IconButton name={'close'} padding='10' onClick={handleCancel} disabled={isProcessing} />
+      <DialogHeader onCloseClick={handleCancel} />
+
+      <ContainerSpacer left='50' right='50'>
+        <Flex justifyContent='space-between'>
+          <Flex>
+            <ActionSelector selectedAction={action} setAction={setAction} />
+          </Flex>
+          <Spacer height='30' />
+          {action === 'show' &&
+            <Container width='150' height='30'>
+              <Select color='var(--soft-white)' options={serviceOptions} topLabel={null} onChange={handleServiceChange} />
+            </Container>
+          }
+        </Flex>
+
+        <ContainerSpacer top='50' bottom='60'>
+          <Container height='60'>
+            {action === 'show' && serviceName === 'youtube' &&
+            <>
+              <Flex alignItems='center'>
+                <PlainText size='14' color='var(--soft-white)'>https://www.youtube.com/embed/</PlainText>
+                <Spacer width='10' />
+                <Container width='130' height='30'>
+                  <InputText size='16' textAlign='center' color='var(--soft-white)' borderColor='var(--soft-white)' borderWidth='0 0 1px 0'
+                    placeholder='ビデオIDを入力' defaultValue={config.contentID} maxLength='11' onChange={handleContentIDChange} />
+                </Container>
+                <Spacer width='10' />
+                <PlainText size='14' color='var(--soft-white)'>?autoplay=1&mute=1</PlainText>
+              </Flex>
+              <Spacer height='10' />
+              <PlainText size='12' color='var(--text-gray)'>仕様上の制限のため、ミュート状態で再生が開始されます。</PlainText>
+              <Spacer height='10' />
+              {isInvalidInput && <PlainText size='13' color='red'>ビデオIDは11文字で入力してください。</PlainText>}
+            </>
+            }
+            {action === 'show' && serviceName === 'geogebra' &&
+            <>
+              <Flex alignItems='center'>
+                <PlainText size='14' color='var(--soft-white)'>https://www.geogebra.org/material/iframe/id/</PlainText>
+                <Spacer width='4' />
+                <Container width='130' height='30'>
+                  <InputText size='16' textAlign='center' color='var(--soft-white)' borderColor='var(--soft-white)' borderWidth='0 0 1px 0'
+                    placeholder='教材IDを入力' defaultValue={config.contentID} onChange={handleContentIDChange} />
+                </Container>
+              </Flex>
+              {isInvalidInput && <PlainText size='13' color='red'>教材IDは11文字で入力してください。</PlainText>}
+            </>
+            }
           </Container>
-        </AlignContainer>
-      </DragHandler>
-      <Container height='60'>
-        <ContainerSpacer left='50' right='50'>
-          <DialogFooter elapsedTime={tabConfig.elapsedTime} setConfig={setConfig} onConfirm={handleConfirm} onCancel={handleCancel} isProcessing={isProcessing} />
         </ContainerSpacer>
-      </Container>
+
+        <Container height='60'>
+          <DialogFooter elapsedTime={config.elapsedTime} setConfig={setConfig} onConfirm={handleConfirm} onCancel={handleCancel} disabled={isInvalidInput} />
+        </Container>
+      </ContainerSpacer>
     </>
   )
 }

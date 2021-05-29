@@ -12,7 +12,7 @@ export default function LessonLineEmbedding({ embedding, index, isEditButtonShow
   return (
     <>
       <KindIcon kind="embedding" />
-      <ActionLabel kind="embedding" />
+      <ActionLabel kind="embedding" action={embedding.action} />
       <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} />
     </>
   )
