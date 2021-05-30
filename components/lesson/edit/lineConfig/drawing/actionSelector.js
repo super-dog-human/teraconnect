@@ -13,7 +13,7 @@ const labels = [
 
 export default function ActionSelector({ initialAction, selectedAction, setSelectedAction, disabled }) {
   function handleChange(e) {
-    setSelectedAction(e.currentTarget.dataset.action)
+    setSelectedAction(e.currentTarget.value)
   }
 
   return (
@@ -21,8 +21,8 @@ export default function ActionSelector({ initialAction, selectedAction, setSelec
       {labels.filter(l => initialAction === 'draw' ? l : l.action !== 'draw').map((label, i) => (
         <React.Fragment key={i}>
           <Flex alignItems='center'>
-            <InputRadio id={`drawing${label.action}`} name='drawingLine' data-action={label.action} size='16' color='var(--soft-white)'
-              checked={selectedAction === label.action} disabled={disabled} onChange={handleChange}>
+            <InputRadio id={`drawing${label.action}`} name='drawingLine' size='16' color='var(--soft-white)'
+              value={label.action} checked={selectedAction === label.action} disabled={disabled} onChange={handleChange}>
               <PlainText size='13' lineHeight='18' color='var(--soft-white)'>{label.body}</PlainText>
             </InputRadio>
             <Spacer width='30' />

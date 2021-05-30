@@ -11,7 +11,7 @@ const labels = [
 
 export default function ActionSelector({ selectedAction, dispatchConfig, disabled }) {
   function handleChange(e) {
-    dispatchConfig({ type: 'action', payload: e.currentTarget.dataset.action })
+    dispatchConfig({ type: 'action', payload: e.currentTarget.value })
   }
 
   return (
@@ -19,8 +19,8 @@ export default function ActionSelector({ selectedAction, dispatchConfig, disable
       {labels.map((label, i) => (
         <React.Fragment key={i}>
           <Flex alignItems='center'>
-            <InputRadio id={`embedding${label.action}`} name='embeddingLine' data-action={label.action} size='16' color='var(--soft-white)'
-              checked={selectedAction === label.action} disabled={disabled} onChange={handleChange}>
+            <InputRadio id={`embedding${label.action}`} name='embeddingLine' size='16' color='var(--soft-white)'
+              value={label.action} checked={selectedAction === label.action} disabled={disabled} onChange={handleChange}>
               <PlainText size='13' lineHeight='18' color='var(--soft-white)'>{label.body}</PlainText>
             </InputRadio>
             <Spacer width='30' />
