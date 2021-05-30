@@ -18,11 +18,11 @@ import useHumanVoicePlayer from '../../../../../libs/hooks/lesson/edit/useHumanV
 import useHumanVoiceRecorder from '../../../../../libs/hooks/lesson/edit/useHumanVoiceRecorder'
 import useHumanVoiceFileController from '../../../../../libs/hooks/lesson/edit/useHumanVoiceFileController'
 
-export default function HumanVoiceTab({ config, setConfig, switchTab }) {
+export default function HumanVoiceTab({ config, dispatchConfig, switchTab }) {
   const inputFileRef = useRef(null)
   const { audioElapsedTime, audioMax, audioCurrent, isPlaying, handlePlay, handleSeek } = useHumanVoicePlayer(config)
-  const { deviceOptions, isMicReady, isRecording, handleMicChange, handleRecording } = useHumanVoiceRecorder(config, setConfig)
-  const { handleMoreButtonClick, handleFileChange } = useHumanVoiceFileController(config, setConfig, inputFileRef)
+  const { deviceOptions, isMicReady, isRecording, handleMicChange, handleRecording } = useHumanVoiceRecorder(config, dispatchConfig)
+  const { handleMoreButtonClick, handleFileChange } = useHumanVoiceFileController(config, dispatchConfig, inputFileRef)
 
   return (
     <ContainerSpacer left='50' right='50'>

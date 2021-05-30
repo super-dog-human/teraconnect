@@ -6,7 +6,7 @@ import { wavToMp3 } from '../../../audioUtils'
 
 const maxFileByteSize = 10485760 // 10MB
 
-export default function useHumanVoiceFileController(config, setConfig, inputFileRef) {
+export default function useHumanVoiceFileController(config, dispatchConfig, inputFileRef) {
   const [isProcessing, setIsProcessing] = useState(false)
   const [disableMenuIndexes, setDisableMenuIndexes] = useState([1]) // 初期状態では「ダウンロード」を選択できない
   const { setContextMenu } = useContextMenuContext()
@@ -68,12 +68,7 @@ export default function useHumanVoiceFileController(config, setConfig, inputFile
       URL.revokeObjectURL(config.url)
     }
 
-    setConfig(config => {
-      config.url = URL.createObjectURL(file)
-      config.voiceID = ''
-      return { ...config }
-    })
-
+    dispatchConfig({ type: 'humanVoice', payload: URL.createObjectURL(file) })
     setIsProcessing(false)
   }
 

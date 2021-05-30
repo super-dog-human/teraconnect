@@ -4,7 +4,7 @@ import useAudioPlayer from '../../useAudioPlayer'
 import { useRouter } from 'next/router'
 import { SYNTHESIS_VOICE_LANGUAGE_NAMES, SYNTHESIS_JAPANESE_VOICE_NAMES, SYNTHESIS_ENGLISH_VOICE_NAMES } from '../../../constants'
 
-export default function useSynthesisVoiceEditor(config, setConfig) {
+export default function useSynthesisVoiceEditor(config, dispatchConfig) {
   const [voiceNames, setVoiceNames] = useState(SYNTHESIS_JAPANESE_VOICE_NAMES)
   const [isSynthesizing, setIsSynthesizing] = useState(false)
   const router = useRouter()
@@ -12,11 +12,7 @@ export default function useSynthesisVoiceEditor(config, setConfig) {
   const { isPlaying, createAudio, switchAudio } = useAudioPlayer()
 
   function setSubtitle(e) {
-    setConfig(config => {
-      config.subtitle = e.target.value
-      config.url = ''
-      return { ...config }
-    })
+    dispatchConfig({ type: 'synthesisSubtitle', payload: e.target.value })
   }
 
   function setLanguageCode(e) {
@@ -30,44 +26,23 @@ export default function useSynthesisVoiceEditor(config, setConfig) {
       newVoiceName = SYNTHESIS_ENGLISH_VOICE_NAMES[0].value
     }
 
-    setConfig(config => {
-      config.synthesisConfig.languageCode = languageCode
-      config.synthesisConfig.name = newVoiceName
-      config.url = ''
-      return { ...config }
-    })
+    dispatchConfig({ type: 'initializeSynthesis', payload: { languageCode, name: newVoiceName } })
   }
 
   function setName(e) {
-    setConfig(config => {
-      config.synthesisConfig.name = e.target.value
-      config.url = ''
-      return { ...config }
-    })
+    dispatchConfig({ type: 'synthesisName', payload: e.target.value })
   }
 
   function setSpeakingRate(e) {
-    setConfig(config => {
-      config.synthesisConfig.speakingRate = e.target.value
-      config.url = ''
-      return { ...config }
-    })
+    dispatchConfig({ type: 'synthesisSpeakingRate', payload: e.target.value })
   }
 
   function setPitch(e) {
-    setConfig(config => {
-      config.synthesisConfig.pitch = e.target.value
-      config.url = ''
-      return { ...config }
-    })
+    dispatchConfig({ type: 'synthesisPitch', payload: e.target.value })
   }
 
   function setVolumeGainDb(e) {
-    setConfig(config => {
-      config.synthesisConfig.volumeGainDb = e.target.value
-      config.url = ''
-      return { ...config }
-    })
+    dispatchConfig({ type: 'synthesisVolumeGainDb', payload: e.target.value })
   }
 
   async function playVoice() {
@@ -83,11 +58,7 @@ export default function useSynthesisVoiceEditor(config, setConfig) {
 
       const lessonID = parseInt(router.query.id)
       const voice = await createSynthesisVoiceFile(lessonID, config)
-      setConfig(config => {
-        config.voiceID = voice.id
-        config.url = voice.url
-        return { ...config }
-      })
+      dispatchConfig({ type: 'synthesisVoice', payload: { voiceID: voice.id, url: voice.url } })
       createAudio(voice.url)
 
       setIsSynthesizing(false)

@@ -13,8 +13,8 @@ import InputText from '../../../../form/inputText'
 import { Container as GridContainer, Row, Col } from 'react-grid-system'
 import useSynthesisVoiceEditor from '../../../../../libs/hooks/lesson/edit/useSynthesisVoiceEditor'
 
-export default function SynthesisVoiceTab({ config, setConfig, switchTab }) {
-  const { languageNames, voiceNames, setSubtitle, setLanguageCode, setName, setSpeakingRate, setPitch, setVolumeGainDb, playVoice, isSynthesizing } = useSynthesisVoiceEditor(config, setConfig)
+export default function SynthesisVoiceTab({ config, dispatchConfig, switchTab }) {
+  const { languageNames, voiceNames, setSubtitle, setLanguageCode, setName, setSpeakingRate, setPitch, setVolumeGainDb, playVoice, isSynthesizing } = useSynthesisVoiceEditor(config, dispatchConfig)
 
   return (
     <ContainerSpacer left='50' right='50'>

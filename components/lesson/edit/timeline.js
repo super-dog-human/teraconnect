@@ -55,7 +55,7 @@ export default function Timeline() {
           </React.Fragment>
         ))}
       </DragSwappable>
-      { durationSec > 600 && <PlainText color='red'>収録時間が10分を超えています。</PlainText>}
+      { durationSec > 600 && <PlainText color='var(--error-red)'>収録時間が10分を超えています。</PlainText>}
     </div>
   )
 }

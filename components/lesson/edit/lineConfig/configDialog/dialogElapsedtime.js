@@ -7,7 +7,7 @@ import PlainText from '../../../../plainText'
 import InputCheckbox from '../../../../form/inputCheckbox'
 import InputElapsedTime from './inputElapsedTime'
 
-const DialogElapsedTime = React.forwardRef(function dialogElapsedTime({ elapsedTime, setConfig }, ref) {
+const DialogElapsedTime = React.forwardRef(function dialogElapsedTime({ elapsedTime, dispatchConfig }, ref) {
   const [minutesTime, setMinutesTime] = useState('')
   const [secondsTime, setSecondsTime] = useState('')
   const [millisecTime, setMillisecTime] = useState('')
@@ -28,10 +28,7 @@ const DialogElapsedTime = React.forwardRef(function dialogElapsedTime({ elapsedT
     const newElapsedTime = parseFloat((parseInt(minutesTime) * 60 + parseInt(secondsTime) + (parseInt(millisecTime) /  1000)).toFixed(3))
     if (elapsedTime !== newElapsedTime) {
       setHasChangedElapsedTime(true)
-      setConfig(config => {
-        config.elapsedTime = newElapsedTime
-        return { ...config }
-      })
+      dispatchConfig({ type: 'elapsedTime', payload: newElapsedTime })
     }
   }, [minutesTime, secondsTime, millisecTime])
 

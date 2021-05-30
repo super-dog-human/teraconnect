@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useReducer } from 'react'
 import { useLessonEditorContext } from '../../../contexts/lessonEditorContext'
 import { deepCopy } from '../../../utils'
 
@@ -7,8 +7,17 @@ export default function useDrawingConfig({ index, initialConfig, closeCallback }
   const [isRecording, setIsRecording] = useState(false)
   const [selectedAction, setSelectedAction] = useState(initialConfig.action)
   const { drawings, updateLine } = useLessonEditorContext()
-  const [config, setConfig] = useState(initialConfig)
+  const [config, dispatchConfig] = useReducer(configReducer, initialConfig)
   const [previewDrawings, setPreviewDrawings] = useState(deepCopy(drawings))
+
+  function configReducer(state, { type, payload }) {
+    switch (type) {
+    case 'elapsedTime':
+      return { ...state, elapsedTime: payload }
+    default:
+      throw new Error()
+    }
+  }
 
   function handleCancel() {
     closeCallback(true)
@@ -41,5 +50,5 @@ export default function useDrawingConfig({ index, initialConfig, closeCallback }
     updateLine({ kind: 'drawing', index, elapsedTime: startElapsedTimeRef.current, newValue: config, changeAfterLineElapsedTime })
   }
 
-  return { config, setConfig, selectedAction, setSelectedAction, startElapsedTimeRef, previewDrawings, setPreviewDrawings, isRecording, setIsRecording, handleConfirm, handleCancel }
+  return { config, dispatchConfig, selectedAction, setSelectedAction, startElapsedTimeRef, previewDrawings, setPreviewDrawings, isRecording, setIsRecording, handleConfirm, handleCancel }
 }

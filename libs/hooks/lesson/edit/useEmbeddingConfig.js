@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react'
-import { deepCopy } from '../../../utils'
+import { useState, useReducer } from 'react'
 import { useLessonEditorContext } from '../../../contexts/lessonEditorContext'
 
 export default function useEmbeddingConfig({ index, initialConfig, closeCallback }) {
@@ -9,48 +8,55 @@ export default function useEmbeddingConfig({ index, initialConfig, closeCallback
   ]
 
   const { updateLine } = useLessonEditorContext()
-  const [config, setConfig] = useState(deepCopy(initialConfig))
-  const [action, setAction] = useState(initialConfig.action)
-  const [serviceName, setServiceName] = useState(initialConfig.serviceName || 'youtube')
-  const [contentID, setContentID] = useState(initialConfig.contentID || '')
-  const [isInvalidInput, setIsInvalidInput] = useState(false)
+  const [config, dispatchConfig] = useReducer(configReducer, initialConfig)
+  const [isInvalidInput, setIsInvalidInput] = useState(!initialConfig.contentID || initialConfig.contentID.length < 11)
 
-  function handleServiceChange(e) {
-    setServiceName(e.target.value)
+  function configReducer(state, { type, payload }) {
+    switch (type) {
+    case 'elapsedTime':
+      return { ...state, elapsedTime: payload }
+    case 'action':
+      return { ...state, action: payload }
+    case 'serviceName':
+      if (payload === initialConfig.serviceName) {
+        return { ...state, serviceName: payload, contentID: initialConfig.contentID }
+      } else {
+        return { ...state, serviceName: payload, contentID: '' }
+      }
+    case 'contentID':
+      return { ...state, contentID: payload }
+    default:
+      throw new Error()
+    }
   }
 
-  function handleContentIDChange(e) {
-    setContentID(e.currentTarget.value)
+  function handleServiceChange(e) {
+    dispatchConfig({ type: 'serviceName', payload: e.target.value })
+  }
+
+  function handleContentIDBlur(e) {
+    const id = e.currentTarget.value
+
+    if (id.length === 11) {
+      setIsInvalidInput(false)
+    } else {
+      setIsInvalidInput(true)
+    }
+    dispatchConfig({ type: 'contentID', payload: id })
   }
 
   function handleConfirm(changeAfterLineElapsedTime) {
-    const newValue = {
-      elapsedTime: config.elapsedTime,
-      action,
-      serviceName,
-      contentID,
+    if (config.action === 'hide') {
+      delete config.serviceName
+      delete config.contentID
     }
 
-    updateLine({ kind: 'embedding', index, elapsedTime: initialConfig.elapsedTime, newValue, changeAfterLineElapsedTime })
+    updateLine({ kind: 'embedding', index, elapsedTime: initialConfig.elapsedTime, newValue: config, changeAfterLineElapsedTime })
     closeCallback()
   }
 
   function handleCancel() {
     closeCallback(true)
   }
-
-  useEffect(() => {
-    if (action === 'hide') return
-    if (contentID.length === 11) {
-      setIsInvalidInput(false)
-    } else {
-      setIsInvalidInput(true)
-    }
-  }, [contentID])
-
-  useEffect(() => {
-    // contentIDをクリアする
-  }, [serviceName])
-
-  return { config, setConfig, action, setAction, serviceName, serviceOptions, isInvalidInput, handleServiceChange, handleContentIDChange, handleConfirm, handleCancel }
+  return { config, dispatchConfig, serviceOptions, isInvalidInput, handleServiceChange, handleContentIDBlur, handleConfirm, handleCancel }
 }

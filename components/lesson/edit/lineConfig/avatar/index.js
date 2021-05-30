@@ -16,7 +16,7 @@ export default function Avatar({ index, initialConfig, closeCallback }) {
     closeCallback()
   }
 
-  function setConfig() {
+  function dispatchConfig() {
 
   }
 
@@ -26,7 +26,7 @@ export default function Avatar({ index, initialConfig, closeCallback }) {
 
       <Container height='60'>
         <ContainerSpacer left='50' right='50'>
-          <DialogFooter elapsedTime={tabConfig.elapsedTime} setConfig={setConfig} onConfirm={handleConfirm} onCancel={handleCancel} isProcessing={isProcessing} />
+          <DialogFooter elapsedTime={tabConfig.elapsedTime} dispatchConfig={dispatchConfig} onConfirm={handleConfirm} onCancel={handleCancel} isProcessing={isProcessing} />
         </ContainerSpacer>
       </Container>
     </>

@@ -1,44 +1,26 @@
-export default function useSpeechTextEditor(setConfig) {
+export default function useSpeechTextEditor(dispatchConfig) {
   function setSubtitle(e) {
-    setConfig(config => {
-      config.subtitle = e.target.value
-      return { ...config }
-    })
+    dispatchConfig({ type: 'subtitle', payload: e.target.value })
   }
 
   function setBody(e) {
-    setConfig(config => {
-      config.caption.body = e.target.value
-      return { ...config }
-    })
+    dispatchConfig({ type: 'captionBody', payload: e.target.value })
   }
 
   function setBodyColor(color) {
-    setConfig(config => {
-      config.caption.bodyColor = color
-      return { ...config }
-    })
+    dispatchConfig({ type: 'captionBodyColor', payload: color })
   }
 
   function setBorderColor(color) {
-    setConfig(config => {
-      config.caption.borderColor = color
-      return { ...config }
-    })
+    dispatchConfig({ type: 'captionBorderColor', payload: color })
   }
 
   function setHorizontalAlign(align) {
-    setConfig(config => {
-      config.caption.horizontalAlign = align
-      return { ...config }
-    })
+    dispatchConfig({ type: 'captionHorizontalAlign', payload: align })
   }
 
   function setVerticalAlign(align) {
-    setConfig(config => {
-      config.caption.verticalAlign = align
-      return { ...config }
-    })
+    dispatchConfig({ type: 'captionVerticalAlign', payload: align })
   }
 
   return { setSubtitle, setBody, setBodyColor, setBorderColor, setHorizontalAlign, setVerticalAlign }

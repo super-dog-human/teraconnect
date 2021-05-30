@@ -4,7 +4,7 @@ import useVoiceRecorder from '../useVoiceRecorder'
 import { useRouter } from 'next/router'
 import useFetch from '../../useFetch'
 
-export default function useHumanVoiceRecorder(config, setConfig) {
+export default function useHumanVoiceRecorder(config, dispatchConfig) {
   const router = useRouter()
   const lessonIDRef = useRef(parseInt(router.query.id))
   const [isRecording, setIsRecording] = useState(false)
@@ -21,10 +21,7 @@ export default function useHumanVoiceRecorder(config, setConfig) {
   }
 
   function updateAudioURL(url) {
-    setConfig(config => {
-      config.url = url
-      return { ...config }
-    })
+    dispatchConfig({ type: 'url', payload: url })
   }
 
   useEffect(() => {

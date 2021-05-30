@@ -8,8 +8,8 @@ import ColorPickerCube from '../../../../colorPickerCube'
 import TextAlignButton from './textAlignButton'
 import useSpeechTextEditor from '../../../../../libs/hooks/lesson/edit/useSpeechTextEditor'
 
-export default function TextTab({ config, setConfig }) {
-  const { setSubtitle, setBody, setBodyColor, setBorderColor, setHorizontalAlign, setVerticalAlign } = useSpeechTextEditor(setConfig)
+export default function TextTab({ config, dispatchConfig }) {
+  const { setSubtitle, setBody, setBodyColor, setBorderColor, setHorizontalAlign, setVerticalAlign } = useSpeechTextEditor(dispatchConfig)
 
   return (
     <ContainerSpacer top='30' left='50' right='50'>

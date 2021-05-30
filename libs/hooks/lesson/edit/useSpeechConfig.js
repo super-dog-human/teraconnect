@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useReducer } from 'react'
 import { useRouter } from 'next/router'
 import { useLessonEditorContext } from '../../../contexts/lessonEditorContext'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
@@ -9,19 +9,67 @@ import fetch from 'isomorphic-unfetch'
 import useFetch from '../../useFetch'
 import { fetchVoiceFileURL, createVoice } from '../../../fetchResource'
 import { wavToMp3 } from '../../../audioUtils'
-import { deepCopy } from '../../../utils'
 
 export default function useSpeechConfig({ index, initialConfig, closeCallback }) {
   const router = useRouter()
   const lessonIDRef = useRef(parseInt(router.query.id))
   const { showError } = useErrorDialogContext()
   // propsをタブの初期値としてstateにコピーし、確定時にコピー元を更新する
-  const [tabConfig, setTabConfig] = useState(deepCopy(initialConfig))
+  const [config, dispatchConfig] = useReducer(configReducer, initialConfig)
   const [isProcessing, setIsProcessing] = useState(false)
   const { updateLine } = useLessonEditorContext()
   const { createSynthesisVoiceFile } = useSynthesisVoice()
   const { createAudio } = useAudioPlayer()
   const { putFile } = useFetch()
+
+  function configReducer(state, { type, payload }) {
+    switch (type) {
+    case 'elapsedTime':
+      return { ...state, elapsedTime: payload }
+    case 'url':
+      return { ...state, url: payload }
+    case 'switchIsSynthesis':
+      state.isSynthesis = !state.isSynthesis
+      if (state.isSynthesis) {
+        state.voiceID = ''
+        state.url = ''
+      } else {
+        state = { ...state, ...payload }
+      }
+      return { ...state }
+    case 'initializeSynthesis':
+      return { ...state, url: '', synthesisConfig: { ...state.synthesisConfig, languageCode: payload.languageCode, name: payload.name } }
+    case 'synthesisName':
+      return { ...state, url: '', synthesisConfig: { ...state.synthesisConfig, name: payload } }
+    case 'synthesisSpeakingRate':
+      return { ...state, url: '', synthesisConfig: { ...state.synthesisConfig, speakingRate: payload } }
+    case 'synthesisPitch':
+      return { ...state, url: '', synthesisConfig: { ...state.synthesisConfig, pitch: payload } }
+    case 'synthesisVolumeGainDb':
+      return { ...state, url: '', synthesisConfig: { ...state.synthesisConfig, volumeGainDb: payload } }
+    case 'synthesisVoice':
+      return { ...state, url: payload.url, voiceID: payload.voiceID }
+    case 'synthesisSubtitle':
+      return { ...state, url: '', subtitle: payload }
+    case 'humanVoice':
+      return { ...state, url: payload, voiceID: '', }
+
+    case 'subtitle':
+      return { ...state, subtitle: payload }
+    case 'captionBody':
+      return { ...state, caption: { ...state.caption, body: payload } }
+    case 'captionBodyColor':
+      return { ...state, caption: { ...state.caption, bodyColor: payload } }
+    case 'captionBorderColor':
+      return { ...state, caption: { ...state.caption, borderColor: payload } }
+    case 'captionHorizontalAlign':
+      return { ...state, caption: { ...state.caption, horizontalAlign: payload } }
+    case 'captionVerticalAlign':
+      return { ...state, caption: { ...state.caption, verticalAlign: payload } }
+    default:
+      throw new Error()
+    }
+  }
 
   async function handleConfirm(changeAfterLineElapsedTime) {
     setIsProcessing(true)
@@ -38,25 +86,25 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
   }
 
   async function updateSpeech(changeAfterLineElapsedTime) {
-    if (!tabConfig.url) {
-      if (tabConfig.isSynthesis && tabConfig.subtitle) {
-        const voice = await createSynthesisVoiceFile(lessonIDRef.current, tabConfig)
-        tabConfig.voiceID = voice.id
-        tabConfig.url = voice.url
-      } else if (!tabConfig.isSynthesis && tabConfig.voiceID) {
-        const voice = await fetchVoiceFileURL(tabConfig.voiceID, lessonIDRef.current)
-        tabConfig.url = voice.url
+    if (!config.url) {
+      if (config.isSynthesis && config.subtitle) {
+        const voice = await createSynthesisVoiceFile(lessonIDRef.current, config)
+        config.voiceID = voice.id
+        config.url = voice.url
+      } else if (!config.isSynthesis && config.voiceID) {
+        const voice = await fetchVoiceFileURL(config.voiceID, lessonIDRef.current)
+        config.url = voice.url
       } else {
         // 合成だがsubtitleが未入力、または録音だがvoiceIDがない場合、声はなしになる
-        tabConfig.voiceID = ''
-        tabConfig.durationSec = 0
+        config.voiceID = ''
+        config.durationSec = 0
       }
     }
 
-    if (tabConfig.url) {
-      updateSpeechWithAudio(tabConfig, changeAfterLineElapsedTime)
+    if (config.url) {
+      updateSpeechWithAudio(config, changeAfterLineElapsedTime)
     } else {
-      updateSpeechWithoutAudio(tabConfig, changeAfterLineElapsedTime)
+      updateSpeechWithoutAudio(config, changeAfterLineElapsedTime)
     }
   }
 
@@ -110,5 +158,5 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
     closeCallback(true)
   }
 
-  return { isProcessing, tabConfig, setTabConfig, handleConfirm, handleCancel }
+  return { isProcessing, config, dispatchConfig, handleConfirm, handleCancel }
 }

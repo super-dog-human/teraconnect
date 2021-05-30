@@ -9,9 +9,9 @@ const labels = [
   { action: 'hide', body: '非表示' },
 ]
 
-export default function ActionSelector({ selectedAction, setAction, disabled }) {
+export default function ActionSelector({ selectedAction, dispatchConfig, disabled }) {
   function handleChange(e) {
-    setAction(e.currentTarget.dataset.action)
+    dispatchConfig({ type: 'action', payload: e.currentTarget.dataset.action })
   }
 
   return (

@@ -13,7 +13,7 @@ import useSpeechConfig from '../../../../../libs/hooks/lesson/edit/useSpeechConf
 import 'react-tabs/style/react-tabs.css'
 
 export default function Speech(props) {
-  const { isProcessing, tabConfig, setTabConfig, handleConfirm, handleCancel } = useSpeechConfig(props)
+  const { isProcessing, config, dispatchConfig, handleConfirm, handleCancel } = useSpeechConfig(props)
 
   resetIdCounter()
 
@@ -30,16 +30,16 @@ export default function Speech(props) {
             </TabList>
           </DragHandler>
           <TabPanel>
-            <TextTab config={tabConfig} setConfig={setTabConfig} />
+            <TextTab config={config} dispatchConfig={dispatchConfig} />
           </TabPanel>
           <TabPanel>
-            <VoiceTab config={tabConfig} setConfig={setTabConfig} />
+            <VoiceTab config={config} dispatchConfig={dispatchConfig} />
           </TabPanel>
         </Tabs>
       </TabContainer>
       <Container height='60'>
         <ContainerSpacer left='50' right='50'>
-          <DialogFooter elapsedTime={tabConfig.elapsedTime} setConfig={setTabConfig} onConfirm={handleConfirm} onCancel={handleCancel} isProcessing={isProcessing} />
+          <DialogFooter elapsedTime={config.elapsedTime} dispatchConfig={dispatchConfig} onConfirm={handleConfirm} onCancel={handleCancel} isProcessing={isProcessing} />
         </ContainerSpacer>
       </Container>
     </>
