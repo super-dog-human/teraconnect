@@ -1,15 +1,19 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState } from 'react'
-import { useContextMenuContext } from '../../../../libs/contexts/contextMenuContext'
 import { css } from '@emotion/core'
+import Flex from '../../../flex'
 import Container from '../../../container'
 import IconButton from '../../../button/iconButton'
 import GraphicThumbnail from '../graphicThumbnail'
 import AbsoluteContainer from '../../../absoluteContainer'
+import { useContextMenuContext } from '../../../../libs/contexts/contextMenuContext'
+import { useImageViewerContext } from '../../../../libs/contexts/imageViewerContext'
 
 export default function ThumbnailController({ graphicID, graphic, swapGraphic, removeGraphic }) {
   const { setContextMenu } = useContextMenuContext()
+  const { setImage } = useImageViewerContext()
   const [isButtonShow, setIsButtonShow] = useState(false)
+
 
   function handleEnter() {
     if (graphic.isUploading) return
@@ -28,9 +32,18 @@ export default function ThumbnailController({ graphicID, graphic, swapGraphic, r
     })
   }
 
+  function handleThumbnailClick(e) {
+    const url = e.currentTarget.dataset.url
+    setImage({ url, widePer: 70 })
+  }
+
   return (
-    <div css={bodyStyle} onMouseOver={handleEnter} onMouseLeave={handleLeave}>
-      <GraphicThumbnail url={graphic.url} isProcessing={graphic.isUploading} />
+    <div css={bodyStyle} data-url={graphic.url} onMouseOver={handleEnter} onMouseLeave={handleLeave} onClick={handleThumbnailClick}>
+      <Container width='185' height='100'>
+        <Flex justifyContent='center'>
+          <GraphicThumbnail url={graphic.url} isProcessing={graphic.isUploading} />
+        </Flex>
+      </Container>
       {isButtonShow && <AbsoluteContainer right='3px' bottom='5px'>
         <Container width='22' height='22'>
           <IconButton name='more' onClick={handleMenuClick} />
