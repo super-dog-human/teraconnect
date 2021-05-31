@@ -18,11 +18,11 @@ const GraphicThumbnail = React.memo(function graphicThumbnail({ url, isProcessin
         <Image src={url} width="175" height="100" objectFit="contain" draggable={false} onLoad={handleLoad} />
       }
       {(!isLoaded || isProcessing) &&
-      <AbsoluteContainer top='0' left='0'>
-        <ColorFilter filter='contrast(20%)'>
-          <Container width='175' height='100'><LoadingIndicator size={50} /></Container>
-        </ColorFilter>
-      </AbsoluteContainer>
+        <AbsoluteContainer top='0' left='0'>
+          <ColorFilter filter='contrast(20%)'>
+            <Container width='175' height='100'><LoadingIndicator size={50} /></Container>
+          </ColorFilter>
+        </AbsoluteContainer>
       }
     </Container>
   )
