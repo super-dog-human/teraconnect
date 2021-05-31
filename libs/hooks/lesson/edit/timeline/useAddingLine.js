@@ -73,7 +73,7 @@ export default function useAddingLine({ lessonRef, maxDurationSecInLine, lastTim
   }
 
   function addNewLine(elapsedTime, kind, newLine) {
-    const nextElapsedTime = Math.floor(elapsedTime + 1.0)
+    const nextElapsedTime = parseFloat((elapsedTime + 0.001).toFixed(3))
     newLine.elapsedTime = nextElapsedTime
 
     let sameTimeIndex
