@@ -5,6 +5,7 @@ import { useScreenClass } from 'react-grid-system'
 import Container from '../../../container'
 import Spacer from '../../../spacer'
 import Flex from '../../../flex'
+import Icon from '../../../icon'
 import PlainText from '../../../plainText'
 import TopLogoLink from '../../../topLogoLink'
 import MenuLink from './menuLink'
@@ -42,15 +43,27 @@ export default function Header({ currentPage }) {
           <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
             <Flex>
               <MenuLink isHover={isHover} page='edit' currentPage={currentPage} path='/'>
-                <PlainText color='white' size='16' lineHeight='77' letterSpacing='15'>編集</PlainText>
+                <Flex justifyContent='center'>
+                  <Container width='20' height='77'><Icon name='edit' /></Container>
+                  <Spacer width='20' />
+                  <PlainText color='white' size='16' lineHeight='77' letterSpacing='5'>編集</PlainText>
+                </Flex>
               </MenuLink>
               {['lg', 'xl', 'xxl'].includes(screenClass) && <Spacer width='100' />}
               <MenuLink isHover={isHover} page='review' currentPage={currentPage} path='/'>
-                <PlainText color='white' size='17' lineHeight='77' letterSpacing='2'>レビュー</PlainText>
+                <Flex justifyContent='center'>
+                  <Container width='20' height='77'><Icon name='report' /></Container>
+                  <Spacer width='10' />
+                  <PlainText color='white' size='17' lineHeight='77' letterSpacing='2'>レビュー</PlainText>
+                </Flex>
               </MenuLink>
               {['lg', 'xl', 'xxl'].includes(screenClass) && <Spacer width='100' />}
               <MenuLink isHover={isHover} page='publishing' currentPage={currentPage} path='/'>
-                <PlainText color='white' size='16' lineHeight='77'>公開設定</PlainText>
+                <Flex justifyContent='center'>
+                  <Container width='20' height='77'><Icon name='book' /></Container>
+                  <Spacer width='10' />
+                  <PlainText color='white' size='16' lineHeight='77'>公開設定</PlainText>
+                </Flex>
               </MenuLink>
             </Flex>
           </div>
