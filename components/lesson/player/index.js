@@ -12,7 +12,7 @@ export default function LessonPlayer(props) {
   return (
     <Aspect16To9Container>
       {isPreparing && <div>声の準備中</div>}
-      {bgImageURL && <BackgroundImage src={bgImageURL} />}
+      {bgImageURL && <BackgroundImage url={bgImageURL} />}
       {avatars    && <Avatar />}
       {drawings   && <Drawing drawingRef={drawingRef} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing} zKind='drawing' />}
       {graphics   && <Graphic />}
