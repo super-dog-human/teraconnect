@@ -59,7 +59,6 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
       <Header currentPage='edit'/>
       <main css={mainStyle} ref={ref}>
         <ImageViewerProvider>
-          <ImageViwer />
           <div css={bodyStyle}>
             <div css={leftSideStyle}>
               <LessonEditPreview />
@@ -70,6 +69,7 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
               <Timeline />
             </div>
           </div>
+          <ImageViwer />
         </ImageViewerProvider>
       </main>
     </>
