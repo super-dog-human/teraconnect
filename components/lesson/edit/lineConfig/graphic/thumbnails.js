@@ -8,6 +8,12 @@ import ContainerSpacer from '../../../../containerSpacer'
 import GraphicThumbnail from '../../graphicThumbnail'
 
 export default function Thumbnails({ config, graphicURLs, onClick }) {
+  const bodyStyle = css({
+    overflowX: 'scroll',
+    height: '100%',
+    visibility: config.action === 'show' ? 'visible' : 'hidden',
+  })
+
   const notSelectedStyle = css({
     cursor: 'pointer',
     margin: '10px',
@@ -38,8 +44,3 @@ export default function Thumbnails({ config, graphicURLs, onClick }) {
     </div>
   )
 }
-
-const bodyStyle = css({
-  overflowX: 'scroll',
-  height: '100%',
-})

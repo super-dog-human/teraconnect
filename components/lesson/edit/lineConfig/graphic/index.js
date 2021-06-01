@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from 'react'
+import React, { useState, useReducer, useEffect } from 'react'
 import Flex from '../../../../flex'
 import Spacer from '../../../../spacer'
 import Container from '../../../../container'
@@ -13,7 +13,7 @@ import { useLessonEditorContext } from '../../../../../libs/contexts/lessonEdito
 export default function Graphic({ index, initialConfig, closeCallback }) {
   const [config, dispatchConfig] = useReducer(configReducer, initialConfig)
   const { graphicURLs, updateLine } = useLessonEditorContext()
-  const [invalidSelected, setInvalidSelected] = useState(false)
+  const [invalidSelected, setInvalidSelected] = useState()
 
   function configReducer(state, { type, payload }) {
     switch (type) {
@@ -51,6 +51,14 @@ export default function Graphic({ index, initialConfig, closeCallback }) {
   function handleCancel() {
     closeCallback(true)
   }
+
+  useEffect(() => {
+    if (config.action === 'show' && !config.graphicID) {
+      setInvalidSelected(true)
+    } else {
+      setInvalidSelected(false)
+    }
+  }, [config])
 
   return (
     <>
