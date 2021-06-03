@@ -58,5 +58,6 @@ export default function useEmbeddingConfig({ index, initialConfig, closeCallback
   function handleCancel() {
     closeCallback(true)
   }
+
   return { config, dispatchConfig, serviceOptions, isInvalidInput, handleServiceChange, handleContentIDBlur, handleConfirm, handleCancel }
 }

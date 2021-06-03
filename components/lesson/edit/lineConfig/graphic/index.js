@@ -21,9 +21,8 @@ export default function Graphic({ index, initialConfig, closeCallback }) {
       return { ...state, elapsedTime: payload }
     case 'action':
       return { ...state, action: payload }
-    case 'graphicID': {
+    case 'graphicID':
       return { ...state, graphicID: payload.graphicID, url: payload.url }
-    }
     default:
       throw new Error()
     }
