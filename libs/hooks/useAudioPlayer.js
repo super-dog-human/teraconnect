@@ -75,6 +75,11 @@ export default function useAudioPlayer() {
     updateAudioElapsedTime()
   }
 
+  function changeVolume(volume) {
+    if (!audioRef.current) return
+    audioRef.current.volume = volume
+  }
+
   useEffect(() => {
     return () => {
       if (isStopped()) return
@@ -82,5 +87,5 @@ export default function useAudioPlayer() {
     }
   }, [])
 
-  return { isPlaying, createAudio, switchAudio, seekAudio, audioElapsedTime, audioDuration, audioCurrent }
+  return { isPlaying, createAudio, switchAudio, seekAudio, changeVolume, audioElapsedTime, audioDuration, audioCurrent }
 }

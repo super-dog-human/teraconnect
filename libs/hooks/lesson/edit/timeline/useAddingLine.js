@@ -68,6 +68,9 @@ export default function useAddingLine({ lessonRef, maxDurationSecInLine, lastTim
   function addMusicLine(elapsedTime) {
     const music = {
       action: 'start',
+      isFading: false,
+      isLoop: false,
+      volume: 1,
     }
     return addNewLine(elapsedTime, 'music', music)
   }

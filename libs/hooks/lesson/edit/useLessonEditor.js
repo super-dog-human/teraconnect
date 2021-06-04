@@ -22,6 +22,7 @@ export default function useLessonEditor() {
   const [graphicURLs, setGraphicURLs] = useState({})
   const [embeddings, setEmbeddings] = useState([])
   const [musics, setMusics] = useState([])
+  const [musicURLs, setMusicURLs] = useState({})
   const [speeches, setSpeeches] = useState([])
   const { fetchWithAuth } = useFetch()
   const { showError } = useErrorDialogContext()
@@ -54,6 +55,23 @@ export default function useLessonEditor() {
       })
   }
 
+  function fetchMusicURLs() {
+    fetchWithAuth('/background_musics').then(r => {
+      setMusicURLs(r.reduce((acc, r) => {
+        acc[r.id] = { name: r.name, url: r.url }
+        return acc
+      }, {}))
+    }).catch(e => {
+      showError({
+        message: 'BGMの読み込みに失敗しました。',
+        original: e,
+        canDismiss: false,
+        callback: fetchMusicURLs,
+      })
+      console.error(e)
+    })
+  }
+
   function updateLessonDuration() {
     const totalDurationSec = Math.max(...Object.keys(timeline).map(elapsedTime => {
       const maxDurationSec = Math.max(...Object.keys(timeline[elapsedTime]).map(kind => (
@@ -71,6 +89,10 @@ export default function useLessonEditor() {
   }
 
   useEffect(() => {
+    fetchMusicURLs()
+  }, [])
+
+  useEffect(() => {
     if (Object.keys(timeline).length === 0) return
     updateLessonDuration()
   }, [timeline])
@@ -81,6 +103,6 @@ export default function useLessonEditor() {
   }, allMaterials())
 
   return { fetchResources, isLoading, durationSec, timeline, voiceSynthesisConfig, setVoiceSynthesisConfig, bgImageURL, setBgImageURL,
-    avatars, drawings, embeddings, graphics, graphicURLs, musics, speeches, setEmbeddings, setGraphics, setGraphicURLs, updateLine, deleteLine, swapLine,
+    avatars, drawings, embeddings, graphics, graphicURLs, musics, musicURLs, speeches, setEmbeddings, setGraphics, setGraphicURLs, updateLine, deleteLine, swapLine,
     addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast }
 }

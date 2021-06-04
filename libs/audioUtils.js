@@ -1,5 +1,13 @@
 const numChannels = 1
 const lamejs = require('lamejs')
+const maxFileByteSize = 10485760 // 10MB
+
+export function filterAvailableAudios(files) {
+  return Array.from(files)
+    .filter(f => ['audio/mpeg'].includes(f.type))
+    .filter(f => f.size <= maxFileByteSize)
+}
+
 
 export function bufferToWavFile({ buffers, sampleRate }) {
   const mergedBuffers = mergeBuffers(buffers)
