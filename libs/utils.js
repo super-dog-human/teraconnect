@@ -3,6 +3,8 @@ import { GA_TRACKING_ID } from './constants'
 ReactGA.initialize(GA_TRACKING_ID)
 const cloneDeep = require('clone-deep')
 
+export const tenMB = 10485760
+
 export function filterObject(obj, keys) {
   return Object.keys(obj)
     .filter(key => keys.includes(key))

@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useContextMenuContext } from '../../../contexts/contextMenuContext'
-import { isBlobURL } from '../../../utils'
+import { isBlobURL, tenMB as maxFileByteSize } from '../../../utils'
 import fetch from 'isomorphic-unfetch'
 import { wavToMp3 } from '../../../audioUtils'
-
-const maxFileByteSize = 10485760 // 10MB
 
 export default function useHumanVoiceFileController(config, dispatchConfig, inputFileRef) {
   const [isProcessing, setIsProcessing] = useState(false)

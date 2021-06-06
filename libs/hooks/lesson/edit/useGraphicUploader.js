@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import useFetch from '../../useFetch'
+import { putFile } from '../../../fetch'
 import { useRouter } from 'next/router'
 import { generateRandomID } from '../../../utils'
 import { filterAvailableImages, isAvailableFileSize, imageToThumbnailURL } from '../../../graphicUtils'
@@ -12,7 +13,7 @@ export default function useGraphicUploader({ graphicURLs, setGraphicURLs }) {
   const graphicContainerRef = useRef()
   const inputMultiFileRef = useRef()
   const lessonIDRef = useRef(parseInt(router.query.id))
-  const { createGraphics, putFile } = useFetch()
+  const { createGraphics } = useFetch()
   const { showError } = useErrorDialogContext()
 
   function handleUploadButtonClick() {

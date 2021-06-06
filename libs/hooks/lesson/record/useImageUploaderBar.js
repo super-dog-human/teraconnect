@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react'
 import useFetch from '../../useFetch'
+import { putFile } from '../../../fetch'
 import { generateRandomID } from '../../../utils'
 import { filterAvailableImages, isAvailableFileSize, imageToThumbnailURL } from '../../../graphicUtils'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
@@ -7,7 +8,7 @@ import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 export default function useImageUploaderBar(id, images, setImages, inputFileRef, selectImageBarRef) {
   const imageCountRef = useRef(0)
   const { showError } = useErrorDialogContext()
-  const { createGraphics, putFile } = useFetch()
+  const { createGraphics } = useFetch()
 
   function handleDrop(e) {
     uploadImages(e.dataTransfer.files)
