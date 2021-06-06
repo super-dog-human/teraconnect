@@ -21,3 +21,8 @@ export function createGraphics(lessonID, files, option) {
   const request = { lessonID, fileRequests: requests }
   return post('/graphics', request, 'POST', null, option)
 }
+
+export function createMusic(fileName, option) {
+  const request = { name: fileName }
+  return post('/background_musics', request, 'POST', null, option)
+}

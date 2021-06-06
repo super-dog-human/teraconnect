@@ -2,7 +2,7 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-export default function LoadingIndicator({ size }) {
+export default function LoadingIndicator({ size, color }) {
   const imageStyle = css({
     width: `${size}%`,
     height: `${size}%`,
@@ -11,7 +11,7 @@ export default function LoadingIndicator({ size }) {
 
   return (
     <div css={bodyStyle} className='indicator-z'>
-      <img src="/img/icon/loading.svg" css={imageStyle} draggable="false" />
+      <img src={`/img/icon/${color ? `loading-${color}` : 'loading'}.svg`} css={imageStyle} draggable="false" />
     </div>
   )
 }

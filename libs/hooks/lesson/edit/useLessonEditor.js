@@ -103,6 +103,6 @@ export default function useLessonEditor() {
   }, allMaterials())
 
   return { fetchResources, isLoading, durationSec, timeline, voiceSynthesisConfig, setVoiceSynthesisConfig, bgImageURL, setBgImageURL,
-    avatars, drawings, embeddings, graphics, graphicURLs, musics, musicURLs, speeches, setEmbeddings, setGraphics, setGraphicURLs, updateLine, deleteLine, swapLine,
+    avatars, drawings, embeddings, graphics, graphicURLs, musics, musicURLs, setMusicURLs, speeches, setEmbeddings, setGraphics, setGraphicURLs, updateLine, deleteLine, swapLine,
     addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast }
 }

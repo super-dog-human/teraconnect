@@ -1,4 +1,4 @@
-const maxFileByteSize = 10485760 // 10MB
+import { tenMB as maxFileByteSize } from './utils'
 const maxThumbnailSize = { width: 150, height: 95 }
 
 export function filterAvailableImages(files) {
