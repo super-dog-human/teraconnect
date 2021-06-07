@@ -29,7 +29,7 @@ export default function FlipIconButton({ name, flipName, backgroundColor, color,
   })
 
   return (
-    <button onClick={onClick} css={bodyStyle} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <button css={bodyStyle} onClick={onClick} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <img src={`/img/icon/${isHover ? flipName : name}.svg`} draggable={false} css={imageStyle} />
     </button>
   )
