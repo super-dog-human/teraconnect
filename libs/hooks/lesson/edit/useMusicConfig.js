@@ -29,9 +29,9 @@ export default function useMusicConfig({ index, initialConfig, closeCallback }) 
     case 'volume':
       return { ...state, volume: payload }
     case 'isFading':
-      return { ...state, isFading: !state.isFading }
+      return { ...state, isFading: payload }
     case 'isLoop':
-      return { ...state, isLoop: !state.isLoop }
+      return { ...state, isLoop: payload }
     default:
       throw new Error()
     }
@@ -129,12 +129,12 @@ export default function useMusicConfig({ index, initialConfig, closeCallback }) 
     dispatchConfig({ type: 'volume', payload: volume })
   }
 
-  function handleFadeChange() {
-    dispatchConfig({ type: 'isFading' })
+  function handleFadeChange(e) {
+    dispatchConfig({ type: 'isFading', payload: e.target.checked })
   }
 
-  function handleLoopChange() {
-    dispatchConfig({ type: 'isLoop' })
+  function handleLoopChange(e) {
+    dispatchConfig({ type: 'isLoop', payload: e.target.checked })
   }
 
   function handleConfirm(changeAfterLineElapsedTime) {
