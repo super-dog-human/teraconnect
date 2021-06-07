@@ -5,7 +5,7 @@ import { useLessonRecorderContext } from '../../../libs/contexts/lessonRecorderC
 import useLessonRecordChangeTabDetector from '../../../libs/hooks/lesson/record/useChangeTabDetector'
 import useRecordResource from '../../../libs/hooks/lesson/record/useRecordResource'
 import useDragOverDetector from '../../../libs/hooks/useDragOverDetector'
-import useLessonAvatar from '../../../libs/hooks/lesson/useAvatar'
+import useAvatar from '../../../libs/hooks/lesson/useAvatar'
 import useDrawingRecorder from '../../../libs/hooks/lesson/useDrawingRecorder'
 import useVoiceRecorder from '../../../libs/hooks/lesson/useVoiceRecorder'
 import Aspect16To9Container from '../../aspect16To9Container'
@@ -33,7 +33,7 @@ const LessonRecord = React.forwardRef(function lessonRecord({ lesson, hasResize 
   const { hasDragOver, handleAreaDragOver, handleAreaDragLeave, handleAreaDrop } = useDragOverDetector()
   const { bgImages, avatars } = useRecordResource(setBgImageURL)
   const { isMicReady, isSpeaking, micDeviceID, setMicDeviceID, silenceThresholdSec, setSilenceThresholdSec } = useVoiceRecorder({ lessonID: lesson.id, isRecording, realElapsedTime })
-  const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useLessonAvatar(setIsLoading, isSpeaking, hasResize)
+  const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useAvatar(setIsLoading, isSpeaking, hasResize)
   const { isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, enableEraser, setEnableEraser, undoDrawing, clearDrawing, drawingColor, setDrawingColor, drawingLineWidth, setDrawingLineWidth,
     startDrawing, inDrawing, endDrawing } = useDrawingRecorder({ hasResize, drawingRef, startDragging, inDragging, endDragging, setRecord })
 

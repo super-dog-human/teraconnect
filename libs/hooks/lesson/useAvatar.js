@@ -4,7 +4,7 @@ import AvatarLoader from '../../avatar/loader'
 import { switchSwipable, mouseOrTouchPositions } from '../../utils'
 import { useLessonRecorderContext } from '../../contexts/lessonRecorderContext'
 
-export default function useLessonAvatar(setIsLoading, isSpeaking, hasResize) {
+export default function useAvatar(setIsLoading, isSpeaking, hasResize) {
   const clock = new Clock()
   const avatarRef = useRef()
   const startDraggingTimeRef = useRef()
