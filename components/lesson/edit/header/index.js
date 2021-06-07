@@ -46,7 +46,7 @@ export default function Header({ currentPage }) {
                 <Flex justifyContent='center'>
                   <Container width='20' height='77'><Icon name='edit' /></Container>
                   <Spacer width='20' />
-                  <PlainText color='white' size='16' lineHeight='77' letterSpacing='5'>編集</PlainText>
+                  <PlainText color='white' size='15' lineHeight='77' letterSpacing='5'>編集</PlainText>
                 </Flex>
               </MenuLink>
               {['lg', 'xl', 'xxl'].includes(screenClass) && <Spacer width='100' />}
@@ -54,7 +54,7 @@ export default function Header({ currentPage }) {
                 <Flex justifyContent='center'>
                   <Container width='20' height='77'><Icon name='report' /></Container>
                   <Spacer width='10' />
-                  <PlainText color='white' size='17' lineHeight='77' letterSpacing='2'>レビュー</PlainText>
+                  <PlainText color='white' size='15' lineHeight='77' letterSpacing='2'>レビュー</PlainText>
                 </Flex>
               </MenuLink>
               {['lg', 'xl', 'xxl'].includes(screenClass) && <Spacer width='100' />}
@@ -62,7 +62,7 @@ export default function Header({ currentPage }) {
                 <Flex justifyContent='center'>
                   <Container width='20' height='77'><Icon name='book' /></Container>
                   <Spacer width='10' />
-                  <PlainText color='white' size='16' lineHeight='77'>公開設定</PlainText>
+                  <PlainText color='white' size='15' lineHeight='77'>公開設定</PlainText>
                 </Flex>
               </MenuLink>
             </Flex>
