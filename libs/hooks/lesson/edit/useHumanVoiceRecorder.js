@@ -8,7 +8,7 @@ export default function useHumanVoiceRecorder(config, dispatchConfig) {
   const router = useRouter()
   const lessonIDRef = useRef(parseInt(router.query.id))
   const [isRecording, setIsRecording] = useState(false)
-  const { deviceOptions, requestMicPermission } = useAudioInputDevices()
+  const { deviceOptions } = useAudioInputDevices()
   const { isMicReady, setMicDeviceID, voiceFile } = useVoiceRecorder({ needsUpload: false, isRecording })
   const { fetchVoiceFileURL } = useFetch()
 
@@ -25,7 +25,6 @@ export default function useHumanVoiceRecorder(config, dispatchConfig) {
   }
 
   useEffect(() => {
-    requestMicPermission()
     setAudioFromVoiceID()
 
     function setAudioFromVoiceID() {

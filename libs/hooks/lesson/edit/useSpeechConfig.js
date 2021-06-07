@@ -27,15 +27,10 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
       return { ...state, elapsedTime: payload }
     case 'url':
       return { ...state, url: payload }
-    case 'switchIsSynthesis':
-      state.isSynthesis = !state.isSynthesis
-      if (state.isSynthesis) {
-        state.voiceID = ''
-        state.url = ''
-      } else {
-        state = { ...state, ...payload }
-      }
-      return { ...state }
+    case 'switchToSynthesis':
+      return { ...state, url: payload.url, voiceID: payload.voiceID, isSynthesis: true }
+    case 'switchToHuman':
+      return { ...state, url: payload.url, voiceID: payload.voiceID, isSynthesis: false }
     case 'initializeSynthesis':
       return { ...state, url: '', synthesisConfig: { ...state.synthesisConfig, languageCode: payload.languageCode, name: payload.name } }
     case 'synthesisName':
@@ -52,7 +47,6 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
       return { ...state, url: '', subtitle: payload }
     case 'humanVoice':
       return { ...state, url: payload, voiceID: '', }
-
     case 'subtitle':
       return { ...state, subtitle: payload }
     case 'captionBody':
@@ -74,12 +68,12 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
     setIsProcessing(true)
 
     updateSpeech(changeAfterLineElapsedTime).catch(e => {
-      setIsProcessing(false)
       showError({
         message: '音声データのURL生成に失敗しました。',
         original: e,
         canDismiss: true,
-        callback: handleConfirm,
+        callback: () => { handleConfirm(changeAfterLineElapsedTime) },
+        dismissCallback: () => { setIsProcessing(false) },
       })
     })
   }
