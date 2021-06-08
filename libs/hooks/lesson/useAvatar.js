@@ -2,16 +2,14 @@ import { useRef, useState, useEffect } from 'react'
 import { Clock } from 'three'
 import AvatarLoader from '../../avatar/loader'
 import { switchSwipable, mouseOrTouchPositions } from '../../utils'
-import { useLessonRecorderContext } from '../../contexts/lessonRecorderContext'
 
-export default function useAvatar(setIsLoading, isSpeaking, hasResize) {
+export default function useAvatar({ setIsLoading, isSpeaking, hasResize, movingCallback }) {
   const clock = new Clock()
   const avatarRef = useRef()
   const startDraggingTimeRef = useRef()
   const isDraggingRef = useRef(false)
   const [config, setConfig] = useState({})
   const containerRef = useRef(null)
-  const { setRecord } = useLessonRecorderContext()
 
   function startDragging(e) {
     const positions = mouseOrTouchPositions(e, ['touchstart'])
@@ -31,7 +29,7 @@ export default function useAvatar(setIsLoading, isSpeaking, hasResize) {
       return
     }
 
-    if(avatarRef.current.isOverAvatar(...positions)) {
+    if (avatarRef.current.isOverAvatar(...positions)) {
       e.target.style.cursor = 'move'
     } else {
       e.target.style.cursor = 'default'
@@ -42,11 +40,13 @@ export default function useAvatar(setIsLoading, isSpeaking, hasResize) {
     if (isDraggingRef.current) {
       switchSwipable(true)
       isDraggingRef.current = false
-      setRecord({
-        kind: 'avatarMoving',
-        durationMillisec: new Date() - startDraggingTimeRef.current,
-        value: { ...avatarRef.current.currentPosition() },
-      })
+      if (movingCallback) {
+        movingCallback({
+          kind: 'avatarMoving',
+          durationMillisec: new Date() - startDraggingTimeRef.current,
+          value: { ...avatarRef.current.currentPosition() },
+        })
+      }
     }
   }
 
@@ -67,7 +67,7 @@ export default function useAvatar(setIsLoading, isSpeaking, hasResize) {
     avatarRef.current.setLightColor(color, config.lightColor.a * 2)
   }
 
-  function changeSpeakMotion() {
+  function changeSpeakingMotion() {
     avatarRef.current.switchSpeaking(isSpeaking)
   }
 
@@ -108,7 +108,7 @@ export default function useAvatar(setIsLoading, isSpeaking, hasResize) {
   }, [config])
 
   useEffect(() => {
-    changeSpeakMotion()
+    changeSpeakingMotion()
   }, [isSpeaking])
 
   useEffect(() => {

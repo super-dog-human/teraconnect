@@ -33,7 +33,7 @@ const LessonRecord = React.forwardRef(function lessonRecord({ lesson, hasResize 
   const { hasDragOver, handleAreaDragOver, handleAreaDragLeave, handleAreaDrop } = useDragOverDetector()
   const { bgImages, avatars } = useRecordResource(setBgImageURL)
   const { isMicReady, isSpeaking, micDeviceID, setMicDeviceID, silenceThresholdSec, setSilenceThresholdSec } = useVoiceRecorder({ lessonID: lesson.id, isRecording, realElapsedTime })
-  const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useAvatar(setIsLoading, isSpeaking, hasResize)
+  const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useAvatar({ setIsLoading, isSpeaking, hasResize, movingCallback: setRecord })
   const { isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, enableEraser, setEnableEraser, undoDrawing, clearDrawing, drawingColor, setDrawingColor, drawingLineWidth, setDrawingLineWidth,
     startDrawing, inDrawing, endDrawing } = useDrawingRecorder({ hasResize, drawingRef, startDragging, inDragging, endDragging, setRecord })
 
