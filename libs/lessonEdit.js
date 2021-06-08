@@ -1,10 +1,11 @@
 import { filterObject } from './utils'
 import { createTimeline } from './lessonLineUtils'
 
-export async function fetchMaterial({ lesson, fetchWithAuth, setVoiceSynthesisConfig, setBgImageURL, setAvatars, setDrawings, setEmbeddings, setGraphics, setGraphicURLs, setMusics, setSpeeches }) {
+export async function fetchMaterial({ lesson, fetchWithAuth, setVoiceSynthesisConfig, setBgImageURL, setAvatarLightColor, setAvatars, setDrawings, setEmbeddings, setGraphics, setGraphicURLs, setMusics, setSpeeches }) {
   const material = await fetchWithAuth(`/lessons/${lesson.id}/materials`)
   setBgImageURL(material.backgroundImageURL)
   setVoiceSynthesisConfig(material.voiceSynthesisConfig)
+  setAvatarLightColor(material.avatarLightColor)
   setAvatars(material.avatars || [])
   await setGraphicsWithURL(material.graphics || [])
   setDrawings(material.drawings || [])

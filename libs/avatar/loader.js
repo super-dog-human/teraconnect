@@ -64,8 +64,7 @@ export default class AvatarLoader {
 
     raycaster.ray.intersectPlane(plane, planeIntersect)
     this.vrm.scene.position.addVectors(planeIntersect, positionShift)
-
-    this._getBone('hips').rotation.y = Math.PI - mousePosition.x * 0.7
+    this._setBodyRotationByXPosition(mousePosition.x)
   }
 
   switchSpeaking(isSpeaking) {
@@ -156,7 +155,6 @@ export default class AvatarLoader {
       150.0,
       160.0
     )
-    //    this.camera.position.set(-0.6, 1.05, 155.0)
     this.camera.position.set(0, 0, 155.0)
   }
 
@@ -185,6 +183,11 @@ export default class AvatarLoader {
     })
   }
 
+  _setBodyRotationByXPosition(x) {
+    // xは-1〜+1の範囲をとる。完全に真横を向かないよう0.7をかけて使用する
+    this._getBone('hips').rotation.y = Math.PI - x * 0.7
+  }
+
   _getBone(boneName) {
     return this.vrm.humanoid.getBoneNode(boneName)
   }
@@ -197,6 +200,10 @@ export default class AvatarLoader {
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setSize(this.domSize.width, this.domSize.height)
     this.renderer.render(this.scene, this.camera)
+
+    // rendererの作成後でないとアバターの正しい位置が取得できないので、ここで体の向きを調整
+    const currentPosition = this.vrm.scene.getWorldPosition(new THREE.Vector3()).project(this.camera)
+    this._setBodyRotationByXPosition(currentPosition.x)
 
     return this.renderer.domElement
   }

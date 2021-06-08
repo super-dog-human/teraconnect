@@ -16,13 +16,6 @@ const InputNumber = React.forwardRef(function inputNumber(props, ref) {
     borderStyle: 'solid',
     padding: '0px',
     margin: '0px',
-    '::-webkit-outer-spin-button': {
-      '-webkit-appearance': 'none',
-    },
-    '::-webkit-inner-spin-button': {
-      '-webkit-appearance': 'none',
-    },
-    '-moz-appearance': 'textfield',
     ':focus': {
       outline: 'none', // 入力中はカーソルが表示されるのでnoneを許容する
     },
