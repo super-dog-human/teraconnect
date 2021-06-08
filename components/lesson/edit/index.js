@@ -9,9 +9,9 @@ import Loading from './loading'
 import ContextMenu from '../../contextMenu'
 import ImageViwer from '../../imageViewer'
 import Header from './header'
-import LessonEditPreview from './preview'
-import LessonDurationTime from './durationTime'
-import LessonEditGraphicController from './graphicController/'
+import Preview from './preview'
+import DurationTime from './durationTime'
+import GraphicController from './graphicController/'
 import Timeline from './timeline'
 
 const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
@@ -61,9 +61,9 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
         <ImageViewerProvider>
           <div css={bodyStyle}>
             <div css={leftSideStyle}>
-              <LessonEditPreview />
-              <LessonDurationTime />
-              <LessonEditGraphicController />
+              <Preview />
+              <DurationTime />
+              <GraphicController />
             </div>
             <div css={rightSideStyle}>
               <Timeline />

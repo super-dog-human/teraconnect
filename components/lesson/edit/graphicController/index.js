@@ -16,7 +16,7 @@ import { useLessonEditorContext } from '../../../../libs/contexts/lessonEditorCo
 import { useErrorDialogContext } from '../../../../libs/contexts/errorDialogContext'
 import { useDialogContext } from '../../../../libs/contexts/dialogContext'
 
-export default function LessonEditGraphicController() {
+export default function GraphicController() {
   const { setGraphics, graphicURLs, setGraphicURLs } = useLessonEditorContext()
   const { showDialog } = useDialogContext()
   const { showError } = useErrorDialogContext()

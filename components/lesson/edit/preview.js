@@ -5,7 +5,7 @@ import LessonPlayer from '../player/'
 import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorContext'
 import useLessonPlayer from '../../../libs/hooks/lesson/useLessonPlayer'
 
-export default function LessonEditPreview() {
+export default function Preview() {
   const { durationSec, bgImageURL, avatars, graphics, drawings, speeches } = useLessonEditorContext()
   const { handleMouseOver, handleMouseLeave, handlePlayButtonClick, handleDragStart, handleSeekChange, isPlayerHover, ...playerProps } =
     useLessonPlayer({ startElapsedTime: 0, durationSec, avatars, graphics, drawings, speeches })

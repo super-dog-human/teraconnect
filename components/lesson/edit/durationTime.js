@@ -4,7 +4,7 @@ import { css } from '@emotion/core'
 import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorContext'
 import { floatSecondsToMinutesFormat } from '../../../libs/utils'
 
-export default function LessonDurationTime() {
+export default function DurationTime() {
   const { durationSec } = useLessonEditorContext()
 
   return (
