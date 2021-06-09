@@ -9,7 +9,7 @@ export default function useEmbeddingConfig({ index, initialConfig, closeCallback
 
   const { updateLine } = useLessonEditorContext()
   const [config, dispatchConfig] = useReducer(configReducer, initialConfig)
-  const [isInvalidInput, setIsInvalidInput] = useState(!initialConfig.contentID || initialConfig.contentID.length < 11)
+  const [isInvalidInput, setIsInvalidInput] = useState(false)
 
   function configReducer(state, { type, payload }) {
     switch (type) {
