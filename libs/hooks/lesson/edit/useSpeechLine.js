@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useLessonEditorContext } from '../../../contexts/lessonEditorContext'
 import useAudioPlayer from '../../useAudioPlayer'
 import useSynthesisVoice from '../../useSynthesisVoice'
@@ -6,9 +6,11 @@ import { findNextElement } from '../../../utils'
 import { fetchVoiceFileURL } from '../../../fetchResource'
 import { useRouter } from 'next/router'
 
-export default function useSpeechLine({ speech, index }) {
+export default function useSpeechLine({ speech, index, handleEditClick }) {
   const router = useRouter()
+  const inputRef = useRef()
   const [isLoading, setIsLoading] = useState(false)
+  const [status, setStatus] = useState(true)
   const { isPlaying, createAudio, switchAudio } = useAudioPlayer()
   const { addSpeechLineToLast, updateLine } = useLessonEditorContext()
   const { createSynthesisVoiceFile } = useSynthesisVoice()
@@ -73,5 +75,27 @@ export default function useSpeechLine({ speech, index }) {
     updateLine({ kind: 'speech', index, elapsedTime: speech.elapsedTime, newValue: speech })
   }
 
-  return { isLoading, isPlaying, handleSpeechClick, handleInputKeyDown, handleTextBlur }
+  function handleSpeechButtonClick() {
+    if (!status) return
+    handleSpeechClick(inputRef.current.value)
+  }
+
+  function handleEditButtonClick(e) {
+    e.stopPropagation()
+
+    speech.subtitle = inputRef.current.value
+    handleEditClick(e, 'speech', index, speech)
+  }
+
+  useEffect(() => {
+    if (speech.isSynthesis && speech.subtitle) {
+      setStatus(true)
+    } else if(!speech.isSynthesis && speech.voiceID) {
+      setStatus(true)
+    } else {
+      setStatus(false)
+    }
+  }, [speech])
+
+  return { isLoading, isPlaying, inputRef, status, handleSpeechButtonClick, handleEditButtonClick, handleSpeechClick, handleInputKeyDown, handleTextBlur }
 }

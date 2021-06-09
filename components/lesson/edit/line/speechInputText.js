@@ -3,15 +3,16 @@ import React, { useEffect } from 'react'
 import { css } from '@emotion/core'
 import InputText from '../../../form/inputText'
 
-const SpeechInputText = React.forwardRef(function speechInputText({ defaultValue, onKeyDown, onBlur, readOnly, isFocus }, ref) {
+const SpeechInputText = React.forwardRef(function speechInputText({ defaultValue, onKeyDown, onBlur, readOnly, shouldFocus }, ref) {
   useEffect(() => {
-    if (!isFocus) return
+    if (!shouldFocus) return
     ref.current.focus()
   }, [])
 
   return (
     <div css={bodyStyle}>
-      <InputText key={defaultValue} ref={ref} size='15' color='var(--dark-gray)' borderWidth='0' defaultValue={defaultValue} onKeyDown={onKeyDown} onBlur={onBlur} readOnly={readOnly} />
+      <InputText key={defaultValue} ref={ref} size='15' color='var(--dark-gray)' borderColor='var(--dark-purple)' borderWidth='0'
+        defaultValue={defaultValue} onKeyDown={onKeyDown} onBlur={onBlur} readOnly={readOnly} />
     </div>
   )
 })
