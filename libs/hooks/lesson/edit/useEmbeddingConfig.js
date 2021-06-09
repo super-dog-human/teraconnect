@@ -37,7 +37,9 @@ export default function useEmbeddingConfig({ index, initialConfig, closeCallback
   function handleContentIDBlur(e) {
     const id = e.currentTarget.value
 
-    if (id.length === 11) {
+    if (config.serviceName === 'youtube' && id.length === 11) {
+      setIsInvalidInput(false)
+    } else if (config.serviceName === 'geogebra' && id.length === 8) {
       setIsInvalidInput(false)
     } else {
       setIsInvalidInput(true)
