@@ -38,7 +38,8 @@ export default function useLessonEditor() {
   async function fetchResources(lesson) {
     lessonRef.current = lesson
 
-    fetchMaterial({ lesson, fetchWithAuth, setDurationSec, setVoiceSynthesisConfig, setBgImageURL, setAvatarLightColor, setAvatars, setDrawings, setEmbeddings, setGraphics, setGraphicURLs, setMusics, setSpeeches })
+    setDurationSec(lesson.durationSec)
+    fetchMaterial({ lesson, fetchWithAuth, setVoiceSynthesisConfig, setBgImageURL, setAvatarLightColor, setAvatars, setDrawings, setEmbeddings, setGraphics, setGraphicURLs, setMusics, setSpeeches })
       .then(timeline => {
         setTimeline(timeline)
         setIsLoading(false)

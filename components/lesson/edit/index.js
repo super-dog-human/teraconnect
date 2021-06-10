@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/core'
 import { useScreenClass } from 'react-grid-system'
 import { useContextMenuContext } from '../../../libs/contexts/contextMenuContext'
@@ -18,6 +18,7 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
   const screenClass = useScreenClass()
   const { contextMenu, handleDismiss } = useContextMenuContext()
   const { fetchResources, timeline } = useLessonEditorContext()
+  const [isLoading, setIsLoading] = useState(true)
 
   const bodyStyle = css({
     margin: 'auto',
@@ -52,10 +53,16 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
     fetchResources(lesson)
   }, [])
 
+  useEffect(() => {
+    if (Object.keys(timeline).length > 0) {
+      setIsLoading(false)
+    }
+  }, [timeline])
+
   return (
     <>
       <ContextMenu {...contextMenu} handleDismiss={handleDismiss} />
-      <Loading timeline={timeline} />
+      <Loading isShow={isLoading} />
       <Header currentPage='edit'/>
       <main css={mainStyle} ref={ref}>
         <ImageViewerProvider>

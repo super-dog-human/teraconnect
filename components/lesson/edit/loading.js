@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef } from 'react'
 import { css } from '@emotion/core'
 import Container from '../../container'
 import Flex from '../../flex'
@@ -14,15 +14,8 @@ const maxims = [
   { body: '教えるとは、希望を語ること', author: 'Louis Aragon', source: 'Chanson de l\'Université de Strasbourg' },
 ]
 
-export default function Loading({ timeline }) {
+export default function Loading({ isShow }) {
   const randomMaximRef = useRef(pickFromArray(maxims))
-  const [isShow, setIsShow] = useState(true)
-
-  useEffect(() => {
-    if (Object.keys(timeline).length > 0) {
-      setIsShow(false)
-    }
-  }, [timeline])
 
   return (
     <FullscreeenContainer position='fixed' zKind='indicator' isShow={isShow}>
