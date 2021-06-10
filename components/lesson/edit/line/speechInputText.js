@@ -11,7 +11,7 @@ const SpeechInputText = React.forwardRef(function speechInputText({ defaultValue
 
   return (
     <div css={bodyStyle}>
-      <InputText key={defaultValue} ref={ref} size='15' color='var(--dark-gray)' borderColor='var(--dark-purple)' borderWidth='0'
+      <InputText key={defaultValue} ref={ref} size='14' color='var(--dark-gray)' borderColor='var(--dark-purple)' borderWidth='0'
         defaultValue={defaultValue} onKeyDown={onKeyDown} onBlur={onBlur} readOnly={readOnly} />
     </div>
   )
