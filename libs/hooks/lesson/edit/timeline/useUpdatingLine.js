@@ -1,6 +1,6 @@
-export default function useUpdatingLine({ shiftElapsedTime, updateMaterial, targetMaterials }) {
+export default function useUpdatingLine({ shiftElapsedTime, updateMaterial, targetMaterial }) {
   function updateLine({ kind, index, elapsedTime, newValue, changeAfterLineElapsedTime }) {
-    const { materials, setter } = targetMaterials(kind)
+    const { materials, setter } = targetMaterial(kind)
     const currentValue = materials.filter(m => m.elapsedTime === elapsedTime)[index]
     updateMaterial(setter, currentValue, newValue)
 

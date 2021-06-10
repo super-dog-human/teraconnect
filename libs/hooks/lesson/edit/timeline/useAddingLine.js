@@ -1,4 +1,4 @@
-export default function useAddingLine({ lessonRef, maxDurationSecInLine, lastTimeline, targetMaterials }) {
+export default function useAddingLine({ lessonRef, maxDurationSecInLine, lastTimeline, targetMaterial }) {
   function addAvatarLine(elapsedTime) {
     const avatar = {
       durationSec: 0,
@@ -48,7 +48,7 @@ export default function useAddingLine({ lessonRef, maxDurationSecInLine, lastTim
     if (newElapsedTime > 600.0) return
 
     const newSpeech = newBlankSpeech(newElapsedTime)
-    targetMaterials('speech').setter(speeches => [...speeches, newSpeech])
+    targetMaterial('speech').setter(speeches => [...speeches, newSpeech])
   }
 
   function newBlankSpeech(elapsedTime) {
@@ -80,7 +80,7 @@ export default function useAddingLine({ lessonRef, maxDurationSecInLine, lastTim
     newLine.elapsedTime = nextElapsedTime
 
     let sameTimeIndex
-    targetMaterials(kind).setter(materials => {
+    targetMaterial(kind).setter(materials => {
       const sameTimeLastIndex = materials.slice().reverse().findIndex(m => m.elapsedTime === newLine.elapsedTime)
       if (sameTimeLastIndex >= 0) {
         sameTimeIndex = materials.length - sameTimeLastIndex

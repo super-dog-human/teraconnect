@@ -3,7 +3,7 @@ export default function useLineUtils({ avatars, drawings, embeddings, graphics, 
 
   function shiftElapsedTime({ fromElapsedTime, toElapsedTime, offsetTime }) {
     allMaterialNames().forEach(kind => {
-      targetMaterials(kind).setter(materials => {
+      targetMaterial(kind).setter(materials => {
         materials.forEach(m => {
           if (fromElapsedTime && m.elapsedTime <= fromElapsedTime) return // fromElapsedTimeと同じ時間まではスキップ
           if (toElapsedTime   && m.elapsedTime > toElapsedTime)   return
@@ -68,7 +68,7 @@ export default function useLineUtils({ avatars, drawings, embeddings, graphics, 
     return parseFloat((currentValue + offsetTime).toFixed(3))
   }
 
-  function targetMaterials(kind) {
+  function targetMaterial(kind) {
     switch(kind) {
     case 'avatar':
       return { materials: avatars, setter: setAvatars }
@@ -94,5 +94,5 @@ export default function useLineUtils({ avatars, drawings, embeddings, graphics, 
   }
 
   return { shiftElapsedTime, updateMaterial, deleteMaterial, lastTimeline, sortedElapsedTimes, maxDurationSecInLine,
-    nextElapsedTime, calcTime, targetMaterials, allMaterialNames, allMaterials }
+    nextElapsedTime, calcTime, targetMaterial, allMaterialNames, allMaterials }
 }

@@ -1,4 +1,4 @@
-export default function useSwappingLine({ lastTimeline, sortedElapsedTimes, maxDurationSecInLine, calcTime, targetMaterials, allMaterialNames }) {
+export default function useSwappingLine({ lastTimeline, sortedElapsedTimes, maxDurationSecInLine, calcTime, targetMaterial, allMaterialNames }) {
   function swapLine(fromIndex, toIndex) {
     if (fromIndex === toIndex) return
     if (fromIndex === toIndex + 1) return
@@ -19,7 +19,7 @@ export default function useSwappingLine({ lastTimeline, sortedElapsedTimes, maxD
     }
 
     allMaterialNames().forEach(kind => {
-      targetMaterials(kind).setter(materials => {
+      targetMaterial(kind).setter(materials => {
         materials.forEach(material => {
           if (material.elapsedTime === selfElapsedTime) {
             let newElapsedTime

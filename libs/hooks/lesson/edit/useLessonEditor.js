@@ -27,13 +27,13 @@ export default function useLessonEditor() {
   const [speeches, setSpeeches] = useState([])
   const { fetchWithAuth } = useFetch()
   const { showError } = useErrorDialogContext()
-  const { shiftElapsedTime, updateMaterial, deleteMaterial, lastTimeline, sortedElapsedTimes, maxDurationSecInLine, nextElapsedTime, calcTime, targetMaterials, allMaterialNames, allMaterials } =
+  const { shiftElapsedTime, updateMaterial, deleteMaterial, lastTimeline, sortedElapsedTimes, maxDurationSecInLine, nextElapsedTime, calcTime, targetMaterial, allMaterialNames, allMaterials } =
     useLineUtils({ avatars, drawings, embeddings, graphics, musics, speeches, setAvatars, setDrawings, setEmbeddings, setGraphics, setSpeeches, setMusics, timeline })
   const { addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast } =
-    useAddingLine({ lessonRef, maxDurationSecInLine, lastTimeline, targetMaterials })
-  const { updateLine } = useUpdatingLine({ shiftElapsedTime, updateMaterial, targetMaterials })
-  const { deleteLine } = useDeletionLine({ shiftElapsedTime, nextElapsedTime, deleteMaterial, targetMaterials, allMaterialNames })
-  const { swapLine } = useSwappingLine({ lastTimeline, sortedElapsedTimes, maxDurationSecInLine, calcTime, targetMaterials, allMaterialNames })
+    useAddingLine({ lessonRef, maxDurationSecInLine, lastTimeline, targetMaterial })
+  const { updateLine } = useUpdatingLine({ shiftElapsedTime, updateMaterial, targetMaterial })
+  const { deleteLine } = useDeletionLine({ shiftElapsedTime, nextElapsedTime, deleteMaterial, targetMaterial, allMaterialNames })
+  const { swapLine } = useSwappingLine({ lastTimeline, sortedElapsedTimes, maxDurationSecInLine, calcTime, targetMaterial, allMaterialNames })
 
   async function fetchResources(lesson) {
     lessonRef.current = lesson
@@ -104,6 +104,6 @@ export default function useLessonEditor() {
   }, allMaterials())
 
   return { lesson: lessonRef.current, fetchResources, isLoading, durationSec, timeline, voiceSynthesisConfig, setVoiceSynthesisConfig, bgImageURL, setBgImageURL,
-    avatarLightColor, avatars, drawings, embeddings, graphics, graphicURLs, musics, musicURLs, setMusicURLs, speeches, setEmbeddings, setGraphics, setGraphicURLs, updateLine, deleteLine, swapLine,
-    addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast }
+    avatarLightColor, avatars, drawings, embeddings, graphics, graphicURLs, musics, musicURLs, setMusicURLs, speeches, setEmbeddings, setGraphics, setGraphicURLs,
+    updateLine, deleteLine, swapLine, addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast }
 }

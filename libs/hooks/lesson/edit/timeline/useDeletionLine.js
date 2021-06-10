@@ -1,6 +1,6 @@
-export default function useDeletionLine({ shiftElapsedTime, nextElapsedTime, deleteMaterial, targetMaterials, allMaterialNames }) {
+export default function useDeletionLine({ shiftElapsedTime, nextElapsedTime, deleteMaterial, targetMaterial, allMaterialNames }) {
   function deleteLine(kind, index, elapsedTime) {
-    const { materials, setter } = targetMaterials(kind)
+    const { materials, setter } = targetMaterial(kind)
 
     if (materials.filter(m => m.elapsedTime === elapsedTime).length > 1) {
       // 自身と同じmaterialの同じ時間に他の行が存在する場合、単純に自身だけを削除
@@ -26,7 +26,7 @@ export default function useDeletionLine({ shiftElapsedTime, nextElapsedTime, del
 
   function includesElapsedTimeInAllMaterial(elapsedTime, skipMaterial) {
     return allMaterialNames().filter(m => m !== skipMaterial).some(kind => {
-      const { materials } = targetMaterials(kind)
+      const { materials } = targetMaterial(kind)
       return includesElapsedTime(elapsedTime, materials)
     })
   }
