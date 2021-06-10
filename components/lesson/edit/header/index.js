@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { css } from '@emotion/core'
 import { useScreenClass } from 'react-grid-system'
 import Container from '../../../container'
+import AbsoluteContainer from '../../../absoluteContainer'
 import Spacer from '../../../spacer'
 import Flex from '../../../flex'
 import Icon from '../../../icon'
@@ -12,7 +13,7 @@ import MenuLink from './menuLink'
 import IconButton from '../../../button/iconButton'
 import { useContextMenuContext } from '../../../../libs/contexts/contextMenuContext'
 
-export default function Header({ currentPage }) {
+export default function Header({ currentPage, showBadge }) {
   const [isHover, setIsHover] = useState(false)
   const { setContextMenu } = useContextMenuContext()
   const screenClass = useScreenClass()
@@ -69,10 +70,19 @@ export default function Header({ currentPage }) {
           </div>
           <Container width='100' height='40'>
             <Flex>
-              <Container width='40' height='40'>
-                <IconButton name='save' padding='10' />
+              <Container position='relative'>
+                <Container width='40' height='40'>
+                  <IconButton name='save' padding='10' />
+                </Container>
+                {showBadge &&
+                  <AbsoluteContainer top='0' right='0'>
+                    <Container width='15' height='15'>
+                      <PlainText size='15' lineHeight='15' color='var(--error-red)'>●</PlainText>
+                    </Container>
+                  </AbsoluteContainer>
+                }
               </Container>
-              <Container width='10'>
+              <Container position='relative' width='10'>
                 <IconButton name='sort-down' onClick={handleSortDownClick} />
               </Container>
             </Flex>

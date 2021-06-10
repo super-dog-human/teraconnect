@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/core'
 import { useScreenClass } from 'react-grid-system'
+import useLessonUpdater from '../../../libs/hooks/lesson/edit/useLessonUpdater'
 import { useContextMenuContext } from '../../../libs/contexts/contextMenuContext'
 import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorContext'
 import { ImageViewerProvider } from '../../../libs/contexts/imageViewerContext'
@@ -19,6 +20,7 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
   const { contextMenu, handleDismiss } = useContextMenuContext()
   const { fetchResources, timeline } = useLessonEditorContext()
   const [isLoading, setIsLoading] = useState(true)
+  const { hasResourceDiff } = useLessonUpdater({ isLoading })
 
   const bodyStyle = css({
     margin: 'auto',
@@ -63,7 +65,7 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
     <>
       <ContextMenu {...contextMenu} handleDismiss={handleDismiss} />
       <Loading isShow={isLoading} />
-      <Header currentPage='edit'/>
+      <Header currentPage='edit' showBadge={hasResourceDiff} />
       <main css={mainStyle} ref={ref}>
         <ImageViewerProvider>
           <div css={bodyStyle}>
