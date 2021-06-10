@@ -3,18 +3,19 @@ import React, { useState } from 'react'
 import { css } from '@emotion/core'
 import { useScreenClass } from 'react-grid-system'
 import Container from '../../../container'
-import AbsoluteContainer from '../../../absoluteContainer'
 import Spacer from '../../../spacer'
 import Flex from '../../../flex'
 import Icon from '../../../icon'
 import PlainText from '../../../plainText'
 import TopLogoLink from '../../../topLogoLink'
 import MenuLink from './menuLink'
+import IconWithBadgeButton from '../../../button/iconWithBadgeButton'
 import IconButton from '../../../button/iconButton'
 import { useContextMenuContext } from '../../../../libs/contexts/contextMenuContext'
 
-export default function Header({ currentPage, showBadge }) {
+export default function Header({ currentPage, showBadge, updateLesson }) {
   const [isHover, setIsHover] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
   const { setContextMenu } = useContextMenuContext()
   const screenClass = useScreenClass()
 
@@ -24,6 +25,12 @@ export default function Header({ currentPage, showBadge }) {
 
   function handleMouseLeave() {
     setIsHover(false)
+  }
+
+  async function handleSaveClick() {
+    setIsProcessing(true)
+    await updateLesson()
+    setIsProcessing(false)
   }
 
   function handleSortDownClick(e) {
@@ -70,20 +77,11 @@ export default function Header({ currentPage, showBadge }) {
           </div>
           <Container width='100' height='40'>
             <Flex>
-              <Container position='relative'>
-                <Container width='40' height='40'>
-                  <IconButton name='save' padding='10' />
-                </Container>
-                {showBadge &&
-                  <AbsoluteContainer top='0' right='0'>
-                    <Container width='15' height='15'>
-                      <PlainText size='15' lineHeight='15' color='var(--error-red)'>●</PlainText>
-                    </Container>
-                  </AbsoluteContainer>
-                }
+              <Container width='40' height='40'>
+                <IconWithBadgeButton name='save' padding='10' showBadge={showBadge} isProcessing={isProcessing} disabled={isProcessing} onClick={handleSaveClick} onMouseDown={handleSaveClick} />
               </Container>
-              <Container position='relative' width='10'>
-                <IconButton name='sort-down' onClick={handleSortDownClick} />
+              <Container width='10'>
+                <IconButton name='sort-down' disabled={isProcessing} onClick={handleSortDownClick} />
               </Container>
             </Flex>
           </Container>

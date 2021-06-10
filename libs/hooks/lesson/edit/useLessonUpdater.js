@@ -11,14 +11,16 @@ export default function useLessonUpdater({ isLoading }) {
   function storeUploadableResource(resource) {
     if (isLoading) return
     uploadableResourceRef.current = { ...uploadableResourceRef.current, ...resource }
+    setHasResourceDiff(true)
   }
 
-  function updateToRemote() {
+  async function uploadToRemote() {
     const body = {}
     // bodyにそのままuploadableResourceRefが使えるはず
     // post(method: 'PATCH')
 
     uploadableResourceRef.current = {}
+    setHasResourceDiff(false)
   }
 
   useEffect(() => {
@@ -49,13 +51,5 @@ export default function useLessonUpdater({ isLoading }) {
     storeUploadableResource({ speeches })
   }, [speeches])
 
-  useEffect(() => {
-    if (Object.keys(uploadableResourceRef.current).length === 0) {
-      setHasResourceDiff(false)
-    } else {
-      setHasResourceDiff(true)
-    }
-  }, [uploadableResourceRef.current])
-
-  return { hasResourceDiff, updateToRemote }
+  return { hasResourceDiff, uploadToRemote }
 }
