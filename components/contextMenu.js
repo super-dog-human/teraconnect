@@ -46,10 +46,7 @@ export default function ContextMenu({ labels=[], actions=[], position={}, disabl
               fontSize: '14px',
               marginTop: '5px',
               marginBottom: '5px',
-              paddingTop: '5px',
-              paddingBottom: '5px',
-              paddingLeft: '20px',
-              paddingRight: '20px',
+              padding: '5px 20px',
               cursor: disabled ? 'auto' : 'pointer',
               ':hover': {
                 backgroundColor: disabled ? 'var(--dark-gray)' : 'var(--soft-white)',
