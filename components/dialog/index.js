@@ -1,9 +1,10 @@
 /** @jsxImportSource @emotion/react */
-import React from 'react'
+import React, { useRef } from 'react'
 import { css } from '@emotion/core'
 import { useDialogContext } from '../../libs/contexts/dialogContext'
 import DismissButton from './dismissButton'
 import ConfirmButton from './confirmButton'
+import Checkbox from '../form/inputCheckbox'
 import FullscreenContainer from '../fullscreenContainer'
 import Flex from '../flex'
 import Spacer from '../spacer'
@@ -11,14 +12,11 @@ import Container from '../container'
 import PlainText from '../plainText'
 
 export default function Dialog() {
-  const { dialog, isProcessing, dismissDialog } = useDialogContext()
+  const { dialog, isProcessing, confirmDialog, dismissDialog } = useDialogContext()
+  const skipConfirmRef = useRef()
 
-  function handleDismiss() {
-    dismissDialog(dialog.dismissCallback)
-  }
-
-  function handleCallback() {
-    dismissDialog(dialog.callback)
+  function handleConfirm() {
+    confirmDialog(skipConfirmRef.current?.checked)
   }
 
   return (
@@ -39,10 +37,18 @@ export default function Dialog() {
               </div>
               <div css={bodyStyle}>
                 <PlainText color='var(--border-dark-gray)' size='16'>{dialog.message}</PlainText>
+                {dialog.skipConfirmNextTimeKey &&
+                  <>
+                    <Spacer height='30' />
+                    <Checkbox id='skipConfirmNextTime' size='14' borderColor='gray' checkColor='gray' ref={skipConfirmRef}>
+                      <PlainText color='gray' size='12'>次回から確認しない</PlainText>
+                    </Checkbox>
+                  </>
+                }
               </div>
               <Flex justifyContent='space-around'>
-                {dialog.canDismiss && <DismissButton onClick={handleDismiss} isProcessing={isProcessing} name={dialog.dismissName} />}
-                {dialog.callback && <ConfirmButton onClick={handleCallback} isProcessing={isProcessing} name={dialog.callbackName} />}
+                {dialog.canDismiss && <DismissButton onClick={dismissDialog} isProcessing={isProcessing} name={dialog.dismissName} />}
+                {dialog.callback && <ConfirmButton onClick={handleConfirm} isProcessing={isProcessing} name={dialog.callbackName} />}
               </Flex>
             </div>
           </FullscreenContainer>

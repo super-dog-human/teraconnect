@@ -13,9 +13,8 @@ import IconWithBadgeButton from '../../../button/iconWithBadgeButton'
 import IconButton from '../../../button/iconButton'
 import { useContextMenuContext } from '../../../../libs/contexts/contextMenuContext'
 
-export default function Header({ currentPage, showBadge, updateLesson }) {
+export default function Header({ currentPage, showBadge, isUpdating, updateLesson }) {
   const [isHover, setIsHover] = useState(false)
-  const [isProcessing, setIsProcessing] = useState(false)
   const { setContextMenu } = useContextMenuContext()
   const screenClass = useScreenClass()
 
@@ -27,16 +26,10 @@ export default function Header({ currentPage, showBadge, updateLesson }) {
     setIsHover(false)
   }
 
-  async function handleSaveClick() {
-    setIsProcessing(true)
-    await updateLesson()
-    setIsProcessing(false)
-  }
-
   function handleSortDownClick(e) {
     setContextMenu({
-      labels: ['上書き保存', '変更の破棄', 'その他の設定'],
-      actions: [() => {}, () => {}, () => {}],
+      labels: ['上書き保存', '変更の破棄'],
+      actions: [updateLesson, () => {}],
       position: { fixed: true, x: e.pageX, y: e.pageY },
     })
   }
@@ -78,10 +71,10 @@ export default function Header({ currentPage, showBadge, updateLesson }) {
           <Container width='100' height='40'>
             <Flex>
               <Container width='40' height='40'>
-                <IconWithBadgeButton name='save' padding='10' showBadge={showBadge} isProcessing={isProcessing} disabled={isProcessing} onClick={handleSaveClick} onMouseDown={handleSaveClick} />
+                <IconWithBadgeButton name='save' padding='10' showBadge={showBadge} isProcessing={isUpdating} disabled={isUpdating} onClick={updateLesson} onMouseDown={updateLesson} />
               </Container>
               <Container width='10'>
-                <IconButton name='sort-down' disabled={isProcessing} onClick={handleSortDownClick} />
+                <IconButton name='sort-down' disabled={isUpdating} onClick={handleSortDownClick} />
               </Container>
             </Flex>
           </Container>

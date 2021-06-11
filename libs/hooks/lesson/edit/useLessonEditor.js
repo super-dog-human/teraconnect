@@ -10,7 +10,8 @@ import useLineUtils from './timeline/useLineUtils'
 import useFetch from '../../useFetch'
 
 export default function useLessonEditor() {
-  const lessonRef = useRef()
+  const lessonRef = useRef({})
+  const materialRef = useRef({})
   const [isLoading, setIsLoading] = useState(true)
   const [durationSec, setDurationSec] = useState(0)
   const [timeline, setTimeline] = useState({})
@@ -39,7 +40,7 @@ export default function useLessonEditor() {
     lessonRef.current = lesson
 
     setDurationSec(lesson.durationSec)
-    fetchMaterial({ lesson, fetchWithAuth, setVoiceSynthesisConfig, setBgImageURL, setAvatarLightColor, setAvatars, setDrawings, setEmbeddings, setGraphics, setGraphicURLs, setMusics, setSpeeches })
+    fetchMaterial({ lesson, materialRef, fetchWithAuth, setVoiceSynthesisConfig, setBgImageURL, setAvatarLightColor, setAvatars, setDrawings, setEmbeddings, setGraphics, setGraphicURLs, setMusics, setSpeeches })
       .then(timeline => {
         setTimeline(timeline)
         setIsLoading(false)
@@ -104,7 +105,7 @@ export default function useLessonEditor() {
     updateTimeline()
   }, allMaterials())
 
-  return { lesson: lessonRef.current, fetchResources, isLoading, durationSec, timeline, voiceSynthesisConfig, setVoiceSynthesisConfig, bgImageURL, setBgImageURL,
+  return { lesson: lessonRef.current, material: materialRef.current, fetchResources, isLoading, durationSec, timeline, voiceSynthesisConfig, setVoiceSynthesisConfig, bgImageURL, setBgImageURL,
     avatarLightColor, avatars, drawings, embeddings, graphics, graphicURLs, musics, musicURLs, setMusicURLs, speeches, setEmbeddings, setGraphics, setGraphicURLs,
     updateLine, deleteLine, swapLine, addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast }
 }

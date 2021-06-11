@@ -1,8 +1,10 @@
 import { filterObject } from './utils'
 import { createTimeline } from './lessonLineUtils'
 
-export async function fetchMaterial({ lesson, fetchWithAuth, setVoiceSynthesisConfig, setBgImageURL, setAvatarLightColor, setAvatars, setDrawings, setEmbeddings, setGraphics, setGraphicURLs, setMusics, setSpeeches }) {
+export async function fetchMaterial({ lesson, materialRef, fetchWithAuth, setVoiceSynthesisConfig, setBgImageURL, setAvatarLightColor, setAvatars, setDrawings, setEmbeddings, setGraphics, setGraphicURLs, setMusics, setSpeeches }) {
   const material = await fetchWithAuth(`/lessons/${lesson.id}/materials`)
+  materialRef.current = { id: material.id, created: material.created, updated: material.updated }
+
   setBgImageURL(material.backgroundImageURL)
   setVoiceSynthesisConfig(material.voiceSynthesisConfig)
   setAvatarLightColor(material.avatarLightColor)
@@ -12,7 +14,7 @@ export async function fetchMaterial({ lesson, fetchWithAuth, setVoiceSynthesisCo
   setEmbeddings(material.embeddings || [])
   setMusics(material.musics || [])
   await setSpeechWithVoice(material)
-  return createTimeline(filterObject(material, ['avatars', 'drawings', 'embedding', 'graphics', 'speeches', 'musics']))
+  return createTimeline(filterObject(material, ['avatars', 'drawings', 'embeddings', 'graphics', 'speeches', 'musics']))
 
   async function setGraphicsWithURL(graphics) {
     const graphicURLs = (await fetchGraphicURLs()).reduce((acc, r) => {
@@ -59,7 +61,7 @@ export async function fetchMaterial({ lesson, fetchWithAuth, setVoiceSynthesisCo
       material.speeches = speeches
       setSpeeches(speeches)
     } else {
-      setSpeeches(material.speech || [])
+      setSpeeches(material.speeches || [])
     }
   }
 

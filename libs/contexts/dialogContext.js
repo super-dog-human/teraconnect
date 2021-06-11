@@ -4,6 +4,7 @@ const DialogContext = React.createContext({
   dialog: null,
   isProcessing: false,
   showDialog: () => {},
+  confirmDialog: () => {},
   dismissDialog: () => {},
 })
 
@@ -15,15 +16,29 @@ const DialogProvider = ({ children }) => {
     setDialog(dialog)
   }
 
-  async function dismissDialog(callback) {
+  async function confirmDialog(isSkipConfirm) {
     setIsProcessing(true)
-    if (callback) await callback()
+    setSkippingConfirm(isSkipConfirm)
+    if (dialog.callback) await dialog.callback()
     setIsProcessing(false)
     setDialog()
   }
 
+  async function dismissDialog() {
+    setIsProcessing(true)
+    if (dialog.dismissCallback) await dialog.dismissCallback()
+    setIsProcessing(false)
+    setDialog()
+  }
+
+  function setSkippingConfirm(isSkipConfirm) {
+    if (!isSkipConfirm) return
+    if (!dialog.skipConfirmNextTimeKey) return
+    localStorage.setItem(dialog.skipConfirmNextTimeKey, 'true')
+  }
+
   return (
-    <DialogContext.Provider value={{ dialog, isProcessing, showDialog, dismissDialog }}>
+    <DialogContext.Provider value={{ dialog, isProcessing, showDialog, confirmDialog, dismissDialog }}>
       {children}
     </DialogContext.Provider>
   )
