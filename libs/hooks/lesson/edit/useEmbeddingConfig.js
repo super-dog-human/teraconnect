@@ -16,7 +16,11 @@ export default function useEmbeddingConfig({ index, initialConfig, closeCallback
     case 'elapsedTime':
       return { ...state, elapsedTime: payload }
     case 'action':
-      return { ...state, action: payload }
+      if (payload === 'show' && initialConfig.action === 'hide') {
+        return { ...state, action: 'show', serviceName: 'youtube', contentID: '' } // 初期値
+      } else {
+        return { ...state, action: payload }
+      }
     case 'serviceName':
       if (payload === initialConfig.serviceName) {
         return { ...state, serviceName: payload, contentID: initialConfig.contentID }
