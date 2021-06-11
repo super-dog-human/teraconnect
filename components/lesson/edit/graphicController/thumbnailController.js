@@ -30,6 +30,8 @@ export default function ThumbnailController({ graphicID, graphic, swapGraphic, r
       actions: [() => swapGraphic(graphicID), () => removeGraphic(graphicID)],
       position: { fixed: false, x: e.pageX, y: e.pageY },
     })
+
+    e.stopPropagation()
   }
 
   function handleThumbnailClick(e) {
