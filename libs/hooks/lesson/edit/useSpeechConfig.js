@@ -46,7 +46,7 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
     case 'synthesisSubtitle':
       return { ...state, url: '', subtitle: payload }
     case 'humanVoice':
-      return { ...state, url: payload, voiceID: '', }
+      return { ...state, url: payload, voiceID: 0, }
     case 'subtitle':
       return { ...state, subtitle: payload }
     case 'captionBody':
@@ -84,12 +84,12 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
         const voice = await createSynthesisVoiceFile(lessonIDRef.current, config)
         config.voiceID = voice.id
         config.url = voice.url
-      } else if (!config.isSynthesis && config.voiceID) {
+      } else if (!config.isSynthesis && config.voiceID > 0) {
         const voice = await fetchVoiceFileURL(config.voiceID, lessonIDRef.current)
         config.url = voice.url
       } else {
         // 合成だがsubtitleが未入力、または録音だがvoiceIDがない場合、声はなしになる
-        config.voiceID = ''
+        config.voiceID = 0
         config.durationSec = 0
       }
     }

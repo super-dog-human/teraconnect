@@ -53,7 +53,7 @@ export default function useAddingLine({ lessonRef, maxDurationSecInLine, lastTim
 
   function newBlankSpeech(elapsedTime) {
     return {
-      voiceID: '',
+      voiceID: 0,
       elapsedTime,
       durationSec: 0,
       subtitle: '',

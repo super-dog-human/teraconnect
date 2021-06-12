@@ -25,16 +25,14 @@ export default function useHumanVoiceRecorder(config, dispatchConfig) {
   }
 
   useEffect(() => {
-    setAudioFromVoiceID()
+    if (config.voiceID === 0) return
 
-    function setAudioFromVoiceID() {
-      fetchVoiceFileURL(config.voiceID, lessonIDRef.current)
-        .then(voice => updateAudioURL(voice.url))
-        .catch(e => {
-          if (e.name === 'AbortError') return
-          if (e.name === 'TimeoutError') return
-        })
-    }
+    fetchVoiceFileURL(config.voiceID, lessonIDRef.current)
+      .then(voice => updateAudioURL(voice.url))
+      .catch(e => {
+        if (e.name === 'AbortError') return
+        if (e.name === 'TimeoutError') return
+      })
   }, [])
 
   useEffect(() => {
