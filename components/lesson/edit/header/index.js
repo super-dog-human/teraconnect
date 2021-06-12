@@ -31,6 +31,7 @@ export default function Header({ currentPage, showBadge, isUpdating, updateLesso
       labels: ['上書き保存', '変更の破棄'],
       actions: [updateLesson, () => {}],
       position: { fixed: true, x: e.pageX, y: e.pageY },
+      disableMenuIndexes: showBadge ? [] : [0, 1],
     })
   }
 
