@@ -48,7 +48,7 @@ export default function ThumbnailController({ graphicID, graphic, swapGraphic, r
       </Container>
       {isButtonShow && <AbsoluteContainer right='3px' bottom='5px'>
         <Container width='22' height='22'>
-          <IconButton name='more' onClick={handleMenuClick} />
+          <IconButton name='more' onMouseDown={handleMenuClick} />
         </Container>
       </AbsoluteContainer>}
     </div>

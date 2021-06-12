@@ -13,7 +13,7 @@ import IconWithBadgeButton from '../../../button/iconWithBadgeButton'
 import IconButton from '../../../button/iconButton'
 import { useContextMenuContext } from '../../../../libs/contexts/contextMenuContext'
 
-export default function Header({ currentPage, showBadge, isUpdating, updateLesson }) {
+export default function Header({ currentPage, showBadge, isUpdating, updateLesson, discardLessonDraft }) {
   const [isHover, setIsHover] = useState(false)
   const { setContextMenu } = useContextMenuContext()
   const screenClass = useScreenClass()
@@ -29,7 +29,7 @@ export default function Header({ currentPage, showBadge, isUpdating, updateLesso
   function handleSortDownClick(e) {
     setContextMenu({
       labels: ['上書き保存', '変更の破棄'],
-      actions: [updateLesson, () => {}],
+      actions: [updateLesson, discardLessonDraft],
       position: { fixed: true, x: e.pageX, y: e.pageY },
       disableMenuIndexes: showBadge ? [] : [0, 1],
     })
@@ -72,10 +72,10 @@ export default function Header({ currentPage, showBadge, isUpdating, updateLesso
           <Container width='100' height='40'>
             <Flex>
               <Container width='40' height='40'>
-                <IconWithBadgeButton name='save' padding='10' showBadge={showBadge} isProcessing={isUpdating} disabled={isUpdating} onClick={updateLesson} onMouseDown={updateLesson} />
+                <IconWithBadgeButton name='save' padding='10' showBadge={showBadge} isProcessing={isUpdating} disabled={isUpdating} onClick={updateLesson} />
               </Container>
               <Container width='10'>
-                <IconButton name='sort-down' disabled={isUpdating} onClick={handleSortDownClick} />
+                <IconButton name='sort-down' disabled={isUpdating} onMouseDown={handleSortDownClick} />
               </Container>
             </Flex>
           </Container>

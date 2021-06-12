@@ -20,7 +20,7 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
   const { contextMenu, handleDismiss } = useContextMenuContext()
   const { fetchResources, timeline } = useLessonEditorContext()
   const [isLoading, setIsLoading] = useState(true)
-  const { hasResourceDiff, isUpdating, updateLesson } = useLessonUpdater({ isLoading })
+  const { hasResourceDiff, isUpdating, updateLesson, discardLessonDraft } = useLessonUpdater({ isLoading })
 
   const bodyStyle = css({
     margin: 'auto',
@@ -65,7 +65,7 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
     <>
       <ContextMenu {...contextMenu} handleDismiss={handleDismiss} />
       <Loading isShow={isLoading} />
-      <Header currentPage='edit' showBadge={hasResourceDiff} isUpdating={isUpdating} updateLesson={updateLesson} />
+      <Header currentPage='edit' showBadge={hasResourceDiff} isUpdating={isUpdating} updateLesson={updateLesson} discardLessonDraft={discardLessonDraft} />
       <main css={mainStyle} ref={ref}>
         <ImageViewerProvider>
           <div css={bodyStyle}>
