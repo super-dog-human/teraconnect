@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/core'
 import { useScreenClass } from 'react-grid-system'
+import useLessonCacheController from '../../../libs/hooks/lesson/edit/useLessonCacheController'
 import useLessonUpdater from '../../../libs/hooks/lesson/edit/useLessonUpdater'
 import { useContextMenuContext } from '../../../libs/contexts/contextMenuContext'
 import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorContext'
@@ -17,10 +18,11 @@ import Timeline from './timeline'
 
 const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
   const screenClass = useScreenClass()
+  const [isLoading, setIsLoading] = useState(true)
+  const { isExistsCache, getCache, clearCache } = useLessonCacheController({ isLoading, lessonID: lesson.id })
   const { contextMenu, handleDismiss } = useContextMenuContext()
   const { fetchResources, timeline } = useLessonEditorContext()
-  const [isLoading, setIsLoading] = useState(true)
-  const { hasResourceDiff, isUpdating, updateLesson, discardLessonDraft } = useLessonUpdater({ isLoading })
+  const { hasResourceDiff, isUpdating, updateLesson, discardLessonDraft } = useLessonUpdater({ isLoading, isExistsCache, clearCache })
 
   const bodyStyle = css({
     margin: 'auto',

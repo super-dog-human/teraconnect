@@ -3,10 +3,11 @@ import { useLessonEditorContext } from '../../../contexts/lessonEditorContext'
 import { useDialogContext } from '../../../contexts/dialogContext'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 import useFetch from '../../../hooks/useFetch'
+import { useRouter } from 'next/router'
 
 const skipConfirmNextTimeKey = 'skipConfirmLessonUpdating'
 
-export default function useLessonUpdater({ isLoading }) {
+export default function useLessonUpdater({ isLoading, isExistsCache, clearCache }) {
   const { post } = useFetch()
   const { showDialog } = useDialogContext()
   const { showError } = useErrorDialogContext()
@@ -14,6 +15,7 @@ export default function useLessonUpdater({ isLoading }) {
   const uploadableResourceRef = useRef({})
   const [isUpdating, setIsUpdating] = useState(false)
   const { lesson, material, avatars, embeddings, graphics, drawings, musics, speeches } = useLessonEditorContext()
+  const router = useRouter()
 
   function storeUploadableResource(resource) {
     if (isLoading) return
@@ -54,11 +56,23 @@ export default function useLessonUpdater({ isLoading }) {
     }
   }
 
+  function discardLessonDraft() {
+    showDialog({
+      title: '変更の破棄',
+      message: '現在の変更を破棄して、最後に保存した状態に戻しますか？',
+      canDismiss: true,
+      dismissName: 'キャンセル',
+      callbackName: '実行',
+      callback: discardLessonAndReload,
+    })
+  }
+
   function uploadToRemote() {
     setIsUpdating(true)
 
     post(`/lessons/${lesson.id}/materials/${material.id}`, uploadableResourceRef.current, 'PATCH').then(() => {
       uploadableResourceRef.current = {}
+      clearCache()
       setIsUpdating(false)
       setHasResourceDiff(false)
     }).catch(e => {
@@ -72,9 +86,18 @@ export default function useLessonUpdater({ isLoading }) {
     })
   }
 
+  function discardLessonAndReload() {
+    clearCache()
+    router.reload()
+  }
+
   useEffect(() => {
     if (isLoading) return
     initialUploadSpeech()
+
+    if (isExistsCache()) { // キャッシュフラグが立っているなら未アップロードの差分がある
+      setHasResourceDiff(true)
+    }
   }, [isLoading])
 
   useEffect(() => {
@@ -101,5 +124,5 @@ export default function useLessonUpdater({ isLoading }) {
     storeUploadableResource({ speeches })
   }, [speeches])
 
-  return { hasResourceDiff, isUpdating, updateLesson }
+  return { hasResourceDiff, isUpdating, updateLesson, discardLessonDraft }
 }
