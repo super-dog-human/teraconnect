@@ -34,6 +34,8 @@ export default function ThumbnailController({ graphicID, graphic, swapGraphic, r
   }
 
   function handleThumbnailClick(e) {
+    if (graphic.isUploading) return
+
     const url = e.currentTarget.dataset.url
     setImage({ url, widePer: 70 })
   }

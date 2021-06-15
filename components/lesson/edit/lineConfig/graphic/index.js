@@ -22,7 +22,7 @@ export default function Graphic({ index, initialConfig, closeCallback }) {
     case 'action':
       return { ...state, action: payload }
     case 'graphicID':
-      return { ...state, graphicID: payload.graphicID, url: payload.url }
+      return { ...state, graphicID: payload }
     default:
       throw new Error()
     }
@@ -34,13 +34,12 @@ export default function Graphic({ index, initialConfig, closeCallback }) {
 
   function handleGraphicClick(e) {
     const graphicID = parseInt(e.currentTarget.dataset.graphicId)
-    dispatchConfig({ type: 'graphicID', payload: { graphicID, url: graphicURLs[graphicID].url } })
+    dispatchConfig({ type: 'graphicID', payload: graphicID })
   }
 
   function handleConfirm(changeAfterLineElapsedTime) {
     if (config.action === 'hide') {
       delete config.graphicID
-      delete config.url
     }
 
     updateLine({ kind: 'graphic', index, elapsedTime: initialConfig.elapsedTime, newValue: config, changeAfterLineElapsedTime })
