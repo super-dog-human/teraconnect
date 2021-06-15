@@ -14,7 +14,6 @@ export default function ThumbnailController({ graphicID, graphic, swapGraphic, r
   const { setImage } = useImageViewerContext()
   const [isButtonShow, setIsButtonShow] = useState(false)
 
-
   function handleEnter() {
     if (graphic.isUploading) return
     setIsButtonShow(true)

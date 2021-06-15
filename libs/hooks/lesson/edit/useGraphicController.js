@@ -60,8 +60,8 @@ export default function useGraphicController({ showDialog, showError, setGraphic
 
   async function removeGraphic(graphicID) {
     return deleteGraphic(graphicID).then(() => {
-      setGraphics(graphics => graphics.filter(g => g.graphicID != graphicID))
-      setGraphicURLs(urls => filterObject(urls, Object.keys(urls).filter(id => id != graphicID)))
+      setGraphics(graphics => graphics.filter(g => g.graphicID !== parseInt(graphicID)))
+      setGraphicURLs(urls => filterObject(urls, Object.keys(urls).filter(id => id !== graphicID)))
     }).catch(e => {
       showError(e.dialog)
     })
@@ -69,25 +69,24 @@ export default function useGraphicController({ showDialog, showError, setGraphic
 
   async function swapGraphic(currentGraphicID, newFile) {
     return uploadAndDeleteGraphic(currentGraphicID, newFile).then(({ id, url }) => {
-      setGraphics(graphics => {
-        graphics.forEach(graphic => {
-          if (graphic.graphicID != currentGraphicID) return
-          graphic.graphicID = id
-          if (graphic.action === 'show') graphic.url = url
-        })
-        return [...graphics]
-      })
-
       setGraphicURLs(urls => {
         const newURLs = {}
         Object.keys(urls).forEach(graphicID => {
           if (graphicID === currentGraphicID) {
-            newURLs[id] = url
+            newURLs[id] = { url }
           } else {
             newURLs[graphicID] = urls[graphicID] // サムネイルの順番を保つため、入れ替え対象以外も格納しなおす
           }
         })
         return newURLs
+      })
+
+      setGraphics(graphics => {
+        graphics.forEach(graphic => {
+          if (graphic.graphicID !== parseInt(currentGraphicID)) return
+          graphic.graphicID = id
+        })
+        return [...graphics]
       })
     }).catch(e => {
       if (e.dialog) {

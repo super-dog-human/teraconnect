@@ -8,9 +8,11 @@ import ActionLabel from './actionLabel'
 import GraphicThumbnail from '../graphicThumbnail'
 import EditIcon from './editIcon'
 import { useImageViewerContext } from '../../../../libs/contexts/imageViewerContext'
+import { useLessonEditorContext } from '../../../../libs/contexts/lessonEditorContext'
 
 export default function LessonLineGraphic({ graphic, index, isEditButtonShow, handleEditClick }) {
   const { setImage } = useImageViewerContext()
+  const { graphicURLs } = useLessonEditorContext()
 
   function handleEditButtonClick(e) {
     e.stopPropagation()
@@ -29,8 +31,8 @@ export default function LessonLineGraphic({ graphic, index, isEditButtonShow, ha
         {graphic.action === 'show' &&
           <ContainerSpacer left='20' top='20' bottom='20'>
             <Container width='175' height='100'>
-              <div data-url={graphic.url} onClick={handleThumbnailClick}>
-                <GraphicThumbnail url={graphic.url} />
+              <div data-url={graphicURLs[graphic.graphicID]?.url} onClick={handleThumbnailClick}>
+                <GraphicThumbnail url={graphicURLs[graphic.graphicID]?.url} />
               </div>
             </Container>
           </ContainerSpacer>

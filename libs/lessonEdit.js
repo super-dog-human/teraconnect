@@ -9,14 +9,16 @@ export async function fetchMaterial({ lesson, materialRef, fetchWithAuth, setVoi
   setVoiceSynthesisConfig(material.voiceSynthesisConfig)
   setAvatarLightColor(material.avatarLightColor)
   setAvatars(material.avatars || [])
-  await setGraphicsWithURL(material.graphics || [])
   setDrawings(material.drawings || [])
   setEmbeddings(material.embeddings || [])
+  setGraphics(material.graphics || [])
   setMusics(material.musics || [])
-  await setSpeechWithVoice(material)
+
+  await fetchAndSetGraphicURLs()
+  await fetchAnsSetSpeechWithVoice(material)
   return createTimeline(filterObject(material, ['avatars', 'drawings', 'embeddings', 'graphics', 'speeches', 'musics']))
 
-  async function setGraphicsWithURL(graphics) {
+  async function fetchAndSetGraphicURLs() {
     const graphicURLs = (await fetchGraphicURLs()).reduce((acc, r) => {
       acc[r.id] = {
         url: r.url,
@@ -26,18 +28,10 @@ export async function fetchMaterial({ lesson, materialRef, fetchWithAuth, setVoi
     }, {})
 
     setGraphicURLs(graphicURLs)
-
-    const graphicsWithURLs = graphics.map(g => {
-      if (g.action === 'show') {
-        g.url = graphicURLs[g.graphicID].url // ここでgraphicsの元のmaterialも更新されている
-      }
-      return g
-    })
-    setGraphics(graphicsWithURLs)
   }
 
-  async function setSpeechWithVoice(material) {
-    const conditions = [!material.speeches, lesson.needsRecording, material.version === 1, material.created === material.updated]
+  async function fetchAnsSetSpeechWithVoice(material) {
+    const conditions = [!material.speeches, lesson.needsRecording, material.created === material.updated]
     if (conditions.every(v => v)) {
       const voices = await fetchWithAuth(`/voices?lesson_id=${lesson.id}`)
         .catch(e => {
