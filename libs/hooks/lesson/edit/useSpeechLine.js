@@ -5,6 +5,7 @@ import useSynthesisVoice from '../../useSynthesisVoice'
 import { findNextElement } from '../../../utils'
 import { fetchVoiceFileURL } from '../../../fetchResource'
 import { useRouter } from 'next/router'
+import { filterObject } from '../../../utils'
 
 export default function useSpeechLine({ speech, index, handleEditClick }) {
   const router = useRouter()
@@ -12,7 +13,7 @@ export default function useSpeechLine({ speech, index, handleEditClick }) {
   const [isLoading, setIsLoading] = useState(false)
   const [status, setStatus] = useState(true)
   const { isPlaying, createAudio, switchAudio } = useAudioPlayer()
-  const { addSpeechLineToLast, updateLine } = useLessonEditorContext()
+  const { addSpeechLineToLast, updateLine, speechURLs, setSpeechURLs } = useLessonEditorContext()
   const { createSynthesisVoiceFile } = useSynthesisVoice()
 
   async function handleSpeechClick(text) {
@@ -27,22 +28,22 @@ export default function useSpeechLine({ speech, index, handleEditClick }) {
   async function setAudioIfNeeded(text) {
     const lessonID = parseInt(router.query.id)
 
-    if (speech.url) {
-      createAudio(speech.url)
+    const url = speechURLs[speech.voiceID]
+    if (url) {
+      createAudio(url)
     } else if (speech.isSynthesis && text) {
       speech.subtitle = text
       const voice = await createSynthesisVoiceFile(lessonID, speech)
       createAudio(voice.url)
-      speech.voiceID = voice.id
-      speech.url = voice.url
 
+      setSpeechURLs(urls => ({ ...urls, [voice.id]: voice.url }))
+      speech.voiceID = voice.id
       updateLine({ kind: 'speech', index, elapsedTime: speech.elapsedTime, newValue: speech })
     } else if (!speech.isSynthesis) {
       const voice = await fetchVoiceFileURL(speech.voiceID, lessonID)
       createAudio(voice.url)
-      speech.url = voice.url
 
-      updateLine({ kind: 'speech', index, elapsedTime: speech.elapsedTime, newValue: speech })
+      setSpeechURLs(urls => ({ ...urls, [speech.voiceID]: voice.url }))
     }
   }
 
@@ -69,9 +70,11 @@ export default function useSpeechLine({ speech, index, handleEditClick }) {
     const text = e.target.value
     if (text === speech.subtitle) return
 
+    if (speech.isSynthesis) {
+      // テキストが更新されたら作成済みの音声も更新が必要なのでURLをクリア
+      setSpeechURLs(urls => filterObject(urls => Object.keys(urls).filter(id => parseInt(id) !== speech.voiceID)))
+    }
     speech.subtitle = text
-    if (speech.isSynthesis) speech.url = '' // テキストが更新されたら作成済みの音声も更新が必要なのでURLをクリア
-
     updateLine({ kind: 'speech', index, elapsedTime: speech.elapsedTime, newValue: speech })
   }
 

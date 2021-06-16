@@ -101,12 +101,6 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
     }
   }
 
-  function updateSpeechWithoutAudio(config, changeAfterLineElapsedTime) {
-    updateLine({ kind: 'speech', index, elapsedTime: initialConfig.elapsedTime, newValue: config, changeAfterLineElapsedTime })
-    setIsProcessing(false)
-    closeCallback()
-  }
-
   function updateSpeechWithAudio(config, changeAfterLineElapsedTime) {
     // 音声の長さは読み込まないと分からないので以後の処理はコールバックになる
     createAudio(config.url, async audio => {
@@ -145,6 +139,12 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
       await putFile(voice.signedURL, mp3File, mp3File.type)
       return voice
     }
+  }
+
+  function updateSpeechWithoutAudio(config, changeAfterLineElapsedTime) {
+    updateLine({ kind: 'speech', index, elapsedTime: initialConfig.elapsedTime, newValue: config, changeAfterLineElapsedTime })
+    setIsProcessing(false)
+    closeCallback()
   }
 
   function handleCancel() {

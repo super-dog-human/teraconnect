@@ -26,6 +26,7 @@ export default function useLessonEditor() {
   const [musics, setMusics] = useState([])
   const [musicURLs, setMusicURLs] = useState({})
   const [speeches, setSpeeches] = useState([])
+  const [speechURLs, setSpeechURLs] = useState({})
   const { fetchWithAuth } = useFetch()
   const { showError } = useErrorDialogContext()
   const { shiftElapsedTime, updateMaterial, deleteMaterial, lastTimeline, sortedElapsedTimes, maxDurationSecInLine, nextElapsedTime, calcTime, targetMaterial, allMaterialNames, allMaterials } =
@@ -106,6 +107,6 @@ export default function useLessonEditor() {
   }, allMaterials())
 
   return { lesson: lessonRef.current, material: materialRef.current, fetchResources, isLoading, durationSec, timeline, voiceSynthesisConfig, setVoiceSynthesisConfig, bgImageURL, setBgImageURL,
-    avatarLightColor, avatars, drawings, embeddings, graphics, graphicURLs, musics, musicURLs, setMusicURLs, speeches, setEmbeddings, setGraphics, setGraphicURLs,
+    avatarLightColor, avatars, drawings, embeddings, graphics, graphicURLs, musics, musicURLs, setMusicURLs, speeches, speechURLs, setSpeechURLs, setEmbeddings, setGraphics, setGraphicURLs,
     updateLine, deleteLine, swapLine, addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast }
 }
