@@ -14,10 +14,10 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
   const router = useRouter()
   const lessonIDRef = useRef(parseInt(router.query.id))
   const { showError } = useErrorDialogContext()
+  const { updateLine, speechURLs, setSpeechURLs } = useLessonEditorContext()
   // propsをタブの初期値としてstateにコピーし、確定時にコピー元を更新する
-  const [config, dispatchConfig] = useReducer(configReducer, initialConfig)
+  const [config, dispatchConfig] = useReducer(configReducer, { ...initialConfig, url: speechURLs[initialConfig.voiceID] })
   const [isProcessing, setIsProcessing] = useState(false)
-  const { updateLine } = useLessonEditorContext()
   const { createSynthesisVoiceFile } = useSynthesisVoice()
   const { createAudio } = useAudioPlayer()
 
@@ -46,7 +46,7 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
     case 'synthesisSubtitle':
       return { ...state, url: '', subtitle: payload }
     case 'humanVoice':
-      return { ...state, url: payload, voiceID: 0, }
+      return { ...state, url: payload, voiceID: 0 }
     case 'subtitle':
       return { ...state, subtitle: payload }
     case 'captionBody':
@@ -127,6 +127,8 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
         config.voiceID = parseInt(voice.fileID)
       }
 
+      updateSpeechURL()
+      delete config.url
       updateLine({ kind: 'speech', index, elapsedTime: initialConfig.elapsedTime, newValue: config, changeAfterLineElapsedTime })
       setIsProcessing(false)
       closeCallback()
@@ -142,9 +144,24 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
   }
 
   function updateSpeechWithoutAudio(config, changeAfterLineElapsedTime) {
+    updateSpeechURL()
     updateLine({ kind: 'speech', index, elapsedTime: initialConfig.elapsedTime, newValue: config, changeAfterLineElapsedTime })
     setIsProcessing(false)
     closeCallback()
+  }
+
+  function updateSpeechURL() {
+    if (initialConfig.voiceID === config.voiceID) return
+
+    setSpeechURLs(urls => {
+      delete urls[initialConfig.voiceID]
+      if (config.url) {
+        urls[config.voiceID] = config.url
+      } else {
+        delete urls[config.voiceID]
+      }
+      return { ...urls }
+    })
   }
 
   function handleCancel() {

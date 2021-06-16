@@ -58,7 +58,6 @@ export default function useAddingLine({ lessonRef, maxDurationSecInLine, lastTim
       durationSec: 0,
       subtitle: '',
       caption: {},
-      url: '',
       isSynthesis: !lessonRef.current.needsRecording,
       synthesisConfig: {},
       isFocus: true,
