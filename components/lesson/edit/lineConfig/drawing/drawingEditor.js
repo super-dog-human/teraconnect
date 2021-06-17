@@ -18,7 +18,7 @@ import useDrawingRecorder from '../../../../../libs/hooks/lesson/useDrawingRecor
 
 export default function DrawingEditor({ config, selectedAction, setSelectedAction, startElapsedTime, sameTimeIndex, isRecording, setIsRecording, drawings, setDrawings }) {
   const previewDurationSecRef = useRef(config.durationSec) // プレビューではdrawingsの時間だけ再生し、収録中はフル再生する
-  const { bgImageURL, graphics, speeches } = useLessonEditorContext()
+  const { generalSetting, graphics, speeches } = useLessonEditorContext()
   const containerRef = useRef()
   const { hasResize } = useResizeDetector(containerRef)
   const { drawingRef, isPlaying, setIsPlaying, isPreparing, isPlayerHover, getElapsedTime, playerElapsedTime, resetBeforeUndo, handleMouseOver, handleMouseLeave, handlePlayButtonClick, handleDragStart, handleSeekChange, } =
@@ -62,7 +62,7 @@ export default function DrawingEditor({ config, selectedAction, setSelectedActio
         <Container invisible={selectedAction !== 'draw'}>
           <Flex>
             <Container width='500' height='281'>
-              <Player isPreparing={isPreparing} durationSec={previewDurationSecRef.current} bgImageURL={bgImageURL} graphics={graphics} drawings={drawings}
+              <Player isPreparing={isPreparing} durationSec={previewDurationSecRef.current} backgroundImageURL={generalSetting.backgroundImageURL} graphics={graphics} drawings={drawings}
                 drawingRef={drawingRef} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing}
                 isPlayerHover={isPlayerHover} controllerInvisible={!isPlayerHover} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onPlayButtonClick={handlePlayButtonClick}
                 disabledControl={isRecording} playerElapsedTime={playerElapsedTime}

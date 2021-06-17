@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
-import { fetchMaterial }  from '../../../lessonEdit'
 import { createTimeline } from '../../../lessonLineUtils'
+import { filterObject } from '../../../utils'
 import useAddingLine from './timeline/useAddingLine'
 import useUpdatingLine from './timeline/useUpdatingLine'
 import useDeletionLine from './timeline/useDeletionLine'
@@ -11,13 +11,10 @@ import useFetch from '../../useFetch'
 
 export default function useLessonEditor() {
   const lessonRef = useRef({})
-  const materialRef = useRef({})
   const [isLoading, setIsLoading] = useState(true)
   const [durationSec, setDurationSec] = useState(0)
   const [timeline, setTimeline] = useState({})
-  const [voiceSynthesisConfig, setVoiceSynthesisConfig] = useState({})
-  const [bgImageURL, setBgImageURL] = useState('')
-  const [avatarLightColor, setAvatarLightColor] = useState([])
+  const [generalSetting, setGeneralSetting] = useState({})
   const [avatars, setAvatars] = useState([])
   const [drawings, setDrawings] = useState([])
   const [graphics, setGraphics] = useState([])
@@ -27,7 +24,7 @@ export default function useLessonEditor() {
   const [musicURLs, setMusicURLs] = useState({})
   const [speeches, setSpeeches] = useState([])
   const [speechURLs, setSpeechURLs] = useState({})
-  const { fetchWithAuth } = useFetch()
+  const { fetchWithAuth, post } = useFetch()
   const { showError } = useErrorDialogContext()
   const { shiftElapsedTime, updateMaterial, deleteMaterial, lastTimeline, sortedElapsedTimes, maxDurationSecInLine, nextElapsedTime, calcTime, targetMaterial, allMaterialNames, allMaterials } =
     useLineUtils({ avatars, drawings, embeddings, graphics, musics, speeches, setAvatars, setDrawings, setEmbeddings, setGraphics, setSpeeches, setMusics, timeline })
@@ -37,12 +34,33 @@ export default function useLessonEditor() {
   const { deleteLine } = useDeletionLine({ shiftElapsedTime, nextElapsedTime, deleteMaterial, targetMaterial, allMaterialNames })
   const { swapLine } = useSwappingLine({ lastTimeline, sortedElapsedTimes, maxDurationSecInLine, calcTime, targetMaterial, allMaterialNames })
 
-  async function fetchResources(lesson) {
+  async function fetchResources({ isExistsCache, getCache, lesson }) {
     lessonRef.current = lesson
 
+    if (isExistsCache()) {
+      loadMaterialCache(getCache)
+    } else {
+      fetchMaterialFromRemote()
+    }
+
     setDurationSec(lesson.durationSec)
-    fetchMaterial({ lesson, materialRef, fetchWithAuth, setVoiceSynthesisConfig, setBgImageURL, setAvatarLightColor, setAvatars, setDrawings, setEmbeddings, setGraphics, setGraphicURLs, setMusics, setSpeeches })
-      .then(timeline => {
+  }
+
+  function loadMaterialCache(getCache) {
+    setGeneralSetting(getCache('generalSetting'))
+    setAvatars(getCache('avatars'))
+    setDrawings(getCache('drawings'))
+    setGraphics(getCache('graphics'))
+    setEmbeddings(getCache('embeddings'))
+    setSpeeches(getCache('speeches'))
+    setMusics(getCache('musics'))
+    fetchAndSetGraphicURLs()
+
+    setIsLoading(false)
+  }
+
+  function fetchMaterialFromRemote() {
+    fetchMaterial().then(timeline => {
         setTimeline(timeline)
         setIsLoading(false)
       }).catch(e => {
@@ -57,6 +75,76 @@ export default function useLessonEditor() {
 
         console.error(e)
       })
+  }
+
+  async function fetchMaterial() {
+    const material = await fetchWithAuth(`/lessons/${lessonRef.current.id}/materials/${lessonRef.current.materialID}`)
+
+    setGeneralSetting(filterObject(material, ['avatarLightColor', 'backgroundImageID', 'backgroundImageURL', 'voiceSynthesisConfig']))
+    setAvatars(material.avatars || [])
+    setDrawings(material.drawings || [])
+    setEmbeddings(material.embeddings || [])
+    setGraphics(material.graphics || [])
+    setMusics(material.musics || [])
+
+    await fetchAndSetGraphicURLs()
+    await fetchAndSetSpeechWithVoice(material)
+    return createTimeline(filterObject(material, ['avatars', 'drawings', 'embeddings', 'graphics', 'speeches', 'musics']))
+
+    async function fetchAndSetSpeechWithVoice(material) {
+      const conditions = [!material.speeches, lessonRef.current.needsRecording, material.created === material.updated]
+      if (conditions.every(v => v)) {
+        const voices = await fetchWithAuth(`/voices?lesson_id=${lessonRef.current.id}`)
+          .catch(e => {
+            if (e.response?.status === 404) return []
+            throw e
+          })
+        const speeches = []
+
+        voices.forEach(v => {
+          const newSpeech = {}
+          newSpeech.isSynthesis = false
+          newSpeech.caption = {}
+          newSpeech.voiceID = v.id
+          newSpeech.elapsedTime = v.elapsedTime
+          newSpeech.durationSec = v.durationSec
+          newSpeech.subtitle = v.text
+          newSpeech.synthesisConfig = {}
+
+          speeches.push({ ...newSpeech })
+        })
+        material.speeches = speeches
+        setSpeeches(speeches)
+        initialUploadSpeech(speeches)
+      } else {
+        setSpeeches(material.speeches || [])
+      }
+    }
+
+    function initialUploadSpeech(speeches) {
+      if (speeches.length === 0) return
+      post(`/lessons/${lessonRef.current.id}/materials/${lessonRef.current.materialID}`, { speeches }, 'PATCH')
+    }
+  }
+
+  async function fetchAndSetGraphicURLs() {
+    const graphicURLs = (await fetchGraphicURLs()).reduce((acc, r) => {
+      acc[r.id] = {
+        url: r.url,
+        isUploading: false,
+      }
+      return acc
+    }, {})
+
+    setGraphicURLs(graphicURLs)
+
+    async function fetchGraphicURLs() {
+      return fetchWithAuth(`/graphics?lesson_id=${lessonRef.current.id}`)
+        .catch(e => {
+          if (e.response?.status === 404) return []
+          throw e
+        })
+    }
   }
 
   function fetchMusicURLs() {
@@ -106,7 +194,7 @@ export default function useLessonEditor() {
     updateTimeline()
   }, allMaterials())
 
-  return { lesson: lessonRef.current, material: materialRef.current, fetchResources, isLoading, durationSec, timeline, voiceSynthesisConfig, setVoiceSynthesisConfig, bgImageURL, setBgImageURL,
-    avatarLightColor, avatars, drawings, embeddings, graphics, graphicURLs, musics, musicURLs, setMusicURLs, speeches, speechURLs, setSpeechURLs, setEmbeddings, setGraphics, setGraphicURLs,
+  return { lesson: lessonRef.current, fetchResources, isLoading, durationSec, timeline, generalSetting, setGeneralSetting,
+    avatars, drawings, embeddings, graphics, graphicURLs, musics, musicURLs, setMusicURLs, speeches, speechURLs, setSpeechURLs, setEmbeddings, setGraphics, setGraphicURLs,
     updateLine, deleteLine, swapLine, addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast }
 }

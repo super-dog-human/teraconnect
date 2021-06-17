@@ -6,7 +6,7 @@ export default function useAvatarConfig({ index, initialConfig, closeCallback })
   const [config, dispatchConfig] = useReducer(configReducer, initialConfig)
   const [durationSec, setDurationSec] = useState(initialConfig.durationSec)
   const [isLoading, setIsLoading] = useState(true)
-  const { lesson, avatarLightColor, updateLine } = useLessonEditorContext()
+  const { lesson, generalSetting, updateLine } = useLessonEditorContext()
   const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useAvatar({ setIsLoading, movingCallback })
 
   function configReducer(state, { type, payload }) {
@@ -25,7 +25,7 @@ export default function useAvatarConfig({ index, initialConfig, closeCallback })
   async function initAvatar() {
     const avatar = { ...lesson.avatar }
     avatar.config.positions = Object.values(config.moving)
-    setAvatarConfig({ avatar, 'lightColor': avatarLightColor })
+    setAvatarConfig({ avatar, 'lightColor': generalSetting.avatarLightColor })
   }
 
   function movingCallback(record) {

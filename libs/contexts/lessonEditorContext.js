@@ -3,16 +3,12 @@ import useLessonEditor from '../hooks/lesson/edit/useLessonEditor'
 
 const LessonEditorContext = React.createContext({
   lesson: {},
-  material: {},
   fetchResources: () => {},
   isLoading: true,
   durationSec: null,
   timeline: {},
-  voiceSynthesisConfig: {},
-  setVoiceSynthesisConfig: () => {},
-  bgImageURL: '',
-  setBgImageURL: () => {},
-  avatarLightColor: '',
+  generalSetting: {},
+  setGeneralSetting: () => {},
   avatars: [],
   embeddings: [],
   graphics: [],
@@ -40,14 +36,14 @@ const LessonEditorContext = React.createContext({
 })
 
 const LessonEditorProvider = ({ children }) => {
-  const { lesson, material, fetchResources, isLoading, durationSec, timeline, voiceSynthesisConfig, setVoiceSynthesisConfig, bgImageURL, setBgImageURL,
-    avatarLightColor, avatars, embeddings, graphics, graphicURLs, drawings, musics, musicURLs, setMusicURLs, speeches, speechURLs, setSpeechURLs, setEmbeddings, setGraphics, setGraphicURLs,
+  const { lesson, fetchResources, isLoading, durationSec, timeline, generalSetting, setGeneralSetting,
+    avatars, embeddings, graphics, graphicURLs, drawings, musics, musicURLs, setMusicURLs, speeches, speechURLs, setSpeechURLs, setEmbeddings, setGraphics, setGraphicURLs,
     updateLine, deleteLine, swapLine, addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast } = useLessonEditor()
 
   return (
     <LessonEditorContext.Provider value={{
-      lesson, material, fetchResources, isLoading, durationSec, timeline, voiceSynthesisConfig, setVoiceSynthesisConfig, bgImageURL, setBgImageURL,
-      avatarLightColor, avatars, embeddings, graphics, graphicURLs, drawings, musics, musicURLs, setMusicURLs, speeches, speechURLs, setSpeechURLs, setEmbeddings, setGraphics, setGraphicURLs,
+      lesson, fetchResources, isLoading, durationSec, timeline, generalSetting, setGeneralSetting,
+      avatars, embeddings, graphics, graphicURLs, drawings, musics, musicURLs, setMusicURLs, speeches, speechURLs, setSpeechURLs, setEmbeddings, setGraphics, setGraphicURLs,
       updateLine, deleteLine, swapLine, addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast
     }}>
       {children}

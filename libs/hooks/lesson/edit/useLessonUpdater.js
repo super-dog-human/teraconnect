@@ -7,14 +7,14 @@ import { useRouter } from 'next/router'
 
 const skipConfirmNextTimeKey = 'skipConfirmLessonUpdating'
 
-export default function useLessonUpdater({ isLoading, isExistsCache, clearCache }) {
+export default function useLessonUpdater({ isLoading, isExistsDiff, clearDiffFlag, clearCache }) {
   const { post } = useFetch()
   const { showDialog } = useDialogContext()
   const { showError } = useErrorDialogContext()
   const [hasResourceDiff, setHasResourceDiff] = useState(false)
   const uploadableResourceRef = useRef({})
   const [isUpdating, setIsUpdating] = useState(false)
-  const { lesson, material, avatars, embeddings, graphics, drawings, musics, speeches } = useLessonEditorContext()
+  const { lesson, avatars, embeddings, graphics, drawings, musics, speeches } = useLessonEditorContext()
   const router = useRouter()
 
   function storeUploadableResource(resource) {
@@ -22,20 +22,6 @@ export default function useLessonUpdater({ isLoading, isExistsCache, clearCache 
 
     uploadableResourceRef.current = { ...uploadableResourceRef.current, ...resource }
     setHasResourceDiff(true)
-  }
-
-  function initialUploadSpeech() {
-    if (material.created !== material.updated) return
-    if (speeches.length === 0) return
-
-    post(`/lessons/${lesson.id}/materials/${material.id}`, { speeches }, 'PATCH').catch(e => {
-      showError({
-        message: '初回更新に失敗しました。再度実行します。',
-        original: e,
-        canDismiss: false,
-        callback: initialUploadSpeech,
-      })
-    })
   }
 
   async function updateLesson() {
@@ -70,9 +56,9 @@ export default function useLessonUpdater({ isLoading, isExistsCache, clearCache 
   function uploadToRemote() {
     setIsUpdating(true)
 
-    post(`/lessons/${lesson.id}/materials/${material.id}`, uploadableResourceRef.current, 'PATCH').then(() => {
+    post(`/lessons/${lesson.id}/materials/${lesson.materialID}`, uploadableResourceRef.current, 'PATCH').then(() => {
       uploadableResourceRef.current = {}
-      clearCache()
+      clearDiffFlag()
       setIsUpdating(false)
       setHasResourceDiff(false)
     }).catch(e => {
@@ -93,9 +79,8 @@ export default function useLessonUpdater({ isLoading, isExistsCache, clearCache 
 
   useEffect(() => {
     if (isLoading) return
-    initialUploadSpeech()
 
-    if (isExistsCache()) { // キャッシュフラグが立っているなら未アップロードの差分がある
+    if (isExistsDiff()) { // キャッシュフラグが立っているなら未アップロードの差分がある
       setHasResourceDiff(true)
     }
   }, [isLoading])

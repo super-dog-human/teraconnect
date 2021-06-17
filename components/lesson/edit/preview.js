@@ -6,13 +6,13 @@ import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorConte
 import useLessonPlayer from '../../../libs/hooks/lesson/useLessonPlayer'
 
 export default function Preview() {
-  const { durationSec, bgImageURL, avatars, graphics, drawings, speeches } = useLessonEditorContext()
+  const { durationSec, generalSetting, avatars, graphics, drawings, speeches } = useLessonEditorContext()
   const { handleMouseOver, handleMouseLeave, handlePlayButtonClick, handleDragStart, handleSeekChange, isPlayerHover, ...playerProps } =
     useLessonPlayer({ startElapsedTime: 0, durationSec, avatars, graphics, drawings, speeches })
 
   return (
     <div css={bodyStyle}>
-      <LessonPlayer durationSec={durationSec} bgImageURL={bgImageURL} graphics={graphics} drawings={drawings}
+      <LessonPlayer durationSec={durationSec} backgroundImageURL={generalSetting.backgroundImageURL} graphics={graphics} drawings={drawings}
         onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onPlayButtonClick={handlePlayButtonClick}
         controllerInvisible={!isPlayerHover} maxTime={parseFloat(durationSec.toFixed(2))} onDragStart={handleDragStart} onSeekChange={handleSeekChange}
         {...playerProps} />

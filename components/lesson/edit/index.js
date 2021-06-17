@@ -19,10 +19,10 @@ import Timeline from './timeline'
 const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
   const screenClass = useScreenClass()
   const [isLoading, setIsLoading] = useState(true)
-  const { isExistsCache, getCache, clearCache } = useLessonCacheController({ isLoading, lessonID: lesson.id })
+  const { isExistsCache, isExistsDiff, clearDiffFlag, getCache, clearCache } = useLessonCacheController({ isLoading, lessonID: lesson.id })
   const { contextMenu, handleDismiss } = useContextMenuContext()
   const { fetchResources, timeline } = useLessonEditorContext()
-  const { hasResourceDiff, isUpdating, updateLesson, discardLessonDraft } = useLessonUpdater({ isLoading, isExistsCache, clearCache })
+  const { hasResourceDiff, isUpdating, updateLesson, discardLessonDraft } = useLessonUpdater({ isLoading, isExistsDiff, clearDiffFlag, clearCache })
 
   const bodyStyle = css({
     margin: 'auto',
@@ -54,7 +54,7 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
   })
 
   useEffect(() => {
-    fetchResources(lesson)
+    fetchResources({ isExistsCache, getCache, lesson })
   }, [])
 
   useEffect(() => {
