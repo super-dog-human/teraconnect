@@ -27,10 +27,11 @@ export default function Header({ currentPage, showBadge, isUpdating, updateLesso
   }
 
   function handleSortDownClick(e) {
+    const targetRect = e.currentTarget.getBoundingClientRect()
     setContextMenu({
       labels: ['上書き保存', '変更の破棄'],
       actions: [updateLesson, discardLessonDraft],
-      position: { fixed: true, x: e.pageX, y: e.pageY },
+      position: { fixed: true, x: targetRect.x, y: targetRect.y + targetRect.height },
       disableMenuIndexes: showBadge ? [] : [0, 1],
     })
   }

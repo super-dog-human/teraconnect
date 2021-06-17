@@ -14,7 +14,7 @@ export default function useHumanVoiceFileController(config, dispatchConfig, inpu
     setContextMenu({
       labels: ['アップロード', 'ダウンロード'],
       actions: [openFileSelector, downloadVoice],
-      position: { fixed: true, x: targetRect.x, y: targetRect.y + targetRect.height + window.scrollY },
+      position: { fixed: true, x: targetRect.x + (targetRect.width / 2), y: targetRect.y + targetRect.height },
       disableMenuIndexes,
     })
 
