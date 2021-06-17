@@ -4,7 +4,6 @@ import useLessonEditor from '../hooks/lesson/edit/useLessonEditor'
 const LessonEditorContext = React.createContext({
   lesson: {},
   fetchResources: () => {},
-  isLoading: true,
   durationSec: null,
   timeline: {},
   generalSetting: {},
@@ -36,13 +35,13 @@ const LessonEditorContext = React.createContext({
 })
 
 const LessonEditorProvider = ({ children }) => {
-  const { lesson, fetchResources, isLoading, durationSec, timeline, generalSetting, setGeneralSetting,
+  const { lesson, fetchResources, durationSec, timeline, generalSetting, setGeneralSetting,
     avatars, embeddings, graphics, graphicURLs, drawings, musics, musicURLs, setMusicURLs, speeches, speechURLs, setSpeechURLs, setEmbeddings, setGraphics, setGraphicURLs,
     updateLine, deleteLine, swapLine, addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast } = useLessonEditor()
 
   return (
     <LessonEditorContext.Provider value={{
-      lesson, fetchResources, isLoading, durationSec, timeline, generalSetting, setGeneralSetting,
+      lesson, fetchResources, durationSec, timeline, generalSetting, setGeneralSetting,
       avatars, embeddings, graphics, graphicURLs, drawings, musics, musicURLs, setMusicURLs, speeches, speechURLs, setSpeechURLs, setEmbeddings, setGraphics, setGraphicURLs,
       updateLine, deleteLine, swapLine, addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast
     }}>

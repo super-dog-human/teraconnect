@@ -11,7 +11,7 @@ import useFetch from '../../useFetch'
 
 export default function useLessonEditor() {
   const lessonRef = useRef({})
-  const [isLoading, setIsLoading] = useState(true)
+  const [isInitialLoading, setIsInitialLoading] = useState(true)
   const [durationSec, setDurationSec] = useState(0)
   const [timeline, setTimeline] = useState({})
   const [generalSetting, setGeneralSetting] = useState({})
@@ -38,31 +38,40 @@ export default function useLessonEditor() {
     lessonRef.current = lesson
 
     if (isExistsCache()) {
-      loadMaterialCache(getCache)
+      loadMaterialCaches(getCache)
     } else {
-      fetchMaterialFromRemote()
+      fetchMaterials()
     }
-
-    setDurationSec(lesson.durationSec)
   }
 
-  function loadMaterialCache(getCache) {
+  async function loadMaterialCaches(getCache) {
+    await fetchAndSetGraphicURLs()
+
     setGeneralSetting(getCache('generalSetting'))
-    setAvatars(getCache('avatars'))
-    setDrawings(getCache('drawings'))
-    setGraphics(getCache('graphics'))
-    setEmbeddings(getCache('embeddings'))
-    setSpeeches(getCache('speeches'))
-    setMusics(getCache('musics'))
-    fetchAndSetGraphicURLs()
 
-    setIsLoading(false)
+    const avatars = getCache('avatars')
+    const drawings = getCache('drawings')
+    const graphics = getCache('graphics')
+    const embeddings = getCache('embeddings')
+    const musics = getCache('musics')
+    const speeches = getCache('speeches')
+
+    setAvatars(avatars)
+    setDrawings(drawings)
+    setGraphics(graphics)
+    setEmbeddings(embeddings)
+    setMusics(musics)
+    setSpeeches(speeches)
+
+    setTimeline(createTimeline({ avatars, drawings, embeddings, graphics, musics, speeches }))
+
+    setIsInitialLoading(false)
   }
 
-  function fetchMaterialFromRemote() {
+  function fetchMaterials() {
     fetchMaterial().then(timeline => {
         setTimeline(timeline)
-        setIsLoading(false)
+        setIsInitialLoading(false)
       }).catch(e => {
         if (e.response?.status === 404) return
 
@@ -190,11 +199,11 @@ export default function useLessonEditor() {
   }, [timeline])
 
   useEffect(() => {
-    if (isLoading) return
+    if (isInitialLoading) return
     updateTimeline()
   }, allMaterials())
 
-  return { lesson: lessonRef.current, fetchResources, isLoading, durationSec, timeline, generalSetting, setGeneralSetting,
+  return { lesson: lessonRef.current, fetchResources, durationSec, timeline, generalSetting, setGeneralSetting,
     avatars, drawings, embeddings, graphics, graphicURLs, musics, musicURLs, setMusicURLs, speeches, speechURLs, setSpeechURLs, setEmbeddings, setGraphics, setGraphicURLs,
     updateLine, deleteLine, swapLine, addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast }
 }
