@@ -5,7 +5,7 @@ import { useDialogContext } from '../../../contexts/dialogContext'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 import useFetch from '../../../hooks/useFetch'
 import { putFile } from '../../../fetch'
-import { tenMB as maxFileByteSize } from '../../../utils'
+import { TEN_MB as maxFileByteSize } from '../../../constants'
 
 export default function useMusicConfig({ index, initialConfig, closeCallback }) {
   const [isProcessing, setIsProcessing] = useState(false)

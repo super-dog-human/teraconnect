@@ -23,3 +23,5 @@ export const SYNTHESIS_ENGLISH_VOICE_NAMES = [
   { value: 'en-US-Wavenet-I', label: 'タイプI' },
   { value: 'en-US-Wavenet-J', label: 'タイプJ' },
 ]
+
+export const TEN_MB = 10485760

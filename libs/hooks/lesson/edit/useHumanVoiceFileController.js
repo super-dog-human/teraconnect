@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useContextMenuContext } from '../../../contexts/contextMenuContext'
-import { isBlobURL, tenMB as maxFileByteSize } from '../../../utils'
+import { isBlobURL } from '../../../utils'
+import { TEN_MB as maxFileByteSize } from '../../../constants'
 import fetch from 'isomorphic-unfetch'
 import { wavToMp3 } from '../../../audioUtils'
 

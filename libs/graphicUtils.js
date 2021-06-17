@@ -1,4 +1,4 @@
-import { tenMB as maxFileByteSize } from './utils'
+import { TEN_MB as maxFileByteSize } from './constants'
 const maxThumbnailSize = { width: 150, height: 95 }
 
 export function filterAvailableImages(files) {
