@@ -1,13 +1,17 @@
 export default function useLineUtils({ avatars, drawings, embeddings, graphics, musics, speeches,
   setAvatars, setDrawings, setEmbeddings, setGraphics, setSpeeches, setMusics, timeline }) {
 
-  function shiftElapsedTime({ fromElapsedTime, toElapsedTime, offsetTime }) {
+  function shiftElapsedTime({ fromElapsedTime, offsetTime }) {
     allMaterialNames().forEach(kind => {
       targetMaterial(kind).setter(materials => {
         materials.forEach(m => {
-          if (fromElapsedTime && m.elapsedTime <= fromElapsedTime) return // fromElapsedTimeと同じ時間まではスキップ
-          if (toElapsedTime   && m.elapsedTime > toElapsedTime)   return
-          m.elapsedTime = calcTime(m.elapsedTime, offsetTime)
+          if (fromElapsedTime && m.elapsedTime <= fromElapsedTime) return // 対象の時間が自身以前のものはスキップ
+
+          const newElapsedTime = calcTime(m.elapsedTime, offsetTime)
+          // 変更後の時間が自身以前になってしまう場合はスキップ。通常は発生しないが、変更前の後続行の開始時間が自身の終了より前の場合に起こりうる
+          if (newElapsedTime <= fromElapsedTime) return
+
+          m.elapsedTime = newElapsedTime
           if (kind === 'drawing' && m.units) {
             m.units.forEach(unit => {
               unit.elapsedTime = calcTime(unit.elapsedTime, offsetTime)
