@@ -5,10 +5,10 @@ import useSynthesisVoice from '../../useSynthesisVoice'
 import { findNextElement } from '../../../utils'
 import { fetchVoiceFileURL } from '../../../fetchResource'
 import { useRouter } from 'next/router'
-import { filterObject } from '../../../utils'
 
 export default function useSpeechLine({ speech, index, handleEditClick }) {
   const router = useRouter()
+  const lessonIDRef = useRef(parseInt(router.query.id))
   const inputRef = useRef()
   const [isLoading, setIsLoading] = useState(false)
   const [status, setStatus] = useState(true)
@@ -26,24 +26,15 @@ export default function useSpeechLine({ speech, index, handleEditClick }) {
   }
 
   async function setAudioIfNeeded(text) {
-    const lessonID = parseInt(router.query.id)
-
     const url = speechURLs[speech.voiceID]
     if (url) {
       createAudio(url)
     } else if (speech.isSynthesis && text) {
-      speech.subtitle = text
-      const voice = await createSynthesisVoiceFile(lessonID, speech)
-      createAudio(voice.url)
-
-      setSpeechURLs(urls => ({ ...urls, [voice.id]: voice.url }))
-      speech.voiceID = voice.id
-      updateLine({ kind: 'speech', index, elapsedTime: speech.elapsedTime, newValue: speech })
+      await setNewSynthesisVoice(text)
     } else if (!speech.isSynthesis) {
-      const voice = await fetchVoiceFileURL(speech.voiceID, lessonID)
+      const voice = await fetchVoiceFileURL(speech.voiceID, lessonIDRef.current)
       createAudio(voice.url)
-
-      setSpeechURLs(urls => ({ ...urls, [speech.voiceID]: voice.url }))
+      updateSpeechURL(null, { [speech.voiceID]: voice.url })
     }
   }
 
@@ -66,16 +57,42 @@ export default function useSpeechLine({ speech, index, handleEditClick }) {
     }
   }
 
-  function handleTextBlur(e) {
+  async function setNewSynthesisVoice(text) {
+    speech.subtitle = text
+    const voice = await createSynthesisVoiceFile(lessonIDRef.current, speech)
+    updateSpeechURL(speech.voiceID, { [voice.id]: voice.url })
+
+    createAudio(voice.url, async audio => {
+      speech.durationSec = parseFloat(audio.duration.toFixed(3))
+      speech.voiceID = voice.id
+      updateLine({ kind: 'speech', index, elapsedTime: speech.elapsedTime, newValue: speech })
+    })
+  }
+
+  function updateSpeechURL(oldID, newURL) {
+    setSpeechURLs(urls => {
+      delete urls[oldID]
+      return { ...urls, ...newURL }
+    })
+  }
+
+  async function handleTextBlur(e) {
     const text = e.target.value
     if (text === speech.subtitle) return
 
-    if (speech.isSynthesis) {
-      // テキストが更新されたら作成済みの音声も更新が必要なのでURLをクリア
-      setSpeechURLs(urls => filterObject(urls => Object.keys(urls).filter(id => parseInt(id) !== speech.voiceID)))
-    }
     speech.subtitle = text
-    updateLine({ kind: 'speech', index, elapsedTime: speech.elapsedTime, newValue: speech })
+    if (speech.isSynthesis && text) {
+      setIsLoading(true)
+      await setNewSynthesisVoice(text)
+      setIsLoading(false)
+    } else if (speech.isSynthesis) {
+      updateSpeechURL(speech.voiceID)
+      speech.durationSec = 0
+      speech.voiceID = 0
+      updateLine({ kind: 'speech', index, elapsedTime: speech.elapsedTime, newValue: speech })
+    } else {
+      updateLine({ kind: 'speech', index, elapsedTime: speech.elapsedTime, newValue: speech })
+    }
   }
 
   function handleSpeechButtonClick() {
