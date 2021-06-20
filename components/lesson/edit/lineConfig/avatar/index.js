@@ -15,9 +15,8 @@ import useAvatarConfig from '../../../../../libs/hooks/lesson/edit/useAvatarConf
 import AlignContainer from '../../../../alignContainer'
 
 export default function Avatar(props) {
-  const tabConfig = { elapsedTime: 0 }
   const isProcessing = false
-  const { dispatchConfig, isLoading, avatarRef, durationSec, startDragging, inDragging, endDragging, handleDurationChange, handleConfirm, handleCancel } = useAvatarConfig(props)
+  const { config, dispatchConfig, isLoading, avatarRef, durationSec, startDragging, inDragging, endDragging, handleDurationChange, handleConfirm, handleCancel } = useAvatarConfig(props)
 
   return (
     <>
@@ -55,7 +54,7 @@ export default function Avatar(props) {
 
       <Container height='60'>
         <ContainerSpacer left='50' right='50'>
-          <DialogFooter elapsedTime={tabConfig.elapsedTime} dispatchConfig={dispatchConfig} onConfirm={handleConfirm} onCancel={handleCancel} isProcessing={isProcessing} />
+          <DialogFooter elapsedTime={config.elapsedTime} dispatchConfig={dispatchConfig} onConfirm={handleConfirm} onCancel={handleCancel} isProcessing={isProcessing} />
         </ContainerSpacer>
       </Container>
     </>

@@ -54,7 +54,7 @@ export default function useLineConfig() {
       delete lastTimesRef.current.drawing
     }
 
-    const hasError = (kind === 'speech' || line.action === 'draw') && lastTimesRef.current[kind] >= parseFloat(elapsedTime)
+    const hasError = (['avatar', 'speech'].includes(kind) || line.action === 'draw') && lastTimesRef.current[kind] >= parseFloat(elapsedTime)
     const durationSec = line.durationSec || 0
     lastTimesRef.current[kind] = Math.max(lastTimesRef.current[kind] || 0, parseFloat(elapsedTime) + durationSec)
 
