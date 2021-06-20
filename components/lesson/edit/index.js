@@ -48,7 +48,7 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
     maxWidth: ['xs', 'sm'].includes(screenClass) ? '100%' : '830px',
     height: 'calc(100% - 80px)',
     marginTop: '40px',
-    marginLeft: '100px',
+    marginLeft: '50px',
     marginRight: '10px',
     marginBottom: '40px',
   })

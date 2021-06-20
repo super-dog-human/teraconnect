@@ -49,5 +49,17 @@ export default function useLineConfig() {
     }
   }
 
-  return { handleEditButtonClick, lineConfig, setLineConfig }
+  function hasDoubleTimeError({ lastTimesRef, elapsedTime, kind, line }) {
+    if (kind === 'drawing' && line.action === 'clear') {
+      delete lastTimesRef.current.drawing
+    }
+
+    const hasError = (kind === 'speech' || line.action === 'draw') && lastTimesRef.current[kind] >= parseFloat(elapsedTime)
+    const durationSec = line.durationSec || 0
+    lastTimesRef.current[kind] = Math.max(lastTimesRef.current[kind] || 0, parseFloat(elapsedTime) + durationSec)
+
+    return hasError
+  }
+
+  return { handleEditButtonClick, hasDoubleTimeError, lineConfig, setLineConfig }
 }

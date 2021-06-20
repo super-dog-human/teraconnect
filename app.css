@@ -89,6 +89,7 @@ main {
   --border-dark-gray: #707070;
   --back-movie-black: #141414;
   --error-red: #dc143c;
+  --error-light-pink: #ecd2d2;
 }
 .color-text-gray {
   color: var(--text-gray);

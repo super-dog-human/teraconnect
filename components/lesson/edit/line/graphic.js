@@ -29,7 +29,7 @@ export default function LessonLineGraphic({ graphic, index, isEditButtonShow, ha
       {graphic.action !== 'show' && <KindIcon kind="graphic" />}
       <div css={graphicContainerStyle}>
         {graphic.action === 'show' &&
-          <ContainerSpacer left='20' top='20' bottom='20'>
+          <ContainerSpacer left='10' top='20' bottom='20'>
             <Container width='175' height='100'>
               <div data-url={graphicURLs[graphic.graphicID]?.url} onClick={handleThumbnailClick}>
                 <GraphicThumbnail url={graphicURLs[graphic.graphicID]?.url} />

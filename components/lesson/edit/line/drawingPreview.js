@@ -11,7 +11,7 @@ export default function DrawingPreview({ drawings, drawing, sameTimeIndex }) {
     = useLessonPlayer({ startElapsedTime: drawing.elapsedTime, durationSec: drawing.durationSec, drawings, sameTimeIndex })
 
   return (
-    <ContainerSpacer left='20' top='20' bottom='20'>
+    <ContainerSpacer left='10' top='20' bottom='20'>
       <Container width='302' height='170' position='relative'>
         <Container width='302' height='170' position='absolute'>
           <Drawing drawingRef={drawingRef} backgroundColor='lightgray' />

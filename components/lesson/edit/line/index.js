@@ -1,8 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState } from 'react'
 import { css } from '@emotion/core'
+import ErrorNotice from './errorNotice'
 
-export default function LessonLine({ children }) {
+export default function LessonLine({ hasError, kind, children }) {
   const [isEditButtonShow, setIsEditButtonShow] = useState(false)
 
   function handleMouseOver() {
@@ -13,14 +14,21 @@ export default function LessonLine({ children }) {
     setIsEditButtonShow(false)
   }
 
+  const backgroundStyle = css({
+    backgroundColor: hasError && 'var(--error-light-pink)',
+  })
+
   return (
-    <div css={bodyStyle} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave}>
-      {children.map((child, key) => {
-        if (React.isValidElement(child)) {
-          return React.cloneElement(child, { key, isEditButtonShow })
-        }
-        return child
-      })}
+    <div css={backgroundStyle}>
+      <div css={bodyStyle} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave}>
+        {children.map((child, key) => {
+          if (React.isValidElement(child)) {
+            return React.cloneElement(child, { key, isEditButtonShow })
+          }
+          return child
+        })}
+      </div>
+      {hasError && <ErrorNotice kind={kind} />}
     </div>
   )
 }

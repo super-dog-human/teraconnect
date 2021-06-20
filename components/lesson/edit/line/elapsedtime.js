@@ -17,4 +17,5 @@ const bodyStyle = css({
   lineHeight: '55px',
   letterSpacing: '1px',
   paddingLeft: '10px',
+  paddingRight: '10px',
 })
