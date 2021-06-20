@@ -9,7 +9,7 @@ export default function ImageViwer() {
   const [loaded, setLoaded] = useState(false)
   const { image } = useImageViewerContext()
 
-  function handleLoad(e) {
+  function handleLoad() {
     setLoaded(true)
   }
 
