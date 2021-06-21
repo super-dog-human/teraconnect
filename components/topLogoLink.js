@@ -10,12 +10,18 @@ export default function TopLogoLink({ color }) {
     <ContainerSpacer left='20'>
       <PageLink path='/'>
         <Container width='181' height='25'>
-          <img css={logoStyle} src={`/img/logo_${color}.png`} srcSet={`/img/logo_${color}.png 1x, /img/logo_${color}@2x.png 2x`} />
+          <div css={backgroundStyle}>
+            <img css={logoStyle} src={`/img/logo_${color}.png`} srcSet={`/img/logo_${color}.png 1x, /img/logo_${color}@2x.png 2x`} />
+          </div>
         </Container>
       </PageLink>
     </ContainerSpacer>
   )
 }
+
+const backgroundStyle = css({
+  fontSize: '0',
+})
 
 const logoStyle = css({
   verticalAlign: 'middle',

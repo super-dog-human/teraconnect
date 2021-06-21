@@ -2,16 +2,16 @@
 import React, { useState } from 'react'
 import { css } from '@emotion/core'
 import { useScreenClass } from 'react-grid-system'
-import Container from '../../../container'
-import Spacer from '../../../spacer'
-import Flex from '../../../flex'
-import Icon from '../../../icon'
-import PlainText from '../../../plainText'
-import TopLogoLink from '../../../topLogoLink'
+import Container from '../container'
+import Spacer from '../spacer'
+import Flex from '../flex'
+import Icon from '../icon'
+import PlainText from '../plainText'
+import TopLogoLink from '../topLogoLink'
 import MenuLink from './menuLink'
-import IconWithBadgeButton from '../../../button/iconWithBadgeButton'
-import IconButton from '../../../button/iconButton'
-import { useContextMenuContext } from '../../../../libs/contexts/contextMenuContext'
+import IconWithBadgeButton from '../button/iconWithBadgeButton'
+import IconButton from '../button/iconButton'
+import { useContextMenuContext } from '../../libs/contexts/contextMenuContext'
 
 export default function Header({ currentPage, showBadge, isUpdating, updateLesson, discardLessonDraft }) {
   const [isHover, setIsHover] = useState(false)
@@ -45,40 +45,42 @@ export default function Header({ currentPage, showBadge, isUpdating, updateLesso
           </div>
           <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
             <Flex>
-              <MenuLink isHover={isHover} page='edit' currentPage={currentPage} path='/'>
+              <MenuLink isHover={isHover} page='analytics' currentPage={currentPage} path='/'>
                 <Flex justifyContent='center'>
-                  <Container width='20' height='77'><Icon name='edit' /></Container>
-                  <Spacer width='20' />
-                  <PlainText color='white' size='15' lineHeight='77' letterSpacing='5'>編集</PlainText>
+                  <Container width='20' height='60'><Icon name='analytics' /></Container>
+                  <Spacer width='10' />
+                  <PlainText color='white' size='14' lineHeight='60'>レポート</PlainText>
                 </Flex>
               </MenuLink>
               {['lg', 'xl', 'xxl'].includes(screenClass) && <Spacer width='100' />}
-              <MenuLink isHover={isHover} page='review' currentPage={currentPage} path='/'>
+              <MenuLink isHover={isHover} page='edit' currentPage={currentPage} path='/'>
                 <Flex justifyContent='center'>
-                  <Container width='20' height='77'><Icon name='report' /></Container>
-                  <Spacer width='10' />
-                  <PlainText color='white' size='15' lineHeight='77' letterSpacing='2'>レビュー</PlainText>
+                  <Container width='18' height='60'><Icon name='edit' /></Container>
+                  <Spacer width='20' />
+                  <PlainText color='white' size='14' lineHeight='60' letterSpacing='5'>編集</PlainText>
                 </Flex>
               </MenuLink>
               {['lg', 'xl', 'xxl'].includes(screenClass) && <Spacer width='100' />}
               <MenuLink isHover={isHover} page='publishing' currentPage={currentPage} path='/'>
                 <Flex justifyContent='center'>
-                  <Container width='20' height='77'><Icon name='book' /></Container>
+                  <Container width='23' height='60'><Icon name='cloud-upload' /></Container>
                   <Spacer width='10' />
-                  <PlainText color='white' size='15' lineHeight='77'>公開設定</PlainText>
+                  <PlainText color='white' size='13' lineHeight='60'>公開設定</PlainText>
                 </Flex>
               </MenuLink>
             </Flex>
           </div>
           <Container width='100' height='40'>
-            <Flex>
-              <Container width='40' height='40'>
-                <IconWithBadgeButton name='save' padding='10' showBadge={showBadge} isProcessing={isUpdating} disabled={isUpdating} onClick={updateLesson} />
-              </Container>
-              <Container width='10'>
-                <IconButton name='sort-down' disabled={isUpdating} onMouseDown={handleSortDownClick} />
-              </Container>
-            </Flex>
+            {currentPage === 'edit' &&
+              <Flex>
+                <Container width='40' height='40'>
+                  <IconWithBadgeButton name='save' padding='10' showBadge={showBadge} isProcessing={isUpdating} disabled={isUpdating} onClick={updateLesson} />
+                </Container>
+                <Container width='10'>
+                  <IconButton name='sort-down' disabled={isUpdating} onMouseDown={handleSortDownClick} />
+                </Container>
+              </Flex>
+            }
           </Container>
         </Flex>
       </div>
@@ -97,7 +99,7 @@ const headerStyle = css({
 
 const bodyStyle = css({
   maxWidth: '1280px',
-  height: '77px',
+  height: '60px',
   marginLeft: 'auto',
   marginRight: 'auto',
 })

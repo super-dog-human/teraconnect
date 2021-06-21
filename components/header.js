@@ -89,14 +89,14 @@ const headerStyle = css({
 
 const headerBodyStyle = css({
   maxWidth: '1280px',
-  height: '77px',
+  height: '60px',
   marginLeft: 'auto',
   marginRight: 'auto',
 })
 
 const logoStyle = css({
   verticalAlign: 'middle',
-  lineHeight: '77px',
+  lineHeight: '60px',
   marginLeft: '20px',
   marginRight: '100px',
 })
@@ -105,12 +105,12 @@ const logoImageStyle = css({
   width: '181px',
   height: '25px',
   marginLeft: '0px',
-  lineHeight: '77px',
+  lineHeight: '60px',
   verticalAlign: 'middle',
 })
 
 const menuStyle = css({
-  lineHeight: '77px',
+  lineHeight: '60px',
   verticalAlign: 'middle',
   textAlign: 'center',
   color: '#848484',

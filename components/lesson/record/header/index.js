@@ -81,7 +81,7 @@ const bodyStyle = css({
   justifyContent: 'space-between',
   alignItems: 'center',
   maxWidth: '1280px',
-  height: '77px',
+  height: '60px',
   marginLeft: 'auto',
   marginRight: 'auto',
 })

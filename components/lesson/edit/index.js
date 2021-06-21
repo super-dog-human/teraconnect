@@ -11,7 +11,7 @@ import useResourceReloader from '../../../libs/hooks/lesson/edit/useResourceRelo
 import Loading from './loading'
 import ContextMenu from '../../contextMenu'
 import ImageViwer from '../../imageViewer'
-import Header from './header'
+import Header from '../../authoringHeader'
 import Preview from './preview'
 import DurationTime from './durationTime'
 import GraphicController from './graphicController/'
@@ -93,7 +93,7 @@ export default LessonEdit
 
 const mainStyle = css({
   width: '100%',
-  height: 'calc(100vh - 77px)', // ヘッダの分を差し引いた画面の高さいっぱいに要素を表示
+  height: 'calc(100vh - 60px)', // ヘッダの分を差し引いた画面の高さいっぱいに要素を表示
   backgroundColor: 'var(--bg-light-gray)',
   userSelect: 'none',
 })
