@@ -70,20 +70,20 @@ export default function useLessonEditor() {
 
   function fetchMaterials() {
     fetchMaterial().then(timeline => {
-        setTimeline(timeline)
-        setIsInitialLoading(false)
-      }).catch(e => {
-        if (e.response?.status === 404) return
+      setTimeline(timeline)
+      setIsInitialLoading(false)
+    }).catch(e => {
+      if (e.response?.status === 404) return
 
-        showError({
-          message: '収録した授業の読み込みに失敗しました。',
-          original: e,
-          canDismiss: true,
-          callback: fetchResources,
-        })
-
-        console.error(e)
+      showError({
+        message: '収録した授業の読み込みに失敗しました。',
+        original: e,
+        canDismiss: true,
+        callback: fetchResources,
       })
+
+      console.error(e)
+    })
   }
 
   async function fetchMaterial() {
