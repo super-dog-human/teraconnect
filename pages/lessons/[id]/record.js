@@ -8,9 +8,11 @@ import LessonRecord from '../../../components/lesson/record/'
 import Footer from '../../../components/footer'
 import requirePageAuth from '../../../libs/middlewares/requirePageAuth'
 import fetchLessonAsProps from '../../../libs/middlewares/fetchLessonAsProps'
+import useSessionExpireChecker from '../../../libs/hooks/useTokenExpireChecker'
 
 const Page = ({ lesson }) => {
   usePreventBack()
+  useSessionExpireChecker()
   const containerRef = useRef(null)
   const { hasResize } = useResizeDetector(containerRef)
 

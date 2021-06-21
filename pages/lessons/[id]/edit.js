@@ -6,8 +6,11 @@ import fetchLessonAsProps from '../../../libs/middlewares/fetchLessonAsProps'
 import Footer from '../../../components/footer'
 import { ContextMenuProvider } from '../../../libs/contexts/contextMenuContext'
 import { LessonEditorProvider } from '../../../libs/contexts/lessonEditorContext'
+import useSessionExpireChecker from '../../../libs/hooks/useTokenExpireChecker'
 
 const Page = ({ lesson }) => {
+  useSessionExpireChecker()
+
   return (
     <>
       <Head>

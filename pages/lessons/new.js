@@ -4,17 +4,22 @@ import Layout from '../../components/layout'
 import LessonNewForm from '../../components/lesson/new/form'
 import requirePageAuth from '../../libs/middlewares/requirePageAuth'
 import { fetch } from '../../libs/fetch'
+import useSessionExpireChecker from '../../libs/hooks/useTokenExpireChecker'
 
-const Page = (props) => (
-  <>
-    <Head>
-      <title>TERACONNECT</title>
-    </Head>
-    <Layout>
-      <LessonNewForm {...props} subjects={props.subjects} />
-    </Layout>
-  </>
-)
+const Page = (props) => {
+  useSessionExpireChecker()
+
+  return (
+    <>
+      <Head>
+        <title>TERACONNECT</title>
+      </Head>
+      <Layout>
+        <LessonNewForm {...props} subjects={props.subjects} />
+      </Layout>
+    </>
+  )
+}
 
 export default Page
 

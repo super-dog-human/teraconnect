@@ -2,17 +2,22 @@ import React from 'react'
 import Head from 'next/head'
 import Layout from '../../components/layout'
 import requirePageAuth from '../../libs/middlewares/requirePageAuth'
+import useSessionExpireChecker from '../../../libs/hooks/useTokenExpireChecker'
 
-const Page = () => (
-  <>
-    <Head>
-      <title>TERACONNECT</title>
-    </Head>
-    <Layout>
-      <div>new user page.</div>
-    </Layout>
-  </>
-)
+const Page = () => {
+  useSessionExpireChecker()
+
+  return (
+    <>
+      <Head>
+        <title>TERACONNECT</title>
+      </Head>
+      <Layout>
+        <div>new user page.</div>
+      </Layout>
+    </>
+  )
+}
 
 export default Page
 
