@@ -6,7 +6,6 @@ const encodeBlockSize = 1152
 let mp3Encoder
 let uploadingCount = 0
 let lessonID
-let token
 let apiURL
 
 onmessage = async function(e) {
@@ -14,14 +13,13 @@ onmessage = async function(e) {
     switch(k) {
     case 'initialize': {
       lessonID = e.data.initialize.lessonID
-      token = e.data.initialize.token
       apiURL = e.data.initialize.apiURL
       return
     }
     case 'newVoice': {
       uploadingCount += 1
 
-      const result = await fetchSignedURL(e.data.newVoice.elapsedTime, e.data.newVoice.durationSec)
+      const result = await fetchSignedURL(e.data.newVoice.elapsedTime, e.data.newVoice.durationSec, e.data.newVoice.token)
       const file = await createMP3(e.data.newVoice.buffers, e.data.newVoice.sampleRate)
       await uploadFile(result.signedURL, file)
       e.data = null
@@ -72,7 +70,7 @@ async function createMP3(rawData, sampleRate) {
   return new Blob(mp3Data, { type: 'audio/mpeg' })
 }
 
-async function fetchSignedURL(elapsedTime, durationSec) {
+async function fetchSignedURL(elapsedTime, durationSec, token) {
   const url = apiURL + '/voice'
   const body = {
     elapsedTime: parseFloat(elapsedTime.toFixed(3)),

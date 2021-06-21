@@ -28,7 +28,7 @@ export default function useVoiceRecorder({ needsUpload=true, lessonID, isRecordi
   }
 
   function handleRecorderMessage(command) {
-    Object.keys(command).forEach(k => {
+    Object.keys(command).forEach(async k => {
       switch(k) {
       case 'isSpeaking':
         setIsSpeaking(command[k])
@@ -36,13 +36,18 @@ export default function useVoiceRecorder({ needsUpload=true, lessonID, isRecordi
       case 'saveRecord':
         // データコピーが発生するが、AudioWorklet内でDedicated Workerを扱えないのでここから受け渡しをする
         if (needsUpload) {
-          uploaderRef.current.postMessage({ newVoice: command[k] })
+          uploadVoice(command[k])
         } else {
           setVoiceFile(bufferToWavFile(command[k]))
         }
         return
       }
     })
+  }
+
+  async function uploadVoice(body) {
+    body.token = await fetchToken()
+    uploaderRef.current.postMessage({ newVoice: body })
   }
 
   function updateSilenceThresholdSec() {
@@ -52,9 +57,7 @@ export default function useVoiceRecorder({ needsUpload=true, lessonID, isRecordi
 
   useEffect(() => {
     uploaderRef.current = new Worker('/voiceUploader.js')
-    fetchToken().then(token => {
-      uploaderRef.current.postMessage({ initialize: { lessonID, token, apiURL: process.env.NEXT_PUBLIC_TERACONNECT_API_URL } })
-    })
+    uploaderRef.current.postMessage({ initialize: { lessonID, apiURL: process.env.NEXT_PUBLIC_TERACONNECT_API_URL } })
 
     return () => {
       terminalCurrentRecorder()
