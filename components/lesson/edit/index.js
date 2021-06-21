@@ -7,6 +7,7 @@ import useLessonUpdater from '../../../libs/hooks/lesson/edit/useLessonUpdater'
 import { useContextMenuContext } from '../../../libs/contexts/contextMenuContext'
 import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorContext'
 import { ImageViewerProvider } from '../../../libs/contexts/imageViewerContext'
+import useResourceReloader from '../../../libs/hooks/lesson/edit/useResourceReloader'
 import Loading from './loading'
 import ContextMenu from '../../contextMenu'
 import ImageViwer from '../../imageViewer'
@@ -23,6 +24,7 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
   const { contextMenu, handleDismiss } = useContextMenuContext()
   const { fetchResources, timeline } = useLessonEditorContext()
   const { hasResourceDiff, isUpdating, updateLesson, discardLessonDraft } = useLessonUpdater({ isLoading, isExistsDiff, clearDiffFlag, clearCache })
+  useResourceReloader()
 
   const bodyStyle = css({
     margin: 'auto',
