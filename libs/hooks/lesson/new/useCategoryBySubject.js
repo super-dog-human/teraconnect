@@ -23,7 +23,7 @@ export default function useCategoryBySubject(setValue) {
   }
 
   const { data: categories, error } = useSWR(
-    () => subjectID ? `/categories?subjectID=${subjectID}` : null,
+    () => subjectID ? `/categories?subject_id=${subjectID}` : null,
     fetcher, { dedupingInterval: 86400000 }
   )
 
