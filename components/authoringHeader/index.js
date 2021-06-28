@@ -1,7 +1,8 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { css } from '@emotion/core'
 import { useScreenClass } from 'react-grid-system'
+import { useRouter } from 'next/router'
 import Container from '../container'
 import Spacer from '../spacer'
 import Flex from '../flex'
@@ -14,9 +15,12 @@ import IconButton from '../button/iconButton'
 import { useContextMenuContext } from '../../libs/contexts/contextMenuContext'
 
 export default function Header({ currentPage, showBadge, isUpdating, updateLesson, discardLessonDraft }) {
+  const router = useRouter()
+  const lessonIDRef = useRef(parseInt(router.query.id))
   const [isHover, setIsHover] = useState(false)
   const { setContextMenu } = useContextMenuContext()
   const screenClass = useScreenClass()
+
 
   function handleMouseEnter() {
     setIsHover(true)
@@ -53,7 +57,7 @@ export default function Header({ currentPage, showBadge, isUpdating, updateLesso
                 </Flex>
               </MenuLink>
               {['lg', 'xl', 'xxl'].includes(screenClass) && <Spacer width='100' />}
-              <MenuLink isHover={isHover} page='edit' currentPage={currentPage} path='/'>
+              <MenuLink isHover={isHover} page='edit' currentPage={currentPage} path={`/lessons/${lessonIDRef.current}/edit`}>
                 <Flex justifyContent='center'>
                   <Container width='18' height='60'><Icon name='edit' /></Container>
                   <Spacer width='20' />
@@ -61,7 +65,7 @@ export default function Header({ currentPage, showBadge, isUpdating, updateLesso
                 </Flex>
               </MenuLink>
               {['lg', 'xl', 'xxl'].includes(screenClass) && <Spacer width='100' />}
-              <MenuLink isHover={isHover} page='publishing' currentPage={currentPage} path='/'>
+              <MenuLink isHover={isHover} page='publishing' currentPage={currentPage} path={`/lessons/${lessonIDRef.current}/publishing`}>
                 <Flex justifyContent='center'>
                   <Container width='23' height='60'><Icon name='cloud-upload' /></Container>
                   <Spacer width='10' />
