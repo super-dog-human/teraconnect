@@ -28,6 +28,7 @@ export default function useLessonCacheController({ isLoading, lessonID }) {
     return JSON.parse(localStorage.getItem(keyName(name)) || '""')
   }
 
+  // localStorageへの書き込みはなるべく回数を抑えたいのでDebounceする
   function setCacheWithDebounce(material) {
     if (isLoading) return
 
@@ -132,7 +133,7 @@ export default function useLessonCacheController({ isLoading, lessonID }) {
 
   useEffect(() => {
     if (shouldSetCache) {
-      setCache()                     // localStorageへの書き込みはなるべく回数を抑えたいのでDebounceする
+      setCache()
     } else if (Object.keys(materialBusyQueRef.current).length > 0) {
       setCacheWithDebounceInBusied() // 書き込み中に発生した更新差分があれば次の書き込みに使用する
     }

@@ -17,7 +17,7 @@ import DurationTime from './durationTime'
 import GraphicController from './graphicController/'
 import Timeline from './timeline'
 
-const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
+export default function LessonEdit({ lesson }) {
   const screenClass = useScreenClass()
   const [isLoading, setIsLoading] = useState(true)
   const { isExistsCache, isExistsDiff, clearDiffFlag, getCache, clearCache } = useLessonCacheController({ isLoading, lessonID: lesson.id })
@@ -70,7 +70,7 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
       <ContextMenu {...contextMenu} handleDismiss={handleDismiss} />
       <Loading isShow={isLoading} />
       <Header currentPage='edit' showBadge={hasResourceDiff} isUpdating={isUpdating} updateLesson={updateLesson} discardLessonDraft={discardLessonDraft} />
-      <main css={mainStyle} ref={ref}>
+      <main css={mainStyle}>
         <ImageViewerProvider>
           <div css={bodyStyle}>
             <div css={leftSideStyle}>
@@ -87,9 +87,7 @@ const LessonEdit = React.forwardRef(function lessonEdit({ lesson }, ref) {
       </main>
     </>
   )
-})
-
-export default LessonEdit
+}
 
 const mainStyle = css({
   width: '100%',
