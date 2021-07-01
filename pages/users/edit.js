@@ -2,7 +2,7 @@ import React from 'react'
 import Head from 'next/head'
 import Layout from '../../components/layout'
 import requirePageAuth from '../../libs/middlewares/requirePageAuth'
-import useSessionExpireChecker from '../../../libs/hooks/useTokenExpireChecker'
+import useSessionExpireChecker from '../../libs/hooks/useTokenExpireChecker'
 
 const Page = () => {
   useSessionExpireChecker()
