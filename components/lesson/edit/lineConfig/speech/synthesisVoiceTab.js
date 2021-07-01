@@ -2,19 +2,14 @@ import React from 'react'
 import Flex from '../../../../flex'
 import Container from '../../../../container'
 import ContainerSpacer from '../../../../containerSpacer'
-import AlignContainer from '../../../../alignContainer'
 import FlipIconButton from '../../../../button/flipIconButton'
-import IconButton from '../../../../button/iconButton'
 import Spacer from '../../../../spacer'
-import PlainText from '../../../../plainText'
-import InputRange from '../../../../form/inputRange'
-import Select from '../../../../form/select'
 import InputText from '../../../../form/inputText'
-import { Container as GridContainer, Row, Col } from 'react-grid-system'
+import SynthesisVoiceConfig from '../../../../synthesisVoiceConfig'
 import useSynthesisVoiceEditor from '../../../../../libs/hooks/lesson/edit/useSynthesisVoiceEditor'
 
 export default function SynthesisVoiceTab({ config, dispatchConfig, switchTab }) {
-  const { languageNames, voiceNames, setSubtitle, setLanguageCode, setName, setSpeakingRate, setPitch, setVolumeGainDb, playVoice, isSynthesizing } = useSynthesisVoiceEditor(config, dispatchConfig)
+  const { setSubtitle, setLanguageCode, setName, setSpeakingRate, setPitch, setVolumeGainDb, playVoice, isSynthesizing } = useSynthesisVoiceEditor(config, dispatchConfig)
 
   return (
     <ContainerSpacer left='50' right='50'>
@@ -26,53 +21,10 @@ export default function SynthesisVoiceTab({ config, dispatchConfig, switchTab })
       </Flex>
       <Spacer height='18' />
       <InputText defaultValue={config.subtitle} key={config.subtitle} size='18' color='var(--soft-white)' borderWidth='0 0 1px' borderColor='var(--text-gray)' onBlur={setSubtitle} />
-      <GridContainer>
-        <Spacer height='40' />
-        <Row>
-          <Col md={4}>
-            <Select options={languageNames} topLabel={null} value={config.synthesisConfig.languageCode} color='var(--soft-white)' backgroundColor='var(--dark-gray)' onChange={setLanguageCode} />
-          </Col>
-          <Col md={4}>
-            <Select options={voiceNames} topLabel={null} value={config.synthesisConfig.name} color='var(--soft-white)' backgroundColor='var(--dark-gray)' onChange={setName} />
-          </Col>
-          <Col md={3}></Col>
-          <Col md={1}>
-            <Container width='35' height='35'>
-              <IconButton name='play' backgroundColor='var(--dark-gray)' borderColor='var(--border-dark-gray)' padding='10' onClick={playVoice} isProcessing={isSynthesizing} />
-            </Container>
-          </Col>
-        </Row>
-        <Spacer height='30' />
-        <Row>
-          <Col md={4}>
-            <PlainText size='13' color='var(--soft-white)'>速度</PlainText>
-            <ContainerSpacer left='10'>
-              <InputRange defaultValue={config.synthesisConfig.speakingRate || '1.2'} min='0.5' max='3.0' step='0.1' onInput={setSpeakingRate} onChange={setSpeakingRate} />
-            </ContainerSpacer>
-            <AlignContainer textAlign='right'>
-              <PlainText size='12' color='var(--soft-white)'>{config.synthesisConfig.speakingRate || '1.2'}</PlainText>
-            </AlignContainer>
-          </Col>
-          <Col md={4}>
-            <PlainText size='13' color='var(--soft-white)'>ピッチ</PlainText>
-            <ContainerSpacer left='10'>
-              <InputRange defaultValue={config.synthesisConfig.pitch || '0'} min='-10.0' max='10.0' step='1' onInput={setPitch} onChange={setPitch} />
-            </ContainerSpacer>
-            <AlignContainer textAlign='right'>
-              <PlainText size='12' color='var(--soft-white)'>{config.synthesisConfig.pitch || '0'}</PlainText>
-            </AlignContainer>
-          </Col>
-          <Col md={4}>
-            <PlainText size='13' color='var(--soft-white)'>音量調整</PlainText>
-            <ContainerSpacer left='10'>
-              <InputRange defaultValue={config.synthesisConfig.volumeGainDb || '0'} min='-5.0' max='0' step='1' onInput={setVolumeGainDb} onChange={setVolumeGainDb} />
-            </ContainerSpacer>
-            <AlignContainer textAlign='right'>
-              <PlainText size='12' color='var(--soft-white)'>{config.synthesisConfig.volumeGainDb || '0'}</PlainText>
-            </AlignContainer>
-          </Col>
-        </Row>
-      </GridContainer>
+
+      <SynthesisVoiceConfig isProcessing={isSynthesizing} languageCode={config.synthesisConfig.languageCode} setLanguageCode={setLanguageCode} name={config.synthesisConfig.name} setName={setName}
+        speakingRate={config.synthesisConfig.speakingRate} setSpeakingRate={setSpeakingRate} pitch={config.synthesisConfig.pitch} setPitch={setPitch}
+        volumeGainDb={config.synthesisConfig.volumeGainDb} setVolumeGainDb={setVolumeGainDb} playVoice={playVoice} />
     </ContainerSpacer>
   )
 }
