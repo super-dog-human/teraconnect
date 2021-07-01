@@ -24,7 +24,7 @@ export default function SynthesisVoiceTab({ config, dispatchConfig, switchTab })
 
       <SynthesisVoiceConfig isProcessing={isSynthesizing} languageCode={config.synthesisConfig.languageCode} setLanguageCode={setLanguageCode} name={config.synthesisConfig.name} setName={setName}
         speakingRate={config.synthesisConfig.speakingRate} setSpeakingRate={setSpeakingRate} pitch={config.synthesisConfig.pitch} setPitch={setPitch}
-        volumeGainDb={config.synthesisConfig.volumeGainDb} setVolumeGainDb={setVolumeGainDb} playVoice={playVoice} />
+        volumeGainDb={config.synthesisConfig.volumeGainDb} setVolumeGainDb={setVolumeGainDb} playVoice={playVoice} isDark={true} />
     </ContainerSpacer>
   )
 }

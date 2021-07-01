@@ -10,8 +10,11 @@ import InputRange from './form/inputRange'
 import PlainText from './plainText'
 import { SYNTHESIS_VOICE_LANGUAGE_NAMES, SYNTHESIS_JAPANESE_VOICE_NAMES, SYNTHESIS_ENGLISH_VOICE_NAMES } from '../libs/constants'
 
-export default function SynthesisVoiceConfig({ isProcessing, languageCode, setLanguageCode, name, setName, speakingRate, setSpeakingRate, pitch, setPitch, volumeGainDb, setVolumeGainDb, playVoice }) {
+export default function SynthesisVoiceConfig({ isProcessing, languageCode, setLanguageCode, name, setName, speakingRate, setSpeakingRate, pitch, setPitch, volumeGainDb, setVolumeGainDb, playVoice, isDark }) {
   const [voiceNames, setVoiceNames] = useState(SYNTHESIS_JAPANESE_VOICE_NAMES)
+  const textColor = isDark ? 'var(--soft-white)' : ''
+  const backgroundColor = isDark ? 'var(--dark-gray)' : ''
+  const borderColor = isDark ? 'var(--border-dark-gray)' : ''
 
   function handleLanguageCodeChange(e) {
     const languageCode = e.target.value
@@ -32,45 +35,45 @@ export default function SynthesisVoiceConfig({ isProcessing, languageCode, setLa
       <Spacer height='40' />
       <Row>
         <Col md={4}>
-          <Select options={SYNTHESIS_VOICE_LANGUAGE_NAMES} topLabel={null} value={languageCode} color='var(--soft-white)' backgroundColor='var(--dark-gray)' onChange={handleLanguageCodeChange} />
+          <Select options={SYNTHESIS_VOICE_LANGUAGE_NAMES} topLabel={null} value={languageCode} color={textColor} backgroundColor={backgroundColor} onChange={handleLanguageCodeChange} />
         </Col>
         <Col md={4}>
-          <Select options={voiceNames} topLabel={null} value={name} color='var(--soft-white)' backgroundColor='var(--dark-gray)' onChange={setName} />
+          <Select options={voiceNames} topLabel={null} value={name} color={textColor} backgroundColor={backgroundColor} onChange={setName} />
         </Col>
         <Col md={3}></Col>
         <Col md={1}>
           <Container width='35' height='35'>
-            <IconButton name='play' backgroundColor='var(--dark-gray)' borderColor='var(--border-dark-gray)' padding='10' onClick={playVoice} isProcessing={isProcessing} />
+            <IconButton name='play' backgroundColor={backgroundColor} borderColor={borderColor} padding='10' onClick={playVoice} isProcessing={isProcessing} />
           </Container>
         </Col>
       </Row>
       <Spacer height='30' />
       <Row>
         <Col md={4}>
-          <PlainText size='13' color='var(--soft-white)'>速度</PlainText>
+          <PlainText size='13' color={textColor}>速度</PlainText>
           <ContainerSpacer left='10'>
             <InputRange defaultValue={speakingRate || '1.2'} min='0.5' max='3.0' step='0.1' onInput={setSpeakingRate} onChange={setSpeakingRate} />
           </ContainerSpacer>
           <AlignContainer textAlign='right'>
-            <PlainText size='12' color='var(--soft-white)'>{speakingRate || '1.2'}</PlainText>
+            <PlainText size='12' color={textColor}>{speakingRate || '1.2'}</PlainText>
           </AlignContainer>
         </Col>
         <Col md={4}>
-          <PlainText size='13' color='var(--soft-white)'>ピッチ</PlainText>
+          <PlainText size='13' color={textColor}>ピッチ</PlainText>
           <ContainerSpacer left='10'>
             <InputRange defaultValue={pitch || '0'} min='-10.0' max='10.0' step='1' onInput={setPitch} onChange={setPitch} />
           </ContainerSpacer>
           <AlignContainer textAlign='right'>
-            <PlainText size='12' color='var(--soft-white)'>{pitch || '0'}</PlainText>
+            <PlainText size='12' color={textColor}>{pitch || '0'}</PlainText>
           </AlignContainer>
         </Col>
         <Col md={4}>
-          <PlainText size='13' color='var(--soft-white)'>音量調整</PlainText>
+          <PlainText size='13' color={textColor}>音量調整</PlainText>
           <ContainerSpacer left='10'>
             <InputRange defaultValue={volumeGainDb || '0'} min='-5.0' max='0' step='1' onInput={setVolumeGainDb} onChange={setVolumeGainDb} />
           </ContainerSpacer>
           <AlignContainer textAlign='right'>
-            <PlainText size='12' color='var(--soft-white)'>{volumeGainDb || '0'}</PlainText>
+            <PlainText size='12' color={textColor}>{volumeGainDb || '0'}</PlainText>
           </AlignContainer>
         </Col>
       </Row>
