@@ -9,7 +9,7 @@ export default function SeekBar({ invisible, playerElapsedTime, maxTime, onDragS
     <Container invisible={invisible}>
       <ContainerSpacer left='15' right='15'>
         <ColorFilter filter='drop-shadow(2px 2px 2px var(--dark-purple))'>
-          <InputRange key={playerElapsedTime} defaultValue={playerElapsedTime} min='0' max={parseFloat((maxTime).toFixed(2))} step='0.01'
+          <InputRange key={playerElapsedTime} color='var(--soft-white)' defaultValue={playerElapsedTime} min='0' max={parseFloat((maxTime).toFixed(2))} step='0.01'
             onDragStart={onDragStart} onInput={onSeekChange} onChange={onSeekChange} />
         </ColorFilter>
       </ContainerSpacer>

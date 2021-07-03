@@ -3,28 +3,30 @@ import React from 'react'
 import { css } from '@emotion/core'
 
 const InputRange = React.forwardRef(function inputRange(props, ref) {
-  return (
-    <input type="range" draggable="false" {...props} ref={ref} css={bodyStyle} />
-  )
-})
-
-const bodyStyle = css({
-  width: 'calc(100% - 2px)',
-  height: '1px',
-  appearance: 'none',
-  '::-webkit-slider-thumb': {
+  const { color, ...inputProps } = props
+  const bodyStyle = css({
+    width: 'calc(100% - 2px)',
+    height: '1px',
     appearance: 'none',
-    width: '12px',
-    height: '12px',
-    background: 'var(--soft-white)',
-    borderRadius: '50%',
-  },
-  ':active': {
-    outline: 'none',
-  },
-  ':focus': {
-    outline: '2px dotted gray',
-  },
+    background: color,
+    '::-webkit-slider-thumb': {
+      appearance: 'none',
+      width: '12px',
+      height: '12px',
+      background: color,
+      borderRadius: '50%',
+    },
+    ':active': {
+      outline: 'none',
+    },
+    ':focus': {
+      outline: '2px dotted gray',
+    },
+  })
+
+  return (
+    <input type="range" draggable="false" {...inputProps} ref={ref} css={bodyStyle} />
+  )
 })
 
 export default InputRange
