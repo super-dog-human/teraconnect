@@ -56,15 +56,6 @@ const featureBodyStyle = css({
   lineHeight: '25px'
 })
 
-const createLessonButtonStyle = css({
-  marginTop: '120px',
-  width: '170px',
-  height: '55px',
-  backgroundColor: 'white',
-  color: 'var(--dark-purple)',
-  fontSize: '18px'
-})
-
 const CopyForTeacher = () => (
   <div css={bodyStyle}>
     <div css={copyFotTeacherStyle}>

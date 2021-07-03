@@ -8,13 +8,12 @@ const bodyStyle = css({
 })
 
 const SignUpForm = () => {
-  let email, password =  ''
-  const handleEmail = useCallback(event => {
-    email = event.target.value
+  const handleEmail = useCallback(() => {
+    //    const email = event.target.value
   }, [])
 
-  const handlePassword = useCallback(event => {
-    password = event.target.value
+  const handlePassword = useCallback(() => {
+    //    password = event.target.value
   }, [])
 
   const handleSubmit = useCallback(event => {

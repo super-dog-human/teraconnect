@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import ReactDOM from 'react-dom'
+//import ReactDOM from 'react-dom'
 import { css } from '@emotion/core'
 import AvatarLoader from '../../libs/avatar/loader'
 import { Clock } from 'three'
@@ -16,6 +16,7 @@ export default class AloneAvatar extends React.Component {
   }
 
   async componentDidMount() {
+    /*
     const dom = await this.state.avatarLoader.render(
       '/model/alone.vrm',
       this.container
@@ -31,6 +32,7 @@ export default class AloneAvatar extends React.Component {
     addEventListener('resize', () => {
       this.state.avatarLoader.updateSize(this.container)
     })
+    */
   }
 
   animate() {
