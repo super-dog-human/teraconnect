@@ -12,9 +12,9 @@ import { SYNTHESIS_VOICE_LANGUAGE_NAMES, SYNTHESIS_JAPANESE_VOICE_NAMES, SYNTHES
 
 export default function SynthesisVoiceConfig({ isProcessing, languageCode, setLanguageCode, name, setName, speakingRate, setSpeakingRate, pitch, setPitch, volumeGainDb, setVolumeGainDb, playVoice, isDark }) {
   const [voiceNames, setVoiceNames] = useState(SYNTHESIS_JAPANESE_VOICE_NAMES)
-  const textColor = isDark ? 'var(--soft-white)' : ''
+  const textColor = isDark ? 'var(--soft-white)' : 'gray'
   const backgroundColor = isDark ? 'var(--dark-gray)' : ''
-  const borderColor = isDark ? 'var(--border-dark-gray)' : ''
+  const borderColor = isDark ? 'var(--border-dark-gray)' : 'gray'
 
   function handleLanguageCodeChange(e) {
     const languageCode = e.target.value
@@ -43,7 +43,7 @@ export default function SynthesisVoiceConfig({ isProcessing, languageCode, setLa
         <Col md={3}></Col>
         <Col md={1}>
           <Container width='35' height='35'>
-            <IconButton name='play' backgroundColor={backgroundColor} borderColor={borderColor} padding='10' onClick={playVoice} isProcessing={isProcessing} />
+            <IconButton name={isDark ? 'play' : 'play-gray'} backgroundColor={backgroundColor} borderColor={borderColor} padding='10' onClick={playVoice} isProcessing={isProcessing} />
           </Container>
         </Col>
       </Row>
@@ -52,7 +52,7 @@ export default function SynthesisVoiceConfig({ isProcessing, languageCode, setLa
         <Col md={4}>
           <PlainText size='13' color={textColor}>速度</PlainText>
           <ContainerSpacer left='10'>
-            <InputRange defaultValue={speakingRate || '1.2'} min='0.5' max='3.0' step='0.1' onInput={setSpeakingRate} onChange={setSpeakingRate} />
+            <InputRange color={textColor} defaultValue={speakingRate || '1.2'} min='0.5' max='3.0' step='0.1' onInput={setSpeakingRate} onChange={setSpeakingRate} />
           </ContainerSpacer>
           <AlignContainer textAlign='right'>
             <PlainText size='12' color={textColor}>{speakingRate || '1.2'}</PlainText>
@@ -61,7 +61,7 @@ export default function SynthesisVoiceConfig({ isProcessing, languageCode, setLa
         <Col md={4}>
           <PlainText size='13' color={textColor}>ピッチ</PlainText>
           <ContainerSpacer left='10'>
-            <InputRange defaultValue={pitch || '0'} min='-10.0' max='10.0' step='1' onInput={setPitch} onChange={setPitch} />
+            <InputRange color={textColor} defaultValue={pitch || '0'} min='-10.0' max='10.0' step='1' onInput={setPitch} onChange={setPitch} />
           </ContainerSpacer>
           <AlignContainer textAlign='right'>
             <PlainText size='12' color={textColor}>{pitch || '0'}</PlainText>
@@ -70,7 +70,7 @@ export default function SynthesisVoiceConfig({ isProcessing, languageCode, setLa
         <Col md={4}>
           <PlainText size='13' color={textColor}>音量調整</PlainText>
           <ContainerSpacer left='10'>
-            <InputRange defaultValue={volumeGainDb || '0'} min='-5.0' max='0' step='1' onInput={setVolumeGainDb} onChange={setVolumeGainDb} />
+            <InputRange color={textColor} defaultValue={volumeGainDb || '0'} min='-5.0' max='0' step='1' onInput={setVolumeGainDb} onChange={setVolumeGainDb} />
           </ContainerSpacer>
           <AlignContainer textAlign='right'>
             <PlainText size='12' color={textColor}>{volumeGainDb || '0'}</PlainText>
