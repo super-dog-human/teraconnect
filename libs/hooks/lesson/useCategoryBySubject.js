@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import useSWR from 'swr'
-import useFetch from '../../useFetch'
+import useFetch from '../useFetch'
 
 export default function useCategoryBySubject(setValue) {
   const [subjectID, setSubjectID] = useState()
@@ -28,7 +28,7 @@ export default function useCategoryBySubject(setValue) {
   )
 
   function handleSubjectChange(e) {
-    setValue('category', undefined)
+    if (setValue) setValue('category', undefined)
     setSubjectID(e.target.value)
   }
 
