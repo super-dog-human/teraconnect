@@ -3,16 +3,17 @@ import React from 'react'
 import { css } from '@emotion/core'
 
 const Select = React.forwardRef((props, ref) => {
-  const { options, topLabel, color, backgroundColor, ...selectProps } = props
+  const { options, topLabel, size, color, backgroundColor, ...selectProps } = props
   const bodyStyle = css({
     width: '100%',
     height: '100%',
     lineHeight: '100%',
     padding: '0px',
     margin: '0px',
+    fontSize: size && `${size}px`,
     border: 'none',
     borderBottom: '1px solid var(--text-gray)',
-    color: color,
+    color,
     backgroundColor: backgroundColor || 'inherit',
     ':active': {
       outline: 'none',
