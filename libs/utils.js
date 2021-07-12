@@ -110,3 +110,9 @@ export function isBlobURL(url) {
 export function generateRandomID() {
   return Math.random().toString(32).substring(2)
 }
+
+export function rgb2hex(rgb) {
+  return rgb.map((value) => (
+    ('0' + value.toString(16)).slice(-2)
+  )).join('')
+}

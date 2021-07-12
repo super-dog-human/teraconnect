@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { Clock } from 'three'
 import AvatarLoader from '../../avatar/loader'
-import { switchSwipable, mouseOrTouchPositions } from '../../utils'
+import { switchSwipable, mouseOrTouchPositions, rgb2hex } from '../../utils'
 
 export default function useAvatar({ setIsLoading, isSpeaking, hasResize, movingCallback }) {
   const clock = new Clock()
@@ -74,12 +74,6 @@ export default function useAvatar({ setIsLoading, isSpeaking, hasResize, movingC
   function changeScreenSize() {
     if (!hasResize) return
     avatarRef.current.updateSize(containerRef.current)
-  }
-
-  function rgb2hex(rgb) {
-    return rgb.map((value) => (
-      ('0' + value.toString(16)).slice(-2)
-    )).join('')
   }
 
   function animate() {
