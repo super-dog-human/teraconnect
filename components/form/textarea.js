@@ -6,7 +6,7 @@ const Textarea = React.forwardRef(function textarea(props, ref) {
   const { size, color, backgroundColor, borderColor, borderWidth, padding, ...inputProps } = props
   const bodyStyle = css({
     width: 'calc(100% - 2px)',
-    height: '100%',
+    height: 'calc(100% - 2px)',
     fontSize: `${size}px`,
     color,
     backgroundColor: backgroundColor || 'inherit',
