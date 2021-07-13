@@ -57,8 +57,8 @@ export default function useAvatar({ setIsLoading, isSpeaking, hasResize, movingC
     avatarRef.current.play()
     animate()
 
+    removeCurrentCanvas()
     containerRef.current.append(dom)
-
     setIsLoading(false)
   }
 
@@ -81,10 +81,19 @@ export default function useAvatar({ setIsLoading, isSpeaking, hasResize, movingC
     requestAnimationFrame(() => animate())
   }
 
+  function removeCurrentCanvas() {
+    if (!containerRef.current) return
+
+    Array.from(containerRef.current.getElementsByTagName('canvas')).forEach(canvas => {
+      canvas.remove() // 描画済みのアバターをcanvasごと削除
+    })
+  }
+
   useEffect(() => {
     avatarRef.current = new AvatarLoader()
     return () => {
       avatarRef.current.clearBeforeUnload()
+      removeCurrentCanvas()
     }
   }, [])
 

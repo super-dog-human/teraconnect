@@ -78,6 +78,8 @@ export default class AvatarLoader {
   }
 
   animate(deltaTime) {
+    if (!this.vrm) return
+
     this.vrm.update(deltaTime)
     this.animationMixer.update(deltaTime)
     this.renderer.render(this.scene, this.camera)
