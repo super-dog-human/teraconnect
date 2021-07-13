@@ -25,7 +25,7 @@ export default function useAvatarConfig({ index, initialConfig, closeCallback })
   async function initAvatar() {
     const avatar = { ...lesson.avatar }
     avatar.config.positions = Object.values(config.moving)
-    setAvatarConfig({ avatar, 'lightColor': generalSetting.avatarLightColor })
+    setAvatarConfig({ avatar, lightColor: generalSetting.avatarLightColor })
   }
 
   function movingCallback(record) {
