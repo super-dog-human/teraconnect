@@ -28,3 +28,16 @@ export function imageToThumbnailURL(original, maxSize, callback) {
 export function isAvailableFileSize(file) {
   return file.size <= maxFileByteSize
 }
+
+export function dataURLToImageData(url, callback) {
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d')
+  const image = new Image()
+  image.onload = (() => {
+    canvas.width = image.width
+    canvas.height = image.height
+    ctx.drawImage(image, canvas.width, canvas.height)
+    callback(ctx.getImageData(0, 0, canvas.width, canvas.height))
+  })
+  image.src = url
+}
