@@ -5,6 +5,8 @@ import { generateRandomID } from '../../../utils'
 import { filterAvailableImages, isAvailableFileSize, imageToThumbnailURL } from '../../../graphicUtils'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 
+const maxThumbnailSize = { width: 150, height: 95 }
+
 export default function useImageUploaderBar(id, images, setImages, inputFileRef, selectImageBarRef) {
   const imageCountRef = useRef(0)
   const { showError } = useErrorDialogContext()
@@ -34,7 +36,7 @@ export default function useImageUploaderBar(id, images, setImages, inputFileRef,
       reader.onload = (e => {
         loadedCount += 1
 
-        imageToThumbnailURL(e.target.result, (imageDataURL => {
+        imageToThumbnailURL(e.target.result, maxThumbnailSize, (imageDataURL => {
           setImages(images =>
             [...images, {
               src: e.target.result,

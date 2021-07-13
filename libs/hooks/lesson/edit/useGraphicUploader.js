@@ -6,6 +6,8 @@ import { generateRandomID } from '../../../utils'
 import { filterAvailableImages, isAvailableFileSize, imageToThumbnailURL } from '../../../graphicUtils'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 
+const maxThumbnailSize = { width: 150, height: 95 }
+
 export default function useGraphicUploader({ graphicURLs, setGraphicURLs }) {
   const router = useRouter()
   const hasAddedRef = useRef(false)
@@ -81,7 +83,7 @@ export default function useGraphicUploader({ graphicURLs, setGraphicURLs }) {
       reader.readAsDataURL(file)
       reader.onload = (e => {
         const originalDataURL = e.target.result
-        imageToThumbnailURL(originalDataURL, thumbnailDataURL => {
+        imageToThumbnailURL(originalDataURL, maxThumbnailSize, thumbnailDataURL => {
           setGraphicURLs(urls => {
             urls[tempID].url = thumbnailDataURL
             return { ...urls }
