@@ -107,6 +107,10 @@ export function isBlobURL(url) {
   return url.startsWith('blob:')
 }
 
+export function isDataURL(url) {
+  return url.startsWith('data:')
+}
+
 export function generateRandomID() {
   return Math.random().toString(32).substring(2)
 }
