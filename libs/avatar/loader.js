@@ -161,6 +161,11 @@ export default class AvatarLoader {
   }
 
   async _setupAvatar(avatar) {
+    if (this.vrm) {
+      this.scene.remove(this.vrm.scene)
+      this.vrm = null
+    }
+
     this.vrm = await new Promise(resolve => {
       const loader = new GLTFLoader()
       loader.load(avatar.url, gltf => {
