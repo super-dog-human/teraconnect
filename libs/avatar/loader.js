@@ -20,7 +20,7 @@ export default class AvatarLoader {
     this.scene = new THREE.Scene()
     this.renderer
     this.animationMixer
-    this.animationClip ={}
+    this.animationClip = {}
     this.light
   }
 
@@ -243,6 +243,7 @@ export default class AvatarLoader {
     )
 
     const clip = new THREE.AnimationClip('breath', 6.0, [headTrack, chestTrack])
+    this.animationClip = {}
     this.animationClip.initial = this.animationMixer.clipAction(clip)
   }
 
