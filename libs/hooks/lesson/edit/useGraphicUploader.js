@@ -83,7 +83,8 @@ export default function useGraphicUploader({ graphicURLs, setGraphicURLs }) {
       reader.readAsDataURL(file)
       reader.onload = (e => {
         const originalDataURL = e.target.result
-        imageToThumbnailURL(originalDataURL, maxThumbnailSize, thumbnailDataURL => {
+        const maxSize = { width: maxThumbnailSize.width * window.devicePixelRatio, height: maxThumbnailSize.height * window.devicePixelRatio }
+        imageToThumbnailURL(originalDataURL, maxSize, thumbnailDataURL => {
           setGraphicURLs(urls => {
             urls[tempID].url = thumbnailDataURL
             return { ...urls }

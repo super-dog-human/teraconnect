@@ -35,8 +35,8 @@ export default function useImageUploaderBar(id, images, setImages, inputFileRef,
       reader.readAsDataURL(file)
       reader.onload = (e => {
         loadedCount += 1
-
-        imageToThumbnailURL(e.target.result, maxThumbnailSize, (imageDataURL => {
+        const maxSize =  { width: maxThumbnailSize.width * window.devicePixelRatio, height: maxThumbnailSize.height * window.devicePixelRatio }
+        imageToThumbnailURL(e.target.result, maxSize, (imageDataURL => {
           setImages(images =>
             [...images, {
               src: e.target.result,
