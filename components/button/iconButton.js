@@ -4,7 +4,8 @@ import { css } from '@emotion/core'
 import Icon from '../icon'
 import LoadingIndicator from '../loadingIndicator'
 
-export default function IconButton({ name, backgroundColor, hoverBackgroundColor, toggledBackgroundColor, borderColor, padding, disabled, isToggle, isProcessing, onClick, onMouseDown }) {
+export default function IconButton(props) {
+  const { name, backgroundColor, hoverBackgroundColor, toggledBackgroundColor, borderColor, padding, disabled, isToggle, isProcessing, ...buttonProps } = props
   const buttonDisable = disabled || isProcessing
   const bodyStyle = css({
     display: 'block',
@@ -28,7 +29,7 @@ export default function IconButton({ name, backgroundColor, hoverBackgroundColor
   })
 
   return (
-    <button onClick={onClick} onMouseDown={onMouseDown} disabled={buttonDisable} css={bodyStyle}>
+    <button {...buttonProps} disabled={buttonDisable} css={bodyStyle}>
       {!isProcessing && <Icon name={name} disabled={buttonDisable} />}
       {isProcessing && <LoadingIndicator size='80' />}
     </button>
