@@ -10,7 +10,7 @@ import InputRange from './form/inputRange'
 import PlainText from './plainText'
 import { SYNTHESIS_VOICE_LANGUAGE_NAMES, SYNTHESIS_JAPANESE_VOICE_NAMES, SYNTHESIS_ENGLISH_VOICE_NAMES } from '../libs/constants'
 
-export default function SynthesisVoiceConfig({ isProcessing, languageCode, setLanguageCode, name, setName, speakingRate, setSpeakingRate, pitch, setPitch, volumeGainDb, setVolumeGainDb, playVoice, isDark }) {
+export default function SynthesisVoiceConfig({ isProcessing, synthesisConfig, setLanguageCode, setName, setSpeakingRate, setPitch, setVolumeGainDb, playVoice, isDark }) {
   const [voiceNames, setVoiceNames] = useState(SYNTHESIS_JAPANESE_VOICE_NAMES)
   const textColor = isDark ? 'var(--soft-white)' : 'gray'
   const backgroundColor = isDark ? 'var(--dark-gray)' : ''
@@ -35,10 +35,10 @@ export default function SynthesisVoiceConfig({ isProcessing, languageCode, setLa
       <Spacer height='40' />
       <Row>
         <Col md={4}>
-          <Select options={SYNTHESIS_VOICE_LANGUAGE_NAMES} topLabel={null} value={languageCode} color={textColor} backgroundColor={backgroundColor} onChange={handleLanguageCodeChange} />
+          <Select options={SYNTHESIS_VOICE_LANGUAGE_NAMES} topLabel={null} value={synthesisConfig.languageCode} color={textColor} backgroundColor={backgroundColor} onChange={handleLanguageCodeChange} />
         </Col>
         <Col md={4}>
-          <Select options={voiceNames} topLabel={null} value={name} color={textColor} backgroundColor={backgroundColor} onChange={setName} />
+          <Select options={voiceNames} topLabel={null} value={synthesisConfig.name} color={textColor} backgroundColor={backgroundColor} onChange={setName} />
         </Col>
         <Col md={3}></Col>
         <Col md={1}>
@@ -52,28 +52,28 @@ export default function SynthesisVoiceConfig({ isProcessing, languageCode, setLa
         <Col md={4}>
           <PlainText size='13' color={textColor}>速度</PlainText>
           <ContainerSpacer left='10'>
-            <InputRange color={textColor} defaultValue={speakingRate || '1.2'} min='0.5' max='3.0' step='0.1' onInput={setSpeakingRate} onChange={setSpeakingRate} />
+            <InputRange color={textColor} defaultValue={synthesisConfig.speakingRate || '1.2'} min='0.5' max='3.0' step='0.1' onInput={setSpeakingRate} onChange={setSpeakingRate} />
           </ContainerSpacer>
           <AlignContainer textAlign='right'>
-            <PlainText size='12' color={textColor}>{speakingRate || '1.2'}</PlainText>
+            <PlainText size='12' color={textColor}>{synthesisConfig.speakingRate || '1.2'}</PlainText>
           </AlignContainer>
         </Col>
         <Col md={4}>
           <PlainText size='13' color={textColor}>ピッチ</PlainText>
           <ContainerSpacer left='10'>
-            <InputRange color={textColor} defaultValue={pitch || '0'} min='-10.0' max='10.0' step='1' onInput={setPitch} onChange={setPitch} />
+            <InputRange color={textColor} defaultValue={synthesisConfig.pitch || '0'} min='-10.0' max='10.0' step='1' onInput={setPitch} onChange={setPitch} />
           </ContainerSpacer>
           <AlignContainer textAlign='right'>
-            <PlainText size='12' color={textColor}>{pitch || '0'}</PlainText>
+            <PlainText size='12' color={textColor}>{synthesisConfig.pitch || '0'}</PlainText>
           </AlignContainer>
         </Col>
         <Col md={4}>
           <PlainText size='13' color={textColor}>音量調整</PlainText>
           <ContainerSpacer left='10'>
-            <InputRange color={textColor} defaultValue={volumeGainDb || '0'} min='-5.0' max='0' step='1' onInput={setVolumeGainDb} onChange={setVolumeGainDb} />
+            <InputRange color={textColor} defaultValue={synthesisConfig.volumeGainDb || '0'} min='-5.0' max='0' step='1' onInput={setVolumeGainDb} onChange={setVolumeGainDb} />
           </ContainerSpacer>
           <AlignContainer textAlign='right'>
-            <PlainText size='12' color={textColor}>{volumeGainDb || '0'}</PlainText>
+            <PlainText size='12' color={textColor}>{synthesisConfig.volumeGainDb || '0'}</PlainText>
           </AlignContainer>
         </Col>
       </Row>

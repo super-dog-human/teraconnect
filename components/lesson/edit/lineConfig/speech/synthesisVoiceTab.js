@@ -6,7 +6,7 @@ import FlipIconButton from '../../../../button/flipIconButton'
 import Spacer from '../../../../spacer'
 import InputText from '../../../../form/inputText'
 import SynthesisVoiceConfig from '../../../../synthesisVoiceConfig'
-import useSynthesisVoiceEditor from '../../../../../libs/hooks/lesson/edit/useSynthesisVoiceEditor'
+import useSynthesisVoiceEditor from '../../../../../libs/hooks/lesson/useSynthesisVoiceEditor'
 
 export default function SynthesisVoiceTab({ config, dispatchConfig, switchTab }) {
   const { setSubtitle, setLanguageCode, setName, setSpeakingRate, setPitch, setVolumeGainDb, playVoice, isSynthesizing } = useSynthesisVoiceEditor(config, dispatchConfig)
@@ -22,9 +22,8 @@ export default function SynthesisVoiceTab({ config, dispatchConfig, switchTab })
       <Spacer height='18' />
       <InputText defaultValue={config.subtitle} key={config.subtitle} size='18' color='var(--soft-white)' borderWidth='0 0 1px' borderColor='var(--text-gray)' onBlur={setSubtitle} />
 
-      <SynthesisVoiceConfig isProcessing={isSynthesizing} languageCode={config.synthesisConfig.languageCode} setLanguageCode={setLanguageCode} name={config.synthesisConfig.name} setName={setName}
-        speakingRate={config.synthesisConfig.speakingRate} setSpeakingRate={setSpeakingRate} pitch={config.synthesisConfig.pitch} setPitch={setPitch}
-        volumeGainDb={config.synthesisConfig.volumeGainDb} setVolumeGainDb={setVolumeGainDb} playVoice={playVoice} isDark={true} />
+      <SynthesisVoiceConfig isProcessing={isSynthesizing} synthesisConfig={config.synthesisConfig} setLanguageCode={setLanguageCode} setName={setName}
+        setSpeakingRate={setSpeakingRate} setPitch={setPitch} setVolumeGainDb={setVolumeGainDb} playVoice={playVoice} isDark={true} />
     </ContainerSpacer>
   )
 }

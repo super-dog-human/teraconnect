@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import useSynthesisVoice from '../../useSynthesisVoice'
-import useAudioPlayer from '../../useAudioPlayer'
+import useSynthesisVoice from '../useSynthesisVoice'
+import useAudioPlayer from '../useAudioPlayer'
 import { useRouter } from 'next/router'
 
 export default function useSynthesisVoiceEditor(config, dispatchConfig) {
