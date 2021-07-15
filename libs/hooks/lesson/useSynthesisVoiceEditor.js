@@ -3,7 +3,7 @@ import useSynthesisVoice from '../useSynthesisVoice'
 import useAudioPlayer from '../useAudioPlayer'
 import { useRouter } from 'next/router'
 
-export default function useSynthesisVoiceEditor(config, dispatchConfig) {
+export default function useSynthesisVoiceEditor({ dispatchConfig, url, subtitle, synthesisConfig }) {
   const [isSynthesizing, setIsSynthesizing] = useState(false)
   const router = useRouter()
   const { createSynthesisVoiceFile } = useSynthesisVoice()
@@ -39,13 +39,13 @@ export default function useSynthesisVoiceEditor(config, dispatchConfig) {
       return
     }
 
-    if (config.url) {
-      createAudio(config.url)
+    if (url) {
+      createAudio(url)
     } else {
       setIsSynthesizing(true)
 
       const lessonID = parseInt(router.query.id)
-      const voice = await createSynthesisVoiceFile(lessonID, config)
+      const voice = await createSynthesisVoiceFile({ lessonID, subtitle, synthesisConfig })
       dispatchConfig({ type: 'synthesisVoice', payload: { voiceID: voice.id, url: voice.url } })
       createAudio(voice.url)
 

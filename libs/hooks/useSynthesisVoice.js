@@ -1,20 +1,19 @@
-import { useLessonEditorContext } from '../contexts/lessonEditorContext'
 import useFetch from './useFetch'
 
-export default function useSynthesisVoice() {
-  const { generalSetting } = useLessonEditorContext()
+export default function useSynthesisVoice(voiceSynthesisConfig) {
   const { post } = useFetch()
-  const voiceSynthesisConfig = generalSetting.voiceSynthesisConfig
 
-  function createSynthesisVoiceFile(lessonID, speech) {
+  function createSynthesisVoiceFile({ lessonID, subtitle, synthesisConfig }) {
+    const pitch = parseFloat(synthesisConfig?.pitch)
+    const volume = parseFloat(synthesisConfig?.volumeGainDb)
     const request = {
       'lessonID': lessonID,
-      'text': speech.subtitle,
-      'languageCode': speech.synthesisConfig?.languageCode || voiceSynthesisConfig.languageCode,
-      'name': speech.synthesisConfig?.name || voiceSynthesisConfig.name,
-      'speakingRate': parseFloat(speech.synthesisConfig?.speakingRate) || voiceSynthesisConfig.speakingRate,
-      'pitch': parseFloat(speech.synthesisConfig?.pitch) || voiceSynthesisConfig.pitch,
-      'volumeGainDb': parseFloat(speech.synthesisConfig?.volumeGainDb) || voiceSynthesisConfig.volumeGainDb,
+      'text': subtitle,
+      'languageCode': synthesisConfig?.languageCode || voiceSynthesisConfig.languageCode,
+      'name': synthesisConfig?.name || voiceSynthesisConfig.name,
+      'speakingRate': parseFloat(synthesisConfig?.speakingRate) || voiceSynthesisConfig.speakingRate,
+      'pitch': isNaN(pitch) ? voiceSynthesisConfig.pitch : pitch,                 // 0になりうる値は偽として評価されてしまうのでisNaNでチェック
+      'volumeGainDb': isNaN(volume) ? voiceSynthesisConfig.volumeGainDb : volume, // 同上
     }
 
     return post('/synthesis_voice', request)

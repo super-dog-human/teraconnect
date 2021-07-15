@@ -13,8 +13,8 @@ export default function useSpeechLine({ speech, index, handleEditClick }) {
   const [isLoading, setIsLoading] = useState(false)
   const [status, setStatus] = useState(true)
   const { isPlaying, createAudio, switchAudio } = useAudioPlayer()
-  const { addSpeechLineToLast, updateLine, speechURLs, setSpeechURLs } = useLessonEditorContext()
-  const { createSynthesisVoiceFile } = useSynthesisVoice()
+  const { addSpeechLineToLast, updateLine, speechURLs, setSpeechURLs, generalSetting } = useLessonEditorContext()
+  const { createSynthesisVoiceFile } = useSynthesisVoice(generalSetting.voiceSynthesisConfig)
 
   async function handleSpeechClick(text) {
     if (!isPlaying) {
@@ -59,7 +59,7 @@ export default function useSpeechLine({ speech, index, handleEditClick }) {
 
   async function setNewSynthesisVoice(text) {
     speech.subtitle = text
-    const voice = await createSynthesisVoiceFile(lessonIDRef.current, speech)
+    const voice = await createSynthesisVoiceFile({ lessonID: lessonIDRef.current, subtitle: speech.subtitle, synthesisConfig: speech.synthesisConfig })
     updateSpeechURL(speech.voiceID, { [voice.id]: voice.url })
 
     createAudio(voice.url, async audio => {

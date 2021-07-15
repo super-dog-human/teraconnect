@@ -9,7 +9,8 @@ import SynthesisVoiceConfig from '../../../../synthesisVoiceConfig'
 import useSynthesisVoiceEditor from '../../../../../libs/hooks/lesson/useSynthesisVoiceEditor'
 
 export default function SynthesisVoiceTab({ config, dispatchConfig, switchTab }) {
-  const { setSubtitle, setLanguageCode, setName, setSpeakingRate, setPitch, setVolumeGainDb, playVoice, isSynthesizing } = useSynthesisVoiceEditor(config, dispatchConfig)
+  const { setSubtitle, setLanguageCode, setName, setSpeakingRate, setPitch, setVolumeGainDb, playVoice, isSynthesizing } =
+    useSynthesisVoiceEditor({ dispatchConfig, url: config.url, subtitle: config.subtitle, synthesisConfig: config.synthesisConfig })
 
   return (
     <ContainerSpacer left='50' right='50'>

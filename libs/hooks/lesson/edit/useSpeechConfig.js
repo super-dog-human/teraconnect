@@ -14,11 +14,11 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
   const router = useRouter()
   const lessonIDRef = useRef(parseInt(router.query.id))
   const { showError } = useErrorDialogContext()
-  const { updateLine, speechURLs, setSpeechURLs } = useLessonEditorContext()
+  const { updateLine, speechURLs, setSpeechURLs, generalSetting } = useLessonEditorContext()
   // propsをタブの初期値としてstateにコピーし、確定時にコピー元を更新する
   const [config, dispatchConfig] = useReducer(configReducer, { ...initialConfig, url: speechURLs[initialConfig.voiceID] })
   const [isProcessing, setIsProcessing] = useState(false)
-  const { createSynthesisVoiceFile } = useSynthesisVoice()
+  const { createSynthesisVoiceFile } = useSynthesisVoice(generalSetting.voiceSynthesisConfig)
   const { createAudio } = useAudioPlayer()
 
   function configReducer(state, { type, payload }) {
@@ -81,7 +81,7 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
   async function updateSpeech(changeAfterLineElapsedTime) {
     if (!config.url) {
       if (config.isSynthesis && config.subtitle) {
-        const voice = await createSynthesisVoiceFile(lessonIDRef.current, config)
+        const voice = await createSynthesisVoiceFile({ lessonID: lessonIDRef.current, subtitle: config.subtitle, synthesisConfig: config.synthesisConfig })
         config.voiceID = voice.id
         config.url = voice.url
       } else if (!config.isSynthesis && config.voiceID > 0) {
