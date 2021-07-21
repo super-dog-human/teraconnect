@@ -4,9 +4,10 @@ import { css } from '@emotion/core'
 
 const Textarea = React.forwardRef(function textarea(props, ref) {
   const { size, color, backgroundColor, borderColor, borderWidth, padding, ...inputProps } = props
+  const bodySize = padding ? `calc(100% - 2px - ${padding * 2}px)` : 'calc(100% - 2px)'
   const bodyStyle = css({
-    width: 'calc(100% - 2px)',
-    height: 'calc(100% - 2px)',
+    width: bodySize,
+    height: bodySize,
     fontSize: `${size}px`,
     color,
     backgroundColor: backgroundColor || 'inherit',
