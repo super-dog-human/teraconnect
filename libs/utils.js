@@ -2,6 +2,7 @@ import ReactGA from 'react-ga'
 import { GA_TRACKING_ID } from './constants'
 ReactGA.initialize(GA_TRACKING_ID)
 const cloneDeep = require('clone-deep')
+const isbn13Exp = new RegExp(/^[0-9]{12}[0-9Xx]{1}$/)
 
 export function filterObject(obj, keys) {
   return Object.keys(obj)
@@ -119,4 +120,15 @@ export function rgb2hex(rgb) {
   return rgb.map((value) => (
     ('0' + value.toString(16)).slice(-2)
   )).join('')
+}
+
+export function stringValueToRGBA(str) {
+  const arr = str.split(',').map(v => parseFloat(v))
+  return { r: arr[0], g: arr[1], b: arr[2], a: arr[3] }
+}
+
+export function isValidISBN13(isbn) {
+  if (!isbn) return false
+  if (isbn.length !== 13) return false
+  return isbn13Exp.test(isbn)
 }
