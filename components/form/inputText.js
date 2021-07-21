@@ -23,7 +23,7 @@ const InputText = React.forwardRef(function inputText(props, ref) {
   })
 
   return (
-    <input type="text" {...inputProps} ref={ref} css={bodyStyle} />
+    <input type="text" ref={ref} css={bodyStyle} {...inputProps} />
   )
 })
 

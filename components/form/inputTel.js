@@ -32,7 +32,7 @@ const InputTel = React.forwardRef(function inputTel(props, ref) {
   }
 
   return (
-    <input type="tel" {...inputProps} onChange={handleChange} ref={ref} css={bodyStyle} />
+    <input type="tel" onChange={handleChange} ref={ref} css={bodyStyle} {...inputProps} />
   )
 })
 
