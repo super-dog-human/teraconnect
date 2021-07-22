@@ -5,6 +5,7 @@ import { css } from '@emotion/core'
 const Select = React.forwardRef((props, ref) => {
   const { options, topLabel, size, color, backgroundColor, ...selectProps } = props
   const bodyStyle = css({
+    appearance: 'none',
     width: '100%',
     height: '100%',
     lineHeight: '100%',
@@ -12,6 +13,7 @@ const Select = React.forwardRef((props, ref) => {
     margin: '0px',
     fontSize: size && `${size}px`,
     border: 'none',
+    borderRadius: '0px',
     borderBottom: '1px solid var(--text-gray)',
     color,
     backgroundColor: backgroundColor || 'inherit',
