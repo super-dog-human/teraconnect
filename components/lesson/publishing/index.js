@@ -49,6 +49,7 @@ export default function LessonPublishing({ lesson, material }) {
       useLessonPublishing({ lesson, material, setFormValue: setValue, handleCategorySelectChange, isLoading, onSubjectChange, avatars, allLessons, setting, dispatchSetting })
   const { setLanguageCode, setName, setSpeakingRate, setPitch, setVolumeGainDb, playVoice, isSynthesizing } =
     useSynthesisVoiceEditor({ dispatchConfig: dispatchSetting, subtitle: sampleTextForSynthesisRef.current, synthesisConfig: setting.voiceSynthesisConfig, dispatchSetting })
+  const flexDirection = ['lg', 'xl', 'xxl'].includes(screenClass) ? 'row' : 'column'
 
   return (
     <>
@@ -58,7 +59,7 @@ export default function LessonPublishing({ lesson, material }) {
           <Spacer height='70' />
 
           <ContainerSpacer left='30' right='30'>
-            <Flex>
+            <Flex flexDirection={flexDirection}>
               <FlexItem flexShrink='0'>
                 <Container width='300'>
                   <Aspect16To9Container>
