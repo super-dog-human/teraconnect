@@ -3,7 +3,7 @@ import React from 'react'
 import { css } from '@emotion/core'
 
 const Select = React.forwardRef((props, ref) => {
-  const { options, topLabel, size, color, backgroundColor, ...selectProps } = props
+  const { options, topLabel, topValue, size, color, backgroundColor, ...selectProps } = props
   const bodyStyle = css({
     appearance: 'none',
     width: '100%',
@@ -28,7 +28,7 @@ const Select = React.forwardRef((props, ref) => {
   return (
     <select ref={ref} css={bodyStyle} {...selectProps}>
       {topLabel && (
-        <option label={ topLabel }></option>
+        <option label={ topLabel } value={topValue}></option>
       )}
 
       {Array.isArray(options) && options.map((opt, i) => (
