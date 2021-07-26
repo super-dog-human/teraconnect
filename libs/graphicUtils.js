@@ -29,15 +29,14 @@ export function isAvailableFileSize(file) {
   return file.size <= maxFileByteSize
 }
 
-export function dataURLToImageData(url, callback) {
-  const canvas = document.createElement('canvas')
-  const ctx = canvas.getContext('2d')
-  const image = new Image()
-  image.onload = (() => {
-    canvas.width = image.width
-    canvas.height = image.height
-    ctx.drawImage(image, canvas.width, canvas.height)
-    callback(ctx.getImageData(0, 0, canvas.width, canvas.height))
-  })
-  image.src = url
+export function dataURLToBlob(url, type) {
+  const byteString = atob(url.split(',')[1])
+  const ab = new ArrayBuffer(byteString.length)
+  const ia = new Uint8Array(ab)
+
+  for (var i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i)
+  }
+
+  return new Blob([ab], { type })
 }
