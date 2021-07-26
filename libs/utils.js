@@ -2,7 +2,6 @@ import ReactGA from 'react-ga'
 import { GA_TRACKING_ID } from './constants'
 ReactGA.initialize(GA_TRACKING_ID)
 const cloneDeep = require('clone-deep')
-const isbn13Exp = new RegExp(/^[0-9]{12}[0-9Xx]{1}$/)
 
 export function filterObject(obj, keys) {
   return Object.keys(obj)
@@ -130,5 +129,5 @@ export function stringValueToRGBA(str) {
 export function isValidISBN13(isbn) {
   if (!isbn) return false
   if (isbn.length !== 13) return false
-  return isbn13Exp.test(isbn)
+  return /^[0-9]{12}[0-9Xx]{1}$/.test(isbn)
 }
