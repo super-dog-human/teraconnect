@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { Clock } from 'three'
 import AvatarLoader from '../../avatar/loader'
-import { switchSwipable, mouseOrTouchPositions, rgb2hex } from '../../utils'
+import { switchSwipable, mouseOrTouchPositions, rgbToHex } from '../../utils'
 
 export default function useAvatar({ setIsLoading, isSpeaking, hasResize, movingCallback }) {
   const clock = new Clock()
@@ -63,7 +63,7 @@ export default function useAvatar({ setIsLoading, isSpeaking, hasResize, movingC
   }
 
   function changeLightColor() {
-    const color = parseInt(rgb2hex(Object.values(config.lightColor).slice(0, 3)), 16)
+    const color = parseInt(rgbToHex(Object.values(config.lightColor).slice(0, 3)), 16)
     avatarRef.current.setLightColor(color, config.lightColor.a * 2)
   }
 
