@@ -218,7 +218,7 @@ export default function LessonPublishing({ lesson, material }) {
               </Container>
             </Flex>
 
-            <TransitionContainer isShow={isExtendedOtherSetting} name='other-setting' duration={300}>
+            <TransitionContainer isShow={isExtendedOtherSetting} duration={300}>
               <FormGroup name='背景・アバター'>
                 <Flex>
                   <FlexItem flexShrink='0'>
@@ -271,7 +271,7 @@ export default function LessonPublishing({ lesson, material }) {
 
           <Flex justifyContent='center'>
             <Container height='30'>
-              <FlashContainer isShow={isUpdated} timeoutMs='2000' transitionName='setting-updated-notice' transitionDuration='200' >
+              <FlashContainer isShow={isUpdated} timeoutMs='2000' transitionDuration='200' >
                 <PlainText size='12' fontWeight='500' color='var(--dark-purple)'>設定を更新しました。</PlainText>
               </FlashContainer>
             </Container>

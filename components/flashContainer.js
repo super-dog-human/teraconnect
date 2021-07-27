@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import TransitionContainer from './transitionContainer'
 
-export default function FlashContainer({ children, isShow, timeoutMs, transitionName, transitionDuration }) {
+export default function FlashContainer({ children, isShow, timeoutMs, transitionDuration }) {
   const [isContainerShow, setIsContainerShow] = useState(false)
   const timerRef = useRef()
 
@@ -25,7 +25,7 @@ export default function FlashContainer({ children, isShow, timeoutMs, transition
   }, [isShow, timeoutMs])
 
   return (
-    <TransitionContainer isShow={isContainerShow} name={transitionName} duration={transitionDuration}>
+    <TransitionContainer isShow={isContainerShow} duration={transitionDuration}>
       {children}
     </TransitionContainer>
   )
