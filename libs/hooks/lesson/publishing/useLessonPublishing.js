@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useCallback, useEffect } from 'react'
 import useAvatar from '../../lesson/useAvatar'
 import { filterObject, stringValueToRGBA, isValidISBN13 } from '../../../utils'
 import { imageToThumbnailURL } from '../../../graphicUtils'
@@ -6,7 +6,7 @@ import { fetchBookTitle } from '../../../fetchGoogleBooks'
 
 const maxThumbnailSize = { width: 480, height: 270 }
 
-export default function useLessonPublishing({ lesson, material, setFormValue, handleCategorySelectChange, isLoading, onSubjectChange, avatars, allLessons, setting, dispatchSetting }) {
+export default function useLessonPublishing({ lesson, material, setFormValue, handleTitleInputChange, handleDescriptionTextChange, handleCategorySelectChange, isLoading, onSubjectChange, avatars, allLessons, setting, dispatchSetting }) {
   const inputFileRef = useRef()
   const newReferenceRef = useRef()
   const [isExtendedOtherSetting, setIsExtendedOtherSetting] = useState(false)
@@ -18,10 +18,12 @@ export default function useLessonPublishing({ lesson, material, setFormValue, ha
 
   function handleTitleChange(e) {
     dispatchSetting({ type: 'title', payload: e.target.value })
+    handleTitleInputChange(e)
   }
 
   function handleDescriptionChange(e) {
     dispatchSetting({ type: 'description', payload: e.target.value })
+    handleDescriptionTextChange(e)
   }
 
   function handleThumbnailUploadingClick() {
@@ -81,10 +83,10 @@ export default function useLessonPublishing({ lesson, material, setFormValue, ha
     setIsAddingReference(true)
 
     fetchBookTitle(isbn).then(name => {
-      dispatchSetting({ type: 'addReference', payload: { isbn, name } })
+      dispatchSetting({ type: 'addReference', payload: { name, isbn } })
     }).catch(e => {
       console.error(e) // エラーでも処理を続行する
-      dispatchSetting({ type: 'addReference', payload: { isbn, name: '' } })
+      dispatchSetting({ type: 'addReference', payload: { name: '', isbn } })
     }).finally(() => {
       if (newReferenceRef.current) { // 最後の行でなければ今のISBNをクリア
         newReferenceRef.current.value = null
@@ -130,7 +132,7 @@ export default function useLessonPublishing({ lesson, material, setFormValue, ha
     dispatchSetting({ type: 'avatarLightColor', payload: color })
   }
 
-  function setInitialSetting() {
+  const setInitialSetting = useCallback(() => {
     setAvatarLight(stringValueToRGBA(material.avatarLightColor))
 
     const payload = {
@@ -140,29 +142,30 @@ export default function useLessonPublishing({ lesson, material, setFormValue, ha
       ...filterObject(material, ['avatarID', 'avatarLightColor', 'backgroundImageID', 'backgroundImageURL', 'voiceSynthesisConfig']),
     }
     dispatchSetting({ type: 'initialize', payload })
-  }
+    setFormValue('categoryID', lesson.japaneseCategoryID) // これがないとreact-hook-formのバリデーションエラーになる
+  }, [lesson, material, dispatchSetting, setFormValue])
 
-  function setRelationLessonURL(prevLessonID, nextLessonID) {
+  const setRelationLessonURL = useCallback((prevLessonID, nextLessonID) => {
     setRelationLessonThumbnailURL({
       prev: allLessons.find(l => l.id === prevLessonID)?.thumbnailURL,
       next: allLessons.find(l => l.id === nextLessonID)?.thumbnailURL,
     })
-  }
+  }, [allLessons])
 
   useEffect(() => {
     if (!isLoading) return
     setInitialSetting()
-  }, [isLoading])
+  }, [isLoading, setInitialSetting])
 
   useEffect(() => {
     if (allLessons.length === 0) return
     setRelationLessonURL(lesson.prevLessonID, lesson.nextLessonID)
-  }, [allLessons, lesson.prevLessonID, lesson.nextLessonID])
+  }, [allLessons.length, lesson.prevLessonID, lesson.nextLessonID, setRelationLessonURL])
 
   useEffect(() => {
     if (!isExtendedOtherSetting) return
     setAvatarConfig({ avatar: material.avatar, lightColor: avatarLight })
-  }, [isExtendedOtherSetting, material.avatar, material.avatarLightColor])
+  }, [isExtendedOtherSetting, material.avatar, avatarLight, setAvatarConfig])
 
   return { isExtendedOtherSetting, inputFileRef, newReferenceRef, isAddingReference, relationLessonThumbnailURL, isAvatarLoading, avatarRef, avatarLight,
     handleExtendSettingClick, handleTitleChange, handleDescriptionChange, handleThumbnailUploadingClick, handleThumbnailChange, handleStatusChange, handleSubjectChange, handleCategoryChange,

@@ -1,12 +1,13 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import Image from 'next/image'
 import { css } from '@emotion/core'
+import Image from 'next/image'
 import { useForm } from 'react-hook-form'
 import { useScreenClass } from 'react-grid-system'
 import useResourceLoader from '../../../libs/hooks/lesson/publishing/useResourceLoader'
 import useLessonPublishing from '../../../libs/hooks/lesson/publishing/useLessonPublishing'
 import useSynthesisVoiceEditor from '../../../libs/hooks/lesson/useSynthesisVoiceEditor'
+import useSettingUpdater from '../../../libs/hooks/lesson/publishing/useSettingUpdater'
 import { isDataURL } from '../../../libs/utils'
 import Header from '../../authoringHeader'
 import Container from '../../container'
@@ -14,6 +15,7 @@ import ContainerSpacer from '../../containerSpacer'
 import Aspect16To9Container from '../../aspect16To9Container'
 import AbsoluteContainer from '../../absoluteContainer'
 import TransitionContainer from '../../transitionContainer'
+import FlashContainer from '../../flashContainer'
 import Spacer from '../../spacer'
 import PlainText from '../../plainText'
 import Flex from '../../flex'
@@ -34,19 +36,20 @@ import FormGroup from './formGroup'
 import NoImage from '../../noImage'
 import ErrorText from './errorText'
 import SynthesisVoiceConfig from '../../synthesisVoiceConfig'
-import useSettingUpdater from '../../../libs/hooks/lesson/publishing/useSettingUpdater'
 
 export default function LessonPublishing({ lesson, material }) {
   const screenClass = useScreenClass()
   const { isLoading, subjects, categories, allLessons, allLessonOptions, bgImages, bgImageOptions, avatars, avatarOptions, handleSubjectChange: onSubjectChange } = useResourceLoader({ lesson })
-  const { sampleTextForSynthesisRef, setting, dispatchSetting, handleFormSubmit } = useSettingUpdater({ isLoading, lesson, bgImages })
+  const { isUpdating, isUpdated, sampleTextForSynthesisRef, setting, dispatchSetting, handleSubmitClick } = useSettingUpdater({ isLoading, lesson, material, bgImages })
   const defaultValues = { title: lesson.title, description: lesson.description, ...Object.fromEntries(lesson.references.map((ref, i) => [`reference${i}`, ref.isbn])) }
   const { register, handleSubmit, formState: { errors }, setValue } = useForm({ defaultValues })
+  const { onChange: handleTitleInputChange, ...titleInputProps } = register('title', { required: true })
+  const { onChange: handleDescriptionTextChange, ...descriptionTextProps } = register('description', { required: true })
   const { onChange: handleCategorySelectChange, ...categoryIDSelectProps } = register('categoryID', { required: true })
   const { isExtendedOtherSetting, inputFileRef, newReferenceRef, isAddingReference, relationLessonThumbnailURL, isAvatarLoading, avatarRef, avatarLight,
     handleExtendSettingClick, handleTitleChange, handleDescriptionChange, handleThumbnailUploadingClick, handleThumbnailChange, handleStatusChange, handleSubjectChange, handleCategoryChange,
     handlePrevLessonChange, handleNextLessonChange, handleAddReferenceClick, handleRemoveReferenceClick, handleReferenceISBNBlur, handleReferenceNameBlur, handleBgImageChange, handleAvatarChange, handleColorChange } =
-      useLessonPublishing({ lesson, material, setFormValue: setValue, handleCategorySelectChange, isLoading, onSubjectChange, avatars, allLessons, setting, dispatchSetting })
+      useLessonPublishing({ lesson, material, setFormValue: setValue, handleTitleInputChange, handleDescriptionTextChange, handleCategorySelectChange, isLoading, onSubjectChange, avatars, allLessons, setting, dispatchSetting })
   const { setLanguageCode, setName, setSpeakingRate, setPitch, setVolumeGainDb, playVoice, isSynthesizing } =
     useSynthesisVoiceEditor({ dispatchConfig: dispatchSetting, subtitle: sampleTextForSynthesisRef.current, synthesisConfig: setting.voiceSynthesisConfig, dispatchSetting })
   const flexDirection = ['lg', 'xl', 'xxl'].includes(screenClass) ? 'row' : 'column'
@@ -64,7 +67,7 @@ export default function LessonPublishing({ lesson, material }) {
                 <Container width='300'>
                   <Aspect16To9Container>
                     <AbsoluteContainer top='0' left='0'>
-                      {setting.thumbnailURL && !isDataURL(setting.thumbnailURL) && <Image src={setting.thumbnailURL}/>}
+                      {setting.thumbnailURL && !isDataURL(setting.thumbnailURL) && <Image src={setting.thumbnailURL} width={960} height={540} />}
                       {setting.thumbnailURL && isDataURL(setting.thumbnailURL) && <img src={setting.thumbnailURL} css={thumbnailStyle} />}
                       {!setting.thumbnailURL && <NoImage textSize='16' color='gray' backgroundColor='lightgray' />}
                     </AbsoluteContainer>
@@ -80,11 +83,11 @@ export default function LessonPublishing({ lesson, material }) {
               <FlexItem flexBasis='100%'>
                 <ContainerSpacer left='20'>
                   <Container height='20'>
-                    <InputText size='18' color='gray' borderWidth='0' placeholder='授業の名前を入力' onChange={handleTitleChange} {...register('title', { required: true })} />
+                    <InputText size='18' color='gray' borderWidth='0' placeholder='授業の名前を入力' onChange={handleTitleChange} {...titleInputProps} />
                   </Container>
                   <Spacer height='20' />
                   <Container height='130'>
-                    <Textarea size='14' color='gray' borderColor='lightgray' borderWidth='1px' padding='10' placeholder='授業の概要を入力' maxLength='300' onChange={handleDescriptionChange} {...register('description', { required: true })} />
+                    <Textarea size='14' color='gray' borderColor='lightgray' borderWidth='1px' padding='10' placeholder='授業の概要を入力' maxLength='300' onChange={handleDescriptionChange} {...descriptionTextProps} />
                   </Container>
                 </ContainerSpacer>
               </FlexItem>
@@ -160,7 +163,7 @@ export default function LessonPublishing({ lesson, material }) {
                   </Container>
                 </FlexItem>
                 <Spacer width='50' />
-                <Select size='14' color='gray' options={allLessonOptions} value={setting.prevLessonID} disabled={allLessonOptions.length === 0} onChange={handlePrevLessonChange} />
+                <Select size='15' color='gray' options={allLessonOptions} topValue='0' value={setting.prevLessonID} disabled={allLessonOptions.length === 0} onChange={handlePrevLessonChange} />
               </Flex>
               <Spacer height='30' />
               <PlainText color='gray' size='13'>次の授業</PlainText>
@@ -176,7 +179,7 @@ export default function LessonPublishing({ lesson, material }) {
                   </Container>
                 </FlexItem>
                 <Spacer width='50' />
-                <Select size='14' color='gray' options={allLessonOptions} value={setting.nextLessonID} disabled={allLessonOptions.length === 0} onChange={handleNextLessonChange} />
+                <Select size='15' color='gray' options={allLessonOptions} topValue='0' value={setting.nextLessonID} disabled={allLessonOptions.length === 0} onChange={handleNextLessonChange} />
               </Flex>
             </FormGroup>
 
@@ -257,11 +260,24 @@ export default function LessonPublishing({ lesson, material }) {
 
           <Flex justifyContent='center'>
             <Container width='120' height='40'>
-              <LabelButton color='var(--soft-white)' fontSize='15' backgroundColor='var(--dark-purple)' disabled={isLoading} onClick={handleSubmit(handleFormSubmit)}>更新</LabelButton>
+              <LabelButton color='var(--soft-white)' fontSize='15' backgroundColor='var(--dark-purple)' disabled={isLoading || isUpdating} onClick={handleSubmit(handleSubmitClick)}>
+                {!isUpdating && '更新'}
+                {isUpdating && <LoadingIndicator size='20' color='white' />}
+              </LabelButton>
             </Container>
           </Flex>
 
-          <Spacer height='100' />
+          <Spacer height='20' />
+
+          <Flex justifyContent='center'>
+            <Container height='30'>
+              <FlashContainer isShow={isUpdated} timeoutMs='2000' transitionName='setting-updated-notice' transitionDuration='200' >
+                <PlainText size='12' fontWeight='500' color='var(--dark-purple)'>設定を更新しました。</PlainText>
+              </FlashContainer>
+            </Container>
+          </Flex>
+
+          <Spacer height='50' />
         </div>
       </main>
     </>

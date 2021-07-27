@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Container as GridContainer, Row, Col } from 'react-grid-system'
 import Spacer from './spacer'
 import Container from './container'
@@ -11,24 +11,40 @@ import PlainText from './plainText'
 import { SYNTHESIS_VOICE_LANGUAGE_NAMES, SYNTHESIS_JAPANESE_VOICE_NAMES, SYNTHESIS_ENGLISH_VOICE_NAMES } from '../libs/constants'
 
 export default function SynthesisVoiceConfig({ isProcessing, synthesisConfig, setLanguageCode, setName, setSpeakingRate, setPitch, setVolumeGainDb, playVoice, isDark }) {
-  const [voiceNames, setVoiceNames] = useState(SYNTHESIS_JAPANESE_VOICE_NAMES)
+  const [voiceNames, setVoiceNames] = useState([])
   const textColor = isDark ? 'var(--soft-white)' : 'gray'
   const backgroundColor = isDark ? 'var(--dark-gray)' : ''
   const borderColor = isDark ? 'var(--border-dark-gray)' : 'gray'
 
   function handleLanguageCodeChange(e) {
     const languageCode = e.target.value
-    let newVoiceName // 言語を変更した際、声も選択肢の最初のものにリセットする
+    setVoiceNamesByLanguage(languageCode)
+
+    // 言語を変更した際、声も選択肢の最初のものにリセットする
+    if (languageCode === SYNTHESIS_VOICE_LANGUAGE_NAMES[0].value) {
+      setLanguageCode(languageCode, SYNTHESIS_JAPANESE_VOICE_NAMES[0].value)
+    } else {
+      setLanguageCode(languageCode, SYNTHESIS_ENGLISH_VOICE_NAMES[0].value)
+    }
+  }
+
+  function setVoiceNamesByLanguage(languageCode) {
     if (languageCode === SYNTHESIS_VOICE_LANGUAGE_NAMES[0].value) {
       setVoiceNames(SYNTHESIS_JAPANESE_VOICE_NAMES)
-      newVoiceName = SYNTHESIS_JAPANESE_VOICE_NAMES[0].value
     } else {
       setVoiceNames(SYNTHESIS_ENGLISH_VOICE_NAMES)
-      newVoiceName = SYNTHESIS_ENGLISH_VOICE_NAMES[0].value
     }
-
-    setLanguageCode(languageCode, newVoiceName)
   }
+
+  useEffect(() => {
+    if (voiceNames.length > 0) return
+
+    if (synthesisConfig.languageCode) {
+      setVoiceNamesByLanguage(synthesisConfig.languageCode)
+    } else {
+      setVoiceNames(SYNTHESIS_JAPANESE_VOICE_NAMES) // デフォルトは日本語
+    }
+  }, [voiceNames.length, synthesisConfig.languageCode])
 
   return (
     <GridContainer>

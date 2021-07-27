@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import useFetch from '../../useFetch'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 import useCategoryBySubject from '../useCategoryBySubject'
@@ -17,7 +17,7 @@ export default function useResourceLoader({ lesson }) {
   const { fetch, fetchWithAuth } = useFetch()
   const { categories: fullCategories, handleSubjectChange } = useCategoryBySubject()
 
-  async function fetchSubjects() {
+  const fetchSubjects = useCallback(async() => {
     setSubjects(Array.from(await(fetch('/subjects'))).map((sub) => {
       return {
         value: sub.id,
@@ -26,9 +26,9 @@ export default function useResourceLoader({ lesson }) {
     }))
 
     handleSubjectChange({ target: { value: lesson.subjectID } })
-  }
+  }, [fetch, handleSubjectChange, lesson.subjectID])
 
-  async function fetchLessons() {
+  const fetchLessons = useCallback(async () => {
     fetchWithAuth('/users/me/lessons').then(r => {
       setAllLessons(r)
       setAllLessonOptions(r.filter(l => l.status === 'public' && l.id !== lesson.id).map(l => ({
@@ -40,13 +40,13 @@ export default function useResourceLoader({ lesson }) {
         message: '授業情報の読み込みに失敗しました。',
         original: e,
         canDismiss: false,
-        callback: fetchAvatars,
+        callback: fetchLessons,
       })
       console.error(e)
     })
-  }
+  }, [fetchWithAuth, showError, lesson.id])
 
-  function fetchBgImages() {
+  const fetchBgImages = useCallback(() => {
     fetch('/background_images').then(r => {
       setBgImages(r)
       setBgImageOptions(r.map(i => ({
@@ -62,9 +62,9 @@ export default function useResourceLoader({ lesson }) {
       })
       console.error(e)
     })
-  }
+  }, [fetch, showError])
 
-  function fetchAvatars() {
+  const fetchAvatars = useCallback(() => {
     fetchWithAuth('/avatars').then(r => {
       setAvatars(r)
       setAvatarOptions(r.map(a => ({
@@ -80,7 +80,7 @@ export default function useResourceLoader({ lesson }) {
       })
       console.error(e)
     })
-  }
+  }, [fetchWithAuth, showError])
 
   useEffect(() => {
     if (!isLoading) return
@@ -91,7 +91,7 @@ export default function useResourceLoader({ lesson }) {
     fetchAvatars()
 
     setIsLoading(false)
-  }, [isLoading])
+  }, [isLoading, fetchSubjects, fetchLessons, fetchBgImages, fetchAvatars])
 
   useEffect(() => {
     if (!fullCategories) return
