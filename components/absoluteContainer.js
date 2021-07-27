@@ -10,8 +10,6 @@ export default function AbsoluteContainer(props) {
     left,
     right,
     bottom,
-    width: '100%',
-    height: '100%',
   })
 
   return (
