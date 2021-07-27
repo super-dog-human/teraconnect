@@ -1,20 +1,20 @@
 import { useState, useRef, useReducer, useEffect } from 'react'
-import useLessonCacheController from '../edit/useLessonCacheController'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 import useFetch from '../../useFetch'
-import { dataURLToBlob } from '../../../graphicUtils'
 import { putFile } from '../../../fetch'
+import { dataURLToBlob } from '../../../graphicUtils'
+import { filterObject } from '../../../utils'
+import { updateGeneralSettingCache } from '../../../localStorageUtil'
 
 const sampleJapaneseText = '合成音声のサンプルです'
 const sampleEnglishText = 'This is a sample of synthesized voice.'
 
-export default function useSettingUpdater({ isLoading, lesson, material, bgImages }) {
+export default function useSettingUpdater({ lesson, material, bgImages }) {
   const [isUpdating, setIsUpdating] = useState(false)
   const [isUpdated, setIsUpdated] = useState(false)
   const newSettingRef = useRef({})
   const sampleTextForSynthesisRef = useRef('')
   const [setting, dispatchSetting] = useReducer(settingReducer, { voiceSynthesisConfig: {} })
-  const { isExistsCache, isExistsDiff, clearDiffFlag, getCache, clearCache } = useLessonCacheController({ isLoading, lessonID: lesson.id })
   const { post } = useFetch()
   const { showError } = useErrorDialogContext()
 
@@ -36,8 +36,6 @@ export default function useSettingUpdater({ isLoading, lesson, material, bgImage
     if (type === 'avatarLightColor') {
       const avatarLightColor = Object.values(settingObj.avatarLightColor).join(',')
       newSettingRef.current = { ...newSettingRef.current, avatarLightColor }
-    } else if (type === 'backgroundImageID') {
-      newSettingRef.current = { ...newSettingRef.current, backgroundImageID: settingObj.backgroundImageID }
     } else if (type === 'categoryID') {
       newSettingRef.current = { ...newSettingRef.current, japaneseCategoryID: settingObj.categoryID }
     } else {
@@ -111,6 +109,7 @@ export default function useSettingUpdater({ isLoading, lesson, material, bgImage
         if (thumbnailURL & !lesson.hasThumbnail) {
           newSettingRef.current.hasThumbnail = true
         }
+        setGeneralSettingToCache()
         newSettingRef.current = {}
 
         if (thumbnailURL) {
@@ -174,6 +173,13 @@ export default function useSettingUpdater({ isLoading, lesson, material, bgImage
       })
       console.error(e)
     })
+  }
+
+  function setGeneralSettingToCache() {
+    const newSetting = filterObject(newSettingRef.current, ['avatarLightColor', 'backgroundImageID', 'backgroundImageURL', 'voiceSynthesisConfig'])
+    if (Object.keys(newSetting).length === 0) return
+
+    updateGeneralSettingCache(lesson.id, newSetting)
   }
 
   useEffect(() => {

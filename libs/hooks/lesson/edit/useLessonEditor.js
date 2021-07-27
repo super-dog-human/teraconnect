@@ -8,6 +8,7 @@ import useDeletionLine from './timeline/useDeletionLine'
 import useSwappingLine from './timeline/useSwappingLine'
 import useLineUtils from './timeline/useLineUtils'
 import useFetch from '../../useFetch'
+import { isExistsCache, getCache } from '../../../localStorageUtil'
 
 export default function useLessonEditor() {
   const lessonRef = useRef({})
@@ -34,27 +35,27 @@ export default function useLessonEditor() {
   const { deleteLine } = useDeletionLine({ shiftElapsedTime, nextElapsedTime, deleteMaterial, targetMaterial, allMaterialNames })
   const { swapLine } = useSwappingLine({ lastTimeline, sortedElapsedTimes, maxDurationSecInLine, calcTime, targetMaterial, allMaterialNames })
 
-  async function fetchResources({ isExistsCache, getCache, lesson }) {
+  async function fetchResources(lesson) {
     lessonRef.current = lesson
 
-    if (isExistsCache()) {
-      loadMaterialCaches(getCache)
+    if (isExistsCache(lesson.id)) {
+      loadMaterialCaches(lesson.id, getCache)
     } else {
       fetchMaterials()
     }
   }
 
-  async function loadMaterialCaches(getCache) {
+  async function loadMaterialCaches(lessonID, getCache) {
     await fetchAndSetGraphicURLs()
 
-    setGeneralSetting(getCache('generalSetting'))
+    setGeneralSetting(getCache(lessonID, 'generalSetting'))
 
-    const avatars = getCache('avatars')
-    const drawings = getCache('drawings')
-    const graphics = getCache('graphics')
-    const embeddings = getCache('embeddings')
-    const musics = getCache('musics')
-    const speeches = getCache('speeches')
+    const avatars = getCache(lessonID, 'avatars')
+    const drawings = getCache(lessonID, 'drawings')
+    const graphics = getCache(lessonID, 'graphics')
+    const embeddings = getCache(lessonID, 'embeddings')
+    const musics = getCache(lessonID, 'musics')
+    const speeches = getCache(lessonID, 'speeches')
 
     setAvatars(avatars)
     setDrawings(drawings)

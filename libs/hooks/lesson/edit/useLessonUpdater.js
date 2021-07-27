@@ -1,28 +1,29 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { useLessonEditorContext } from '../../../contexts/lessonEditorContext'
 import { useDialogContext } from '../../../contexts/dialogContext'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 import useFetch from '../../../hooks/useFetch'
 import { useRouter } from 'next/router'
+import { isExistsDiff } from '../../../../libs/localStorageUtil'
 
 const skipConfirmNextTimeKey = 'skipConfirmLessonUpdating'
 
-export default function useLessonUpdater({ isLoading, isExistsDiff, clearDiffFlag, clearCache }) {
+export default function useLessonUpdater({ lessonID, isLoading, clearDiffFlag, clearCache }) {
   const { post } = useFetch()
   const { showDialog } = useDialogContext()
   const { showError } = useErrorDialogContext()
   const [hasResourceDiff, setHasResourceDiff] = useState(false)
+  const isLoadedRef = useRef(false)
   const uploadableResourceRef = useRef({})
   const [isUpdating, setIsUpdating] = useState(false)
   const { lesson, avatars, embeddings, graphics, drawings, musics, speeches } = useLessonEditorContext()
   const router = useRouter()
 
-  function storeUploadableResource(resource) {
-    if (isLoading) return
-
+  const storeUploadableResource = useCallback(resource => {
+    if (!isLoadedRef.current) return
     uploadableResourceRef.current = { ...uploadableResourceRef.current, ...resource }
     setHasResourceDiff(true)
-  }
+  }, [])
 
   async function updateLesson() {
     if (!hasResourceDiff) return
@@ -79,35 +80,37 @@ export default function useLessonUpdater({ isLoading, isExistsDiff, clearDiffFla
 
   useEffect(() => {
     if (isLoading) return
+    isLoadedRef.current = true
 
-    if (isExistsDiff()) { // キャッシュフラグが立っているなら未アップロードの差分がある
+    if (isExistsDiff(lessonID)) { // キャッシュフラグが立っているなら未アップロードの差分がある
       setHasResourceDiff(true)
     }
-  }, [isLoading])
+  }, [isLoading, lessonID])
 
   useEffect(() => {
     storeUploadableResource({ avatars })
-  }, [avatars])
+  }, [avatars, storeUploadableResource])
 
   useEffect(() => {
     storeUploadableResource({ embeddings })
-  }, [embeddings])
+  }, [embeddings, storeUploadableResource])
 
   useEffect(() => {
     storeUploadableResource({ graphics })
-  }, [graphics])
+  }, [graphics, storeUploadableResource])
 
   useEffect(() => {
     storeUploadableResource({ drawings })
-  }, [drawings])
+  }, [drawings, storeUploadableResource])
 
   useEffect(() => {
     storeUploadableResource({ musics })
-  }, [musics])
+  }, [musics, storeUploadableResource])
 
   useEffect(() => {
+    console.log('update speeches.')
     storeUploadableResource({ speeches })
-  }, [speeches])
+  }, [speeches, storeUploadableResource])
 
   return { hasResourceDiff, isUpdating, updateLesson, discardLessonDraft }
 }

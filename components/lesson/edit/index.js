@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { css } from '@emotion/core'
 import { useScreenClass } from 'react-grid-system'
 import useLessonCacheController from '../../../libs/hooks/lesson/edit/useLessonCacheController'
@@ -18,12 +18,13 @@ import GraphicController from './graphicController/'
 import Timeline from './timeline'
 
 export default function LessonEdit({ lesson }) {
+  const fetchedRef = useRef(false)
   const screenClass = useScreenClass()
   const [isLoading, setIsLoading] = useState(true)
-  const { isExistsCache, isExistsDiff, clearDiffFlag, getCache, clearCache } = useLessonCacheController({ isLoading, lessonID: lesson.id })
+  const { clearDiffFlag, clearCache } = useLessonCacheController({ isLoading, lessonID: lesson.id })
   const { contextMenu, handleDismiss } = useContextMenuContext()
   const { fetchResources, timeline } = useLessonEditorContext()
-  const { hasResourceDiff, isUpdating, updateLesson, discardLessonDraft } = useLessonUpdater({ isLoading, isExistsDiff, clearDiffFlag, clearCache })
+  const { hasResourceDiff, isUpdating, updateLesson, discardLessonDraft } = useLessonUpdater({ lessonID: lesson.id, isLoading, clearDiffFlag, clearCache })
   useResourceReloader()
 
   const bodyStyle = css({
@@ -56,8 +57,10 @@ export default function LessonEdit({ lesson }) {
   })
 
   useEffect(() => {
-    fetchResources({ isExistsCache, getCache, lesson })
-  }, [])
+    if (fetchedRef.current) return
+    fetchResources(lesson)
+    fetchedRef.current = true
+  }, [fetchResources, lesson])
 
   useEffect(() => {
     if (Object.keys(timeline).length > 0) {

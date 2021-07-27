@@ -1,19 +1,8 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useCallback, useEffect } from 'react'
 import { useLessonEditorContext } from '../../../contexts/lessonEditorContext'
 import usePreventUnload from '../../usePreventUnload'
 import useDebounce from '../../useDebounce'
-
-const storageKeys = {
-  isExistsCache: 'isExistsCache',
-  isExistsDiffCache: 'isExistsDiffCache',
-  generalSetting: 'generalSetting',
-  avatars: 'lessonAvatars',
-  embeddings: 'lessonEmbeddings',
-  graphics: 'lessonGraphics',
-  drawings: 'lessonDrawings',
-  musics: 'lessonMusics',
-  speeches: 'lessonSpeeches',
-}
+import { setCache, setExistsDiffCache, isExistsCache, setInitialCache, removeExistsDiffCache, removeAllCache } from '../../../localStorageUtil'
 
 export default function useLessonCacheController({ isLoading, lessonID }) {
   const materialQueRef = useRef({})
@@ -24,17 +13,11 @@ export default function useLessonCacheController({ isLoading, lessonID }) {
   const [isPreventUnload, setIsPreventUnload] = useState(false)
   usePreventUnload(isPreventUnload)
 
-  function getCache(name) {
-    return JSON.parse(localStorage.getItem(keyName(name)) || '""')
-  }
-
   // localStorageへの書き込みはなるべく回数を抑えたいのでDebounceする
-  function setCacheWithDebounce(material) {
+  const setCacheWithDebounce = useCallback(material => {
     if (isLoading) return
 
-    if (!isExistsDiff()) {
-      localStorage.setItem(keyName('isExistsDiffCache'), 'true')
-    }
+    setExistsDiffCache(lessonID)
 
     if (shouldSetCache) {
       materialBusyQueRef.current = { ...materialBusyQueRef.current, ...material }
@@ -44,60 +27,35 @@ export default function useLessonCacheController({ isLoading, lessonID }) {
     materialQueRef.current = { ...materialQueRef.current, ...material }
     setIsPreventUnload(true)
     setShouldUpdate(true)
-  }
+  }, [isLoading, lessonID, shouldSetCache])
 
-  function setCacheWithDebounceInBusied() {
-    if (!isExistsDiff()) {
-      localStorage.setItem(keyName('isExistsDiffCache'), 'true')
-    }
+  const setCacheWithDebounceInBusied = useCallback(() => {
+    setExistsDiffCache(lessonID)
 
     materialQueRef.current = { ...materialQueRef.current, ...materialBusyQueRef.current }
     materialBusyQueRef.current = {}
     setIsPreventUnload(true)
     setShouldUpdate(true)
-  }
+  }, [lessonID])
 
-  function setCache() {
+  const setCaches = useCallback(() => {
     Object.keys(materialQueRef.current).forEach(key => {
-      localStorage.setItem(keyName(key), JSON.stringify(materialQueRef.current[key]))
+      setCache(lessonID, key, materialQueRef.current[key])
     })
     materialQueRef.current = {}
 
     setIsPreventUnload(false)
     setShouldUpdate(false)
-  }
+  }, [lessonID])
 
   function clearDiffFlag() {
-    localStorage.removeItem(keyName('isExistsDiffCache'))
+    removeExistsDiffCache(lessonID)
   }
 
   function clearCache() {
     materialQueRef.current = {}
     materialBusyQueRef.current = {}
-    Object.keys(storageKeys).forEach(key => localStorage.removeItem(keyName(key)))
-  }
-
-  function isExistsCache() {
-    return localStorage.getItem(keyName('isExistsCache')) === 'true'
-  }
-
-  function isExistsDiff() {
-    return localStorage.getItem(keyName('isExistsDiffCache')) === 'true'
-  }
-
-  function keyName(name) {
-    return `cache_${lessonID}_${storageKeys[name]}`
-  }
-
-  function setInitialCache() {
-    localStorage.setItem(keyName('isExistsCache'), 'true')
-    localStorage.setItem(keyName('generalSetting'), JSON.stringify(generalSetting))
-    localStorage.setItem(keyName('avatars'), JSON.stringify(avatars))
-    localStorage.setItem(keyName('embeddings'), JSON.stringify(embeddings))
-    localStorage.setItem(keyName('graphics'), JSON.stringify(graphics))
-    localStorage.setItem(keyName('drawings'), JSON.stringify(drawings))
-    localStorage.setItem(keyName('musics'), JSON.stringify(musics))
-    localStorage.setItem(keyName('speeches'), JSON.stringify(speeches))
+    removeAllCache(lessonID)
   }
 
   useEffect(() => {
@@ -126,18 +84,18 @@ export default function useLessonCacheController({ isLoading, lessonID }) {
 
   useEffect(() => {
     if (isLoading) return
-    if (!isExistsCache()) {
-      setInitialCache()
+    if (!isExistsCache(lessonID)) {
+      setInitialCache({ lessonID, generalSetting, avatars, embeddings, graphics, drawings, musics, speeches })
     }
-  }, [isLoading])
+  }, [isLoading, lessonID, generalSetting, avatars, embeddings, graphics, drawings, musics, speeches])
 
   useEffect(() => {
     if (shouldSetCache) {
-      setCache()
+      setCaches()
     } else if (Object.keys(materialBusyQueRef.current).length > 0) {
       setCacheWithDebounceInBusied() // 書き込み中に発生した更新差分があれば次の書き込みに使用する
     }
-  }, [shouldSetCache])
+  }, [shouldSetCache, setCaches, setCacheWithDebounceInBusied])
 
-  return { isExistsCache, isExistsDiff, clearDiffFlag, getCache, clearCache }
+  return { clearDiffFlag, clearCache }
 }

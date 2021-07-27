@@ -40,7 +40,7 @@ import SynthesisVoiceConfig from '../../synthesisVoiceConfig'
 export default function LessonPublishing({ lesson, material }) {
   const screenClass = useScreenClass()
   const { isLoading, subjects, categories, allLessons, allLessonOptions, bgImages, bgImageOptions, avatars, avatarOptions, handleSubjectChange: onSubjectChange } = useResourceLoader({ lesson })
-  const { isUpdating, isUpdated, sampleTextForSynthesisRef, setting, dispatchSetting, handleSubmitClick } = useSettingUpdater({ isLoading, lesson, material, bgImages })
+  const { isUpdating, isUpdated, sampleTextForSynthesisRef, setting, dispatchSetting, handleSubmitClick } = useSettingUpdater({ lesson, material, bgImages })
   const defaultValues = { title: lesson.title, description: lesson.description, ...Object.fromEntries(lesson.references.map((ref, i) => [`reference${i}`, ref.isbn])) }
   const { register, handleSubmit, formState: { errors }, setValue } = useForm({ defaultValues })
   const { onChange: handleTitleInputChange, ...titleInputProps } = register('title', { required: true })
