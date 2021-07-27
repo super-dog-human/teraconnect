@@ -20,7 +20,7 @@ export default function useSettingUpdater({ lesson, material, bgImages }) {
 
   function settingReducer(state, { type, payload }) {
     if (type === 'initialize')     return payload
-    if (type === 'synthesisVoice') return state // サンプルボイスのため、settingが更新しない
+    if (type === 'synthesisVoice') return state // サンプルボイスのため、settingは更新しない
 
     if (type === 'initializeSynthesis') {
       sampleTextForSynthesisRef.current = (payload.languageCode === 'ja-JP') ? sampleJapaneseText : sampleEnglishText

@@ -108,7 +108,6 @@ export default function useLessonUpdater({ lessonID, isLoading, clearDiffFlag, c
   }, [musics, storeUploadableResource])
 
   useEffect(() => {
-    console.log('update speeches.')
     storeUploadableResource({ speeches })
   }, [speeches, storeUploadableResource])
 
