@@ -103,12 +103,13 @@ export default function useSettingUpdater({ lesson, material, bgImages }) {
   }
 
   async function updateSetting() {
+    const thumbnailURL = newSettingRef.current.thumbnailURL
+    if (thumbnailURL && !lesson.hasThumbnail) {
+      newSettingRef.current.hasThumbnail = true
+    }
+
     await post(`/lessons/${lesson.id}`, newSettingRef.current, 'PATCH')
       .then(async () => {
-        const thumbnailURL = newSettingRef.current.thumbnailURL
-        if (thumbnailURL & !lesson.hasThumbnail) {
-          newSettingRef.current.hasThumbnail = true
-        }
         setGeneralSettingToCache()
         newSettingRef.current = {}
 
