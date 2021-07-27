@@ -67,9 +67,11 @@ export default function LessonPublishing({ lesson, material }) {
                 <Container width='300'>
                   <Aspect16To9Container>
                     <AbsoluteContainer top='0' left='0'>
-                      {setting.thumbnailURL && !isDataURL(setting.thumbnailURL) && <Image src={setting.thumbnailURL} width={960} height={540} />}
-                      {setting.thumbnailURL && isDataURL(setting.thumbnailURL) && <img src={setting.thumbnailURL} css={thumbnailStyle} />}
-                      {!setting.thumbnailURL && <NoImage textSize='16' color='gray' backgroundColor='lightgray' />}
+                      <Container width='300' height='169'>
+                        {setting.thumbnailURL && !isDataURL(setting.thumbnailURL) && <Image src={setting.thumbnailURL} width={960} height={540} />}
+                        {setting.thumbnailURL && isDataURL(setting.thumbnailURL) && <img src={setting.thumbnailURL} css={thumbnailStyle} />}
+                        {!setting.thumbnailURL && <NoImage textSize='16' color='gray' backgroundColor='lightgray' />}
+                      </Container>
                     </AbsoluteContainer>
                     <AbsoluteContainer top='125px' left='260px'>
                       <Container width='35'>
@@ -156,8 +158,10 @@ export default function LessonPublishing({ lesson, material }) {
                   <Container width='170'>
                     <Aspect16To9Container>
                       <AbsoluteContainer top='0' left='0'>
-                        {!relationLessonThumbnailURL.prev && <NoImage textSize='12' color='gray' backgroundColor='lightgray' />}
-                        {relationLessonThumbnailURL.prev && <Image src={relationLessonThumbnailURL.prev} width={1280} height={720} />}
+                        <Container width='170' height='96'>
+                          {!relationLessonThumbnailURL.prev && <NoImage textSize='12' color='gray' backgroundColor='lightgray' />}
+                          {relationLessonThumbnailURL.prev && <Image src={relationLessonThumbnailURL.prev} width={1280} height={720} />}
+                        </Container>
                       </AbsoluteContainer>
                     </Aspect16To9Container>
                   </Container>
@@ -172,8 +176,10 @@ export default function LessonPublishing({ lesson, material }) {
                   <Container width='170'>
                     <Aspect16To9Container>
                       <AbsoluteContainer top='0' left='0'>
-                        {!relationLessonThumbnailURL.next && <NoImage textSize='12' color='gray' backgroundColor='lightgray' />}
-                        {relationLessonThumbnailURL.next && <Image src={relationLessonThumbnailURL.next} width={1280} height={720} />}
+                        <Container width='170' height='96'>
+                          {!relationLessonThumbnailURL.next && <NoImage textSize='12' color='gray' backgroundColor='lightgray' />}
+                          {relationLessonThumbnailURL.next && <Image src={relationLessonThumbnailURL.next} width={1280} height={720} />}
+                        </Container>
                       </AbsoluteContainer>
                     </Aspect16To9Container>
                   </Container>
