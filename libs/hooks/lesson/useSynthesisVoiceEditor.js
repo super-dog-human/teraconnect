@@ -14,7 +14,7 @@ export default function useSynthesisVoiceEditor({ dispatchConfig, url, subtitle,
   }
 
   function setLanguageCode(languageCode, voiceName) {
-    dispatchConfig({ type: 'initializeSynthesis', payload: { languageCode, name: voiceName } })
+    dispatchConfig({ type: 'synthesisLanguageAndName', payload: { languageCode, name: voiceName } })
   }
 
   function setName(e) {

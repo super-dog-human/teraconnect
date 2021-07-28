@@ -22,13 +22,13 @@ export default function useSettingUpdater({ lesson, material, bgImages }) {
     if (type === 'initialize')     return payload
     if (type === 'synthesisVoice') return state // サンプルボイスのため、settingは更新しない
 
-    if (type === 'initializeSynthesis') {
+    if (type === 'synthesisLanguageAndName') {
       sampleTextForSynthesisRef.current = (payload.languageCode === 'ja-JP') ? sampleJapaneseText : sampleEnglishText
     }
 
     const settingObj = newSetting({ state, type, payload })
 
-    if (type === 'initializeSynthesis' || /^synthesis.*/.test(type)) {
+    if (/^synthesis.*/.test(type)) {
       newSettingRef.current.voiceSynthesisConfig = { ...newSettingRef.current.voiceSynthesisConfig, ...settingObj }
       return { ...state, voiceSynthesisConfig: { ...state.voiceSynthesisConfig, ...settingObj } }
     }
@@ -79,7 +79,7 @@ export default function useSettingUpdater({ lesson, material, bgImages }) {
     }
     case 'synthesisName':
       return { name: payload }
-    case 'initializeSynthesis':
+    case 'synthesisLanguageAndName':
       return { languageCode: payload.languageCode, name: payload.name }
     case 'synthesisSpeakingRate':
       return { speakingRate: parseFloat(payload) }

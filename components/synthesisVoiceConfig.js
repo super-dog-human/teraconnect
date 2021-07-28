@@ -38,12 +38,8 @@ export default function SynthesisVoiceConfig({ isProcessing, synthesisConfig, se
 
   useEffect(() => {
     if (voiceNames.length > 0) return
-
-    if (synthesisConfig.languageCode) {
-      setVoiceNamesByLanguage(synthesisConfig.languageCode)
-    } else {
-      setVoiceNames(SYNTHESIS_JAPANESE_VOICE_NAMES) // デフォルトは日本語
-    }
+    if (!synthesisConfig.languageCode) return
+    setVoiceNamesByLanguage(synthesisConfig.languageCode)
   }, [voiceNames.length, synthesisConfig.languageCode])
 
   return (

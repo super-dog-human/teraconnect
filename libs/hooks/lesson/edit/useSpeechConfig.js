@@ -1,4 +1,4 @@
-import { useRef, useState, useReducer } from 'react'
+import { useRef, useState, useReducer, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { useLessonEditorContext } from '../../../contexts/lessonEditorContext'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
@@ -32,6 +32,8 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
     case 'switchToHuman':
       return { ...state, url: payload.url, voiceID: payload.voiceID, isSynthesis: false }
     case 'initializeSynthesis':
+      return { ...state, synthesisConfig: { ...payload } }
+    case 'synthesisLanguageAndName':
       return { ...state, url: '', synthesisConfig: { ...state.synthesisConfig, languageCode: payload.languageCode, name: payload.name } }
     case 'synthesisName':
       return { ...state, url: '', synthesisConfig: { ...state.synthesisConfig, name: payload } }
@@ -167,6 +169,16 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
   function handleCancel() {
     closeCallback(true)
   }
+
+  useEffect(() => {
+    if (config.isSynthesis) {
+      if (config.synthesisConfig.name) return
+      dispatchConfig({ type: 'initializeSynthesis', payload: generalSetting.voiceSynthesisConfig })
+    } else {
+      if (Object.keys(config.synthesisConfig).length === 0) return
+      dispatchConfig({ type: 'initializeSynthesis', payload: {} })
+    }
+  }, [config.isSynthesis, config.synthesisConfig, generalSetting.voiceSynthesisConfig])
 
   return { isProcessing, config, dispatchConfig, handleConfirm, handleCancel }
 }
