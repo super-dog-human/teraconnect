@@ -12,7 +12,7 @@ import DrawingConfigButton from './drawingConfigButton'
 import DrawingLineSelector from './drawingLineWidthSelector'
 import 'react-colorful/dist/index.css'
 
-export default function DrawingConfigPanel({ disabled, color, setColor, lineWidth, setLineWidth, enablePen, handlePen, enableEraser, handleEraser }) {
+export default function DrawingConfigPanel({ disabled, color, setColor, lineWidth, setLineWidth, enablePen, setEnablePen, handlePen, enableEraser, handleEraser }) {
   const [showDrawingConfig, setShowDrawingConfig] = useState(false)
   const [panelPosition, setPanelposition] = useState({ top: 0, left: 0 })
 
@@ -27,6 +27,7 @@ export default function DrawingConfigPanel({ disabled, color, setColor, lineWidt
 
   function handleWidthChange(e) {
     setLineWidth(parseInt(e.target.dataset.width))
+    if (!enableEraser) setEnablePen(true)
   }
 
   const contextMenuStyle = css({
