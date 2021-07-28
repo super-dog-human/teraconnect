@@ -7,6 +7,9 @@ import { setCache, setExistsDiffCache, isExistsCache, setInitialCache, removeExi
 export default function useLessonCacheController({ isLoading, lessonID }) {
   const materialQueRef = useRef({})
   const materialBusyQueRef = useRef({})
+  const isLoadedRef = useRef(false)
+  const isInitialSetRef = useRef(false)
+  const shouldSetCacheRef = useRef(false)
   const [shouldUpdate, setShouldUpdate] = useState(false)
   const { generalSetting, avatars, embeddings, graphics, drawings, musics, speeches } = useLessonEditorContext()
   const { debouncedValue: shouldSetCache } = useDebounce(shouldUpdate, 3000) // 最頻でも3秒に1回しかlocalStorageへ書き込みを発生させない
@@ -15,11 +18,11 @@ export default function useLessonCacheController({ isLoading, lessonID }) {
 
   // localStorageへの書き込みはなるべく回数を抑えたいのでDebounceする
   const setCacheWithDebounce = useCallback(material => {
-    if (isLoading) return
+    if (!isLoadedRef.current) return
 
     setExistsDiffCache(lessonID)
 
-    if (shouldSetCache) {
+    if (shouldSetCacheRef.current) {
       materialBusyQueRef.current = { ...materialBusyQueRef.current, ...material }
       return
     }
@@ -27,7 +30,7 @@ export default function useLessonCacheController({ isLoading, lessonID }) {
     materialQueRef.current = { ...materialQueRef.current, ...material }
     setIsPreventUnload(true)
     setShouldUpdate(true)
-  }, [isLoading, lessonID, shouldSetCache])
+  }, [lessonID])
 
   const setCacheWithDebounceInBusied = useCallback(() => {
     setExistsDiffCache(lessonID)
@@ -59,34 +62,45 @@ export default function useLessonCacheController({ isLoading, lessonID }) {
   }
 
   useEffect(() => {
+    isLoadedRef.current = !isLoading
+  }, [isLoading])
+
+  useEffect(() => {
+    shouldSetCacheRef.current = shouldSetCache
+  }, [shouldSetCache])
+
+  useEffect(() => {
     setCacheWithDebounce({ avatars })
-  }, [avatars])
+  }, [avatars, setCacheWithDebounce])
 
   useEffect(() => {
     setCacheWithDebounce({ embeddings })
-  }, [embeddings])
+  }, [embeddings, setCacheWithDebounce])
 
   useEffect(() => {
     setCacheWithDebounce({ graphics })
-  }, [graphics])
+  }, [graphics, setCacheWithDebounce])
 
   useEffect(() => {
     setCacheWithDebounce({ drawings })
-  }, [drawings])
+  }, [drawings, setCacheWithDebounce])
 
   useEffect(() => {
     setCacheWithDebounce({ musics })
-  }, [musics])
+  }, [musics, setCacheWithDebounce])
 
   useEffect(() => {
     setCacheWithDebounce({ speeches })
-  }, [speeches])
+  }, [speeches, setCacheWithDebounce])
 
   useEffect(() => {
     if (isLoading) return
+    if (isInitialSetRef.current) return
+
     if (!isExistsCache(lessonID)) {
       setInitialCache({ lessonID, generalSetting, avatars, embeddings, graphics, drawings, musics, speeches })
     }
+    isInitialSetRef.current = true
   }, [isLoading, lessonID, generalSetting, avatars, embeddings, graphics, drawings, musics, speeches])
 
   useEffect(() => {
