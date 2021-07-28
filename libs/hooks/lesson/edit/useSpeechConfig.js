@@ -38,11 +38,11 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
     case 'synthesisName':
       return { ...state, url: '', synthesisConfig: { ...state.synthesisConfig, name: payload } }
     case 'synthesisSpeakingRate':
-      return { ...state, url: '', synthesisConfig: { ...state.synthesisConfig, speakingRate: payload } }
+      return { ...state, url: '', synthesisConfig: { ...state.synthesisConfig, speakingRate: parseFloat(payload) } }
     case 'synthesisPitch':
-      return { ...state, url: '', synthesisConfig: { ...state.synthesisConfig, pitch: payload } }
+      return { ...state, url: '', synthesisConfig: { ...state.synthesisConfig, pitch: parseInt(payload) } }
     case 'synthesisVolumeGainDb':
-      return { ...state, url: '', synthesisConfig: { ...state.synthesisConfig, volumeGainDb: payload } }
+      return { ...state, url: '', synthesisConfig: { ...state.synthesisConfig, volumeGainDb: parseInt(payload) } }
     case 'synthesisVoice':
       return { ...state, url: payload.url, voiceID: payload.voiceID }
     case 'synthesisSubtitle':
