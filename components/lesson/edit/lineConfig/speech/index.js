@@ -9,6 +9,7 @@ import DragHandler from '../../../../dragHandler'
 import VoiceTab from './voiceTab'
 import TextTab from './textTab'
 import DialogFooter from '../configDialog/dialogFooter'
+import PlainText from '../../../../plainText'
 import useSpeechConfig from '../../../../../libs/hooks/lesson/edit/useSpeechConfig'
 import 'react-tabs/style/react-tabs.css'
 
@@ -24,8 +25,8 @@ export default function Speech(props) {
           <DragHandler>
             <TabList>
               <TabListWithCloseButton onClose={handleCancel} color='var(--soft-white)' disabled={isProcessing}>
-                <Tab><AlignContainer textAlign='center'>字幕・テロップ</AlignContainer></Tab>
-                <Tab><AlignContainer textAlign='center'>音声</AlignContainer></Tab>
+                <Tab><AlignContainer textAlign='center'><PlainText size='13'>字幕・テロップ</PlainText></AlignContainer></Tab>
+                <Tab><AlignContainer textAlign='center'><PlainText size='13'>音声</PlainText></AlignContainer></Tab>
               </TabListWithCloseButton>
             </TabList>
           </DragHandler>

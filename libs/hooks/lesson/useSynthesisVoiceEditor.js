@@ -3,10 +3,10 @@ import useSynthesisVoice from '../useSynthesisVoice'
 import useAudioPlayer from '../useAudioPlayer'
 import { useRouter } from 'next/router'
 
-export default function useSynthesisVoiceEditor({ dispatchConfig, url, subtitle, synthesisConfig }) {
+export default function useSynthesisVoiceEditor({ dispatchConfig, url, subtitle, synthesisConfig, defaultSynthesisConfig }) {
   const [isSynthesizing, setIsSynthesizing] = useState(false)
   const router = useRouter()
-  const { createSynthesisVoiceFile } = useSynthesisVoice()
+  const { createSynthesisVoiceFile } = useSynthesisVoice(defaultSynthesisConfig)
   const { isPlaying, createAudio, switchAudio } = useAudioPlayer()
 
   function setSubtitle(e) {
