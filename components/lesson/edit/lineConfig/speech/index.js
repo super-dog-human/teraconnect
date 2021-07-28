@@ -25,8 +25,8 @@ export default function Speech(props) {
           <DragHandler>
             <TabList>
               <TabListWithCloseButton onClose={handleCancel} color='var(--soft-white)' disabled={isProcessing}>
-                <Tab><AlignContainer textAlign='center'><PlainText size='13'>字幕・テロップ</PlainText></AlignContainer></Tab>
-                <Tab><AlignContainer textAlign='center'><PlainText size='13'>音声</PlainText></AlignContainer></Tab>
+                <Tab><AlignContainer textAlign='center'><PlainText size='14'>字幕・テロップ</PlainText></AlignContainer></Tab>
+                <Tab><AlignContainer textAlign='center'><PlainText size='14'>音声</PlainText></AlignContainer></Tab>
               </TabListWithCloseButton>
             </TabList>
           </DragHandler>

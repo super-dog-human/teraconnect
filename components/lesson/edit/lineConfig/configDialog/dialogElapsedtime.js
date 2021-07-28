@@ -63,7 +63,7 @@ const DialogElapsedTime = React.forwardRef(function dialogElapsedTime({ elapsedT
         <Spacer width='10' />
         {hasChangedElapsedTime &&
           <Flex>
-            <InputCheckbox id='involveAfteLinesCheckbox' size='18' borderColor='var(--border-gray)' checkColor='var(--soft-white)' ref={ref}>
+            <InputCheckbox id='involveAfteLinesCheckbox' size='16' borderColor='var(--border-gray)' checkColor='var(--soft-white)' ref={ref}>
               <PlainText size='11' color='var(--border-gray)'>後続の行にも時間変更を波及</PlainText>
             </InputCheckbox>
           </Flex>
