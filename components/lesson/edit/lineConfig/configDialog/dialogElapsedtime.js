@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Flex from '../../../../flex'
 import Container from '../../../../container'
 import AlignContainer from '../../../../alignContainer'
@@ -12,31 +12,37 @@ const DialogElapsedTime = React.forwardRef(function dialogElapsedTime({ elapsedT
   const [secondsTime, setSecondsTime] = useState('')
   const [millisecTime, setMillisecTime] = useState('')
   const [hasChangedElapsedTime, setHasChangedElapsedTime] = useState(false)
+  const initializedRef = useRef(false)
+
+  function handleInputFocus() {
+    setHasChangedElapsedTime(true)
+  }
 
   useEffect(() => {
+    if (initializedRef.current) return
+
     const minutes = Math.floor(elapsedTime / 60) % 60
     setMinutesTime(minutes.toString())
     const seconds = Math.floor(elapsedTime - minutes * 60).toString()
     setSecondsTime(seconds.padStart(2, '0'))
     const milliSeconds = (parseFloat((elapsedTime - Math.floor(elapsedTime)).toFixed(3)) * 1000).toString()
     setMillisecTime(milliSeconds.padStart(3, '0'))
-  }, [])
+
+    initializedRef.current = true
+  }, [elapsedTime])
 
   useEffect(() => {
     if ([minutesTime, secondsTime, millisecTime].includes('')) return
 
     const newElapsedTime = parseFloat((parseInt(minutesTime) * 60 + parseInt(secondsTime) + (parseInt(millisecTime) /  1000)).toFixed(3))
-    if (elapsedTime !== newElapsedTime) {
-      setHasChangedElapsedTime(true)
-      dispatchConfig({ type: 'elapsedTime', payload: newElapsedTime })
-    }
-  }, [minutesTime, secondsTime, millisecTime])
+    dispatchConfig({ type: 'elapsedTime', payload: newElapsedTime })
+  }, [minutesTime, secondsTime, millisecTime, dispatchConfig])
 
   return (
     <div>
       <Flex justifyContent='start' alignItems='center'>
         <Container width='40'>
-          <InputElapsedTime time={minutesTime} setTime={setMinutesTime} min='0' max='9' maxLength='1' />
+          <InputElapsedTime time={minutesTime} setTime={setMinutesTime} min='0' max='9' maxLength='1' onFocus={handleInputFocus} />
         </Container>
         <Container width='20'>
           <AlignContainer textAlign='center'>
@@ -44,7 +50,7 @@ const DialogElapsedTime = React.forwardRef(function dialogElapsedTime({ elapsedT
           </AlignContainer>
         </Container>
         <Container width='40'>
-          <InputElapsedTime time={secondsTime} setTime={setSecondsTime} min='0' max='59' maxLength='2' />
+          <InputElapsedTime time={secondsTime} setTime={setSecondsTime} min='0' max='59' maxLength='2' onFocus={handleInputFocus} />
         </Container>
         <Container width='20'>
           <AlignContainer textAlign='center'>
@@ -52,7 +58,7 @@ const DialogElapsedTime = React.forwardRef(function dialogElapsedTime({ elapsedT
           </AlignContainer>
         </Container>
         <Container width='50'>
-          <InputElapsedTime time={millisecTime} setTime={setMillisecTime} min='0' max='999' maxLength='3' />
+          <InputElapsedTime time={millisecTime} setTime={setMillisecTime} min='0' max='999' maxLength='3' onFocus={handleInputFocus} />
         </Container>
         <Spacer width='10' />
         {hasChangedElapsedTime &&

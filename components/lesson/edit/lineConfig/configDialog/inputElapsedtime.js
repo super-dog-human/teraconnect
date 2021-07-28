@@ -2,11 +2,12 @@ import React, { useRef } from 'react'
 import InputText from '../../../../form/inputText'
 
 export default function InputElapsedTime(props) {
-  const { time, setTime, min, max, maxLength, ...inputProps } = props
+  const { time, setTime, min, max, maxLength, onFocus, ...inputProps } = props
   const selectedLengthRef = useRef(0)
 
   function handleFocus(e) {
     selectedLengthRef.current = e.currentTarget.selectionEnd - e.currentTarget.selectionStart
+    onFocus()
   }
 
   function handleKeyDown(e) {
