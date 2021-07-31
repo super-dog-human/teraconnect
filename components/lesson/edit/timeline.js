@@ -68,7 +68,8 @@ export default function Timeline() {
 
 const bodyStyle = css({
   height: '100%',
-  overflowX: 'scroll',
+  overflowX: 'hidden',
+  overflowY: 'auto',
 })
 
 const lineStyle = css({

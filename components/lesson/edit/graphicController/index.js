@@ -61,7 +61,8 @@ const bodyStyle = css({
 
 const containerStyle = css({
   height: 'calc(100% - 70px - 20px - 20px - 45px)', // 水平線・アップロードボタンの高さと余白を差し引く
-  overflowX: 'scroll',
+  overflowX: 'hidden',
+  overflowY: 'auto',
   display: 'flex',
   alignContent: 'flex-start',
   flexWrap: 'wrap',

@@ -9,7 +9,8 @@ import GraphicThumbnail from '../../graphicThumbnail'
 
 export default function Thumbnails({ config, graphicURLs, onClick }) {
   const bodyStyle = css({
-    overflowX: 'scroll',
+    overflowX: 'hidden',
+    overflowY: 'auto',
     height: '100%',
     visibility: config.action === 'show' ? 'visible' : 'hidden',
   })
