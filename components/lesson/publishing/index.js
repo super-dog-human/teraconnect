@@ -68,7 +68,7 @@ export default function LessonPublishing({ lesson, material }) {
                   <Aspect16To9Container>
                     <AbsoluteContainer top='0' left='0'>
                       <Container width='300' height='169'>
-                        {setting.thumbnailURL && !isDataURL(setting.thumbnailURL) && <Image src={setting.thumbnailURL} width={960} height={540} />}
+                        {setting.thumbnailURL && !isDataURL(setting.thumbnailURL) && <Image src={setting.thumbnailURL} width={960} height={540} objectFit='contain' />}
                         {setting.thumbnailURL && isDataURL(setting.thumbnailURL) && <img src={setting.thumbnailURL} css={thumbnailStyle} />}
                         {!setting.thumbnailURL && <NoImage textSize='16' color='gray' backgroundColor='lightgray' />}
                       </Container>
