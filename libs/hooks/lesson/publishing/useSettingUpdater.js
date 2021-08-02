@@ -106,11 +106,11 @@ export default function useSettingUpdater({ lesson, material, bgImages }) {
   async function updateSetting() {
     const requestBody = exceptObject(newSettingRef.current, ['avatar', 'backgroundImageURL'])
     const thumbnailURL = newSettingRef.current.thumbnailURL
-    if (thumbnailURL && !lesson.hasThumbnail) {
+    if (thumbnailURL && !setting.thumbnailURL) {
       requestBody.hasThumbnail = true
     }
 
-    await post(`/lessons/${lesson.id}`, requestBody, 'PATCH')
+    await post(`/lessons/${lesson.id}?move_thumbnail=${!thumbnailURL && !!setting.thumbnailURL}`, requestBody, 'PATCH')
       .then(async () => {
         setGeneralSettingToCache()
         newSettingRef.current = {}
@@ -139,7 +139,7 @@ export default function useSettingUpdater({ lesson, material, bgImages }) {
   }
 
   async function uploadThumbnail(url) {
-    post(`/lessons/${lesson.id}/thumbnail`).then(async (r) => {
+    post(`/lessons/${lesson.id}/thumbnail?is_public=${setting.status === 'public'}`).then(async (r) => {
       const file = dataURLToBlob(url, 'image/png')
       uploadImageFile(r.url, file)
     }).catch(e => {
