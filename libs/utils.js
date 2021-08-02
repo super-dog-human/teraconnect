@@ -14,6 +14,17 @@ export function filterObject(obj, keys) {
     }, {})
 }
 
+export function exceptObject(obj, keys) {
+  return  Object.keys(obj)
+    .filter(key => !keys.includes(key))
+    .reduce((newObj, key) => {
+      return {
+        ...newObj,
+        [key]: obj[key]
+      }
+    }, {})
+}
+
 export function pickFromArray(array) {
   return array[Math.floor(Math.random() * array.length)]
 }

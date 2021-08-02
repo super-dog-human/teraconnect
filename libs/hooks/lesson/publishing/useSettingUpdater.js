@@ -3,7 +3,7 @@ import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 import useFetch from '../../useFetch'
 import { putFile } from '../../../fetch'
 import { dataURLToBlob } from '../../../graphicUtils'
-import { filterObject } from '../../../utils'
+import { filterObject, exceptObject } from '../../../utils'
 import { updateGeneralSettingCache } from '../../../localStorageUtil'
 
 const sampleJapaneseText = '合成音声のサンプルです'
@@ -54,9 +54,10 @@ export default function useSettingUpdater({ lesson, material, bgImages }) {
     case 'status':
     case 'prevLessonID':
     case 'nextLessonID':
-    case 'avatarID':
     case 'avatarLightColor':
       return { [type]: payload }
+    case 'avatar':
+      return { avatar: payload, avatarID: payload.id }
     case 'subjectID':
       return { subjectID: payload, categoryID: undefined }
     case 'addReference':
@@ -103,12 +104,13 @@ export default function useSettingUpdater({ lesson, material, bgImages }) {
   }
 
   async function updateSetting() {
+    const requestBody = exceptObject(newSettingRef.current, ['avatar', 'backgroundImageURL'])
     const thumbnailURL = newSettingRef.current.thumbnailURL
     if (thumbnailURL && !lesson.hasThumbnail) {
-      newSettingRef.current.hasThumbnail = true
+      requestBody.hasThumbnail = true
     }
 
-    await post(`/lessons/${lesson.id}`, newSettingRef.current, 'PATCH')
+    await post(`/lessons/${lesson.id}`, requestBody, 'PATCH')
       .then(async () => {
         setGeneralSettingToCache()
         newSettingRef.current = {}
@@ -177,7 +179,7 @@ export default function useSettingUpdater({ lesson, material, bgImages }) {
   }
 
   function setGeneralSettingToCache() {
-    const newSetting = filterObject(newSettingRef.current, ['avatarLightColor', 'backgroundImageID', 'backgroundImageURL', 'voiceSynthesisConfig'])
+    const newSetting = filterObject(newSettingRef.current, ['avatar', 'avatarLightColor', 'backgroundImageID', 'backgroundImageURL', 'voiceSynthesisConfig'])
     if (Object.keys(newSetting).length === 0) return
 
     updateGeneralSettingCache(lesson.id, newSetting)

@@ -90,7 +90,7 @@ export default function useLessonEditor() {
   async function fetchMaterial() {
     const material = await fetchWithAuth(`/lessons/${lessonRef.current.id}/materials/${lessonRef.current.materialID}`)
 
-    setGeneralSetting(filterObject(material, ['avatarLightColor', 'backgroundImageID', 'backgroundImageURL', 'voiceSynthesisConfig']))
+    setGeneralSetting(filterObject(material, ['avatar', 'avatarLightColor', 'backgroundImageID', 'backgroundImageURL', 'voiceSynthesisConfig']))
     setAvatars(material.avatars || [])
     setDrawings(material.drawings || [])
     setEmbeddings(material.embeddings || [])

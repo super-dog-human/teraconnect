@@ -124,7 +124,7 @@ export default function useLessonPublishing({ lesson, material, setFormValue, ha
     const avatarID = parseInt(e.target.value)
     const avatar = avatars.find(a => a.id === avatarID)
     setAvatarConfig({ avatar })
-    dispatchSetting({ type: 'avatarID', payload: avatarID })
+    dispatchSetting({ type: 'avatar', payload: avatar })
   }
 
   function handleColorChange(color) {
