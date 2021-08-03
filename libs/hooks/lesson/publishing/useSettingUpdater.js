@@ -97,7 +97,6 @@ export default function useSettingUpdater({ lesson, material, bgImages }) {
     setIsUpdated(false)
 
     if (isUpdating) return
-    if (Object.values(newSettingRef.current).length === 0) return
 
     setIsUpdating(true)
     updateSetting()
@@ -109,8 +108,10 @@ export default function useSettingUpdater({ lesson, material, bgImages }) {
     if (thumbnailURL && !setting.thumbnailURL) {
       requestBody.hasThumbnail = true
     }
+    console.log('thumbnailURL', thumbnailURL)
+    console.log('setting.thumbnailURL', setting.thumbnailURL)
 
-    await post(`/lessons/${lesson.id}?move_thumbnail=${!thumbnailURL && !!setting.thumbnailURL}`, requestBody, 'PATCH')
+    await post(`/lessons/${lesson.id}?move_thumbnail=${!!thumbnailURL && !!setting.thumbnailURL}`, requestBody, 'PATCH')
       .then(async () => {
         setGeneralSettingToCache()
         newSettingRef.current = {}
@@ -118,9 +119,7 @@ export default function useSettingUpdater({ lesson, material, bgImages }) {
         if (thumbnailURL) {
           uploadThumbnail(thumbnailURL)
         } else {
-          newSettingRef.current = {}
-          setIsUpdating(false)
-          setIsUpdated(true)
+          finalizeUploading()
         }
       }).catch(e => {
         showError({
@@ -160,8 +159,7 @@ export default function useSettingUpdater({ lesson, material, bgImages }) {
 
   function uploadImageFile(url, file) {
     putFile(url, file, file.type).then(() => {
-      setIsUpdating(false)
-      setIsUpdated(true)
+      finalizeUploading()
     }).catch(e => {
       showError({
         message: 'サムネイルのアップロードに失敗しました。',
@@ -176,6 +174,12 @@ export default function useSettingUpdater({ lesson, material, bgImages }) {
       })
       console.error(e)
     })
+  }
+
+  function finalizeUploading() {
+    newSettingRef.current = {}
+    setIsUpdating(false)
+    setIsUpdated(true)
   }
 
   function setGeneralSettingToCache() {
