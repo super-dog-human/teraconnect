@@ -1,11 +1,13 @@
+/** @jsxImportSource @emotion/react */
 import React, { useState } from 'react'
+import { css } from '@emotion/core'
 import Image from 'next/image'
 import Container from '../../container'
 import LoadingIndicator from '../../loadingIndicator'
 import AbsoluteContainer from '../../absoluteContainer'
 import ColorFilter from '../../colorFilter'
 
-const GraphicThumbnail = React.memo(function graphicThumbnail({ url, isProcessing=false }) {
+const GraphicThumbnail = React.memo(function graphicThumbnail({ url, isProcessing=false, isServerCaching=false }) {
   const [isLoaded, setIsLoaded] = useState(false)
 
   function handleLoad() {
@@ -14,8 +16,11 @@ const GraphicThumbnail = React.memo(function graphicThumbnail({ url, isProcessin
 
   return (
     <Container position='relative' width='175' height='100'>
-      {url &&
+      {url && isServerCaching &&
         <Image src={url} width="175" height="100" objectFit="contain" draggable={false} onLoad={handleLoad} />
+      }
+      {url && !isServerCaching &&
+        <img src={url} css={imageStyle} draggable={false} onLoad={handleLoad}/>
       }
       {(!isLoaded || isProcessing) &&
         <AbsoluteContainer top='0' left='0'>
@@ -26,6 +31,12 @@ const GraphicThumbnail = React.memo(function graphicThumbnail({ url, isProcessin
       }
     </Container>
   )
+})
+
+const imageStyle = css({
+  width: '175px',
+  height: '100px',
+  objectFit: 'contain',
 })
 
 export default GraphicThumbnail
