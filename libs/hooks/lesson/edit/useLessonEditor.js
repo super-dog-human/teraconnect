@@ -182,8 +182,7 @@ export default function useLessonEditor() {
       return parseFloat(elapsedTime) + maxDurationSec
     }))
 
-    // タイムラインでは小数点以下の秒数を切り捨てで表示するが、合計収録時間は繰り上げで表示する
-    setDurationSec(Math.round(totalDurationSec))
+    setDurationSec(totalDurationSec)
   }
 
   function updateTimeline() {

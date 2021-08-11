@@ -12,7 +12,7 @@ export default function DurationTime() {
       {durationSec && <>
         <span css={labelStyle}>収録時間</span>
         <span css={elapsedTimeStyle}>
-          {floatSecondsToMinutesFormat(durationSec)}
+          {floatSecondsToMinutesFormat(Math.round(durationSec))}
         </span>
       </>}
     </div>

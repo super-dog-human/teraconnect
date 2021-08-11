@@ -16,7 +16,7 @@ export default function useLessonUpdater({ lessonID, isLoading, clearDiffFlag, c
   const isLoadedRef = useRef(false)
   const uploadableResourceRef = useRef({})
   const [isUpdating, setIsUpdating] = useState(false)
-  const { lesson, avatars, embeddings, graphics, drawings, musics, speeches } = useLessonEditorContext()
+  const { lesson, avatars, embeddings, graphics, drawings, musics, speeches, durationSec } = useLessonEditorContext()
   const router = useRouter()
 
   const storeUploadableResource = useCallback(resource => {
@@ -57,6 +57,7 @@ export default function useLessonUpdater({ lessonID, isLoading, clearDiffFlag, c
   function uploadToRemote() {
     setIsUpdating(true)
 
+    uploadableResourceRef.current.durationSec = durationSec
     post(`/lessons/${lesson.id}/materials/${lesson.materialID}`, uploadableResourceRef.current, 'PATCH').then(() => {
       uploadableResourceRef.current = {}
       clearDiffFlag()
