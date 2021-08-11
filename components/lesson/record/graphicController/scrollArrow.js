@@ -9,6 +9,7 @@ function easeOutSine(x) {
 }
 
 export default function ScrollArrow({ direction, targetRef }) {
+  const initializedRef = useRef(false)
   const isHoverRef = useRef(false)
   const animationIDRef = useRef()
   const offsetLeftRef = useRef()
@@ -70,10 +71,13 @@ export default function ScrollArrow({ direction, targetRef }) {
   })
 
   useEffect(() => {
+    if (initializedRef.current) false
+
     targetRef.current.onwheel = (() => {
       cancelAnimationFrame(animationIDRef.current)
     })
-  }, [])
+    initializedRef.curret = true
+  }, [initializedRef, targetRef])
 
   return (
     <button css={buttonStyle} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave}>

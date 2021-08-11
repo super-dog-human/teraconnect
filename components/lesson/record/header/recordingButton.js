@@ -45,7 +45,7 @@ export default function RecordingButton({ lessonID, isMicReady }) {
       setHasRecordingStarted(true)
     }
 
-  }, [isMicReady, elapsedSeconds])
+  }, [isMicReady, elapsedSeconds, setIsRecordable, switchCounter, setIsRecording, setHasRecordingStarted])
 
   const finishRecordingStyle = css({
     width: '140px',

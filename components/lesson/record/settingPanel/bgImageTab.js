@@ -15,17 +15,17 @@ export default function BgImageTab({ images, setImageURL }) {
 
   useEffect(() => {
     // パネルが開かれるのはimageURLsのロード後
-    if (images.length > 0 && options.length === 0) {
-      setOptions(images.map(img => (
-        {
-          value: img.id,
-          label: img.name,
-        }
-      )))
+    if (images.length === 0 || options.length > 0) return
 
-      setRecord({ kind: 'backgroundImageID', value: images[0].id })
-    }
-  }, [images])
+    setOptions(images.map(img => (
+      {
+        value: img.id,
+        label: img.name,
+      }
+    )))
+
+    setRecord({ kind: 'backgroundImageID', value: images[0].id })
+  }, [images, options.length, setOptions, setRecord])
 
   return (
     <ContainerSpacer top='30' left='50' right='50'>

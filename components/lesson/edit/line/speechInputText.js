@@ -7,7 +7,7 @@ const SpeechInputText = React.forwardRef(function speechInputText({ defaultValue
   useEffect(() => {
     if (!shouldFocus) return
     ref.current.focus()
-  }, [])
+  }, [shouldFocus, ref])
 
   return (
     <div css={bodyStyle}>

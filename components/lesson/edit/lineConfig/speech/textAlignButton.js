@@ -17,7 +17,7 @@ export default function TextAlignButton({ align, value, onClick }) {
     } else {
       setIsSelected(false)
     }
-  }, [value])
+  }, [align, value])
 
   return (
     <Container width='28' height='28'>

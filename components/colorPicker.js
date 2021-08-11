@@ -19,7 +19,7 @@ export default function ColorPicker({ initialColor, size, onChange, showColorCod
 
   useEffect(() => {
     onChange(color)
-  }, [color])
+  }, [color, onChange])
 
   const pickerStyle = css({
     '.react-colorful': {

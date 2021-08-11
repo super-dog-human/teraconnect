@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { css } from '@emotion/core'
 import { RgbaColorPicker } from 'react-colorful'
 import 'react-colorful/dist/index.css'
@@ -13,6 +13,7 @@ import PlainText from '../../../plainText'
 import { useLessonRecorderContext } from '../../../../libs/contexts/lessonRecorderContext'
 
 export default function AvatarTab({ avatars, setConfig }) {
+  const initializedRef = useRef(false)
   const [selectOptions, setSelectOptions] = useState([])
   const [lightColor, setLightColor] = useState({ r: 255, g: 255, b: 255, a: 0.5 })
   const { setRecord } = useLessonRecorderContext()
@@ -34,23 +35,25 @@ export default function AvatarTab({ avatars, setConfig }) {
   }
 
   useEffect(() => {
+    if (initializedRef.current) return
     setConfig({ lightColor })
-  }, [])
+    initializedRef.current = true
+  }, [setConfig, lightColor])
 
   useEffect(() => {
-    if (avatars.length > 0 && selectOptions.length === 0) {
-      setSelectOptions(avatars.map(avatar => (
-        {
-          value: avatar.id,
-          label: avatar.name,
-        }
-      )))
+    if (avatars.length === 0 || selectOptions.length > 0) return
 
-      setConfig({ avatar: avatars[0] })
-      setRecord({ kind: 'avatarID', value: avatars[0].id })
-      setRecord({ kind: 'avatarLightColor', value: lightColor })
-    }
-  }, [avatars])
+    setSelectOptions(avatars.map(avatar => (
+      {
+        value: avatar.id,
+        label: avatar.name,
+      }
+    )))
+
+    setConfig({ avatar: avatars[0] })
+    setRecord({ kind: 'avatarID', value: avatars[0].id })
+    setRecord({ kind: 'avatarLightColor', value: lightColor })
+  }, [avatars, selectOptions.length, lightColor, setConfig, setRecord])
 
   return (
     <ContainerSpacer top='30' left='50' right='50'>

@@ -1,16 +1,12 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState, useEffect } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { css } from '@emotion/core'
 import PlainText from '../../../plainText'
 
 export default function ActionLabel({ kind, action }) {
   const [label, setLabel] = useState('')
 
-  useEffect(() => {
-    setLabel(labelByKind())
-  }, [kind, action])
-
-  function labelByKind() {
+  const labelByKind = useCallback(() => {
     switch(kind) {
     case 'avatar':
       return avatarLabel()
@@ -23,13 +19,13 @@ export default function ActionLabel({ kind, action }) {
     case 'music':
       return musicLabel()
     }
-  }
+  }, [kind, avatarLabel, drawingLabel, embeddingLabel, graphicLabel, musicLabel])
 
-  function avatarLabel() {
+  const avatarLabel = useCallback(() => {
     return 'アバター移動'
-  }
+  }, [])
 
-  function drawingLabel() {
+  const drawingLabel = useCallback(() => {
     switch(action) {
     case 'clear':
       return '板書のクリア'
@@ -38,33 +34,37 @@ export default function ActionLabel({ kind, action }) {
     case 'hide':
       return '板書の非表示'
     }
-  }
+  }, [action])
 
-  function embeddingLabel() {
+  const embeddingLabel = useCallback(() => {
     switch(action) {
     case 'show':
       return '埋め込み動画の表示'
     case 'hide':
       return '埋め込み動画の非表示'
     }
-  }
+  }, [action])
 
-  function graphicLabel() {
+  const graphicLabel = useCallback(() => {
     if (action === 'hide') {
       return '画像の非表示'
     } else {
       return ''
     }
-  }
+  }, [action])
 
-  function musicLabel() {
+  const musicLabel = useCallback(() => {
     switch(action) {
     case 'start':
       return 'BGMの開始'
     case 'stop':
       return 'BGMの停止'
     }
-  }
+  }, [action])
+
+  useEffect(() => {
+    setLabel(labelByKind())
+  }, [kind, action, labelByKind])
 
   return (
     <div css={bodyStyle}>

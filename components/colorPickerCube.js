@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useCallback, useEffect } from 'react'
 import { css } from '@emotion/core'
 import ColorPicker from './colorPicker'
 import Spacer from './spacer'
@@ -19,13 +19,13 @@ export default function ColorPickerCube({ initialColor, isBorder=false, size=0, 
     window.addEventListener('click', handleBackgroundClick, { passive: false })
   }
 
-  function handleBackgroundClick(e) {
+  const handleBackgroundClick = useCallback(e => {
     if (e === clickEventRef.current) return
     if (unmountRef.current) return // 閉じるボタンなどのクリックでコンポーネントごとunmoutされた場合
 
     setIsPickerShow(false)
     window.removeEventListener('click', handleBackgroundClick)
-  }
+  }, [unmountRef])
 
   function handleColorChange(color) {
     setColor(color)
@@ -36,7 +36,7 @@ export default function ColorPickerCube({ initialColor, isBorder=false, size=0, 
     return () => {
       window.removeEventListener('click', handleBackgroundClick)
     }
-  }, [])
+  }, [handleBackgroundClick])
 
   const buttonStyle = css({
     backgroundColor: isBorder ? 'white' : color,

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useRef, useEffect } from 'react'
 import Flex from '../../../flex'
 import Container from '../../../container'
 import ContainerSpacer from '../../../containerSpacer'
@@ -12,6 +12,7 @@ import useAudioInputDevices from '../../../../libs/hooks/useAudioInputDevices'
 import AlignContainer from '../../../alignContainer'
 
 export default function VoiceRecorderTab({ setMicDeviceID, setSilenceThresholdSec, isShowVoiceSpectrum, silenceThresholdSec, setIsShowVoiceSpectrum }) {
+  const initializedRef = useRef(false)
   const { deviceOptions, requestMicPermission } = useAudioInputDevices()
 
   function handleThresholdChange(e) {
@@ -28,9 +29,11 @@ export default function VoiceRecorderTab({ setMicDeviceID, setSilenceThresholdSe
 
   useEffect(() => {
     if (deviceOptions.length === 0) return
+    if (initializedRef.current) return
 
     setMicDeviceID(deviceOptions[0].value)
-  }, [deviceOptions])
+    initializedRef.current = true
+  }, [deviceOptions, setMicDeviceID])
 
   return (
     <ContainerSpacer top='30' left='50' right='50'>
