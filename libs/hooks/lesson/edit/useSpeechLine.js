@@ -29,9 +29,9 @@ export default function useSpeechLine({ speech, index, handleEditClick }) {
     const url = speechURLs[speech.voiceID]
     if (url) {
       createAudio(url)
-    } else if (speech.isSynthesis && text) {
+    } else if (!speech.voiceID && speech.isSynthesis && text) {
       await setNewSynthesisVoice(text)
-    } else if (!speech.isSynthesis) {
+    } else if (speech.voiceID) {
       const voice = await fetchVoiceFileURL(speech.voiceID, lessonIDRef.current)
       createAudio(voice.url)
       updateSpeechURL(null, { [speech.voiceID]: voice.url })
