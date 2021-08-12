@@ -1,4 +1,4 @@
-runtime: nodejs12
+runtime: nodejs14
 service: default
 automatic_scaling:
   min_instances: 1
