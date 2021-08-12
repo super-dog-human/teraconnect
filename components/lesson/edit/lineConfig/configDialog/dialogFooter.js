@@ -1,23 +1,23 @@
-import React, { useRef } from 'react'
+import React, { useState } from 'react'
 import Spacer from '../../../../spacer'
 import Flex from '../../../../flex'
 import DialogButton from './dialogButton'
 import DialogElapsedTime from './dialogElapsedTime'
 
 export default function DialogFooter({ elapsedTime, dispatchConfig, onCancel, onConfirm, isProcessing, disabled }) {
-  const changeElapsedTimeCheckboxRef = useRef()
+  const [isCheckChangingElapsedTime, setIsCheckChangingElapsedTime] = useState(true)
+
+  function handleElapsedTimeCheckingChange(e) {
+    setIsCheckChangingElapsedTime(e.currentTarget.checked)
+  }
 
   function handleConfirm() {
-    if (changeElapsedTimeCheckboxRef.current) {
-      onConfirm(changeElapsedTimeCheckboxRef.current.checked)
-    } else {
-      onConfirm(false)
-    }
+    onConfirm(isCheckChangingElapsedTime)
   }
 
   return (
     <Flex justifyContent='space-between' alignItems='center'>
-      <DialogElapsedTime elapsedTime={elapsedTime} dispatchConfig={dispatchConfig} ref={changeElapsedTimeCheckboxRef}/>
+      <DialogElapsedTime elapsedTime={elapsedTime} dispatchConfig={dispatchConfig} isCheck={isCheckChangingElapsedTime} onCheckingChange={handleElapsedTimeCheckingChange} />
       <Flex justifyContent='space-between'>
         <DialogButton onClick={onCancel} disabled={isProcessing || disabled} kind="cancel" label='キャンセル' />
         <Spacer width='30' />
