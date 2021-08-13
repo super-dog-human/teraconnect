@@ -27,11 +27,11 @@ export default function useLessonEditor() {
   const [speechURLs, setSpeechURLs] = useState({})
   const { fetchWithAuth, post } = useFetch()
   const { showError } = useErrorDialogContext()
-  const { shiftElapsedTime, updateMaterial, deleteMaterial, lastTimeline, sortedElapsedTimes, maxDurationSecInLine, nextElapsedTime, calcTime, targetMaterial, allMaterialNames, allMaterials } =
+  const { shiftElapsedTime, updateMaterial, deleteMaterial, lastTimeline, sortedElapsedTimes, maxDurationSecInLine, nextElapsedTime, nextElapsedTimeByKind, calcTime, targetMaterial, allMaterialNames, allMaterials } =
     useLineUtils({ avatars, drawings, embeddings, graphics, musics, speeches, setAvatars, setDrawings, setEmbeddings, setGraphics, setSpeeches, setMusics, timeline })
   const { addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast } =
     useAddingLine({ lessonRef, durationSec, targetMaterial })
-  const { updateLine } = useUpdatingLine({ shiftElapsedTime, updateMaterial, targetMaterial })
+  const { updateLine } = useUpdatingLine({ shiftElapsedTime, nextElapsedTimeByKind, updateMaterial, targetMaterial })
   const { deleteLine } = useDeletionLine({ shiftElapsedTime, nextElapsedTime, deleteMaterial, targetMaterial, allMaterialNames })
   const { swapLine } = useSwappingLine({ lastTimeline, sortedElapsedTimes, maxDurationSecInLine, calcTime, targetMaterial, allMaterialNames })
 

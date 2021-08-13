@@ -68,6 +68,10 @@ export default function useLineUtils({ avatars, drawings, embeddings, graphics, 
     return isFinite(time) ? time : null // Math.minに空配列を渡すとInifinityが返るのでnullにする
   }
 
+  function nextElapsedTimeByKind(elapsedTime, kind) {
+    return Math.min(...targetMaterial(kind).materials.map(m => m.elapsedTime).filter(e => e > elapsedTime))
+  }
+
   function calcTime(currentValue, offsetTime) {
     return parseFloat((currentValue + offsetTime).toFixed(3))
   }
@@ -98,5 +102,5 @@ export default function useLineUtils({ avatars, drawings, embeddings, graphics, 
   }
 
   return { shiftElapsedTime, updateMaterial, deleteMaterial, lastTimeline, sortedElapsedTimes, maxDurationSecInLine,
-    nextElapsedTime, calcTime, targetMaterial, allMaterialNames, allMaterials }
+    nextElapsedTime, nextElapsedTimeByKind, calcTime, targetMaterial, allMaterialNames, allMaterials }
 }

@@ -1,4 +1,4 @@
-export default function useUpdatingLine({ shiftElapsedTime, updateMaterial, targetMaterial }) {
+export default function useUpdatingLine({ shiftElapsedTime, nextElapsedTimeByKind, updateMaterial, targetMaterial }) {
   function updateLine({ kind, index, elapsedTime, newValue, changeAfterLineElapsedTime }) {
     const { materials, setter } = targetMaterial(kind)
     const currentValue = materials.filter(m => m.elapsedTime === elapsedTime)[index]
@@ -12,7 +12,13 @@ export default function useUpdatingLine({ shiftElapsedTime, updateMaterial, targ
     if (elapsedDiff !== 0 && changeAfterLineElapsedTime) {
       shiftElapsedTime({ fromElapsedTime: newValue.elapsedTime, offsetTime: durationDiff + elapsedDiff })
     } else if (durationDiff !== 0) {
-      shiftElapsedTime({ fromElapsedTime: newValue.elapsedTime, offsetTime: durationDiff })
+      const nextElapsedTime = nextElapsedTimeByKind(newValue.elapsedTime, kind)
+      const endTime = newValue.elapsedTime + newValue.durationSec
+      if (nextElapsedTime <= endTime) { // 後続の行との時間重複があれば解消する
+        shiftElapsedTime({ fromElapsedTime: newValue.elapsedTime, offsetTime: endTime - nextElapsedTime + 0.001 })
+      } else {
+        shiftElapsedTime({ fromElapsedTime: newValue.elapsedTime, offsetTime: durationDiff })
+      }
     }
   }
 
