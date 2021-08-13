@@ -47,7 +47,6 @@ export default function useSettingUpdater({ lesson, material, bgImages }) {
 
   function newSetting({ state, type, payload }) {
     switch (type) {
-    case 'thumbnailURL':
     case 'title':
     case 'description':
     case 'categoryID':
@@ -56,6 +55,8 @@ export default function useSettingUpdater({ lesson, material, bgImages }) {
     case 'nextLessonID':
     case 'avatarLightColor':
       return { [type]: payload }
+    case 'thumbnailURL':
+      return { thumbnailURL: payload, hasThumbnail: true }
     case 'avatar':
       return { avatar: payload, avatarID: payload.id }
     case 'subjectID':
@@ -103,15 +104,16 @@ export default function useSettingUpdater({ lesson, material, bgImages }) {
   }
 
   async function updateSetting() {
+    // サムネイル設定済みの場合、公開範囲の変更でサムネイルの移動が必要になる。サムネイルも一緒に更新する場合は移動不要
+    const needMoveThumbnail = newSettingRef.current.status && !newSettingRef.current.thumbnailURL && setting.hasThumbnail
+
     const requestBody = exceptObject(newSettingRef.current, ['avatar', 'backgroundImageURL'])
     const thumbnailURL = newSettingRef.current.thumbnailURL
-    if (thumbnailURL && !setting.thumbnailURL) {
+    if (thumbnailURL) {
       requestBody.hasThumbnail = true
     }
-    console.log('thumbnailURL', thumbnailURL)
-    console.log('setting.thumbnailURL', setting.thumbnailURL)
 
-    await post(`/lessons/${lesson.id}?move_thumbnail=${!!thumbnailURL && !!setting.thumbnailURL}`, requestBody, 'PATCH')
+    await post(`/lessons/${lesson.id}?move_thumbnail=${needMoveThumbnail}`, requestBody, 'PATCH')
       .then(async () => {
         setGeneralSettingToCache()
         newSettingRef.current = {}

@@ -138,7 +138,7 @@ export default function useLessonPublishing({ lesson, material, setFormValue, ha
     const payload = {
       categoryID: lesson.japaneseCategoryID,
       references: lesson.references || [],
-      ...filterObject(lesson, ['thumbnailURL', 'title', 'subjectID', 'status', 'prevLessonID', 'nextLessonID']),
+      ...filterObject(lesson, ['hasThumbnail', 'thumbnailURL', 'title', 'subjectID', 'status', 'prevLessonID', 'nextLessonID']),
       ...filterObject(material, ['avatarID', 'avatarLightColor', 'backgroundImageID', 'backgroundImageURL', 'voiceSynthesisConfig']),
     }
     dispatchSetting({ type: 'initialize', payload })
