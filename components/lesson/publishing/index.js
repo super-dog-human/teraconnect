@@ -8,7 +8,6 @@ import useResourceLoader from '../../../libs/hooks/lesson/publishing/useResource
 import useLessonPublishing from '../../../libs/hooks/lesson/publishing/useLessonPublishing'
 import useSynthesisVoiceEditor from '../../../libs/hooks/lesson/useSynthesisVoiceEditor'
 import useSettingUpdater from '../../../libs/hooks/lesson/publishing/useSettingUpdater'
-import { isDataURL } from '../../../libs/utils'
 import Header from '../../authoringHeader'
 import Container from '../../container'
 import ContainerSpacer from '../../containerSpacer'
@@ -68,8 +67,7 @@ export default function LessonPublishing({ lesson, material }) {
                   <Aspect16To9Container>
                     <AbsoluteContainer top='0' left='0'>
                       <Container width='300' height='169'>
-                        {setting.thumbnailURL && !isDataURL(setting.thumbnailURL) && <Image src={setting.thumbnailURL} width={960} height={540} objectFit='contain' />}
-                        {setting.thumbnailURL && isDataURL(setting.thumbnailURL) && <img src={setting.thumbnailURL} css={thumbnailStyle} />}
+                        {setting.thumbnailURL && <img src={setting.thumbnailURL} alt='授業のサムネイル画像' css={thumbnailStyle} />}
                         {!setting.thumbnailURL && <NoImage textSize='16' color='gray' backgroundColor='lightgray' />}
                       </Container>
                     </AbsoluteContainer>
