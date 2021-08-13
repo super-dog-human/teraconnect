@@ -21,7 +21,7 @@ import LessonRandomTips from '../randomTips'
 import VoiceSpectrum from '../../voiceSpectrum'
 import { addPreventSwipeEvent, removePreventSwipeEvent } from '../../../libs/utils'
 
-const LessonRecord = React.forwardRef(function lessonRecord({ lesson, hasResize }, ref) {
+const LessonRecord = React.forwardRef(function LessonRecord({ lesson, hasResize }, ref) {
   const drawingRef = useRef()
   const [isLoading, setIsLoading] = useState(true)
   const [bgImageURL, setBgImageURL] = useState()

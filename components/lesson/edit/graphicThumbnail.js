@@ -7,7 +7,7 @@ import LoadingIndicator from '../../loadingIndicator'
 import AbsoluteContainer from '../../absoluteContainer'
 import ColorFilter from '../../colorFilter'
 
-const GraphicThumbnail = React.memo(function graphicThumbnail({ url, isProcessing=false, isServerCaching=false }) {
+const GraphicThumbnail = React.memo(function GraphicThumbnail({ url, isProcessing=false, isServerCaching=false }) {
   const [isLoaded, setIsLoaded] = useState(false)
 
   function handleLoad() {

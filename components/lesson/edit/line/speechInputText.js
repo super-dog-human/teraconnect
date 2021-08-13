@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import { css } from '@emotion/core'
 import InputText from '../../../form/inputText'
 
-const SpeechInputText = React.forwardRef(function speechInputText(props, ref) {
+const SpeechInputText = React.forwardRef(function SpeechInputText(props, ref) {
   const { defaultValue, shouldFocus, ...inputProps } = props
 
   useEffect(() => {
