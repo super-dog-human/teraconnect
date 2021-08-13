@@ -23,7 +23,7 @@ export default function LessonEdit({ lesson }) {
   const [isLoading, setIsLoading] = useState(true)
   const { clearDiffFlag, clearCache } = useLessonCacheController({ isLoading, lessonID: lesson.id })
   const { contextMenu, handleDismiss } = useContextMenuContext()
-  const { fetchResources, timeline } = useLessonEditorContext()
+  const { isInitialLoading, fetchResources } = useLessonEditorContext()
   const { hasResourceDiff, isUpdating, updateLesson, discardLessonDraft } = useLessonUpdater({ lessonID: lesson.id, isLoading, clearDiffFlag, clearCache })
   useResourceReloader()
 
@@ -63,10 +63,10 @@ export default function LessonEdit({ lesson }) {
   }, [fetchResources, lesson])
 
   useEffect(() => {
-    if (Object.keys(timeline).length > 0) {
+    if (!isInitialLoading) {
       setIsLoading(false)
     }
-  }, [timeline])
+  }, [isInitialLoading])
 
   return (
     <>

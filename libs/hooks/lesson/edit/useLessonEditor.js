@@ -203,7 +203,7 @@ export default function useLessonEditor() {
     updateTimeline()
   }, allMaterials())
 
-  return { lesson: lessonRef.current, fetchResources, durationSec, timeline, generalSetting, setGeneralSetting,
+  return { isInitialLoading, lesson: lessonRef.current, fetchResources, durationSec, timeline, generalSetting, setGeneralSetting,
     avatars, drawings, embeddings, graphics, graphicURLs, musics, musicURLs, setMusicURLs, speeches, speechURLs, setSpeechURLs, setEmbeddings, setGraphics, setGraphicURLs,
     updateLine, deleteLine, swapLine, addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast }
 }
