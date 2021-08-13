@@ -1,4 +1,4 @@
-export default function useAddingLine({ lessonRef, maxDurationSecInLine, lastTimeline, targetMaterial }) {
+export default function useAddingLine({ lessonRef, durationSec, targetMaterial }) {
   function addAvatarLine(elapsedTime) {
     const avatar = {
       durationSec: 0,
@@ -38,16 +38,13 @@ export default function useAddingLine({ lessonRef, maxDurationSecInLine, lastTim
   }
 
   function addSpeechLineToLast() {
-    const line = lastTimeline()
-    const lastElapsedTime = line[Object.keys(line)[0]][0].elapsedTime
+    let elapsedTime = Math.ceil(durationSec) // 収録の総時間を繰り上げしたものを自身の開始時間とする
+    if (elapsedTime === durationSec) {
+      elapsedTime += 1.0
+    }
 
-    let durationSec = maxDurationSecInLine(line)
-    if (durationSec === 0) durationSec = 1.0
-
-    const newElapsedTime = parseFloat((lastElapsedTime + durationSec).toFixed(3))
-    if (newElapsedTime > 600.0) return
-
-    const newSpeech = newBlankSpeech(newElapsedTime)
+    if (elapsedTime > 600.0) return
+    const newSpeech = newBlankSpeech(elapsedTime)
     targetMaterial('speech').setter(speeches => [...speeches, newSpeech])
   }
 
