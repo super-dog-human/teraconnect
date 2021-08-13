@@ -3,7 +3,9 @@ import React, { useEffect } from 'react'
 import { css } from '@emotion/core'
 import InputText from '../../../form/inputText'
 
-const SpeechInputText = React.forwardRef(function speechInputText({ defaultValue, onKeyDown, onBlur, readOnly, shouldFocus }, ref) {
+const SpeechInputText = React.forwardRef(function speechInputText(props, ref) {
+  const { defaultValue, shouldFocus, ...inputProps } = props
+
   useEffect(() => {
     if (!shouldFocus) return
     ref.current.focus()
@@ -12,7 +14,7 @@ const SpeechInputText = React.forwardRef(function speechInputText({ defaultValue
   return (
     <div css={bodyStyle}>
       <InputText key={defaultValue} ref={ref} size='14' color='var(--dark-gray)' borderColor='var(--dark-purple)' borderWidth='0'
-        defaultValue={defaultValue} onKeyDown={onKeyDown} onBlur={onBlur} readOnly={readOnly} />
+        defaultValue={defaultValue} {...inputProps} />
     </div>
   )
 })

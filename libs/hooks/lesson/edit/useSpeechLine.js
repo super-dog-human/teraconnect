@@ -6,6 +6,8 @@ import { findNextElement } from '../../../utils'
 import { fetchVoiceFileURL } from '../../../fetchResource'
 import { useRouter } from 'next/router'
 
+let globalInputting = {}
+
 export default function useSpeechLine({ speech, index, handleEditClick }) {
   const router = useRouter()
   const lessonIDRef = useRef(parseInt(router.query.id))
@@ -57,6 +59,10 @@ export default function useSpeechLine({ speech, index, handleEditClick }) {
     }
   }
 
+  function handleInputChange(e) {
+    globalInputting = { index, speech, text: e.target.value }
+  }
+
   async function setNewSynthesisVoice(text) {
     speech.subtitle = text
     const voice = await createSynthesisVoiceFile({ lessonID: lessonIDRef.current, subtitle: speech.subtitle, synthesisConfig: speech.synthesisConfig })
@@ -65,7 +71,7 @@ export default function useSpeechLine({ speech, index, handleEditClick }) {
     createAudio(voice.url, async audio => {
       speech.durationSec = parseFloat(audio.duration.toFixed(3))
       speech.voiceID = voice.id
-      updateLine({ kind: 'speech', index, elapsedTime: speech.elapsedTime, newValue: speech })
+      updateSpeechLine(speech.elapsedTime, speech)
     })
   }
 
@@ -76,7 +82,7 @@ export default function useSpeechLine({ speech, index, handleEditClick }) {
     })
   }
 
-  async function handleTextBlur(e) {
+  async function handleInputBlur(e) {
     const text = e.target.value
     if (text === speech.subtitle) return
 
@@ -89,10 +95,28 @@ export default function useSpeechLine({ speech, index, handleEditClick }) {
       updateSpeechURL(speech.voiceID)
       speech.durationSec = 0
       speech.voiceID = 0
-      updateLine({ kind: 'speech', index, elapsedTime: speech.elapsedTime, newValue: speech })
+      updateSpeechLine(speech.elapsedTime, speech)
     } else {
-      updateLine({ kind: 'speech', index, elapsedTime: speech.elapsedTime, newValue: speech })
+      updateSpeechLine(speech.elapsedTime, speech)
     }
+  }
+
+  function updateInputtingSpeechIfNeeded() {
+    if (Object.keys(globalInputting).length === 0) return
+
+    // 入力中の行がupdateで消えてしまわないように、subtitleだけで先に更新する
+    if (speech.elapsedTime !== globalInputting.speech.elapsedTime || index !== globalInputting.index) {
+      const newSpeech = globalInputting.speech
+      newSpeech.subtitle = globalInputting.text
+      updateLine({ kind: 'speech', index, elapsedTime: newSpeech.elapsedTime, newValue: newSpeech })
+    }
+
+    globalInputting = {}
+  }
+
+  function updateSpeechLine(elapsedTime, newValue) {
+    updateInputtingSpeechIfNeeded()
+    updateLine({ kind: 'speech', index, elapsedTime, newValue })
   }
 
   function handleSpeechButtonClick() {
@@ -117,5 +141,5 @@ export default function useSpeechLine({ speech, index, handleEditClick }) {
     }
   }, [speech])
 
-  return { isLoading, isPlaying, inputRef, status, handleSpeechButtonClick, handleEditButtonClick, handleSpeechClick, handleInputKeyDown, handleTextBlur }
+  return { isLoading, isPlaying, inputRef, status, handleSpeechButtonClick, handleEditButtonClick, handleSpeechClick, handleInputKeyDown, handleInputChange, handleInputBlur }
 }
