@@ -1,15 +1,10 @@
 /** @jsxImportSource @emotion/react */
-import React, { useEffect } from 'react'
+import React from 'react'
 import { css } from '@emotion/core'
 import InputText from '../../../form/inputText'
 
 const SpeechInputText = React.forwardRef(function SpeechInputText(props, ref) {
-  const { defaultValue, shouldFocus, ...inputProps } = props
-
-  useEffect(() => {
-    if (!shouldFocus) return
-    ref.current.focus()
-  }, [shouldFocus, ref])
+  const { defaultValue, ...inputProps } = props
 
   return (
     <div css={bodyStyle}>

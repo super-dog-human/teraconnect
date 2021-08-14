@@ -96,10 +96,10 @@ export function mouseOrTouchPositions(e, touchEventNames) {
   }
 }
 
-export function findNextElement(origin, tagName, callback) {
+export function findNextInputElement(origin, type, callback) {
   let next = origin.nextElementSibling
   while(next) {
-    let nexts = next.getElementsByTagName(tagName)
+    let nexts = next.querySelectorAll(`input[type=${type}]`)
     if (nexts.length > 0) {
       callback(nexts)
       break

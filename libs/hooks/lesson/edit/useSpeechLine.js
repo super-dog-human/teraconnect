@@ -2,20 +2,20 @@ import { useState, useRef, useEffect } from 'react'
 import { useLessonEditorContext } from '../../../contexts/lessonEditorContext'
 import useAudioPlayer from '../../useAudioPlayer'
 import useSynthesisVoice from '../../useSynthesisVoice'
-import { findNextElement } from '../../../utils'
+import { findNextInputElement } from '../../../utils'
 import { fetchVoiceFileURL } from '../../../fetchResource'
 import { useRouter } from 'next/router'
 
-let globalInputting = {}
+let globalFocus = {}
 
-export default function useSpeechLine({ speech, index, handleEditClick }) {
+export default function useSpeechLine({ speech, index, lineIndex, handleEditClick }) {
   const router = useRouter()
   const lessonIDRef = useRef(parseInt(router.query.id))
   const inputRef = useRef()
   const [isLoading, setIsLoading] = useState(false)
   const [status, setStatus] = useState(true)
   const { isPlaying, createAudio, switchAudio } = useAudioPlayer()
-  const { addSpeechLineToLast, updateLine, speechURLs, setSpeechURLs, generalSetting } = useLessonEditorContext()
+  const { addSpeechLineToLast, updateLine, speechURLs, setSpeechURLs, generalSetting, timeline } = useLessonEditorContext()
   const { createSynthesisVoiceFile } = useSynthesisVoice(generalSetting.voiceSynthesisConfig)
 
   async function handleSpeechClick(text) {
@@ -50,17 +50,18 @@ export default function useSpeechLine({ speech, index, handleEditClick }) {
       current = current.parentNode
     }
 
-    findNextElement(current, 'input', inputs => {
+    findNextInputElement(current, 'text', inputs => {
       inputs[0].focus()
     })
 
     if (document.activeElement === e.target) {
       addSpeechLineToLast() // フォーカスが変わらなかったら最後の行なので、新しい行を追加する
+      globalFocus = { index: 0, lineIndex: Object.keys(timeline).length }
     }
   }
 
   function handleInputChange(e) {
-    globalInputting = { index, speech, text: e.target.value }
+    globalFocus.text = e.target.value
   }
 
   async function setNewSynthesisVoice(text) {
@@ -92,7 +93,7 @@ export default function useSpeechLine({ speech, index, handleEditClick }) {
       await setNewSynthesisVoice(text)
       setIsLoading(false)
     } else if (speech.isSynthesis) {
-      updateSpeechURL(speech.voiceID)
+      updateSpeechURL(speech.voiceID, {})
       speech.durationSec = 0
       speech.voiceID = 0
       updateSpeechLine(speech.elapsedTime, speech)
@@ -101,21 +102,7 @@ export default function useSpeechLine({ speech, index, handleEditClick }) {
     }
   }
 
-  function updateInputtingSpeechIfNeeded() {
-    if (Object.keys(globalInputting).length === 0) return
-
-    // 入力中の行がupdateで消えてしまわないように、subtitleだけで先に更新する
-    if (speech.elapsedTime !== globalInputting.speech.elapsedTime || index !== globalInputting.index) {
-      const newSpeech = globalInputting.speech
-      newSpeech.subtitle = globalInputting.text
-      updateLine({ kind: 'speech', index, elapsedTime: newSpeech.elapsedTime, newValue: newSpeech })
-    }
-
-    globalInputting = {}
-  }
-
   function updateSpeechLine(elapsedTime, newValue) {
-    updateInputtingSpeechIfNeeded()
     updateLine({ kind: 'speech', index, elapsedTime, newValue })
   }
 
@@ -140,6 +127,13 @@ export default function useSpeechLine({ speech, index, handleEditClick }) {
       setStatus(false)
     }
   }, [speech])
+
+  useEffect(() => {
+    if (globalFocus.lineIndex === lineIndex && globalFocus.index === index) {
+      inputRef.current.focus()
+      globalFocus = {}
+    }
+  }, [index, lineIndex])
 
   return { isLoading, isPlaying, inputRef, status, handleSpeechButtonClick, handleEditButtonClick, handleSpeechClick, handleInputKeyDown, handleInputChange, handleInputBlur }
 }

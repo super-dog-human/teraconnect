@@ -57,7 +57,6 @@ export default function useAddingLine({ lessonRef, durationSec, targetMaterial }
       caption: {},
       isSynthesis: !lessonRef.current.needsRecording,
       synthesisConfig: {},
-      isFocus: true,
     }
   }
 

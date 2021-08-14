@@ -42,13 +42,13 @@ export default function Timeline() {
                     timeline[elapsedTime][kind].map((line, kindIndex) => {
                       const hasError = hasDoubleTimeError({ lastTimesRef, elapsedTime, kind, line })
                       return (
-                        <LessonLine key={`${elapsedTime}-${kindIndex}`} kind={kind} hasError={hasError}>
+                        <LessonLine key={`${i}-${kindIndex}`} kind={kind} hasError={hasError}>
                           {kind === 'avatar'    && <LessonLineAvatar avatar={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
                           {kind === 'drawing'   && <LessonLineDrawing drawings={drawings} drawing={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
                           {kind === 'embedding' && <LessonLineEmbedding embedding={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
                           {kind === 'graphic'   && <LessonLineGraphic graphic={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
                           {kind === 'music'     && <LessonLineMusic music={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
-                          {kind === 'speech'    && <LessonLineSpeech speech={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
+                          {kind === 'speech'    && <LessonLineSpeech speech={line} index={kindIndex} lineIndex={i} handleEditClick={handleEditButtonClick} />}
                         </LessonLine>
                       )}
                     ))}
