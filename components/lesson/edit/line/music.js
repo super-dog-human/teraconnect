@@ -3,7 +3,7 @@ import KindIcon from './kindIcon'
 import ActionLabel from './actionLabel'
 import EditIcon from './editIcon'
 
-export default function LessonLineMusic({ music, index, isEditButtonShow, handleEditClick }) {
+export default function LessonLineMusic({ music, index, isEditButtonShow, handleEditClick, isLineProcessing }) {
   function handleEditButtonClick(e) {
     e.stopPropagation()
     handleEditClick(e, 'music', index, music)
@@ -13,7 +13,7 @@ export default function LessonLineMusic({ music, index, isEditButtonShow, handle
     <>
       <KindIcon kind="music" />
       <ActionLabel kind="music" action={music.action} />
-      <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} />
+      <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} isProcessing={isLineProcessing} />
     </>
   )
 }

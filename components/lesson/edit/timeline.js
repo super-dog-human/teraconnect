@@ -16,15 +16,17 @@ import LessonLineGraphic from './line/graphic'
 import LessonLineMusic from './line/music'
 import LessonLineSpeech from './line/speech'
 import useSwappingLine from '../../../libs/hooks/lesson/edit/useSwappingLine'
+import useUpdateSpeechLine from '../../../libs/hooks/lesson/edit/timeline/useUpdatingSpeechLine'
 import useLineConfig from '../../../libs/hooks/lesson/edit/useLineConfig'
 import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorContext'
 
 export default function Timeline() {
   const dropLineRef = useRef()
   const lastTimesRef = useRef({})
-  const { durationSec, timeline, drawings, swapLine } = useLessonEditorContext()
+  const { durationSec, timeline, drawings, swapLine, updateLine } = useLessonEditorContext()
   const { handleDragStart, handleDragEnd, handleDragOver, handleDrop, handleChildDrop } = useSwappingLine({ dropLineRef, swapLine })
   const { handleEditButtonClick, hasDoubleTimeError, lineConfig, setLineConfig } = useLineConfig()
+  const { isLineProcessing, setIsLineProcessing, updateSpeechLine } = useUpdateSpeechLine({ timeline, updateLine })
 
   return (
     <div css={bodyStyle}>
@@ -42,13 +44,13 @@ export default function Timeline() {
                     timeline[elapsedTime][kind].map((line, kindIndex) => {
                       const hasError = hasDoubleTimeError({ lastTimesRef, elapsedTime, kind, line })
                       return (
-                        <LessonLine key={`${i}-${kindIndex}`} kind={kind} hasError={hasError}>
+                        <LessonLine key={`${i}-${kindIndex}`} kind={kind} hasError={hasError} isLineProcessing={isLineProcessing}>
                           {kind === 'avatar'    && <LessonLineAvatar avatar={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
                           {kind === 'drawing'   && <LessonLineDrawing drawings={drawings} drawing={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
                           {kind === 'embedding' && <LessonLineEmbedding embedding={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
                           {kind === 'graphic'   && <LessonLineGraphic graphic={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
                           {kind === 'music'     && <LessonLineMusic music={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
-                          {kind === 'speech'    && <LessonLineSpeech speech={line} index={kindIndex} lineIndex={i} handleEditClick={handleEditButtonClick} />}
+                          {kind === 'speech'    && <LessonLineSpeech speech={line} index={kindIndex} lineIndex={i} handleEditClick={handleEditButtonClick} setIsLineProcessing={setIsLineProcessing} updateSpeechLine={updateSpeechLine} />}
                         </LessonLine>
                       )}
                     ))}

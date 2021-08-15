@@ -10,7 +10,7 @@ import EditIcon from './editIcon'
 import { useImageViewerContext } from '../../../../libs/contexts/imageViewerContext'
 import { useLessonEditorContext } from '../../../../libs/contexts/lessonEditorContext'
 
-export default function LessonLineGraphic({ graphic, index, isEditButtonShow, handleEditClick }) {
+export default function LessonLineGraphic({ graphic, index, isEditButtonShow, handleEditClick, isLineProcessing }) {
   const { setImage } = useImageViewerContext()
   const { graphicURLs } = useLessonEditorContext()
 
@@ -40,7 +40,7 @@ export default function LessonLineGraphic({ graphic, index, isEditButtonShow, ha
         {graphic.action === 'hide' && <ActionLabel kind="graphic" action={'hide'} />}
       </div>
       <ContainerSpacer top='20'>
-        <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} />
+        <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} isProcessing={isLineProcessing} />
       </ContainerSpacer>
     </>
   )

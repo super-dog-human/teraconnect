@@ -8,14 +8,14 @@ import { useRouter } from 'next/router'
 
 let globalFocus = {}
 
-export default function useSpeechLine({ speech, index, lineIndex, handleEditClick }) {
+export default function useSpeechLine({ speech, index, lineIndex, handleEditClick, setIsLineProcessing, updateSpeechLine }) {
   const router = useRouter()
   const lessonIDRef = useRef(parseInt(router.query.id))
   const inputRef = useRef()
   const [isLoading, setIsLoading] = useState(false)
   const [status, setStatus] = useState(true)
   const { isPlaying, createAudio, switchAudio } = useAudioPlayer()
-  const { addSpeechLineToLast, updateLine, speechURLs, setSpeechURLs, generalSetting, timeline } = useLessonEditorContext()
+  const { addSpeechLineToLast, speechURLs, setSpeechURLs, generalSetting, timeline } = useLessonEditorContext()
   const { createSynthesisVoiceFile } = useSynthesisVoice(generalSetting.voiceSynthesisConfig)
 
   async function handleSpeechClick(text) {
@@ -32,6 +32,7 @@ export default function useSpeechLine({ speech, index, lineIndex, handleEditClic
     if (url) {
       createAudio(url)
     } else if (!speech.voiceID && speech.isSynthesis && text) {
+      setIsLineProcessing(true)
       await setNewSynthesisVoice(text)
     } else if (speech.voiceID) {
       const voice = await fetchVoiceFileURL(speech.voiceID, lessonIDRef.current)
@@ -65,14 +66,15 @@ export default function useSpeechLine({ speech, index, lineIndex, handleEditClic
   }
 
   async function setNewSynthesisVoice(text) {
-    speech.subtitle = text
-    const voice = await createSynthesisVoiceFile({ lessonID: lessonIDRef.current, subtitle: speech.subtitle, synthesisConfig: speech.synthesisConfig })
+    const newSpeech = { ...speech }
+    newSpeech.subtitle = text
+    const voice = await createSynthesisVoiceFile({ lessonID: lessonIDRef.current, subtitle: text, synthesisConfig: speech.synthesisConfig })
     updateSpeechURL(speech.voiceID, { [voice.id]: voice.url })
 
     createAudio(voice.url, async audio => {
-      speech.durationSec = parseFloat(audio.duration.toFixed(3))
-      speech.voiceID = voice.id
-      updateSpeechLine(speech.elapsedTime, speech)
+      newSpeech.durationSec = parseFloat(audio.duration.toFixed(3))
+      newSpeech.voiceID = voice.id
+      updateSpeechLine({ lineIndex, kindIndex: index, speech: newSpeech })
     })
   }
 
@@ -87,23 +89,21 @@ export default function useSpeechLine({ speech, index, lineIndex, handleEditClic
     const text = e.target.value
     if (text === speech.subtitle) return
 
-    speech.subtitle = text
+    setIsLineProcessing(true)
+    const newSpeech = { ...speech }
+    newSpeech.subtitle = text
     if (speech.isSynthesis && text) {
       setIsLoading(true)
       await setNewSynthesisVoice(text)
       setIsLoading(false)
     } else if (speech.isSynthesis) {
       updateSpeechURL(speech.voiceID, {})
-      speech.durationSec = 0
-      speech.voiceID = 0
-      updateSpeechLine(speech.elapsedTime, speech)
+      newSpeech.durationSec = 0
+      newSpeech.voiceID = 0
+      updateSpeechLine({ lineIndex, kindIndex: index, speech: newSpeech })
     } else {
-      updateSpeechLine(speech.elapsedTime, speech)
+      updateSpeechLine({ lineIndex, kindIndex: index, speech: newSpeech })
     }
-  }
-
-  function updateSpeechLine(elapsedTime, newValue) {
-    updateLine({ kind: 'speech', index, elapsedTime, newValue })
   }
 
   function handleSpeechButtonClick() {

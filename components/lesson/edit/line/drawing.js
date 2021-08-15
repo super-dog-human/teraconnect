@@ -7,7 +7,7 @@ import KindIcon from './kindIcon'
 import ActionLabel from './actionLabel'
 import EditIcon from './editIcon'
 
-export default function LessonLineDrawing({ drawings, drawing, index, isEditButtonShow, handleEditClick }) {
+export default function LessonLineDrawing({ drawings, drawing, index, isEditButtonShow, handleEditClick, isLineProcessing }) {
   function handleEditButtonClick(e) {
     handleEditClick(e, 'drawing', index, drawing)
   }
@@ -20,7 +20,7 @@ export default function LessonLineDrawing({ drawings, drawing, index, isEditButt
         {drawing.action !== 'draw' && <ActionLabel kind="drawing" action={drawing.action} />}
       </div>
       <ContainerSpacer top='20'>
-        <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} />
+        <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} isProcessing={isLineProcessing} />
       </ContainerSpacer>
     </>
   )

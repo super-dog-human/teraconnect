@@ -3,7 +3,7 @@ import KindIcon from './kindIcon'
 import ActionLabel from './actionLabel'
 import EditIcon from './editIcon'
 
-export default function LessonLineAvatar({ avatar, index, isEditButtonShow, handleEditClick }) {
+export default function LessonLineAvatar({ avatar, index, isEditButtonShow, handleEditClick, isLineProcessing }) {
   function handleEditButtonClick(e) {
     e.stopPropagation()
     handleEditClick(e, 'avatar', index, avatar)
@@ -13,7 +13,7 @@ export default function LessonLineAvatar({ avatar, index, isEditButtonShow, hand
     <>
       <KindIcon kind="avatar" />
       <ActionLabel kind="avatar" />
-      <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} />
+      <EditIcon isShow={isEditButtonShow} onClick={handleEditButtonClick} isProcessing={isLineProcessing} />
     </>
   )
 }

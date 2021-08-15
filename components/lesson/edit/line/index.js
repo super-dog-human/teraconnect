@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { css } from '@emotion/core'
 import ErrorNotice from './errorNotice'
 
-export default function LessonLine({ hasError, kind, children }) {
+export default function LessonLine({ hasError, kind, isLineProcessing, children }) {
   const [isEditButtonShow, setIsEditButtonShow] = useState(false)
 
   function handleMouseOver() {
@@ -23,7 +23,7 @@ export default function LessonLine({ hasError, kind, children }) {
       <div css={bodyStyle} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave}>
         {children.map((child, key) => {
           if (React.isValidElement(child)) {
-            return React.cloneElement(child, { key, isEditButtonShow })
+            return React.cloneElement(child, { key, isEditButtonShow, isLineProcessing })
           }
           return child
         })}
