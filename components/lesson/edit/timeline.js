@@ -6,7 +6,6 @@ import DragSwappable from '../../dragSwappable'
 import ElapsedTime from './line/elapsedTime'
 import LineConfig from './lineConfig/'
 import DropLine from './line/dropLine'
-import PlainText from '../../plainText'
 import Hr from '../../hr'
 import LessonLine from './line/'
 import LessonLineAvatar from './line/avatar'
@@ -23,7 +22,7 @@ import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorConte
 export default function Timeline() {
   const dropLineRef = useRef()
   const lastTimesRef = useRef({})
-  const { durationSec, timeline, drawings, swapLine, updateLine } = useLessonEditorContext()
+  const { timeline, drawings, swapLine, updateLine } = useLessonEditorContext()
   const { handleDragStart, handleDragEnd, handleDragOver, handleDrop, handleChildDrop } = useSwappingLine({ dropLineRef, swapLine })
   const { handleEditButtonClick, hasDoubleTimeError, lineConfig, setLineConfig } = useLineConfig()
   const { isLineProcessing, setIsLineProcessing, updateSpeechLine } = useUpdateSpeechLine({ timeline, updateLine })
@@ -63,7 +62,6 @@ export default function Timeline() {
           )
         })}
       </DragSwappable>
-      { durationSec > 600 && <PlainText color='var(--error-red)'>収録時間が10分を超えています。</PlainText>}
     </div>
   )
 }

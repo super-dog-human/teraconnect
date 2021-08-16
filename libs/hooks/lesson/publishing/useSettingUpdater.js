@@ -9,9 +9,10 @@ import { updateGeneralSettingCache } from '../../../localStorageUtil'
 const sampleJapaneseText = '合成音声のサンプルです'
 const sampleEnglishText = 'This is a sample of synthesized voice.'
 
-export default function useSettingUpdater({ lesson, material, bgImages }) {
+export default function useSettingUpdater({ lesson, material, bgImages, isLoading }) {
   const [isUpdating, setIsUpdating] = useState(false)
   const [isUpdated, setIsUpdated] = useState(false)
+  const [isDisabledPublsishing, setIsDisabledPublsishing] = useState(false)
   const newSettingRef = useRef({})
   const sampleTextForSynthesisRef = useRef('')
   const [setting, dispatchSetting] = useReducer(settingReducer, { voiceSynthesisConfig: {} })
@@ -192,6 +193,12 @@ export default function useSettingUpdater({ lesson, material, bgImages }) {
   }
 
   useEffect(() => {
+    const disabled = isLoading || isUpdating || material.durationSec > 600
+    setIsDisabledPublsishing(disabled)
+  }, [isLoading, isUpdating, material.durationSec])
+
+
+  useEffect(() => {
     if (sampleTextForSynthesisRef.current) return
 
     if (material.voiceSynthesisConfig.languageCode === 'ja-JP') {
@@ -201,5 +208,5 @@ export default function useSettingUpdater({ lesson, material, bgImages }) {
     }
   }, [material.voiceSynthesisConfig])
 
-  return { isUpdating, isUpdated, sampleTextForSynthesisRef, setting, dispatchSetting, handleSubmitClick }
+  return { isUpdating, isUpdated, isDisabledPublsishing, sampleTextForSynthesisRef, setting, dispatchSetting, handleSubmitClick }
 }

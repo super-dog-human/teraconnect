@@ -56,11 +56,11 @@ export default function GraphicController() {
 }
 
 const bodyStyle = css({
-  height: 'calc(100% - 253px - 20px - 45px)', // プレビューエリアと収録時間の高さと余白を差し引く
+  height: 'calc(100% - 253px - 20px - 70px)', // プレビューエリアと収録時間の高さと余白を差し引く
 })
 
 const containerStyle = css({
-  height: 'calc(100% - 70px - 20px - 20px - 45px)', // 水平線・アップロードボタンの高さと余白を差し引く
+  height: 'calc(100% - 70px - 20px - 20px - 70px)', // 水平線・アップロードボタンの高さと余白を差し引く
   overflowX: 'hidden',
   overflowY: 'auto',
   display: 'flex',

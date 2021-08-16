@@ -39,7 +39,7 @@ import SynthesisVoiceConfig from '../../synthesisVoiceConfig'
 export default function LessonPublishing({ lesson, material }) {
   const screenClass = useScreenClass()
   const { isLoading, subjects, categories, allLessons, allLessonOptions, bgImages, bgImageOptions, avatars, avatarOptions, handleSubjectChange: onSubjectChange } = useResourceLoader({ lesson })
-  const { isUpdating, isUpdated, sampleTextForSynthesisRef, setting, dispatchSetting, handleSubmitClick } = useSettingUpdater({ lesson, material, bgImages })
+  const { isUpdating, isUpdated, isDisabledPublsishing, sampleTextForSynthesisRef, setting, dispatchSetting, handleSubmitClick } = useSettingUpdater({ lesson, material, bgImages, isLoading })
   const defaultValues = { title: lesson.title, description: lesson.description, ...Object.fromEntries(lesson.references?.map((ref, i) => [`reference${i}`, ref.isbn]) || []) }
   const { register, handleSubmit, formState: { errors }, setValue } = useForm({ defaultValues })
   const { onChange: handleTitleInputChange, ...titleInputProps } = register('title', { required: true })
@@ -48,7 +48,7 @@ export default function LessonPublishing({ lesson, material }) {
   const { isExtendedOtherSetting, inputFileRef, newReferenceRef, isAddingReference, relationLessonThumbnailURL, isAvatarLoading, avatarRef, avatarLight,
     handleExtendSettingClick, handleTitleChange, handleDescriptionChange, handleThumbnailUploadingClick, handleThumbnailChange, handleStatusChange, handleSubjectChange, handleCategoryChange,
     handlePrevLessonChange, handleNextLessonChange, handleAddReferenceClick, handleRemoveReferenceClick, handleReferenceISBNBlur, handleReferenceNameBlur, handleBgImageChange, handleAvatarChange, handleColorChange } =
-      useLessonPublishing({ lesson, material, setFormValue: setValue, handleTitleInputChange, handleDescriptionTextChange, handleCategorySelectChange, isLoading, onSubjectChange, avatars, allLessons, setting, dispatchSetting })
+      useLessonPublishing({ lesson, material, setFormValue: setValue, handleTitleInputChange, handleDescriptionTextChange, handleCategorySelectChange, isLoading, isUpdating, onSubjectChange, avatars, allLessons, setting, dispatchSetting })
   const { setLanguageCode, setName, setSpeakingRate, setPitch, setVolumeGainDb, playVoice, isSynthesizing } =
     useSynthesisVoiceEditor({ dispatchConfig: dispatchSetting, subtitle: sampleTextForSynthesisRef.current, synthesisConfig: setting.voiceSynthesisConfig, dispatchSetting })
   const flexDirection = ['lg', 'xl', 'xxl'].includes(screenClass) ? 'row' : 'column'
@@ -264,11 +264,18 @@ export default function LessonPublishing({ lesson, material }) {
 
           <Flex justifyContent='center'>
             <Container width='120' height='40'>
-              <LabelButton color='var(--soft-white)' fontSize='15' backgroundColor='var(--dark-purple)' disabled={isLoading || isUpdating} onClick={handleSubmit(handleSubmitClick)}>
+              <LabelButton color='var(--soft-white)' fontSize='15' backgroundColor='var(--dark-purple)' disabled={isDisabledPublsishing} onClick={handleSubmit(handleSubmitClick)}>
                 {!isUpdating && '更新'}
                 {isUpdating && <LoadingIndicator size='20' color='white' />}
               </LabelButton>
             </Container>
+          </Flex>
+          <Flex justifyContent='center'>
+            {material.durationSec > 600 &&
+              <ContainerSpacer top='20'>
+                <PlainText size='12' color='var(--error-red)'>収録時間が10分を超えているため、更新できません。</PlainText>
+              </ContainerSpacer>
+            }
           </Flex>
 
           <Spacer height='20' />
