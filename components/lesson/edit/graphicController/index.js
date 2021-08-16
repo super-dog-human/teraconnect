@@ -25,7 +25,6 @@ export default function GraphicController() {
 
   return (
     <div css={bodyStyle} onDragOver={handleDragOver} onDrop={handleDrop}>
-      <Spacer height='70' />
       <Container height='20'>
         <AlignContent textAlign='center'>
           <Hr color='var(--border-gray)' />
@@ -41,7 +40,7 @@ export default function GraphicController() {
       <div css={uploaderButton}>
         <LabelButton color='white' backgroundColor='var(--dark-purple)' onClick={handleUploadButtonClick}>
           <Flex justifyContent='center' alignItems='center'>
-            <img src="/img/icon/photo-upload.svg" css={uploadIconStyle} />
+            <img src="/img/icon/photo-upload.svg" css={uploadIconStyle} alt='画像アップロードアイコン' />
             <Spacer width='15' />
             <PlainText size='14'>画像アップロード</PlainText>
           </Flex>
@@ -60,7 +59,7 @@ const bodyStyle = css({
 })
 
 const containerStyle = css({
-  height: 'calc(100% - 70px - 20px - 20px - 70px)', // 水平線・アップロードボタンの高さと余白を差し引く
+  height: 'calc(100% - 20px - 45px - 20px)', // 水平線・アップロードボタンの高さと余白を差し引く
   overflowX: 'hidden',
   overflowY: 'auto',
   display: 'flex',

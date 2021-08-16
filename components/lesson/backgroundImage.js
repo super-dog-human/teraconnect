@@ -6,7 +6,7 @@ import { css } from '@emotion/core'
 const BackgroundImage = React.memo(function backgroundImage({ url }) {
   return (
     <div css={bodyStyle} className="bg-image-z">
-      {url && <Image src={url} width={1280} height={720} />}
+      {url && <Image src={url} width={1280} height={720} alt='背景画像' />}
     </div>
   )
 })
