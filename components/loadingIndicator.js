@@ -11,7 +11,7 @@ export default function LoadingIndicator({ size, color }) {
 
   return (
     <div css={bodyStyle} className='indicator-z'>
-      <img src={`/img/icon/${color ? `loading-${color}` : 'loading'}.svg`} css={imageStyle} draggable="false" />
+      <img src={`/img/icon/${color ? `loading-${color}` : 'loading'}.svg`} css={imageStyle} draggable="false" alt='ローディング' />
     </div>
   )
 }

@@ -17,6 +17,7 @@ export default function Header() {
                 css={logoImageStyle}
                 src="/img/logo.png"
                 srcSet="/img/logo.png 1x, /img/logo@2x.png 2x"
+                alt='サービスロゴ'
               />
             </span>
           </a>
@@ -60,6 +61,7 @@ export default function Header() {
           <img
             src="/img/search.png"
             srcSet="/img/search.png 1x, /img/search@2x.png 2x"
+            alt='検索ボタン'
           />
         </button>
         {!loading && !session && <>

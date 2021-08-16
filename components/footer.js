@@ -25,13 +25,13 @@ export default function Footer() {
           <Col md={4} css={logoContainerStyle}>
             {!loading && !session && <div>
               <div css={logoCopyStyle}>君の光をさがそう。</div>
-              <img src="/img/logo.png" srcSet="/img/logo.png 1x, /img/logo@2x.png 2x" />
+              <img src="/img/logo.png" srcSet="/img/logo.png 1x, /img/logo@2x.png 2x" alt='サービスロゴ' />
             </div>
             }
 
             {!loading && session && <div>
               <div css={logoCopyStyle}>あなたの知識が、誰かを照らす。</div>
-              <img src="/img/logo.png" srcSet="/img/logo.png 1x, /img/logo@2x.png 2x" />
+              <img src="/img/logo.png" srcSet="/img/logo.png 1x, /img/logo@2x.png 2x" alt='サービスロゴ' />
             </div>
             }
           </Col>

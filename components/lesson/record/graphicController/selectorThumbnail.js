@@ -50,9 +50,9 @@ export default function SelectorThumbnail({ image, onClick, onRemoveClick, isSel
 
   return (
     <div css={bodyStyle} onMouseEnter={handleMouseEnter} onMouseLeave={hanldeMouseLeave} draggable="false">
-      <img css={imageStyle} src={image.thumbnail} data-id={image.id} ref={imageRef} onClick={handleMouseClick} draggable="true" />
+      <img css={imageStyle} src={image.thumbnail} data-id={image.id} ref={imageRef} onClick={handleMouseClick} draggable="true" alt='サムネイル' />
       <button css={removeButtonStyle} data-id={image.id} onClick={onRemoveClick}>
-        <img src="/img/icon/close-bold.svg" css={closeIconStyle} draggable="false" />
+        <img src="/img/icon/close-bold.svg" css={closeIconStyle} draggable="false" alt='サムネイルクローズボタン' />
       </button>
       {image.isUploading && <div css={indicatorStyle}><LoadingIndicator size={50} /></div>}
     </div>

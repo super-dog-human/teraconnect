@@ -78,7 +78,7 @@ export default function RecordingButton({ lessonID, isMicReady }) {
         <div css={finishRecordingStyle}>
           <button css={buttonStyle} disabled={isRecording || !hasRecordingStarted || isFinishing}>
             <Container width='26' height='26'>
-              <img src="/img/icon/tick.svg" />
+              <img src="/img/icon/tick.svg" alt='収録完了ボタン' />
             </Container>
           </button>
           <PlainText size='12' lineHeight='40' color='lightGray'>収録を終わる</PlainText>

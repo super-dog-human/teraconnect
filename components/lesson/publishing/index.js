@@ -158,7 +158,7 @@ export default function LessonPublishing({ lesson, material }) {
                       <AbsoluteContainer top='0' left='0'>
                         <Container width='170' height='96'>
                           {!relationLessonThumbnailURL.prev && <NoImage textSize='12' color='gray' backgroundColor='lightgray' />}
-                          {relationLessonThumbnailURL.prev && <Image src={relationLessonThumbnailURL.prev} width={1280} height={720} />}
+                          {relationLessonThumbnailURL.prev && <Image src={relationLessonThumbnailURL.prev} width={1280} height={720} alt='前の授業サムネイル' />}
                         </Container>
                       </AbsoluteContainer>
                     </Aspect16To9Container>
@@ -176,7 +176,7 @@ export default function LessonPublishing({ lesson, material }) {
                       <AbsoluteContainer top='0' left='0'>
                         <Container width='170' height='96'>
                           {!relationLessonThumbnailURL.next && <NoImage textSize='12' color='gray' backgroundColor='lightgray' />}
-                          {relationLessonThumbnailURL.next && <Image src={relationLessonThumbnailURL.next} width={1280} height={720} />}
+                          {relationLessonThumbnailURL.next && <Image src={relationLessonThumbnailURL.next} width={1280} height={720} alt='次の授業サムネイル' />}
                         </Container>
                       </AbsoluteContainer>
                     </Aspect16To9Container>
@@ -229,7 +229,7 @@ export default function LessonPublishing({ lesson, material }) {
                     <Container width='250' height='132'>
                       <Aspect16To9Container backgroundColor='lightgray'>
                         <div css={bgImageStyle}>
-                          {setting.backgroundImageURL && <Image src={setting.backgroundImageURL} width={1280} height={720} />}
+                          {setting.backgroundImageURL && <Image src={setting.backgroundImageURL} width={1280} height={720} alt='授業の背景画像' />}
                         </div>
                         <div ref={avatarRef} css={avatarContainerStyle} />
                         {isAvatarLoading && <div css={avatarContainerStyle}><LoadingIndicator size='40' /></div>}

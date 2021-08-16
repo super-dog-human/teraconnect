@@ -64,7 +64,7 @@ export default function ImageViwer() {
   return (
     <>
       {isShow && <div css={bodyStyle} className="overay-ui-z" onClick={handleBackClick}>
-        <div css={imageContainerStyle}><img src={image.url} css={imageStyle} onLoad={handleLoad} /></div>
+        <div css={imageContainerStyle}><img src={image.url} css={imageStyle} onLoad={handleLoad} alt='拡大画像' /></div>
         {!loaded && <div css={loadingStyle}><LoadingIndicator size={100} /></div>}
       </div>
       }

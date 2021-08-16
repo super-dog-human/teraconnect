@@ -10,6 +10,6 @@ export default function Icon({ name, disabled }) {
   })
 
   return (
-    <img src={`/img/icon/${name}.svg`} draggable={false} css={bodyStyle} />
+    <img src={`/img/icon/${name}.svg`} draggable={false} css={bodyStyle} alt={`${name}アイコン`} />
   )
 }

@@ -81,7 +81,7 @@ export default function ScrollArrow({ direction, targetRef }) {
 
   return (
     <button css={buttonStyle} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave}>
-      <img src="/img/icon/double-arrows.svg" css={iconStyle} />
+      <img src="/img/icon/double-arrows.svg" css={iconStyle} alt='画像エリアスクロールボタン' />
     </button>
   )
 }

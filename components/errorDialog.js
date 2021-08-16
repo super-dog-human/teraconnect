@@ -20,7 +20,7 @@ export default function ErrorDialog() {
         <div css={backgroundStyle} className="fullscreen-dialog-z">
           <div css={dialogStyle}>
             <div css={headerStyle}>
-              <img src={error.side === 'global' ? '/img/icon/server-error.svg' : '/img/icon/error.svg'} />
+              <img src={error.side === 'global' ? '/img/icon/server-error.svg' : '/img/icon/error.svg'} alt='エラーアイコン' />
               <span>{error.side === 'global' ? '不明なエラー' : '処理エラー' }</span>
             </div>
             <div css={bodyStyle}>

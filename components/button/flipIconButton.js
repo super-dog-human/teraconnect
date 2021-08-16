@@ -30,7 +30,7 @@ export default function FlipIconButton({ name, flipName, backgroundColor, color,
 
   return (
     <button css={bodyStyle} onClick={onClick} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-      <img src={`/img/icon/${isHover ? flipName : name}.svg`} draggable={false} css={imageStyle} />
+      <img src={`/img/icon/${isHover ? flipName : name}.svg`} draggable={false} css={imageStyle} alt='声の録音・合成音声切り替えボタン' />
     </button>
   )
 }

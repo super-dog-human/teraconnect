@@ -29,7 +29,7 @@ export default function Dialog() {
                 <Container height='50'>
                   <Flex alignItems='center'>
                     <Spacer width='15' height='50' />
-                    <img src="/img/icon/information.svg" css={iconStyle} />
+                    <img src="/img/icon/information.svg" css={iconStyle} alt='お知らせアイコン' />
                     <Spacer width='20' height='50' />
                     <PlainText color='var(--soft-white)' size='15'>{dialog.title || 'お知らせ'}</PlainText>
                   </Flex>

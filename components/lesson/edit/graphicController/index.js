@@ -40,7 +40,7 @@ export default function GraphicController() {
       <div css={uploaderButton}>
         <LabelButton color='white' backgroundColor='var(--dark-purple)' onClick={handleUploadButtonClick}>
           <Flex justifyContent='center' alignItems='center'>
-            <img src="/img/icon/photo-upload.svg" css={uploadIconStyle} alt='画像アップロードアイコン' />
+            <img src="/img/icon/photo-upload.svg" css={uploadIconStyle} alt='画像アップロードボタン' />
             <Spacer width='15' />
             <PlainText size='14'>画像アップロード</PlainText>
           </Flex>

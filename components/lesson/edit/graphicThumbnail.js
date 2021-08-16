@@ -17,10 +17,10 @@ const GraphicThumbnail = React.memo(function GraphicThumbnail({ url, isProcessin
   return (
     <Container position='relative' width='175' height='100'>
       {url && isServerCaching &&
-        <Image src={url} width="175" height="100" objectFit="contain" draggable={false} onLoad={handleLoad} />
+        <Image src={url} width="175" height="100" objectFit="contain" draggable={false} onLoad={handleLoad} alt='図表サムネイル' />
       }
       {url && !isServerCaching &&
-        <img src={url} css={imageStyle} draggable={false} onLoad={handleLoad}/>
+        <img src={url} css={imageStyle} draggable={false} onLoad={handleLoad} alt='図表サムネイル' />
       }
       {(!isLoaded || isProcessing) &&
         <AbsoluteContainer top='0' left='0'>

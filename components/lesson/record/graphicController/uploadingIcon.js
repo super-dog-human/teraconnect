@@ -4,7 +4,7 @@ import { css } from '@emotion/core'
 
 export default function UploadingIcon() {
   return (
-    <img src="/img/icon/photo-upload.svg" css={bodyStyle} />
+    <img src="/img/icon/photo-upload.svg" css={bodyStyle} alt='アップロードアイコン' />
   )
 }
 
