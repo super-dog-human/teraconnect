@@ -6,26 +6,26 @@ import PlainText from '../../../plainText'
 export default function ActionLabel({ kind, action }) {
   const [label, setLabel] = useState('')
 
-  const labelByKind = useCallback(() => {
+  const labelByKind = useCallback((kind, action) => {
     switch(kind) {
     case 'avatar':
-      return avatarLabel()
+      return avatarLabel(action)
     case 'drawing':
-      return drawingLabel()
+      return drawingLabel(action)
     case 'embedding':
-      return embeddingLabel()
+      return embeddingLabel(action)
     case 'graphic':
-      return graphicLabel()
+      return graphicLabel(action)
     case 'music':
-      return musicLabel()
+      return musicLabel(action)
     }
-  }, [kind, avatarLabel, drawingLabel, embeddingLabel, graphicLabel, musicLabel])
+  }, [avatarLabel, drawingLabel, embeddingLabel, graphicLabel, musicLabel])
 
   const avatarLabel = useCallback(() => {
     return 'アバター移動'
   }, [])
 
-  const drawingLabel = useCallback(() => {
+  const drawingLabel = useCallback(action => {
     switch(action) {
     case 'clear':
       return '板書のクリア'
@@ -34,36 +34,36 @@ export default function ActionLabel({ kind, action }) {
     case 'hide':
       return '板書の非表示'
     }
-  }, [action])
+  }, [])
 
-  const embeddingLabel = useCallback(() => {
+  const embeddingLabel = useCallback(action => {
     switch(action) {
     case 'show':
       return '埋め込み動画の表示'
     case 'hide':
       return '埋め込み動画の非表示'
     }
-  }, [action])
+  }, [])
 
-  const graphicLabel = useCallback(() => {
+  const graphicLabel = useCallback(action => {
     if (action === 'hide') {
       return '画像の非表示'
     } else {
       return ''
     }
-  }, [action])
+  }, [])
 
-  const musicLabel = useCallback(() => {
+  const musicLabel = useCallback(action => {
     switch(action) {
     case 'start':
       return 'BGMの開始'
     case 'stop':
       return 'BGMの停止'
     }
-  }, [action])
+  }, [])
 
   useEffect(() => {
-    setLabel(labelByKind())
+    setLabel(labelByKind(kind, action))
   }, [kind, action, labelByKind])
 
   return (
