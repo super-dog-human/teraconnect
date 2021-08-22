@@ -12,7 +12,7 @@ export default function useAudioVisualizer(micDeviceID, canvasRef) {
     canvasCtxRef.current.clearRect(0, 0, canvasCtxRef.current.canvas.width, canvasCtxRef.current.canvas.height)
     canvasCtxRef.current.strokeStyle = 'white'
     canvasCtxRef.current.lineWidth = 5
-  }, [])
+  }, [canvasRef])
 
   useEffect(() => {
     if (!micDeviceID) return
@@ -55,5 +55,5 @@ export default function useAudioVisualizer(micDeviceID, canvasRef) {
 
       canvasCtxRef.current.stroke()
     }
-  }, [micDeviceID])
+  }, [micDeviceID, setNode])
 }

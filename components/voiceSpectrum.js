@@ -54,8 +54,9 @@ export default function VoiceSpectrum({ micDeviceID, isShow, setIsShow }) {
   }
 
   useEffect(() => {
+    if (Object.keys(bounds).length > 0) return
     setBounds(draggableRef)
-  }, [setBounds])
+  }, [bounds, setBounds])
 
   return (
     <Hidden xs sm>

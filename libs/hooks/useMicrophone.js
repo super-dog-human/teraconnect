@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useCallback, useEffect } from 'react'
 import { useDialogContext } from '../contexts/dialogContext'
 
 export default function useMicrophone() {
@@ -13,7 +13,7 @@ export default function useMicrophone() {
       new AudioContext({ latencyHint: 'balanced' }) : new webkitAudioContext() // for safari
   }
 
-  async function initMicInput(micDeviceID) {
+  const initMicInput = useCallback(async micDeviceID => {
     if (!audioCtxRef.current) initAudioContext()
 
     if (audioCtxRef.current.state === 'running') {
@@ -34,7 +34,7 @@ export default function useMicrophone() {
         })
       })
     }
-  }
+  }, [showDialog])
 
   async function connectMic(micDeviceID) {
     streamRef.current = await navigator.mediaDevices.getUserMedia({
@@ -69,7 +69,7 @@ export default function useMicrophone() {
     }
   }
 
-  async function setNode(micDeviceID, callback) {
+  const setNode = useCallback(async (micDeviceID, callback) => {
     setIsMicReady(false)
 
     await terminalMicInput()
@@ -77,7 +77,7 @@ export default function useMicrophone() {
     await callback(audioCtxRef.current, micInputRef.current)
 
     setIsMicReady(true)
-  }
+  }, [initMicInput])
 
   useEffect(() => {
     return terminalMicInput
