@@ -12,7 +12,7 @@ export default function useResourceReloader() {
   const timerRef = useRef()
   const [shouldReload, setShouldReload] = useState(false)
   const [ session ] = useSession()
-  const { setGraphicURLs, setSpeechURLs } = useLessonEditorContext()
+  const { setGraphicURLs } = useLessonEditorContext()
   const { fetchWithAuth } = useFetch()
 
   async function setNextTimer() {
@@ -54,7 +54,6 @@ export default function useResourceReloader() {
       return // セッションが切れていたら何もせず終了
     }
 
-    setSpeechURLs({})
     reloadGraphicURLs()
     setNextTimer()
     setShouldReload(false)

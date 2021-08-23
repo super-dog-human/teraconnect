@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react'
-import { fetch as isoFetch, fetchToken as isoFetchToken, fetchWithAuth as isoFetchWithAuth, post as isoPost, putFile as isoPutFile } from '../fetch'
-import { fetchVoiceFileURL as isoFetchVoiceFileURL, createVoice as isoCreateVoice, createGraphics as isoCreateGraphics, createMusic as isoCreateMusic } from '../fetchResource'
+import { fetch as isoFetch, fetchToken as isoFetchToken, fetchWithAuth as isoFetchWithAuth, post as isoPost } from '../fetch'
+import { createVoice as isoCreateVoice, createGraphics as isoCreateGraphics, createMusic as isoCreateMusic } from '../fetchResource'
 
 const timeoutMillisec = 1000 * 60
 
@@ -28,10 +28,6 @@ export default function useFetch() {
 
   function post(resource, body, method='POST', header) {
     return requestWithAbortAndTimeout(signal => isoPost(resource, body, method, header, { signal }))
-  }
-
-  function fetchVoiceFileURL(voiceID, lessonID) {
-    return requestWithAbortAndTimeout(signal => isoFetchVoiceFileURL(voiceID, lessonID, { signal }))
   }
 
   function createVoice(elapsedTime, durationSec, lessonID) {
@@ -75,5 +71,5 @@ export default function useFetch() {
     }
   }, [])
 
-  return { fetch, fetchToken, fetchWithAuth, post, fetchVoiceFileURL, createVoice, createGraphics, createMusic }
+  return { fetch, fetchToken, fetchWithAuth, post, createVoice, createGraphics, createMusic }
 }

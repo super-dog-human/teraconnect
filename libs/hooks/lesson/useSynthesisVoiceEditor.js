@@ -1,11 +1,13 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import useSynthesisVoice from '../useSynthesisVoice'
 import useAudioPlayer from '../useAudioPlayer'
 import { useRouter } from 'next/router'
+import { voiceURL } from '../../speechUtils'
 
 export default function useSynthesisVoiceEditor({ dispatchConfig, url, subtitle, synthesisConfig, defaultSynthesisConfig }) {
   const [isSynthesizing, setIsSynthesizing] = useState(false)
   const router = useRouter()
+  const lessonIDRef = useRef(parseInt(router.query.id))
   const { createSynthesisVoiceFile } = useSynthesisVoice(defaultSynthesisConfig)
   const { isPlaying, createAudio, switchAudio } = useAudioPlayer()
 
@@ -44,10 +46,10 @@ export default function useSynthesisVoiceEditor({ dispatchConfig, url, subtitle,
     } else {
       setIsSynthesizing(true)
 
-      const lessonID = parseInt(router.query.id)
-      const voice = await createSynthesisVoiceFile({ lessonID, subtitle, synthesisConfig })
-      dispatchConfig({ type: 'synthesisVoice', payload: { voiceID: voice.id, url: voice.url } })
-      createAudio(voice.url)
+      const voice = await createSynthesisVoiceFile({ lessonID: lessonIDRef.current, subtitle, synthesisConfig })
+      const url = voiceURL(lessonIDRef.current, voice.id, voice.fileKey)
+      dispatchConfig({ type: 'synthesisVoice', payload: { voiceID: voice.id, voiceFileKey: voice.fileKey, url } })
+      createAudio(url)
 
       setIsSynthesizing(false)
     }

@@ -24,7 +24,6 @@ export default function useLessonEditor() {
   const [musics, setMusics] = useState([])
   const [musicURLs, setMusicURLs] = useState({})
   const [speeches, setSpeeches] = useState([])
-  const [speechURLs, setSpeechURLs] = useState({})
   const { fetchWithAuth, post } = useFetch()
   const { showError } = useErrorDialogContext()
   const { shiftElapsedTime, updateMaterial, deleteMaterial, lastTimeline, sortedElapsedTimes, maxDurationSecInLine, nextElapsedTime, nextElapsedTimeByKind, calcTime, targetMaterial, allMaterialNames, allMaterials } =
@@ -116,6 +115,7 @@ export default function useLessonEditor() {
           newSpeech.isSynthesis = false
           newSpeech.caption = {}
           newSpeech.voiceID = v.id
+          newSpeech.voiceFileKey = v.fileKey
           newSpeech.elapsedTime = v.elapsedTime
           newSpeech.durationSec = v.durationSec
           newSpeech.subtitle = v.text
@@ -204,6 +204,6 @@ export default function useLessonEditor() {
   }, allMaterials())
 
   return { isInitialLoading, lesson: lessonRef.current, fetchResources, durationSec, timeline, generalSetting, setGeneralSetting,
-    avatars, drawings, embeddings, graphics, graphicURLs, musics, musicURLs, setMusicURLs, speeches, speechURLs, setSpeechURLs, setEmbeddings, setGraphics, setGraphicURLs,
+    avatars, drawings, embeddings, graphics, graphicURLs, musics, musicURLs, setMusicURLs, speeches, setEmbeddings, setGraphics, setGraphicURLs,
     updateLine, deleteLine, swapLine, addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast }
 }

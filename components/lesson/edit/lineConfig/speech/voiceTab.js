@@ -3,18 +3,18 @@ import HumanVoiceTab from './humanVoiceTab'
 import SynthesisVoiceTab from './synthesisVoiceTab'
 
 export default function VoiceTab({ config, dispatchConfig }) {
-  const preVoiceRef = useRef({ url: '', voiceID: 0 })
+  const preVoiceRef = useRef({ url: '', voiceID: 0, voiceFileKey: '' })
   const [showHumanVoiceTab, setShowHumanVoiceTab] = useState(!config.isSynthesis)
 
   function switchHuman() {
-    const currentVoice = { url: config.url, voiceID: config.voiceID }
+    const currentVoice = { url: config.url, voiceID: config.voiceID, voiceFileKey: config.voiceFileKey }
     dispatchConfig({ type: 'switchToHuman', payload: preVoiceRef.current })
     setShowHumanVoiceTab(true)
     preVoiceRef.current = currentVoice
   }
 
   function switchSynthesis() {
-    const currentVoice = { url: config.url, voiceID: config.voiceID }
+    const currentVoice = { url: config.url, voiceID: config.voiceID, voiceFileKey: config.voiceFileKey }
     dispatchConfig({ type: 'switchToSynthesis', payload: preVoiceRef.current })
     setShowHumanVoiceTab(false)
     preVoiceRef.current = currentVoice

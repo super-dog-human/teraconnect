@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from 'react'
 import useAudioInputDevices from '../../useAudioInputDevices'
 import useVoiceRecorder from '../useVoiceRecorder'
 import { useRouter } from 'next/router'
-import useFetch from '../../useFetch'
+import { voiceURL } from '../../../speechUtils'
 
 export default function useHumanVoiceRecorder(config, dispatchConfig) {
   const router = useRouter()
@@ -10,7 +10,6 @@ export default function useHumanVoiceRecorder(config, dispatchConfig) {
   const [isRecording, setIsRecording] = useState(false)
   const { deviceOptions } = useAudioInputDevices()
   const { isMicReady, setMicDeviceID, voiceFile } = useVoiceRecorder({ needsUpload: false, isRecording })
-  const { fetchVoiceFileURL } = useFetch()
 
   function handleRecording() {
     setIsRecording(status => !status)
@@ -26,13 +25,7 @@ export default function useHumanVoiceRecorder(config, dispatchConfig) {
 
   useEffect(() => {
     if (config.voiceID === 0) return
-
-    fetchVoiceFileURL(config.voiceID, lessonIDRef.current)
-      .then(voice => updateAudioURL(voice.url))
-      .catch(e => {
-        if (e.name === 'AbortError') return
-        if (e.name === 'TimeoutError') return
-      })
+    updateAudioURL(voiceURL(lessonIDRef.current, config.voiceID, config.voiceFileKey))
   }, [])
 
   useEffect(() => {

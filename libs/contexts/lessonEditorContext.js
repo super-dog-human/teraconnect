@@ -18,8 +18,6 @@ const LessonEditorContext = React.createContext({
   musicURLs: [],
   setMusicURLs: () => {},
   speeches: [],
-  speechURLs: {},
-  setSpeechURLs: () => {},
   setEmbeddings: () => {},
   setGraphics: () => {},
   setGraphicURLs: () => {},
@@ -37,13 +35,13 @@ const LessonEditorContext = React.createContext({
 
 const LessonEditorProvider = ({ children }) => {
   const { isInitialLoading, lesson, fetchResources, durationSec, timeline, generalSetting, setGeneralSetting,
-    avatars, embeddings, graphics, graphicURLs, drawings, musics, musicURLs, setMusicURLs, speeches, speechURLs, setSpeechURLs, setEmbeddings, setGraphics, setGraphicURLs,
+    avatars, embeddings, graphics, graphicURLs, drawings, musics, musicURLs, setMusicURLs, speeches, setEmbeddings, setGraphics, setGraphicURLs,
     updateLine, deleteLine, swapLine, addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast } = useLessonEditor()
 
   return (
     <LessonEditorContext.Provider value={{
       isInitialLoading, lesson, fetchResources, durationSec, timeline, generalSetting, setGeneralSetting,
-      avatars, embeddings, graphics, graphicURLs, drawings, musics, musicURLs, setMusicURLs, speeches, speechURLs, setSpeechURLs, setEmbeddings, setGraphics, setGraphicURLs,
+      avatars, embeddings, graphics, graphicURLs, drawings, musics, musicURLs, setMusicURLs, speeches, setEmbeddings, setGraphics, setGraphicURLs,
       updateLine, deleteLine, swapLine, addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast
     }}>
       {children}

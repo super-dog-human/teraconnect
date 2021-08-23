@@ -7,16 +7,17 @@ import useAudioPlayer from '../../useAudioPlayer'
 import { isBlobURL } from '../../../utils'
 import fetch from 'isomorphic-unfetch'
 import { putFile } from '../../../fetch'
-import { fetchVoiceFileURL, createVoice } from '../../../fetchResource'
+import { createVoice } from '../../../fetchResource'
 import { wavToMp3 } from '../../../audioUtils'
+import { voiceURL } from '../../../speechUtils'
 
 export default function useSpeechConfig({ index, initialConfig, closeCallback }) {
   const router = useRouter()
   const lessonIDRef = useRef(parseInt(router.query.id))
   const { showError } = useErrorDialogContext()
-  const { updateLine, speechURLs, setSpeechURLs, generalSetting } = useLessonEditorContext()
+  const { updateLine, generalSetting } = useLessonEditorContext()
   // propsをタブの初期値としてstateにコピーし、確定時にコピー元を更新する
-  const [config, dispatchConfig] = useReducer(configReducer, { ...initialConfig, url: speechURLs[initialConfig.voiceID] })
+  const [config, dispatchConfig] = useReducer(configReducer, { ...initialConfig })
   const [isProcessing, setIsProcessing] = useState(false)
   const { createSynthesisVoiceFile } = useSynthesisVoice(generalSetting.voiceSynthesisConfig)
   const { createAudio } = useAudioPlayer()
@@ -28,9 +29,9 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
     case 'url':
       return { ...state, url: payload }
     case 'switchToSynthesis':
-      return { ...state, url: payload.url, voiceID: payload.voiceID, isSynthesis: true }
+      return { ...state, url: payload.url, voiceID: payload.voiceID, voiceFileKey: payload.voiceFileKey, isSynthesis: true }
     case 'switchToHuman':
-      return { ...state, url: payload.url, voiceID: payload.voiceID, isSynthesis: false }
+      return { ...state, url: payload.url, voiceID: payload.voiceID, voiceFileKey: payload.voiceFileKey, isSynthesis: false }
     case 'initializeSynthesis':
       return { ...state, synthesisConfig: { ...payload } }
     case 'synthesisLanguageAndName':
@@ -44,11 +45,11 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
     case 'synthesisVolumeGainDb':
       return { ...state, url: '', synthesisConfig: { ...state.synthesisConfig, volumeGainDb: parseInt(payload) } }
     case 'synthesisVoice':
-      return { ...state, url: payload.url, voiceID: payload.voiceID }
+      return { ...state, url: payload.url, voiceID: payload.voiceID, voiceFileKey: payload.voiceFileKey }
     case 'synthesisSubtitle':
       return { ...state, url: '', subtitle: payload }
     case 'humanVoice':
-      return { ...state, url: payload, voiceID: 0 }
+      return { ...state, url: payload, voiceID: 0, voiceFileKey: '' }
     case 'subtitle':
       return { ...state, subtitle: payload }
     case 'captionBody':
@@ -85,13 +86,14 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
       if (config.isSynthesis && config.subtitle) {
         const voice = await createSynthesisVoiceFile({ lessonID: lessonIDRef.current, subtitle: config.subtitle, synthesisConfig: config.synthesisConfig })
         config.voiceID = voice.id
-        config.url = voice.url
+        config.voiceFileKey = voice.fileKey
+        config.url = voiceURL(lessonIDRef.current, voice.id, voice.fileKey)
       } else if (!config.isSynthesis && config.voiceID > 0) {
-        const voice = await fetchVoiceFileURL(config.voiceID, lessonIDRef.current)
-        config.url = voice.url
+        config.url = voiceURL(lessonIDRef.current, config.voiceID, config.voiceFileKey)
       } else {
         // 合成だがsubtitleが未入力、または録音だがvoiceIDがない場合、声はなしになる
         config.voiceID = 0
+        config.voiceFileKey = ''
         config.durationSec = 0
       }
     }
@@ -125,11 +127,10 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
       if (isBlobURL(config.url)) {
         const voice = await createHumanVoice(config.url, config.elapsedTime, config.durationSec)
         URL.revokeObjectURL(config.url)
-        config.url = ''
-        config.voiceID = parseInt(voice.fileID)
+        config.voiceID = voice.id
+        config.voiceFileKey = voice.fileKey
       }
 
-      updateSpeechURL()
       delete config.url
       updateLine({ kind: 'speech', index, elapsedTime: initialConfig.elapsedTime, newValue: config, changeAfterLineElapsedTime })
       setIsProcessing(false)
@@ -146,29 +147,19 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
   }
 
   function updateSpeechWithoutAudio(config, changeAfterLineElapsedTime) {
-    updateSpeechURL()
     updateLine({ kind: 'speech', index, elapsedTime: initialConfig.elapsedTime, newValue: config, changeAfterLineElapsedTime })
     setIsProcessing(false)
     closeCallback()
   }
 
-  function updateSpeechURL() {
-    if (initialConfig.voiceID === config.voiceID) return
-
-    setSpeechURLs(urls => {
-      delete urls[initialConfig.voiceID]
-      if (config.url) {
-        urls[config.voiceID] = config.url
-      } else {
-        delete urls[config.voiceID]
-      }
-      return { ...urls }
-    })
-  }
-
   function handleCancel() {
     closeCallback(true)
   }
+
+  useEffect(() => {
+    if (initialConfig.voiceID === 0) return
+    dispatchConfig({ type: 'url', payload: voiceURL(lessonIDRef.current, initialConfig.voiceID, initialConfig.voiceFileKey) })
+  }, [initialConfig.voiceID, initialConfig.voiceFileKey])
 
   useEffect(() => {
     if (config.isSynthesis) {

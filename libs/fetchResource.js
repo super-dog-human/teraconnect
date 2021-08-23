@@ -1,9 +1,5 @@
-import { fetchWithAuth, post } from './fetch'
+import { post } from './fetch'
 import { extentionNameTo3Chars } from './utils'
-
-export function fetchVoiceFileURL(voiceID, lessonID, option) {
-  return fetchWithAuth(`/voices/${voiceID}?lesson_id=${lessonID}`, null, option)
-}
 
 export function createVoice(elapsedTime, durationSec, lessonID, option) {
   return post('/voice', { elapsedTime, durationSec, lessonID }, 'POST', null, option)
