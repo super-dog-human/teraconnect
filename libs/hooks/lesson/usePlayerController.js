@@ -15,10 +15,6 @@ export default function usePlayerController() {
     setIsPlayerHover(false)
   }
 
-  function handlePlayButtonClick() {
-    setIsPlaying(p => !p)
-  }
-
   function handleDragStart(e) {
     e.preventDefault() // シークが行ドラッグになってしまうのを防ぐ
     e.stopPropagation()
@@ -45,5 +41,5 @@ export default function usePlayerController() {
   }, [])
 
   return { isPlayerHover, isPlaying, setIsPlaying, playerElapsedTime, setPlayerElapsedTime,
-    deltaTime, resetClock, switchClock, handleMouseOver, handleMouseLeave, handlePlayButtonClick, handleDragStart }
+    deltaTime, resetClock, switchClock, handleMouseOver, handleMouseLeave, handleDragStart }
 }

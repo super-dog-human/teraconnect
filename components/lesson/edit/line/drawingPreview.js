@@ -7,8 +7,12 @@ import PlayerController from '../../player/controller'
 import useLessonPlayer from '../../../../libs/hooks/lesson/useLessonPlayer'
 
 export default function DrawingPreview({ drawings, drawing, sameTimeIndex }) {
-  const { drawingRef, handleMouseOver, handleMouseLeave, handlePlayButtonClick, isPlayerHover, playerElapsedTime, handleDragStart, handleSeekChange }
+  const { drawingRef, isPlaying, startPlaying, stopPlaying, handleMouseOver, handleMouseLeave, isPlayerHover, playerElapsedTime, handleDragStart, handleSeekChange }
     = useLessonPlayer({ startElapsedTime: drawing.elapsedTime, durationSec: drawing.durationSec, drawings, sameTimeIndex })
+
+  function handlePlayButtonClick() {
+    isPlaying ? stopPlaying() : startPlaying()
+  }
 
   return (
     <ContainerSpacer left='10' top='20' bottom='20'>

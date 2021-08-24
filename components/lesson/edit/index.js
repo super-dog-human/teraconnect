@@ -77,7 +77,7 @@ export default function LessonEdit({ lesson }) {
         <ImageViewerProvider>
           <div css={bodyStyle}>
             <div css={leftSideStyle}>
-              <Preview />
+              <Preview lessonID={lesson.id}/>
               <DurationTime />
               <GraphicController />
             </div>
