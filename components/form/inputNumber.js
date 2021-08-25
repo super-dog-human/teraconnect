@@ -3,12 +3,13 @@ import React from 'react'
 import { css } from '@emotion/core'
 
 const InputNumber = React.forwardRef(function inputNumber(props, ref) {
-  const { size, color, backgroundColor, borderColor, borderWidth, maxLength, ...inputProps } = props
+  const { size, color, textAlign, backgroundColor, borderColor, borderWidth, maxLength, ...inputProps } = props
   const bodyStyle = css({
     width: 'calc(100% - 2px)',
     height: '100%',
     fontSize: `${size}px`,
     lineHeight: `${size}px`,
+    textAlign,
     color,
     backgroundColor: backgroundColor || 'inherit',
     borderColor,
@@ -32,7 +33,7 @@ const InputNumber = React.forwardRef(function inputNumber(props, ref) {
     if (maxLength) {
       const value = e.currentTarget.value
       if (value.length >= maxLength) {
-        e.currentTarget.value = value.slice(0, 10)
+        e.currentTarget.value = value.slice(0, maxLength)
       }
     }
 
