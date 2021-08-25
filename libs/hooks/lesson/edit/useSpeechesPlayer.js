@@ -88,7 +88,7 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
 
   const prefetchVoice = useCallback(() => {
     let addedNewVoice = false
-    const targets = speeches.filter(s => s.voiceID && s.elapsedTime <= elapsedTimeRef.current + 10.0 && s.elapsedTime + s.durationSec > elapsedTimeRef.current)
+    const targets = speeches.filter(s => s.voiceID && s.elapsedTime <= elapsedTimeRef.current + 10 && s.elapsedTime + s.durationSec > elapsedTimeRef.current)
     for (let i = 0; i < targets.length; i++) {
       if (addNewVoice(targets[i])) addedNewVoice = true
     }
@@ -126,10 +126,11 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
   const playSpeeches = useCallback(() => {
     if (elapsedTimeRef.current >= durationSec) {
       elapsedTimeRef.current = 0
+      prefetchVoice()
     }
     setIsPlaying(true)
     setVoicesTime(true)
-  }, [durationSec, setVoicesTime])
+  }, [durationSec, setVoicesTime, prefetchVoice])
 
   async function updateSpeeches(incrementalTime) {
     const newElapsedTime = elapsedTimeRef.current + incrementalTime
