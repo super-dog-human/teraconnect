@@ -88,7 +88,7 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
 
   const prefetchVoice = useCallback(() => {
     let addedNewVoice = false
-    const targets = speeches.filter(s => s.voiceID && s.elapsedTime <= elapsedTimeRef.current + 60.0 && s.elapsedTime + s.durationSec > elapsedTimeRef.current)
+    const targets = speeches.filter(s => s.voiceID && s.elapsedTime <= elapsedTimeRef.current + 10.0 && s.elapsedTime + s.durationSec > elapsedTimeRef.current)
     for (let i = 0; i < targets.length; i++) {
       if (addNewVoice(targets[i])) addedNewVoice = true
     }
