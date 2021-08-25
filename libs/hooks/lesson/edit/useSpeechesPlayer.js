@@ -19,7 +19,7 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
   }, [voices])
 
   const createAudio = useCallback(voiceURL => {
-    const audio = new Audio(voiceURL)
+    const audio = new Audio()
     audio.onwaiting = () => {
       let existsPreparingSpeech = false
       setVoices(voices => {
@@ -46,32 +46,45 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
         return [...voices]
       })
     }
+    audio.onerror = () => {
+      console.error(audio.error)
+      setVoices(voices => {
+        const voice = voices.find(v => v.audio === audio)
+        if (!voice) return voices
+        if (voice.canPlay) return voices
+        // 連続したシークなどでバッファが枯渇するときにエラーが起きる模様。
+        // このままではローディングが解除されないなどの不具合を引き起こすので便宜上 canPlay: true にする
+        voice.canPlay = true
+        return [...voices]
+      })
+    }
     audio.onended = () => {
       setVoices(speeches => speeches.filter(s => s.audio !== audio))
     }
+    audio.src = voiceURL
     return audio
   }, [isPlaying, stopSpeeches])
 
-  const addNewVoice = useCallback(voice => {
+  const addNewVoice = useCallback(speech => {
     let addedNewVoice = false
     setVoices(voices => {
-      if (voices.find(s => s.id === voice.voiceID)) {
+      if (voices.find(s => s.id === speech.voiceID)) {
         return voices
       }
 
       addedNewVoice = true
-      const url = voiceURL(lessonID, voice.voiceID, voice.voiceFileKey)
+      const url = voiceURL(lessonID, speech.voiceID, speech.voiceFileKey)
       voices.push({
-        id: voice.voiceID,
+        id: speech.voiceID,
         audio: createAudio(url),
         canPlay: false,
-        elapsedTime: voice.elapsedTime,
-        durationSec: voice.durationSec,
+        elapsedTime: speech.elapsedTime,
+        durationSec: speech.durationSec,
       })
       return [...voices]
     })
     return addedNewVoice
-  }, [lessonID, setVoices, createAudio])
+  }, [createAudio, lessonID])
 
   const prefetchVoice = useCallback(() => {
     let addedNewVoice = false
@@ -128,6 +141,7 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
       await setVoicesTime(true)
     } else {
       stopSpeeches()
+      setVoices([])
       elapsedTimeRef.current = durationSec
     }
   }
@@ -141,6 +155,7 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
     }
 
     elapsedTimeRef.current = parseFloat(e.target.value)
+    setVoices([])
     const addedNewVoice = prefetchVoice()
     setVoicesTime(false)
     if (didPlaying && !addedNewVoice) {
