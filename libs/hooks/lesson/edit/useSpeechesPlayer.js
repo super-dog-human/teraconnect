@@ -116,10 +116,11 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
   }, [setVoicesTime])
 
   async function updateSpeeches(incrementalTime) {
-    const shouldPrefetch = Math.floor(elapsedTimeRef.current + incrementalTime) - Math.floor(elapsedTimeRef.current) > 0
+    const newElapsedTime = elapsedTimeRef.current + incrementalTime
 
-    elapsedTimeRef.current += incrementalTime
-    if (elapsedTimeRef.current <= durationSec) {
+    if (newElapsedTime < durationSec) {
+      const shouldPrefetch = Math.floor(newElapsedTime) - Math.floor(elapsedTimeRef.current) > 0
+      elapsedTimeRef.current = newElapsedTime
       if (shouldPrefetch) prefetchVoice()
       await setVoicesTime(true)
     } else {

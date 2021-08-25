@@ -64,13 +64,13 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
       animationRequestRef.current = requestAnimationFrame(playFrame)
     }
 
-    if (drawings) draw(incrementalTime)
-    if (updateSpeeches) updateSpeeches(incrementalTime)
-
     elapsedTimeRef.current += incrementalTime
-    updatePlayerElapsedTime()
 
-    if (elapsedTimeRef.current >= startElapsedTime + durationSec) {
+    if (elapsedTimeRef.current <= startElapsedTime + durationSec) {
+      if (drawings) draw(incrementalTime)
+      if (updateSpeeches) updateSpeeches(incrementalTime)
+      updatePlayerElapsedTime()
+    } else {
       finishPlaying()
       return
     }
