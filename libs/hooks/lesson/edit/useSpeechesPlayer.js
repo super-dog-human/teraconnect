@@ -1,6 +1,8 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
 import { voiceURL } from '../../../speechUtils'
 
+const prefetchSeconds = 10
+
 export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
   const elapsedTimeRef = useRef(0)
   const shouldResumeRef = useRef(false)
@@ -86,16 +88,16 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
     return addedNewVoice
   }, [createAudio, lessonID])
 
-  const prefetchVoice = useCallback(() => {
+  const prefetchVoices = useCallback(() => {
     let addedNewVoice = false
-    const targets = speeches.filter(s => s.voiceID && s.elapsedTime <= elapsedTimeRef.current + 10 && s.elapsedTime + s.durationSec > elapsedTimeRef.current)
-    for (let i = 0; i < targets.length; i++) {
-      if (addNewVoice(targets[i])) addedNewVoice = true
-    }
+    const targets = speeches.filter(s => s.voiceID && s.elapsedTime <= elapsedTimeRef.current + prefetchSeconds && s.elapsedTime + s.durationSec > elapsedTimeRef.current)
+    targets.forEach(speech => {
+      if (addNewVoice(speech)) addedNewVoice = true
+    })
     return addedNewVoice
   }, [speeches, addNewVoice])
 
-  const setVoicesTime = useCallback(async needsPlay => {
+  const setVoiceTimes = useCallback(async needsPlay => {
     let latestVoices = []
     setVoices(voices => {
       latestVoices = voices // requestAnimationFrame経由で呼ばれた場合、最新のstateが取得できないのでsetState中で取得する
@@ -126,11 +128,11 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
   const playSpeeches = useCallback(() => {
     if (elapsedTimeRef.current >= durationSec) {
       elapsedTimeRef.current = 0
-      prefetchVoice()
+      prefetchVoices()
     }
     setIsPlaying(true)
-    setVoicesTime(true)
-  }, [durationSec, setVoicesTime, prefetchVoice])
+    setVoiceTimes(true)
+  }, [durationSec, setVoiceTimes, prefetchVoices])
 
   async function updateSpeeches(incrementalTime) {
     const newElapsedTime = elapsedTimeRef.current + incrementalTime
@@ -138,8 +140,8 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
     if (newElapsedTime < durationSec) {
       const shouldPrefetch = Math.floor(newElapsedTime) - Math.floor(elapsedTimeRef.current) > 0
       elapsedTimeRef.current = newElapsedTime
-      if (shouldPrefetch) prefetchVoice()
-      await setVoicesTime(true)
+      if (shouldPrefetch) prefetchVoices()
+      await setVoiceTimes(true)
     } else {
       stopSpeeches()
       setVoices([])
@@ -157,8 +159,8 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
 
     elapsedTimeRef.current = parseFloat(e.target.value)
     setVoices([])
-    const addedNewVoice = prefetchVoice()
-    setVoicesTime(false)
+    const addedNewVoice = prefetchVoices()
+    setVoiceTimes(false)
     if (didPlaying && !addedNewVoice) {
       setIsLoading(false)
       shouldResumeRef.current = false
@@ -172,11 +174,11 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
 
     setIsLoading(true)
     setVoices([])
-    prefetchVoice()
+    prefetchVoices()
     setIsLoading(false)
 
     if (didPlaying) playSpeeches()
-  }, [isPlaying, stopSpeeches, prefetchVoice, playSpeeches])
+  }, [isPlaying, stopSpeeches, prefetchVoices, playSpeeches])
 
   useEffect(() => {
     if (voices.every(s => s.canPlay)) {
