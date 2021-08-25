@@ -111,9 +111,12 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
   }, [stopSpeeches])
 
   const playSpeeches = useCallback(() => {
+    if (elapsedTimeRef.current >= durationSec) {
+      elapsedTimeRef.current = 0
+    }
     setIsPlaying(true)
     setVoicesTime(true)
-  }, [setVoicesTime])
+  }, [durationSec, setVoicesTime])
 
   async function updateSpeeches(incrementalTime) {
     const newElapsedTime = elapsedTimeRef.current + incrementalTime
@@ -125,7 +128,7 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
       await setVoicesTime(true)
     } else {
       stopSpeeches()
-      elapsedTimeRef.current = 0
+      elapsedTimeRef.current = durationSec
     }
   }
 
