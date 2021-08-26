@@ -67,23 +67,23 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
     return audio
   }, [isPlaying, stopSpeeches])
 
-  const addNewVoice = useCallback(speech => {
+  const addNewVoices = useCallback(newSpeeches => {
     let addedNewVoice = false
     setVoices(voices => {
-      if (voices.find(s => s.id === speech.voiceID)) {
-        return voices
-      }
+      newSpeeches.forEach(speech => {
+        if (voices.find(s => s.id === speech.voiceID)) return
 
-      addedNewVoice = true
-      const url = voiceURL(lessonID, speech.voiceID, speech.voiceFileKey)
-      voices.push({
-        id: speech.voiceID,
-        audio: createAudio(url),
-        canPlay: false,
-        elapsedTime: speech.elapsedTime,
-        durationSec: speech.durationSec,
+        addedNewVoice = true
+        const url = voiceURL(lessonID, speech.voiceID, speech.voiceFileKey)
+        voices.push({
+          id: speech.voiceID,
+          audio: createAudio(url),
+          canPlay: false,
+          elapsedTime: speech.elapsedTime,
+          durationSec: speech.durationSec,
+        })
       })
-      return [...voices]
+      return addedNewVoice ? [...voices] : voices
     })
     return addedNewVoice
   }, [createAudio, lessonID])
@@ -91,11 +91,9 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
   const prefetchVoices = useCallback(() => {
     let addedNewVoice = false
     const targets = speeches.filter(s => s.voiceID && s.elapsedTime <= elapsedTimeRef.current + prefetchSeconds && s.elapsedTime + s.durationSec > elapsedTimeRef.current)
-    targets.forEach(speech => {
-      if (addNewVoice(speech)) addedNewVoice = true
-    })
+    if (addNewVoices(targets)) addedNewVoice = true
     return addedNewVoice
-  }, [speeches, addNewVoice])
+  }, [speeches, addNewVoices])
 
   const setVoiceTimes = useCallback(async needsPlay => {
     let latestVoices = []
