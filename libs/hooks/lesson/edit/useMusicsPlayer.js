@@ -1,6 +1,6 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
 
-const fadingDuration = 3
+const fadingDuration = 4
 
 export default function useMusicsPlayer({ durationSec, musics: originalMusics, musicURLs }) {
   const elapsedTimeRef = useRef(0)
