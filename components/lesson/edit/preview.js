@@ -35,14 +35,12 @@ export default function Preview({ lessonID }) {
 
   useEffect(() => {
     if (isPlaying && (!isMusicPlaying || !isSpeechPlaying)) {
-      console.log('とめる')
-      if (isMusicPlaying) stopMusics()
       if (isSpeechPlaying) stopSpeeches()
+      if (isMusicPlaying) stopMusics()
       stopPlaying()
     } else if (!isPlaying && (isMusicPlaying || isSpeechPlaying)) {
-      console.log('はじめる')
-      if (!isMusicPlaying) playMusics()
       if (!isSpeechPlaying) playSpeeches()
+      if (!isMusicPlaying) playMusics()
       startPlaying()
     }
   }, [isPlaying, isSpeechPlaying, isMusicPlaying, playSpeeches, stopSpeeches, playMusics, stopMusics, startPlaying, stopPlaying])

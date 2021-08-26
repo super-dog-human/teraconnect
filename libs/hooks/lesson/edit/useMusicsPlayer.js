@@ -10,11 +10,10 @@ export default function useMusicsPlayer({ durationSec, musics: originalMusics, m
   const [isPlaying, setIsPlaying] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
-  const stopMusics = useCallback(excludeAudio => {
+  const stopMusics = useCallback(() => {
     setIsPlaying(false)
     musics.forEach(v => {
       if (v.audio.paused) return
-      if (v.audio === excludeAudio) return
       v.audio.pause()
     })
   }, [musics])
@@ -22,21 +21,12 @@ export default function useMusicsPlayer({ durationSec, musics: originalMusics, m
   const createAudio = useCallback((musicURL, isLoop) => {
     const audio = new Audio()
     audio.onwaiting = () => {
-      let existsPreparingMusic = false
       setMusics(musics => {
         const music = musics.find(v => v.audio === audio)
         if (!music || !music.canPlay) return musics
-        if (!music.audio.paused) {
-          existsPreparingMusic = true
-        }
         music.canPlay = false
         return [...musics]
       })
-      if (isPlaying && existsPreparingMusic) {
-        shouldResumeRef.current = true
-        stopMusics(audio) // 自身は自動で再開されるので停止しない
-        setIsLoading(true)
-      }
     }
     audio.oncanplaythrough = () => {
       setMusics(musics => {
@@ -62,7 +52,7 @@ export default function useMusicsPlayer({ durationSec, musics: originalMusics, m
     audio.loop = isLoop
     audio.src = musicURL
     return audio
-  }, [isPlaying, stopMusics])
+  }, [])
 
   const setMusicVolume = useCallback(music => {
     const timeSinceStart = elapsedTimeRef.current - music.elapsedTime

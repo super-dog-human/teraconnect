@@ -11,11 +11,10 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
-  const stopSpeeches = useCallback(excludeAudio => {
+  const stopSpeeches = useCallback(() => {
     setIsPlaying(false)
     voices.forEach(v => {
       if (v.audio.paused) return
-      if (v.audio === excludeAudio) return
       v.audio.pause()
     })
   }, [voices])
@@ -23,21 +22,12 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
   const createAudio = useCallback(voiceURL => {
     const audio = new Audio()
     audio.onwaiting = () => {
-      let existsPreparingSpeech = false
       setVoices(voices => {
         const voice = voices.find(v => v.audio === audio)
         if (!voice || !voice.canPlay) return voices
-        if (!voice.audio.paused) {
-          existsPreparingSpeech = true
-        }
         voice.canPlay = false
         return [...voices]
       })
-      if (isPlaying && existsPreparingSpeech) {
-        shouldResumeRef.current = true
-        stopSpeeches(audio) // 自身は自動で再開されるので停止しない
-        setIsLoading(true)
-      }
     }
     audio.oncanplaythrough = () => {
       setVoices(voices => {
@@ -65,7 +55,7 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
     }
     audio.src = voiceURL
     return audio
-  }, [isPlaying, stopSpeeches])
+  }, [])
 
   const addNewVoices = useCallback(newSpeeches => {
     let addedNewVoice = false
