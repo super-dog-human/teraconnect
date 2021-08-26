@@ -64,28 +64,6 @@ export default function useMusicsPlayer({ durationSec, musics: originalMusics, m
     return audio
   }, [isPlaying, stopMusics])
 
-  const replaceMusics = useCallback(() => {
-    const newMusics = []
-    originalMusics.forEach((music, i) => {
-      if (music.action === 'stop') return
-      const url = musicURLs[music.backgroundMusicID]?.url
-      if (!url) return
-
-      const nextMusic = originalMusics[i + 1]
-      const nextElapsedTime = nextMusic ? nextMusic.elapsedTime : durationSec
-      newMusics.push({
-        audio: createAudio(url, music.isLoop),
-        canPlay: false,
-        isLoop: music.isLoop,
-        isFading: music.isFading,
-        maxVolume: music.volume,
-        elapsedTime: music.elapsedTime,
-        durationSec: nextElapsedTime - music.elapsedTime,
-      })
-    })
-    setMusics(newMusics)
-  }, [originalMusics, musicURLs, durationSec, createAudio])
-
   const setMusicVolume = useCallback(music => {
     const timeSinceStart = elapsedTimeRef.current - music.elapsedTime
     const timeUntilEnd = music.elapsedTime + music.durationSec - elapsedTimeRef.current
@@ -178,6 +156,28 @@ export default function useMusicsPlayer({ durationSec, musics: originalMusics, m
     }
   }
 
+  const replaceMusics = useCallback(() => {
+    const newMusics = []
+    originalMusics.forEach((music, i) => {
+      if (music.action === 'stop') return
+      const url = musicURLs[music.backgroundMusicID]?.url
+      if (!url) return
+
+      const nextMusic = originalMusics[i + 1]
+      const nextElapsedTime = nextMusic ? nextMusic.elapsedTime : durationSec
+      newMusics.push({
+        audio: createAudio(url, music.isLoop),
+        canPlay: false,
+        isLoop: music.isLoop,
+        isFading: music.isFading,
+        maxVolume: music.volume,
+        elapsedTime: music.elapsedTime,
+        durationSec: nextElapsedTime - music.elapsedTime,
+      })
+    })
+    setMusics(newMusics)
+  }, [originalMusics, musicURLs, durationSec, createAudio])
+
   const refreshMusics = useCallback(() => {
     const didPlaying = isPlaying
     if (isPlaying) stopMusics()
@@ -201,7 +201,7 @@ export default function useMusicsPlayer({ durationSec, musics: originalMusics, m
 
   useEffect(() => {
     setDidUpdatedMusics(true)
-  }, [originalMusics])
+  }, [originalMusics, musicURLs, durationSec]) // durationSecは停止行のない最後のBGMの再生時間計算に使用されるため、依存配列に必要
 
   useEffect(() => {
     if (!didUpdatedMusics) return
