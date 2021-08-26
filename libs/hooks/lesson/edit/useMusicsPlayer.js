@@ -1,0 +1,214 @@
+import { useRef, useState, useCallback, useEffect } from 'react'
+
+const fadingDuration = 3
+
+export default function useMusicsPlayer({ durationSec, musics: originalMusics, musicURLs }) {
+  const elapsedTimeRef = useRef(0)
+  const shouldResumeRef = useRef(false)
+  const [didUpdatedMusics, setDidUpdatedMusics] = useState(false)
+  const [musics, setMusics] = useState([])
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
+  const stopMusics = useCallback(excludeAudio => {
+    setIsPlaying(false)
+    musics.forEach(v => {
+      if (v.audio.paused) return
+      if (v.audio === excludeAudio) return
+      v.audio.pause()
+    })
+  }, [musics])
+
+  const createAudio = useCallback((musicURL, isLoop) => {
+    const audio = new Audio()
+    audio.onwaiting = () => {
+      let existsPreparingMusic = false
+      setMusics(musics => {
+        const music = musics.find(v => v.audio === audio)
+        if (!music || !music.canPlay) return musics
+        if (!music.audio.paused) {
+          existsPreparingMusic = true
+        }
+        music.canPlay = false
+        return [...musics]
+      })
+      if (isPlaying && existsPreparingMusic) {
+        shouldResumeRef.current = true
+        stopMusics(audio) // 自身は自動で再開されるので停止しない
+        setIsLoading(true)
+      }
+    }
+    audio.oncanplaythrough = () => {
+      setMusics(musics => {
+        const music = musics.find(v => v.audio === audio)
+        if (!music) return musics
+        if (music.canPlay) return musics
+        music.canPlay = true
+        return [...musics]
+      })
+    }
+    audio.onerror = () => {
+      console.error(audio.error)
+      setMusics(musics => {
+        const music = musics.find(v => v.audio === audio)
+        if (!music) return musics
+        if (music.canPlay) return musics
+        // 連続したシークなどでバッファが枯渇するときにエラーが起きる模様。
+        // このままではローディングが解除されないなどの不具合を引き起こすので便宜上 canPlay: true にする
+        music.canPlay = true
+        return [...musics]
+      })
+    }
+    audio.loop = isLoop
+    audio.src = musicURL
+    return audio
+  }, [isPlaying, stopMusics])
+
+  const replaceMusics = useCallback(() => {
+    const newMusics = []
+    originalMusics.forEach((music, i) => {
+      if (music.action === 'stop') return
+      const url = musicURLs[music.backgroundMusicID]?.url
+      if (!url) return
+
+      const nextMusic = originalMusics[i + 1]
+      const nextElapsedTime = nextMusic ? nextMusic.elapsedTime : durationSec
+      newMusics.push({
+        audio: createAudio(url, music.isLoop),
+        canPlay: false,
+        isLoop: music.isLoop,
+        isFading: music.isFading,
+        maxVolume: music.volume,
+        elapsedTime: music.elapsedTime,
+        durationSec: nextElapsedTime - music.elapsedTime,
+      })
+    })
+    setMusics(newMusics)
+  }, [originalMusics, musicURLs, durationSec, createAudio])
+
+  const setMusicVolume = useCallback(music => {
+    const timeSinceStart = elapsedTimeRef.current - music.elapsedTime
+    const timeUntilEnd = music.elapsedTime + music.durationSec - elapsedTimeRef.current
+    if (0 <= timeSinceStart && timeSinceStart < fadingDuration) {
+      music.audio.volume = timeSinceStart / fadingDuration * music.maxVolume
+    } else if (0 < timeUntilEnd && timeUntilEnd < fadingDuration) {
+      music.audio.volume = timeUntilEnd / fadingDuration * music.maxVolume
+    } else if (fadingDuration <= timeUntilEnd && music.audio.volume < 1) {
+      music.audio.volume = music.maxVolume
+    } else if (timeUntilEnd <= 0 && music.audio.volume > 0) {
+      music.audio.volume = 0
+    }
+  }, [])
+
+  const setMusicTimes = useCallback(async needsPlay => {
+    let latestMusics = []
+    setMusics(musics => {
+      latestMusics = musics // requestAnimationFrame経由で呼ばれた場合、最新のstateが取得できないのでsetState中で取得する
+      return musics
+    })
+
+    const newMusics = []
+    latestMusics.forEach(music => {
+      if (music.elapsedTime > elapsedTimeRef.current) return                // まだ再生すべきでない
+      if (music.elapsedTime + music.durationSec < elapsedTimeRef.current) { // すでに再生期間が終わっている
+        if (!music.audio.paused) music.audio.pause()
+        return
+      }
+      if (!music.audio.paused) {                                            // ボリュームのフェード
+        if (music.isFading) setMusicVolume(music)
+        return
+      }
+      newMusics.push(music)                                                 // 今から再生すべき
+    })
+
+    if (needsPlay && newMusics.some(v => !v.canPlay)) {
+      shouldResumeRef.current = true
+      stopMusics()
+      setIsLoading(true)
+      return
+    }
+
+    for (let i = 0; i < newMusics.length; i++) {
+      const music = newMusics[i]
+      const currentTime = elapsedTimeRef.current - music.elapsedTime
+      if (music.isLoop && currentTime > music.audio.duration) {
+        music.audio.currentTime = currentTime % music.audio.duration
+      } else {
+        music.audio.currentTime = currentTime
+      }
+      if (music.isFading) music.audio.volume = 0
+      if (needsPlay) await music.audio.play()
+    }
+  }, [stopMusics, setMusicVolume])
+
+  const playMusics = useCallback(() => {
+    if (elapsedTimeRef.current >= durationSec) {
+      elapsedTimeRef.current = 0
+    }
+    setIsPlaying(true)
+    setMusicTimes(true)
+  }, [durationSec, setMusicTimes])
+
+  async function updateMusics(incrementalTime) {
+    const newElapsedTime = elapsedTimeRef.current + incrementalTime
+
+    if (newElapsedTime < durationSec) {
+      elapsedTimeRef.current = newElapsedTime
+      await setMusicTimes(true)
+    } else {
+      stopMusics()
+      elapsedTimeRef.current = durationSec
+    }
+  }
+
+  async function seekMusics(e) {
+    const didPlaying = isPlaying
+    if (isPlaying) {
+      shouldResumeRef.current = true
+      stopMusics()
+      setIsLoading(true)
+    }
+
+    elapsedTimeRef.current = parseFloat(e.target.value)
+    setMusicTimes(false)
+    if (didPlaying) {
+      setIsLoading(false)
+      shouldResumeRef.current = false
+      playMusics()
+    }
+  }
+
+  const refreshMusics = useCallback(() => {
+    const didPlaying = isPlaying
+    if (isPlaying) stopMusics()
+
+    setIsLoading(true)
+    replaceMusics()
+    setIsLoading(false)
+
+    if (didPlaying) playMusics()
+  }, [isPlaying, stopMusics, replaceMusics, playMusics])
+
+  useEffect(() => {
+    if (musics.every(s => s.canPlay)) {
+      setIsLoading(false)
+      if (shouldResumeRef.current) {
+        shouldResumeRef.current = false
+        playMusics()
+      }
+    }
+  }, [musics, playMusics])
+
+  useEffect(() => {
+    setDidUpdatedMusics(true)
+  }, [originalMusics])
+
+  useEffect(() => {
+    if (!didUpdatedMusics) return
+    if (musicURLs.length === 0) return
+    refreshMusics()
+    setDidUpdatedMusics(false)
+  }, [didUpdatedMusics, musicURLs, refreshMusics])
+
+  return { isLoading, isPlaying, playMusics, stopMusics, updateMusics, seekMusics }
+}

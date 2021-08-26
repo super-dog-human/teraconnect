@@ -2,7 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react'
 import usePlayerController from './usePlayerController'
 import useDrawingPlayer from './useDrawingPlayer'
 
-export default function useLessonPlayer({ startElapsedTime=0, durationSec, avatars, graphics, drawings, musics, speechURL, sameTimeIndex, updateSpeeches }) {
+export default function useLessonPlayer({ startElapsedTime=0, durationSec, avatars, graphics, drawings, speechURL, sameTimeIndex, updateSpeeches, updateMusics }) {
   const [isSpeechPreparing, setIsSpeechPreparing] = useState(!!speechURL)
   const animationRequestRef = useRef(0)
   const audioRef = useRef()
@@ -69,6 +69,7 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
     if (elapsedTimeRef.current <= startElapsedTime + durationSec) {
       if (drawings) draw(incrementalTime)
       if (updateSpeeches) updateSpeeches(incrementalTime)
+      if (updateMusics) updateMusics(incrementalTime)
       updatePlayerElapsedTime()
     } else {
       finishPlaying()
