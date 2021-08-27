@@ -37,11 +37,9 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
   function createAudio() {
     audioRef.current = new Audio(speechURL)
     audioRef.current.oncanplaythrough = () => {
-      console.log('oncanplaythrough')
       setIsSpeechPreparing(false)
     }
     audioRef.current.onwaiting = () => {
-      console.log('onwaiting')
       stopPlaying()
       setIsSpeechPreparing(true)
     }
