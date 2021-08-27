@@ -9,6 +9,9 @@ const InputRange = React.forwardRef(function inputRange(props, ref) {
     height: '1px',
     appearance: 'none',
     background: color,
+    '::-moz-range-track': {
+      height: '12px',
+    },
     '::-webkit-slider-thumb': {
       appearance: 'none',
       width: '12px',
