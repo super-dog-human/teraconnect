@@ -9,19 +9,23 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
   const preStrokeRef = useRef({})
   const preUndoRef = useRef({})
   const preClearRef = useRef(-1)
-  const { drawPicture } = useDrawingPicture({ canvasRef, drawings, startElapsedTime })
+  const { drawPicture } = useDrawingPicture({ canvasRef })
 
   function setPictureBeforeDrawing() {
     clearDrawing()
     if (sameTimeIndex < 0) return
 
-    const targetDrawings = drawings.filter(d => d.elapsedTime === startElapsedTime).filter((_, i) => i < sameTimeIndex)
+    const targetDrawings = []
+    targetDrawings.push(...drawings.filter(d => d.elapsedTime < startElapsedTime))
+    targetDrawings.push(...drawings.filter(d => d.elapsedTime === startElapsedTime).filter((_, i) => i < sameTimeIndex))
     drawPicture(targetDrawings)
   }
 
   function setCompletedPicture() {
     clearDrawing()
-    const targetDrawings = drawings.filter(d => d.elapsedTime === startElapsedTime).filter((_, i) => i <= sameTimeIndex)
+    const targetDrawings = []
+    targetDrawings.push(...drawings.filter(d => d.elapsedTime < startElapsedTime))
+    targetDrawings.push(...drawings.filter(d => d.elapsedTime === startElapsedTime).filter((_, i) => i <= sameTimeIndex))
     drawPicture(targetDrawings)
   }
 
@@ -92,9 +96,9 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
       drawingsToUndo.push(...deepCopy(drawings.filter(d => d.elapsedTime <= currentElapsedTime)))
     }
     const lastDrawing = drawingsToUndo[drawingsToUndo.length - 1]
-    lastDrawing.units = lastDrawing.units.slice(0, unitIndex + 1)
+    lastDrawing.units = lastDrawing.units.slice(0, unitIndex + 1) // 現時点までの描画データ
 
-    drawPicture(drawingsToUndo)
+    drawPicture(drawingsToUndo) // このメソッドでundoを加味して描画する
 
     preUndoRef.current = { drawingIndex, unitIndex }
   }

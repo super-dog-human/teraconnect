@@ -2,7 +2,7 @@ import { useRef, useEffect } from 'react'
 import { drawToCanvas } from '../../drawingUtils'
 import { deepCopy } from '../../utils'
 
-export default function useDrawingPicture({ canvasRef, drawings, startElapsedTime }) {
+export default function useDrawingPicture({ canvasRef }) {
   const canvasCtxRef = useRef()
 
   function drawPicture(currentDrawings) {
@@ -26,8 +26,7 @@ export default function useDrawingPicture({ canvasRef, drawings, startElapsedTim
   }
 
   function initialDrawings(currentDrawings) {
-    let drawingsInDuration = deepCopy(drawings.filter(d => d.elapsedTime < startElapsedTime))
-    drawingsInDuration.push(...deepCopy(currentDrawings))
+    const drawingsInDuration = deepCopy(currentDrawings)
     removeUndoPair(drawingsInDuration)
 
     const lastClearIndex = drawingsInDuration.slice().reverse().findIndex(d => d.action === 'clear')
@@ -62,7 +61,7 @@ export default function useDrawingPicture({ canvasRef, drawings, startElapsedTim
       for (let i = drawIndex - 1; i >= 0; i--) {
         // 最初に出現するundoを上記で取得しているので、自身より前のdrawのunitsの最後の要素は必ずdrawになる
         if (targetDrawings[i].action === 'draw') {
-          targetDrawings[i].units.pop()
+          targetDrawings[i].units.pop() // undoが所属するものより前のunitsの最後のdrawを削除
           if (targetDrawings[i].units.length === 0) {
             targetDrawings.splice(i, 1)
           }
@@ -75,7 +74,7 @@ export default function useDrawingPicture({ canvasRef, drawings, startElapsedTim
         }
       }
     } else {
-      targetDrawings[drawIndex].units.splice(undoIndexInUnits - 1, 1)
+      targetDrawings[drawIndex].units.splice(undoIndexInUnits - 1, 1) // undoの直前のdrawを削除
       if (targetDrawings[drawIndex].units.length === 0) {
         targetDrawings.splice(drawIndex, 1)
       }
