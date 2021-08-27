@@ -15,7 +15,7 @@ export default function Preview({ lessonID }) {
     useLessonPlayer({ startElapsedTime: 0, durationSec, avatars, drawings, graphics, updateSpeeches, updateMusics })
 
   function handlePlayButtonClick() {
-    if (isSpeechPlaying) {
+    if (isPlaying) {
       stopSpeeches()
       stopMusics()
       stopPlaying()
