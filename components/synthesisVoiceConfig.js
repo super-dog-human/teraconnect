@@ -64,7 +64,7 @@ export default function SynthesisVoiceConfig({ isProcessing, synthesisConfig, se
         <Col md={4}>
           <PlainText size='13' color={textColor}>速度</PlainText>
           <ContainerSpacer left='10'>
-            <InputRange color={textColor} defaultValue={synthesisConfig.speakingRate || '1.2'} min='0.5' max='3.0' step='0.1' onInput={setSpeakingRate} onChange={setSpeakingRate} />
+            <InputRange color={textColor} defaultValue={synthesisConfig.speakingRate || '1.2'} min='0.5' max='3.0' step='0.1' onChange={setSpeakingRate} />
           </ContainerSpacer>
           <AlignContainer textAlign='right'>
             <PlainText size='12' color={textColor}>{synthesisConfig.speakingRate || '1.2'}</PlainText>
@@ -73,7 +73,7 @@ export default function SynthesisVoiceConfig({ isProcessing, synthesisConfig, se
         <Col md={4}>
           <PlainText size='13' color={textColor}>ピッチ</PlainText>
           <ContainerSpacer left='10'>
-            <InputRange color={textColor} defaultValue={synthesisConfig.pitch || '0'} min='-10.0' max='10.0' step='1' onInput={setPitch} onChange={setPitch} />
+            <InputRange color={textColor} defaultValue={synthesisConfig.pitch || '0'} min='-10.0' max='10.0' step='1' onChange={setPitch} />
           </ContainerSpacer>
           <AlignContainer textAlign='right'>
             <PlainText size='12' color={textColor}>{synthesisConfig.pitch || '0'}</PlainText>
@@ -82,7 +82,7 @@ export default function SynthesisVoiceConfig({ isProcessing, synthesisConfig, se
         <Col md={4}>
           <PlainText size='13' color={textColor}>音量調整</PlainText>
           <ContainerSpacer left='10'>
-            <InputRange color={textColor} defaultValue={synthesisConfig.volumeGainDb || '0'} min='-5.0' max='0' step='1' onInput={setVolumeGainDb} onChange={setVolumeGainDb} />
+            <InputRange color={textColor} defaultValue={synthesisConfig.volumeGainDb || '0'} min='-5.0' max='0' step='1' onChange={setVolumeGainDb} />
           </ContainerSpacer>
           <AlignContainer textAlign='right'>
             <PlainText size='12' color={textColor}>{synthesisConfig.volumeGainDb || '0'}</PlainText>

@@ -77,7 +77,7 @@ export default function Music(props) {
                       <Spacer width='20' />
                       <Container width='100'>
                         <Flex alignItems='center'>
-                          <InputRange min='0.1' max='1.0' step='0.05' size='14' color='var(--soft-white)' defaultValue={config.volume} onInput={handleVolumeChange} onChange={handleVolumeChange} />
+                          <InputRange min='0.1' max='1.0' step='0.05' size='14' color='var(--soft-white)' defaultValue={config.volume} onChange={handleVolumeChange} />
                         </Flex>
                       </Container>
                       <Spacer width='5' />
