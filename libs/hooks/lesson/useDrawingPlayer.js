@@ -7,11 +7,14 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
   const canvasRef = useRef()
   const canvasCtxRef = useRef()
   const preStrokeRef = useRef({})
-  const preUndoRef = useRef()
+  const preUndoRef = useRef({})
+  const preClearRef = useRef(-1)
   const { drawPicture } = useDrawingPicture({ canvasRef, drawings, startElapsedTime })
 
   function setPictureBeforeDrawing() {
     clearDrawing()
+    if (sameTimeIndex < 0) return
+
     const targetDrawings = drawings.filter(d => d.elapsedTime === startElapsedTime).filter((_, i) => i < sameTimeIndex)
     drawPicture(targetDrawings)
   }
@@ -32,11 +35,13 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
       targetDrawings.push(...drawings)
     }
 
-    targetDrawings.forEach(drawing => {
+    targetDrawings.forEach((drawing, drawingIndex) => {
+      const currentElapsedTime = elapsedTimeRef.current + incrementalTime
+      if (currentElapsedTime < drawing.elapsedTime) return
+
       switch(drawing.action) {
       case 'draw':
         drawing.units.forEach((unit, unitIndex) => {
-          const currentElapsedTime = elapsedTimeRef.current + incrementalTime
           if (currentElapsedTime < unit.elapsedTime) return
 
           if (unit.action === 'draw') {
@@ -51,16 +56,19 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
               positionIndex = unit.stroke.positions.length
             }
             if (positionIndex > 0) {
-              drawStrokePart(unit.stroke, unitIndex, positionIndex)
+              drawStrokePart({ stroke: unit.stroke, drawingIndex, unitIndex, positionIndex })
             }
           } else {
-            undo(unitIndex)
+            undo({ drawingIndex, unitIndex, currentElapsedTime })
           }
         })
         return
-      case 'clear':
+      case 'clear': {
+        if (drawingIndex <= preClearRef.current) return
         clearDrawing()
+        preClearRef.current = drawingIndex
         return
+      }
       case 'show':
         canvasRef.current.style.opacity = 1
         return
@@ -71,53 +79,57 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
     })
   }
 
-  function undo(unitIndex) {
-    if (unitIndex <= preUndoRef.current) return
-
+  function undo({ drawingIndex, unitIndex, currentElapsedTime }) {
+    if (drawingIndex < preUndoRef.current.drawingIndex) return
+    if (drawingIndex === preUndoRef.current.drawingIndex && unitIndex <= preUndoRef.current.unitIndex) return
     clearDrawing()
-    const preUndoDrawings = drawings.filter(d => d.elapsedTime < startElapsedTime)
-    const drawingsToUndo = deepCopy(drawings.filter(d => d.elapsedTime === startElapsedTime).filter((_, i) => i <= sameTimeIndex))
+
+    const drawingsToUndo = []
+    if (sameTimeIndex >= 0) {
+      drawingsToUndo.push(...drawings.filter(d => d.elapsedTime < startElapsedTime))
+      drawingsToUndo.push(...deepCopy(drawings.filter(d => d.elapsedTime === startElapsedTime).filter((_, i) => i <= sameTimeIndex)))
+    } else {
+      drawingsToUndo.push(...deepCopy(drawings.filter(d => d.elapsedTime <= currentElapsedTime)))
+    }
     const lastDrawing = drawingsToUndo[drawingsToUndo.length - 1]
     lastDrawing.units = lastDrawing.units.slice(0, unitIndex + 1)
-    drawPicture([...preUndoDrawings, ...drawingsToUndo])
 
-    preUndoRef.current = unitIndex
+    drawPicture(drawingsToUndo)
+
+    preUndoRef.current = { drawingIndex, unitIndex }
   }
 
-  function drawStrokePart(stroke, unitIndex, positionIndex) {
-    if (unitIndex < preStrokeRef.current.unitIndex) return
-    if (unitIndex === preStrokeRef.current.unitIndex && positionIndex <= preStrokeRef.current.positionIndex) return
+  function drawStrokePart({ stroke, drawingIndex, unitIndex, positionIndex }) {
+    if (drawingIndex < preStrokeRef.current.drawingIndex) return
+    if (drawingIndex === preStrokeRef.current.drawingIndex && unitIndex < preStrokeRef.current.unitIndex) return
+    if (drawingIndex === preStrokeRef.current.drawingIndex && unitIndex === preStrokeRef.current.unitIndex && positionIndex <= preStrokeRef.current.positionIndex) return
 
     const newStroke = { ...stroke }
     newStroke.positions = stroke.positions.slice(0, positionIndex) // 線をつなげるため毎回0から描画する
     drawToCanvas(canvasCtxRef.current, newStroke)
 
-    preStrokeRef.current.unitIndex = unitIndex
-    preStrokeRef.current.positionIndex = positionIndex
+    preStrokeRef.current = { drawingIndex, unitIndex, positionIndex }
   }
 
   function initializeDrawing() {
-    if (sameTimeIndex >= 0) {
-      setPictureBeforeDrawing()
-    } else {
-      clearDrawing()
-    }
-    clearPreHistory()
+    setPictureBeforeDrawing()
+    clearHistory()
   }
 
   function finishDrawing() {
     draw(0) // 経過時間が終了時間に達した際、描写しきれなかったものが発生しうるので最後にもう一度描写する
-    clearPreHistory()
+    clearHistory()
   }
 
   function resetBeforeSeeking() {
     setPictureBeforeDrawing()
-    clearPreHistory()
+    clearHistory()
   }
 
-  function clearPreHistory() {
+  function clearHistory() {
     preStrokeRef.current = {}
-    preUndoRef.current = null
+    preUndoRef.current = {}
+    preClearRef.current = -1
   }
 
   function clearDrawing() {
@@ -131,7 +143,7 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
   useEffect(() => {
     if (!drawings) return
     setPictureBeforeDrawing()
-    clearPreHistory()
+    clearHistory()
     draw(0)
   }, [drawings])
 

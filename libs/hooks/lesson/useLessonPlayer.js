@@ -73,7 +73,9 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
       if (updateSpeeches) updateSpeeches(incrementalTime)
       if (updateMusics) updateMusics(incrementalTime)
       updatePlayerElapsedTime()
-    } else {
+    }
+
+    if (elapsedTimeRef.current >= startElapsedTime + durationSec) {
       finishPlaying()
       return
     }
