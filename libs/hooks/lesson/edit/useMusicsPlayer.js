@@ -61,14 +61,19 @@ export default function useMusicsPlayer({ durationSec, musics: originalMusics, m
   const setMusicVolume = useCallback(music => {
     const timeSinceStart = elapsedTimeRef.current - music.elapsedTime
     const timeUntilEnd = music.elapsedTime + music.durationSec - elapsedTimeRef.current
-    if (0 <= timeSinceStart && timeSinceStart < fadingDuration) {
-      music.audio.volume = timeSinceStart / fadingDuration * music.maxVolume
-    } else if (0 < timeUntilEnd && timeUntilEnd < fadingDuration) {
-      music.audio.volume = timeUntilEnd / fadingDuration * music.maxVolume
-    } else if (fadingDuration <= timeUntilEnd && music.audio.volume < 1) {
-      music.audio.volume = music.maxVolume
-    } else if (timeUntilEnd <= 0 && music.audio.volume > 0) {
-      music.audio.volume = 0
+    if (music.isFadeIn) {
+      if (0 <= timeSinceStart && timeSinceStart < fadingDuration) {
+        music.audio.volume = timeSinceStart / fadingDuration * music.maxVolume
+      } else if (fadingDuration <= timeUntilEnd && music.audio.volume < 1) {
+        music.audio.volume = music.maxVolume
+      }
+    }
+    if (music.isFadeOut) {
+      if (0 < timeUntilEnd && timeUntilEnd < fadingDuration) {
+        music.audio.volume = timeUntilEnd / fadingDuration * music.maxVolume
+      } else if (timeUntilEnd <= 0 && music.audio.volume > 0) {
+        music.audio.volume = 0
+      }
     }
   }, [])
 
@@ -87,7 +92,7 @@ export default function useMusicsPlayer({ durationSec, musics: originalMusics, m
         return
       }
       if (!music.audio.paused) {                                            // ボリュームのフェード
-        if (music.isFading) setMusicVolume(music)
+        if (music.isFadeIn || music.isFadeOut) setMusicVolume(music)
         return
       }
       newMusics.push(music)                                                 // 今から再生すべき
@@ -108,7 +113,7 @@ export default function useMusicsPlayer({ durationSec, musics: originalMusics, m
       } else {
         music.audio.currentTime = currentTime
       }
-      if (music.isFading) music.audio.volume = 0
+      if (music.isFadeIn) music.audio.volume = 0
       if (needsPlay) await music.audio.play()
     }
   }, [stopMusics, setMusicVolume])
@@ -163,7 +168,8 @@ export default function useMusicsPlayer({ durationSec, musics: originalMusics, m
         audio: createAudio(url, music.isLoop),
         canPlay: false,
         isLoop: music.isLoop,
-        isFading: music.isFading,
+        isFadeIn: music.isFading,
+        isFadeOut: nextMusic?.action === 'stop' && nextMusic?.isFading,
         maxVolume: music.volume,
         elapsedTime: music.elapsedTime,
         durationSec: nextElapsedTime - music.elapsedTime,
