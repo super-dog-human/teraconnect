@@ -18,6 +18,7 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
   const stopSpeeches = useCallback(() => {
     setIsPlaying(false)
     voices.forEach(v => {
+      if (!v.audio) return
       if (v.audio.paused) return
       v.audio.pause()
     })
@@ -126,6 +127,13 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
     setVoiceTimes(true)
   }, [durationSec, setVoiceTimes, prefetchVoices])
 
+  function clearAllVoices() {
+    setVoices(voices => {
+      voices.forEach(v => v.audio = null)
+      return []
+    })
+  }
+
   async function updateSpeeches(incrementalTime) {
     const newElapsedTime = elapsedTimeRef.current + incrementalTime
 
@@ -136,7 +144,7 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
       await setVoiceTimes(true)
     } else {
       stopSpeeches()
-      setVoices([])
+      clearAllVoices()
       elapsedTimeRef.current = durationSec
     }
   }
@@ -150,7 +158,7 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
     }
 
     elapsedTimeRef.current = parseFloat(e.target.value)
-    setVoices([])
+    clearAllVoices()
     const addedNewVoice = prefetchVoices()
     setVoiceTimes(false)
     if (didPlaying && !addedNewVoice) {
@@ -165,7 +173,7 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
     if (isPlaying) stopSpeeches()
 
     setIsLoading(true)
-    setVoices([])
+    clearAllVoices()
     prefetchVoices()
     setIsLoading(false)
 
