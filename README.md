@@ -1,5 +1,5 @@
 # TERACONNECT
-![teraconnect_recording](https://user-images.githubusercontent.com/15179279/126596989-2522216d-285b-46b5-998a-7d6c204948e0.png)
+![teraconnect_recording](https://user-images.githubusercontent.com/15179279/131121553-4138de19-5f13-4c35-9374-90eadbf0ffe2.png)
 
 the recording and publishing tools for teaching lesson with virtual avatar.
 
