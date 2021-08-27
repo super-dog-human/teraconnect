@@ -3,7 +3,7 @@ import usePlayerController from './usePlayerController'
 import useDrawingPlayer from './useDrawingPlayer'
 import { useUnmount } from 'react-use'
 
-export default function useLessonPlayer({ startElapsedTime=0, durationSec, avatars, graphics, drawings, speechURL, sameTimeIndex, updateSpeeches, updateMusics }) {
+export default function useLessonPlayer({ startElapsedTime=0, durationSec, avatars, drawings, graphics, speechURL, sameTimeIndex, updateSpeeches, updateMusics }) {
   const [isSpeechPreparing, setIsSpeechPreparing] = useState(!!speechURL)
   const animationRequestRef = useRef(0)
   const audioRef = useRef()

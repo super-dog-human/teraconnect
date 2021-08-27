@@ -12,7 +12,7 @@ export default function Preview({ lessonID }) {
   const { isLoading: isSpeechLoading, isPlaying: isSpeechPlaying, playSpeeches, stopSpeeches, updateSpeeches, seekSpeeches } = useSpeechesPlayer({ lessonID, durationSec, speeches })
   const { isLoading: isMusicLoading, isPlaying: isMusicPlaying, playMusics, stopMusics, updateMusics, seekMusics } = useMusicsPlayer( { durationSec, musics, musicURLs })
   const { startPlaying, stopPlaying, handleMouseOver, handleMouseLeave, handleDragStart, handleSeekChange: handlePlayerSeekChange, isPlaying, isPlayerHover, ...playerProps } =
-    useLessonPlayer({ startElapsedTime: 0, durationSec, avatars, drawings, graphics, musics, updateSpeeches, updateMusics })
+    useLessonPlayer({ startElapsedTime: 0, durationSec, avatars, drawings, graphics, updateSpeeches, updateMusics })
 
   function handlePlayButtonClick() {
     if (isSpeechPlaying) {
