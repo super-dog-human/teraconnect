@@ -52,12 +52,12 @@ export function reCalcDrawingsTime(rawDrawings) {
     } else {
       // 他の操作をまたいだdraw/undoは新たな配列として格納する
       drawings.push({
-        action: d.action,
+        action: 'draw',       // drawingのactionは常にdrawになる
         elapsedTime: d.elapsedTime,
         durationSec: d.durationSec,
         units: [
           {
-            action: d.action,
+            action: d.action, // unitsのactionはdraw/undoのどちらか
             elapsedTime: d.elapsedTime,
             durationSec: d.durationSec,
             stroke: d.stroke,
