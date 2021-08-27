@@ -15,11 +15,6 @@ export default function usePlayerController() {
     setIsPlayerHover(false)
   }
 
-  function handleDragStart(e) {
-    e.preventDefault() // シークが行ドラッグになってしまうのを防ぐ
-    e.stopPropagation()
-  }
-
   function deltaTime() {
     return clockRef.current.getDelta()
   }
@@ -40,6 +35,5 @@ export default function usePlayerController() {
     resetClock()
   }, [])
 
-  return { isPlayerHover, isPlaying, setIsPlaying, playerElapsedTime, setPlayerElapsedTime,
-    deltaTime, resetClock, switchClock, handleMouseOver, handleMouseLeave, handleDragStart }
+  return { isPlayerHover, isPlaying, setIsPlaying, playerElapsedTime, setPlayerElapsedTime, deltaTime, resetClock, switchClock, handleMouseOver, handleMouseLeave }
 }
