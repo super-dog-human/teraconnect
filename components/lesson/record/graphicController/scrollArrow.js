@@ -76,7 +76,7 @@ export default function ScrollArrow({ direction, targetRef }) {
     targetRef.current.onwheel = (() => {
       cancelAnimationFrame(animationIDRef.current)
     })
-    initializedRef.curret = true
+    initializedRef.current = true
   }, [initializedRef, targetRef])
 
   return (
