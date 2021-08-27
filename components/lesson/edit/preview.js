@@ -11,7 +11,7 @@ export default function Preview({ lessonID }) {
   const { durationSec, generalSetting, avatars, drawings, graphics, musics, musicURLs, speeches } = useLessonEditorContext()
   const { isLoading: isSpeechLoading, isPlaying: isSpeechPlaying, playSpeeches, stopSpeeches, updateSpeeches, seekSpeeches } = useSpeechesPlayer({ lessonID, durationSec, speeches })
   const { isLoading: isMusicLoading, isPlaying: isMusicPlaying, playMusics, stopMusics, updateMusics, seekMusics } = useMusicsPlayer( { durationSec, musics, musicURLs })
-  const { startPlaying, stopPlaying, handleMouseOver, handleMouseLeave, handleDragStart, handleSeekChange: handlePlayerSeekChange, isPlaying, isPlayerHover, ...playerProps } =
+  const { startPlaying, stopPlaying, handleMouseOver, handleMouseLeave, handleSeekChange: handlePlayerSeekChange, isPlaying, isPlayerHover, ...playerProps } =
     useLessonPlayer({ startElapsedTime: 0, durationSec, avatars, drawings, graphics, updateSpeeches, updateMusics })
 
   function handlePlayButtonClick() {
@@ -27,7 +27,10 @@ export default function Preview({ lessonID }) {
   }
 
   function handleSeekChange(e) {
-    if (e.type !== 'change') return
+    handlePlayerSeekChange(e)
+  }
+
+  function handleSeekUp(e) {
     seekSpeeches(e)
     seekMusics(e)
     handlePlayerSeekChange(e)
@@ -49,8 +52,7 @@ export default function Preview({ lessonID }) {
     <div css={bodyStyle}>
       <LessonPlayer isLoading={isSpeechLoading || isMusicLoading} isPlaying={isPlaying} durationSec={durationSec} backgroundImageURL={generalSetting.backgroundImageURL} graphics={graphics} drawings={drawings}
         onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onPlayButtonClick={handlePlayButtonClick}
-        controllerInvisible={!isPlayerHover} maxTime={parseFloat(durationSec.toFixed(2))} onDragStart={handleDragStart} onSeekChange={handleSeekChange}
-        {...playerProps} />
+        controllerInvisible={!isPlayerHover} maxTime={parseFloat(durationSec.toFixed(2))} onSeekChange={handleSeekChange} onSeekUp={handleSeekUp} {...playerProps} />
     </div>
   )
 }

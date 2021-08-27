@@ -21,7 +21,7 @@ export default function DrawingEditor({ config, selectedAction, setSelectedActio
   const { generalSetting, graphics, speeches } = useLessonEditorContext()
   const containerRef = useRef()
   const { hasResize } = useResizeDetector(containerRef)
-  const { drawingRef, isPlaying, setIsPlaying, isPreparing, isPlayerHover, getElapsedTime, playerElapsedTime, resetBeforeUndo, handleMouseOver, handleMouseLeave, handlePlayButtonClick, handleDragStart, handleSeekChange, } =
+  const { drawingRef, isPlaying, setIsPlaying, isPreparing, isPlayerHover, getElapsedTime, playerElapsedTime, resetBeforeUndo, handleMouseOver, handleMouseLeave, handlePlayButtonClick, handleSeekChange, } =
     useLessonPlayer({ startElapsedTime, durationSec: previewDurationSecRef.current, drawings, speeches, sameTimeIndex })
   const { setRecord } = useDrawingEditor({ isRecording, setIsRecording, isPlaying, setIsPlaying, sameTimeIndex, startElapsedTime, getElapsedTime, previewDurationSecRef, drawings, setDrawings })
   const { enablePen, setEnablePen, enableEraser, setEnableEraser, undoDrawing, drawingColor, setDrawingColor, drawingLineWidth, setDrawingLineWidth, startDrawing, inDrawing, endDrawing, resetHistories } = useDrawingRecorder({ hasResize, drawingRef, setRecord })
@@ -66,7 +66,7 @@ export default function DrawingEditor({ config, selectedAction, setSelectedActio
                 drawingRef={drawingRef} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing}
                 isPlayerHover={isPlayerHover} controllerInvisible={!isPlayerHover} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onPlayButtonClick={handlePlayButtonClick}
                 disabledControl={isRecording} playerElapsedTime={playerElapsedTime}
-                maxTime={parseFloat(previewDurationSecRef.current.toFixed(2))} onDragStart={handleDragStart} onSeekChange={handleSeekChange} />
+                maxTime={parseFloat(previewDurationSecRef.current.toFixed(2))} onSeekChange={handleSeekChange} />
             </Container>
             <ContainerSpacer top='10' left='20'>
               <Flex>

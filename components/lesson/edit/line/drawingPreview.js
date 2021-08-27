@@ -7,7 +7,7 @@ import PlayerController from '../../player/controller'
 import useLessonPlayer from '../../../../libs/hooks/lesson/useLessonPlayer'
 
 export default function DrawingPreview({ drawings, drawing, sameTimeIndex }) {
-  const { drawingRef, isPlaying, startPlaying, stopPlaying, handleMouseOver, handleMouseLeave, isPlayerHover, playerElapsedTime, handleDragStart, handleSeekChange }
+  const { drawingRef, isPlaying, startPlaying, stopPlaying, handleMouseOver, handleMouseLeave, isPlayerHover, playerElapsedTime, handleSeekChange }
     = useLessonPlayer({ startElapsedTime: drawing.elapsedTime, durationSec: drawing.durationSec, drawings, sameTimeIndex })
 
   function handlePlayButtonClick() {
@@ -22,8 +22,7 @@ export default function DrawingPreview({ drawings, drawing, sameTimeIndex }) {
         </Container>
         <Container width='302' height='170' position='absolute'>
           <PlayerController onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onPlayButtonClick={handlePlayButtonClick}
-            invisible={!isPlayerHover} playerElapsedTime={playerElapsedTime} maxTime={parseFloat((drawing.durationSec).toFixed(2))}
-            onDragStart={handleDragStart} onSeekChange={handleSeekChange} />
+            invisible={!isPlayerHover} playerElapsedTime={playerElapsedTime} maxTime={parseFloat((drawing.durationSec).toFixed(2))} onSeekChange={handleSeekChange} />
         </Container>
       </Container>
       {drawing.units && drawing.units.some(d => d.action === 'draw' && d.durationSec === 0) &&

@@ -9,7 +9,7 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
   const audioRef = useRef()
   const elapsedTimeRef = useRef(startElapsedTime)
   const { isPlayerHover, isPlaying, setIsPlaying, playerElapsedTime, setPlayerElapsedTime, deltaTime, resetClock, switchClock,
-    handleMouseOver, handleMouseLeave, handleDragStart } = usePlayerController()
+    handleMouseOver, handleMouseLeave } = usePlayerController()
   const { drawingRef, draw, initializeDrawing, finishDrawing, resetBeforeSeeking, resetBeforeUndo } = useDrawingPlayer({ drawings, sameTimeIndex, startElapsedTime, elapsedTimeRef })
   useUnmount(() => {
     if (isPlaying) stopPlaying()
@@ -117,5 +117,5 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
   }
 
   return { drawingRef, isSpeechPreparing, isPlaying, setIsPlaying, startPlaying, stopPlaying, isPlayerHover, getElapsedTime, playerElapsedTime,
-    resetBeforeSeeking, resetBeforeUndo, handleMouseOver, handleMouseLeave, handleDragStart, handleSeekChange }
+    resetBeforeSeeking, resetBeforeUndo, handleMouseOver, handleMouseLeave, handleSeekChange }
 }
