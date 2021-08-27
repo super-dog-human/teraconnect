@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 import React, { useEffect } from 'react'
-import { useUnmount } from 'react-use'
 import { css } from '@emotion/core'
 import LessonPlayer from '../player/'
 import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorContext'
@@ -14,11 +13,6 @@ export default function Preview({ lessonID }) {
   const { isLoading: isMusicLoading, isPlaying: isMusicPlaying, playMusics, stopMusics, updateMusics, seekMusics } = useMusicsPlayer( { durationSec, musics, musicURLs })
   const { startPlaying, stopPlaying, handleMouseOver, handleMouseLeave, handleDragStart, handleSeekChange: handlePlayerSeekChange, isPlaying, isPlayerHover, ...playerProps } =
     useLessonPlayer({ startElapsedTime: 0, durationSec, avatars, drawings, graphics, musics, updateSpeeches, updateMusics })
-  useUnmount(() => {
-    if (isSpeechPlaying) stopSpeeches()
-    if (isMusicPlaying )stopMusics()
-    if (isPlaying) stopPlaying()
-  })
 
   function handlePlayButtonClick() {
     if (isSpeechPlaying) {

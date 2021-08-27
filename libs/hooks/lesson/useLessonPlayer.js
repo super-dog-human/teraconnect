@@ -1,6 +1,7 @@
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import usePlayerController from './usePlayerController'
 import useDrawingPlayer from './useDrawingPlayer'
+import { useUnmount } from 'react-use'
 
 export default function useLessonPlayer({ startElapsedTime=0, durationSec, avatars, graphics, drawings, speechURL, sameTimeIndex, updateSpeeches, updateMusics }) {
   const [isSpeechPreparing, setIsSpeechPreparing] = useState(!!speechURL)
@@ -10,6 +11,9 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
   const { isPlayerHover, isPlaying, setIsPlaying, playerElapsedTime, setPlayerElapsedTime, deltaTime, resetClock, switchClock,
     handleMouseOver, handleMouseLeave, handleDragStart } = usePlayerController()
   const { drawingRef, draw, initializeDrawing, finishDrawing, resetBeforeSeeking, resetBeforeUndo } = useDrawingPlayer({ drawings, sameTimeIndex, startElapsedTime, elapsedTimeRef })
+  useUnmount(() => {
+    if (isPlaying) stopPlaying()
+  })
 
   function startPlaying() {
     setIsPlaying(true)
@@ -113,10 +117,6 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
       draw(0)
     }
   }
-
-  useEffect(() => {
-    return stopPlaying
-  }, [])
 
   return { drawingRef, isSpeechPreparing, isPlaying, setIsPlaying, startPlaying, stopPlaying, isPlayerHover, getElapsedTime, playerElapsedTime,
     resetBeforeSeeking, resetBeforeUndo, handleMouseOver, handleMouseLeave, handleDragStart, handleSeekChange }

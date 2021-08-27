@@ -1,5 +1,6 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
 import { voiceURL } from '../../../speechUtils'
+import { useUnmount } from 'react-use'
 
 const prefetchSeconds = 10
 
@@ -10,6 +11,9 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
   const [voices, setVoices] = useState([])
   const [isPlaying, setIsPlaying] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  useUnmount(() => {
+    if (isPlaying) stopSpeeches()
+  })
 
   const stopSpeeches = useCallback(() => {
     setIsPlaying(false)

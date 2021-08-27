@@ -1,4 +1,5 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
+import { useUnmount } from 'react-use'
 
 const fadingDuration = 4
 
@@ -9,6 +10,9 @@ export default function useMusicsPlayer({ durationSec, musics: originalMusics, m
   const [musics, setMusics] = useState([])
   const [isPlaying, setIsPlaying] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  useUnmount(() => {
+    if (isPlaying) stopMusics()
+  })
 
   const stopMusics = useCallback(() => {
     setIsPlaying(false)
