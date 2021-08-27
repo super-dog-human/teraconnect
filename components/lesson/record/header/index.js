@@ -14,7 +14,7 @@ export default function LessonRecordHeader({ lessonID, isMicReady, isDrawingHide
   const { isFinishing } = useLessonRecorderContext()
 
   function handleDrawingHide() {
-    setIsDrawingHide(state => !state)
+    setIsDrawingHide(!isDrawingHide)
   }
 
   function handlePen() {
