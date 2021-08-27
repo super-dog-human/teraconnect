@@ -21,10 +21,18 @@ export default function DrawingEditor({ config, selectedAction, setSelectedActio
   const { generalSetting, graphics, speeches } = useLessonEditorContext()
   const containerRef = useRef()
   const { hasResize } = useResizeDetector(containerRef)
-  const { drawingRef, isPlaying, setIsPlaying, isPreparing, isPlayerHover, getElapsedTime, playerElapsedTime, resetBeforeUndo, handleMouseOver, handleMouseLeave, handlePlayButtonClick, handleSeekChange, } =
+  const { drawingRef, isPlaying, isPlayerHover, playerElapsedTime, setIsPlaying, startPlaying, stopPlaying, getElapsedTime, resetBeforeUndo, handleMouseOver, handleMouseLeave, handleSeekChange, } =
     useLessonPlayer({ startElapsedTime, durationSec: previewDurationSecRef.current, drawings, speeches, sameTimeIndex })
   const { setRecord } = useDrawingEditor({ isRecording, setIsRecording, isPlaying, setIsPlaying, sameTimeIndex, startElapsedTime, getElapsedTime, previewDurationSecRef, drawings, setDrawings })
   const { enablePen, setEnablePen, enableEraser, setEnableEraser, undoDrawing, drawingColor, setDrawingColor, drawingLineWidth, setDrawingLineWidth, startDrawing, inDrawing, endDrawing, resetHistories } = useDrawingRecorder({ hasResize, drawingRef, setRecord })
+
+  function handlePlayButtonClick() {
+    if (isPlaying) {
+      stopPlaying()
+    } else {
+      startPlaying()
+    }
+  }
 
   function handleRecording() {
     if (isRecording) {
@@ -62,7 +70,7 @@ export default function DrawingEditor({ config, selectedAction, setSelectedActio
         <Container invisible={selectedAction !== 'draw'}>
           <Flex>
             <Container width='500' height='281'>
-              <Player isPreparing={isPreparing} durationSec={previewDurationSecRef.current} backgroundImageURL={generalSetting.backgroundImageURL} graphics={graphics} drawings={drawings}
+              <Player durationSec={previewDurationSecRef.current} backgroundImageURL={generalSetting.backgroundImageURL} graphics={graphics} drawings={drawings}
                 drawingRef={drawingRef} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing}
                 isPlayerHover={isPlayerHover} controllerInvisible={!isPlayerHover} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onPlayButtonClick={handlePlayButtonClick}
                 disabledControl={isRecording} playerElapsedTime={playerElapsedTime}

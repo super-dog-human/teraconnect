@@ -118,6 +118,6 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
     }
   }
 
-  return { drawingRef, isSpeechPreparing, isPlaying, setIsPlaying, startPlaying, stopPlaying, isPlayerHover, getElapsedTime, playerElapsedTime,
+  return { drawingRef, isSpeechPreparing, isPlaying, isPlayerHover, playerElapsedTime, setIsPlaying, startPlaying, stopPlaying, getElapsedTime,
     resetBeforeSeeking, resetBeforeUndo, handleMouseOver, handleMouseLeave, handleSeekChange }
 }
