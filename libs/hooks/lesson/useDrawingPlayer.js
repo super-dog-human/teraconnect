@@ -1,9 +1,10 @@
-import { useRef, useEffect } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { drawToCanvas, clearCanvas } from '../../drawingUtils'
 import useDrawingPicture from './useDrawingPicture'
 import { deepCopy } from '../../utils'
 
 export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElapsedTime, elapsedTimeRef }) {
+  const [didUpdateDrawings, setDidUpdateDrawings] = useState(false)
   const canvasRef = useRef()
   const canvasCtxRef = useRef()
   const preStrokeRef = useRef({})
@@ -11,7 +12,7 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
   const preClearRef = useRef(-1)
   const { drawPicture } = useDrawingPicture({ canvasRef })
 
-  function setPictureBeforeDrawing() {
+  const setPictureBeforeDrawing = useCallback(() => {
     clearDrawing()
     if (sameTimeIndex < 0) return
 
@@ -19,17 +20,37 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
     targetDrawings.push(...drawings.filter(d => d.elapsedTime < startElapsedTime))
     targetDrawings.push(...drawings.filter(d => d.elapsedTime === startElapsedTime).filter((_, i) => i < sameTimeIndex))
     drawPicture(targetDrawings)
-  }
+  }, [sameTimeIndex, drawings, startElapsedTime, drawPicture])
 
-  function setCompletedPicture() {
+  const setCompletedPicture = useCallback(() => {
     clearDrawing()
     const targetDrawings = []
     targetDrawings.push(...drawings.filter(d => d.elapsedTime < startElapsedTime))
     targetDrawings.push(...drawings.filter(d => d.elapsedTime === startElapsedTime).filter((_, i) => i <= sameTimeIndex))
     drawPicture(targetDrawings)
-  }
+  }, [sameTimeIndex, drawings, startElapsedTime, drawPicture])
 
-  function draw(incrementalTime) {
+  const undo = useCallback(({ drawingIndex, unitIndex, currentElapsedTime }) => {
+    if (drawingIndex < preUndoRef.current.drawingIndex) return
+    if (drawingIndex === preUndoRef.current.drawingIndex && unitIndex <= preUndoRef.current.unitIndex) return
+    clearDrawing()
+
+    const drawingsToUndo = []
+    if (sameTimeIndex >= 0) {
+      drawingsToUndo.push(...drawings.filter(d => d.elapsedTime < startElapsedTime))
+      drawingsToUndo.push(...deepCopy(drawings.filter(d => d.elapsedTime === startElapsedTime).filter((_, i) => i <= sameTimeIndex)))
+    } else {
+      drawingsToUndo.push(...deepCopy(drawings.filter(d => d.elapsedTime <= currentElapsedTime)))
+    }
+    const lastDrawing = drawingsToUndo[drawingsToUndo.length - 1]
+    lastDrawing.units = lastDrawing.units.slice(0, unitIndex + 1) // 現時点までの描画データ
+
+    drawPicture(drawingsToUndo) // このメソッドでundoを加味して描画する
+
+    preUndoRef.current = { drawingIndex, unitIndex }
+  }, [sameTimeIndex, drawings, startElapsedTime, drawPicture])
+
+  const draw = useCallback(incrementalTime =>{
     const targetDrawings = []
     if (sameTimeIndex >= 0) {
       // 編集中の一部再生
@@ -81,27 +102,7 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
         return
       }
     })
-  }
-
-  function undo({ drawingIndex, unitIndex, currentElapsedTime }) {
-    if (drawingIndex < preUndoRef.current.drawingIndex) return
-    if (drawingIndex === preUndoRef.current.drawingIndex && unitIndex <= preUndoRef.current.unitIndex) return
-    clearDrawing()
-
-    const drawingsToUndo = []
-    if (sameTimeIndex >= 0) {
-      drawingsToUndo.push(...drawings.filter(d => d.elapsedTime < startElapsedTime))
-      drawingsToUndo.push(...deepCopy(drawings.filter(d => d.elapsedTime === startElapsedTime).filter((_, i) => i <= sameTimeIndex)))
-    } else {
-      drawingsToUndo.push(...deepCopy(drawings.filter(d => d.elapsedTime <= currentElapsedTime)))
-    }
-    const lastDrawing = drawingsToUndo[drawingsToUndo.length - 1]
-    lastDrawing.units = lastDrawing.units.slice(0, unitIndex + 1) // 現時点までの描画データ
-
-    drawPicture(drawingsToUndo) // このメソッドでundoを加味して描画する
-
-    preUndoRef.current = { drawingIndex, unitIndex }
-  }
+  }, [sameTimeIndex, drawings, startElapsedTime, elapsedTimeRef, undo])
 
   function drawStrokePart({ stroke, drawingIndex, unitIndex, positionIndex }) {
     if (drawingIndex < preStrokeRef.current.drawingIndex) return
@@ -146,10 +147,16 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
 
   useEffect(() => {
     if (!drawings) return
+    setDidUpdateDrawings(true)
+  }, [drawings])
+
+  useEffect(() => {
+    if (!didUpdateDrawings) return
+    setDidUpdateDrawings(false)
     setPictureBeforeDrawing()
     clearHistory()
     draw(0)
-  }, [drawings])
+  }, [didUpdateDrawings, setPictureBeforeDrawing, draw])
 
   return { drawingRef: canvasRef, draw, initializeDrawing, finishDrawing, resetBeforeSeeking, resetBeforeUndo: setCompletedPicture }
 }
