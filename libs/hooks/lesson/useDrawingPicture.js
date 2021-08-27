@@ -43,7 +43,7 @@ export default function useDrawingPicture({ canvasRef, drawings, startElapsedTim
     let drawIndex, undoIndexInUnits
 
     targetDrawings.some((drawing, i) => {
-      if (drawing.action !== 'draw') return
+      if (drawing.action !== 'draw') return false
 
       const undoIndex = drawing.units.findIndex(d => d.action === 'undo')
       if (undoIndex >= 0) {
@@ -51,10 +51,10 @@ export default function useDrawingPicture({ canvasRef, drawings, startElapsedTim
         undoIndexInUnits = undoIndex
       }
 
-      return undoIndexInUnits
+      return undoIndexInUnits >= 0
     })
 
-    if (!undoIndexInUnits) return // undoがなくなれば終了
+    if (undoIndexInUnits === undefined) return // undoがなくなれば終了
 
     targetDrawings[drawIndex].units.splice(undoIndexInUnits, 1) // undoを削除
 
@@ -67,7 +67,7 @@ export default function useDrawingPicture({ canvasRef, drawings, startElapsedTim
             targetDrawings.splice(i, 1)
           }
           break
-        } else if (targetDrawings[i].action === 'clear'){
+        } else if (targetDrawings[i].action === 'clear') {
           targetDrawings.splice(i, 1)
           break
         } else {
