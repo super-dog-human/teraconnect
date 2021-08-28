@@ -21,9 +21,9 @@ export default function DrawingEditor({ config, selectedAction, setSelectedActio
   const { generalSetting, graphics, speeches } = useLessonEditorContext()
   const containerRef = useRef()
   const { hasResize } = useResizeDetector(containerRef)
-  const { drawingRef, isPlaying, isPlayerHover, playerElapsedTime, setIsPlaying, startPlaying, stopPlaying, getElapsedTime, resetBeforeUndo, handleMouseOver, handleMouseLeave, handleSeekChange, } =
+  const { drawingRef, isPlaying, isPlayerHover, playerElapsedTime, startPlaying, stopPlaying, getElapsedTime, resetBeforeUndo, handleMouseOver, handleMouseLeave, handleSeekChange, } =
     useLessonPlayer({ startElapsedTime, durationSec: previewDurationSecRef.current, drawings, speeches, sameTimeIndex })
-  const { setRecord } = useDrawingEditor({ isRecording, setIsRecording, isPlaying, setIsPlaying, sameTimeIndex, startElapsedTime, getElapsedTime, previewDurationSecRef, drawings, setDrawings })
+  const { startRecording, stopRecording, setRecord } = useDrawingEditor({ isRecording, setIsRecording, isPlaying, startPlaying, stopPlaying, sameTimeIndex, startElapsedTime, getElapsedTime, previewDurationSecRef, drawings, setDrawings })
   const { enablePen, setEnablePen, enableEraser, setEnableEraser, undoDrawing, drawingColor, setDrawingColor, drawingLineWidth, setDrawingLineWidth, startDrawing, inDrawing, endDrawing, resetHistories } = useDrawingRecorder({ hasResize, drawingRef, setRecord })
 
   function handlePlayButtonClick() {
@@ -36,9 +36,9 @@ export default function DrawingEditor({ config, selectedAction, setSelectedActio
 
   function handleRecording() {
     if (isRecording) {
-      setIsRecording(false)
+      stopRecording()
     } else {
-      setIsRecording(true)
+      startRecording()
       resetHistories()
     }
   }

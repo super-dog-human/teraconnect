@@ -3,7 +3,7 @@ import { deepCopy } from '../../../utils'
 
 const maxLessonDurationSec = 600
 
-export default function useDrawingEditor({ isRecording, setIsRecording, isPlaying, setIsPlaying, sameTimeIndex, startElapsedTime, getElapsedTime,
+export default function useDrawingEditor({ isRecording, setIsRecording, isPlaying, startPlaying, stopPlaying, sameTimeIndex, startElapsedTime, getElapsedTime,
   previewDurationSecRef, drawings, setDrawings }) {
   const hasStartRecording = useRef(false)
   const drawingUnitsRef = useRef([])
@@ -16,7 +16,7 @@ export default function useDrawingEditor({ isRecording, setIsRecording, isPlayin
 
     const elapsedTime = getElapsedTime()
     reduceDrawingsUntilElapsedTime(elapsedTime)
-    setIsPlaying(true) // 音声や画像を再生しながら収録を行う
+    setIsRecording(true)
   }
 
   function reduceDrawingsUntilElapsedTime(elapsedTime) {
@@ -69,7 +69,7 @@ export default function useDrawingEditor({ isRecording, setIsRecording, isPlayin
     drawingUnitsRef.current.push(unit)
   }
 
-  function endRecording() {
+  function stopRecording() {
     setPreviewDurationSecByDrawing()
 
     if (drawingUnitsRef.current.length === 0) return // 収録中に何も描かなかった場合
@@ -84,6 +84,8 @@ export default function useDrawingEditor({ isRecording, setIsRecording, isPlayin
     })
 
     drawingUnitsRef.current = []
+
+    setIsRecording(false)
   }
 
   function setPreviewDurationSecByDrawing() {
@@ -102,19 +104,18 @@ export default function useDrawingEditor({ isRecording, setIsRecording, isPlayin
 
   useEffect(() => {
     if (isRecording) {
-      startRecording()
+      startPlaying() // 音声や画像を再生しながら収録を行う
     } else {
       if (!hasStartRecording.current) return // 初回読み込み時は何もしない
-      setIsPlaying(false)
-      endRecording()
+      stopPlaying()
     }
   }, [isRecording])
 
   useEffect(() => {
     if (!isPlaying && getElapsedTime() >= maxLessonDurationSec) {
-      setIsRecording(false) // 最後まで再生されたら収録も停止する
+      setIsRecording(false) // 最大収録時間まで再生されたら収録も停止する
     }
-  }, [isPlaying])
+  }, [isPlaying, getElapsedTime, setIsRecording])
 
-  return { setRecord }
+  return { startRecording, stopRecording, setRecord }
 }
