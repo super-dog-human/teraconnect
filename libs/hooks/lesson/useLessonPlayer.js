@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import usePlayerController from './usePlayerController'
 import useDrawingPlayer from './useDrawingPlayer'
 import { useUnmount } from 'react-use'
@@ -8,6 +8,7 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
   const animationRequestRef = useRef(0)
   const audioRef = useRef()
   const elapsedTimeRef = useRef(startElapsedTime)
+  const preTimeRef = useRef({})
   const { isPlayerHover, isPlaying, setIsPlaying, playerElapsedTime, setPlayerElapsedTime, deltaTime, resetClock, switchClock,
     handleMouseOver, handleMouseLeave } = usePlayerController()
   const { drawingRef, draw, initializeDrawing, finishDrawing, resetBeforeSeeking, resetBeforeUndo } = useDrawingPlayer({ drawings, sameTimeIndex, startElapsedTime, elapsedTimeRef })
@@ -88,10 +89,10 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
     resetClock()
   }
 
-  function updatePlayerElapsedTime() {
+  const updatePlayerElapsedTime = useCallback(() => {
     // シークバーの精度として小数点以下3桁は細かすぎるため、2桁に落とす
     setPlayerElapsedTime(parseFloat((elapsedTimeRef.current - startElapsedTime).toFixed(2)))
-  }
+  }, [setPlayerElapsedTime, startElapsedTime])
 
   function getElapsedTime() {
     return elapsedTimeRef.current
@@ -117,6 +118,15 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
       draw(0)
     }
   }
+
+  useEffect(() => {
+    if (preTimeRef.current.startElapsedTime !== startElapsedTime || preTimeRef.current.durationSec !== durationSec ) {
+      preTimeRef.current = { startElapsedTime, durationSec }
+      stopPlaying()
+      elapsedTimeRef.current = startElapsedTime
+      updatePlayerElapsedTime()
+    }
+  }, [startElapsedTime, durationSec, stopPlaying, updatePlayerElapsedTime])
 
   return { drawingRef, isSpeechPreparing, isPlaying, isPlayerHover, playerElapsedTime, setIsPlaying, startPlaying, stopPlaying, getElapsedTime,
     resetBeforeSeeking, resetBeforeUndo, handleMouseOver, handleMouseLeave, handleSeekChange }
