@@ -1,12 +1,10 @@
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useRef, useCallback, useEffect } from 'react'
 import usePlayerController from './usePlayerController'
 import useDrawingPlayer from './useDrawingPlayer'
 import { useUnmount } from 'react-use'
 
-export default function useLessonPlayer({ startElapsedTime=0, durationSec, avatars, drawings, graphics, speechURL, sameTimeIndex, updateSpeeches, updateMusics }) {
-  const [isSpeechPreparing, setIsSpeechPreparing] = useState(!!speechURL)
+export default function useLessonPlayer({ startElapsedTime=0, durationSec, avatars, drawings, graphics, sameTimeIndex, updateSpeeches, updateMusics }) {
   const animationRequestRef = useRef(0)
-  const audioRef = useRef()
   const elapsedTimeRef = useRef(startElapsedTime)
   const preTimeRef = useRef({})
   const { isPlayerHover, isPlaying, setIsPlaying, playerElapsedTime, setPlayerElapsedTime, deltaTime, resetClock, switchClock,
@@ -16,11 +14,10 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
     if (isPlaying) stopPlaying()
   })
 
-  function startPlaying() {
+  async function startPlaying() {
     setIsPlaying(true)
 
     switchClock(true)
-    if (speechURL) audioRef.current.play()
 
     if (elapsedTimeRef.current >= startElapsedTime + durationSec) {
       elapsedTimeRef.current = startElapsedTime
@@ -29,34 +26,20 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
 
     if (elapsedTimeRef.current === startElapsedTime) {
       if (drawings) initializeDrawing()
-      if (speechURL) createAudio()
     }
 
     playFrame()
-  }
-
-  function createAudio() {
-    audioRef.current = new Audio(speechURL)
-    audioRef.current.oncanplaythrough = () => {
-      setIsSpeechPreparing(false)
-    }
-    audioRef.current.onwaiting = () => {
-      stopPlaying()
-      setIsSpeechPreparing(true)
-    }
   }
 
   const stopPlaying = useCallback(() => {
     setIsPlaying(false)
     switchClock(false)
 
-    if (speechURL) audioRef.current.pause()
-
     if (animationRequestRef.current !== 0) {
       cancelAnimationFrame(animationRequestRef.current)
       animationRequestRef.current = 0
     }
-  }, [setIsPlaying, switchClock, speechURL])
+  }, [setIsPlaying, switchClock])
 
   function playFrame() {
     let incrementalTime = deltaTime()
@@ -107,8 +90,8 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
 
     // プレイヤーからのelapsedTimeは相対時間なので開始時間を加算する
     const elapsedTime = startElapsedTime + parseFloat(e.target.value)
+
     if (drawings) resetBeforeSeeking()
-    if (speechURL) audioRef.current.currentTime = elapsedTime
 
     elapsedTimeRef.current = elapsedTime
 
@@ -128,6 +111,6 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
     }
   }, [startElapsedTime, durationSec, stopPlaying, updatePlayerElapsedTime])
 
-  return { drawingRef, isSpeechPreparing, isPlaying, isPlayerHover, playerElapsedTime, setIsPlaying, startPlaying, stopPlaying, getElapsedTime,
+  return { drawingRef, isPlaying, isPlayerHover, playerElapsedTime, setIsPlaying, startPlaying, stopPlaying, getElapsedTime,
     resetBeforeSeeking, resetBeforeUndo, handleMouseOver, handleMouseLeave, handleSeekChange }
 }
