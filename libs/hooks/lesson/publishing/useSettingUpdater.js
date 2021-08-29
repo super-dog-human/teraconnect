@@ -106,7 +106,7 @@ export default function useSettingUpdater({ lesson, material, bgImages, isLoadin
 
   async function updateSetting() {
     // サムネイル設定済みの場合、公開範囲の変更でサムネイルの移動が必要になる。サムネイルも一緒に更新する場合は移動不要
-    const needMoveThumbnail = newSettingRef.current.status && !newSettingRef.current.thumbnailURL && setting.hasThumbnail
+    const needMoveThumbnail = !!newSettingRef.current.status && !newSettingRef.current.thumbnailURL && setting.hasThumbnail
 
     const requestBody = exceptObject(newSettingRef.current, ['avatar', 'backgroundImageURL'])
     const thumbnailURL = newSettingRef.current.thumbnailURL
