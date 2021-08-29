@@ -12,14 +12,14 @@ const bodyStyle = css({
 })
 
 export default function LessonNewForm(props) {
-  const { register, errors, handleSubmit, setValue } = useForm()
+  const { register, handleSubmit, formState: { errors }, setValue } = useForm()
   const { onSubmit, isCreating } = useCreatingLesson()
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} css={bodyStyle}>
       <div>
         <label>
-          <input type="radio" name="createMethod" value="useVoice" ref={register({ required: true })} />
+          <input type="radio" name="createMethod" value="useVoice" {...register('useVoice', { required: true })} />
             自分の声で授業を作成する。
         </label>
         <hr />
@@ -27,7 +27,7 @@ export default function LessonNewForm(props) {
       </div>
       <div>
         <label>
-          <input type="radio" name="createMethod" value="useText" ref={register({ required: true })} />
+          <input type="radio" name="createMethod" value="useText" {...register('useText', { required: true })} />
             テキストを入力して授業を作成する。
         </label>
         <hr />
@@ -36,9 +36,9 @@ export default function LessonNewForm(props) {
       {errors.createMethod && '選択してください'}
 
 
-      <SubjectAndCategorySelector subjects={props.subjects} setValue={setValue} errors={errors} ref={register({ required: true })} />
+      <SubjectAndCategorySelector subjects={props.subjects} setValue={setValue} errors={errors} {...register('subjects', { required: true })} />
 
-      <InputText name="title" maxLength="100" ref={register({ required: true })} />
+      <InputText name="title" maxLength="100" ref={register('title', { required: true })} />
       { errors.title && '入力してください' }
 
       <input type="submit" disabled={isCreating} />
