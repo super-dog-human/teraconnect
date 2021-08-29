@@ -1,7 +1,7 @@
 # TERACONNECT
 ![teraconnect_recording](https://user-images.githubusercontent.com/15179279/131121553-4138de19-5f13-4c35-9374-90eadbf0ffe2.png)
 
-the recording and publishing tools for teaching lesson with virtual avatar.
+TERACONNECT is the recording and publishing platform for teaching lesson with virtual avatar.
 
 ### create JSON key for signing
 
