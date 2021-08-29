@@ -72,7 +72,10 @@ export default function useDrawingEditor({ isRecording, setIsRecording, isPlayin
   function stopRecording() {
     setPreviewDurationSecByDrawing()
 
-    if (drawingUnitsRef.current.length === 0) return // 収録中に何も描かなかった場合
+    if (drawingUnitsRef.current.length === 0) {
+      setIsRecording(false)
+      return // 収録中に何も描かなかった場合
+    }
 
     const newUnits = deepCopy(drawingUnitsRef.current)
     setDrawings(drawings => {
@@ -104,6 +107,7 @@ export default function useDrawingEditor({ isRecording, setIsRecording, isPlayin
 
   useEffect(() => {
     if (isRecording) {
+      console.log(drawings)
       startPlaying() // 音声や画像を再生しながら収録を行う
     } else {
       if (!hasStartRecording.current) return // 初回読み込み時は何もしない
