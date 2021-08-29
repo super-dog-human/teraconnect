@@ -6,10 +6,11 @@ import { useUnmount } from 'react-use'
 export default function useLessonPlayer({ startElapsedTime=0, durationSec, avatars, drawings, graphics, sameTimeIndex, updateSpeeches, updateMusics }) {
   const animationRequestRef = useRef(0)
   const elapsedTimeRef = useRef(startElapsedTime)
-  const preTimeRef = useRef({})
+  const preStartElapsedTimeRef = useRef(startElapsedTime)
   const { isPlayerHover, isPlaying, setIsPlaying, playerElapsedTime, setPlayerElapsedTime, deltaTime, resetClock, switchClock,
     handleMouseOver, handleMouseLeave } = usePlayerController()
   const { drawingRef, draw, initializeDrawing, finishDrawing, resetBeforeSeeking, resetBeforeUndo } = useDrawingPlayer({ drawings, sameTimeIndex, startElapsedTime, elapsedTimeRef })
+
   useUnmount(() => {
     if (isPlaying) stopPlaying()
   })
@@ -103,14 +104,15 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
   }
 
   useEffect(() => {
-    if (preTimeRef.current.startElapsedTime !== startElapsedTime || preTimeRef.current.durationSec !== durationSec ) {
-      preTimeRef.current = { startElapsedTime, durationSec }
+    // drawingの開始時間を変更すると、再生中の時間がずれるので停止して初期位置に戻す
+    if (preStartElapsedTimeRef.current !== startElapsedTime) {
+      preStartElapsedTimeRef.current = startElapsedTime
       stopPlaying()
       elapsedTimeRef.current = startElapsedTime
       updatePlayerElapsedTime()
     }
-  }, [startElapsedTime, durationSec, stopPlaying, updatePlayerElapsedTime])
+  }, [startElapsedTime, stopPlaying, updatePlayerElapsedTime])
 
   return { drawingRef, isPlaying, isPlayerHover, playerElapsedTime, setIsPlaying, startPlaying, stopPlaying, getElapsedTime,
-    resetBeforeSeeking, resetBeforeUndo, handleMouseOver, handleMouseLeave, handleSeekChange }
+    resetBeforeUndo, handleMouseOver, handleMouseLeave, handleSeekChange }
 }
