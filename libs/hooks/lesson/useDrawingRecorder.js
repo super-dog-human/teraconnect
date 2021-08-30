@@ -1,13 +1,12 @@
 import { useRef, useState, useEffect } from 'react'
 import { switchSwipable, mouseOrTouchPositions } from '../../utils'
 import { drawToCanvas, drawEdgeCircle, clearCanvas } from '../../drawingUtils'
-
+import useMobileDetector from '../useMobileDetector'
 const initialColor = '#ff0000'
 
 export default function useDrawingRecorder({ hasResize, drawingRef, startDragging, inDragging, endDragging, setRecord }) {
   const canvasCtxRef = useRef()
   const coefficientRef = useRef({ x: 0, y: 0 })
-  const isMobileDeviceRef = useRef()
   const startPositionRef = useRef({})
   const startDrawingTimeRef = useRef()
   const isDrawingRef = useRef(false)
@@ -18,9 +17,10 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
   const [enableEraser, setEnableEraser] = useState(false)
   const [color, setColor] = useState(initialColor)
   const [lineWidth, setLineWidth] = useState(5)
+  const isMobile = useMobileDetector()
 
   function startDrawing(e) {
-    if (isMobileDeviceRef.current && e.type === 'mousedown') return // モバイルではtouchstart後にmousedownが呼ばれるのでスキップ
+    if (isMobile && e.type === 'mousedown') return // モバイルではtouchstart後にmousedownが呼ばれるのでスキップ
     if ((enablePen || enableEraser) && !isDrawingHide) {
       switchSwipable(false)
       isClearedRef.current = false
@@ -53,7 +53,7 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
   }
 
   function endDrawing(e) {
-    if (isMobileDeviceRef.current && e.type === 'mouseup') return // モバイルではtouchend後にmouseupが呼ばれるのでスキップ
+    if (isMobile && e.type === 'mouseup') return // モバイルではtouchend後にmouseupが呼ばれるのでスキップ
     if ((enablePen || enableEraser) && !isDrawingHide) {
       if (!isDrawingRef.current) return
       switchSwipable(true)
@@ -159,7 +159,6 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
   }
 
   useEffect(() => {
-    isMobileDeviceRef.current = window.ontouchstart !== undefined
     canvasCtxRef.current = drawingRef.current.getContext('2d')
   }, [])
 
