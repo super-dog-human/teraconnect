@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/core'
 import LessonPlayer from '../player/'
 import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorContext'
@@ -8,11 +8,12 @@ import useSpeechesPlayer from '../../../libs/hooks/lesson/edit/useSpeechesPlayer
 import useMusicsPlayer from '../../../libs/hooks/lesson/edit/useMusicsPlayer'
 
 export default function Preview({ lessonID }) {
-  const { durationSec, generalSetting, avatars, drawings, graphics, musics, musicURLs, speeches } = useLessonEditorContext()
+  const [graphicURLs, setGraphicURLs] = useState({})
+  const { durationSec, generalSetting, avatars, drawings, graphics, graphicURLs: originalGraphicURLs, musics, musicURLs, speeches } = useLessonEditorContext()
   const { isLoading: isSpeechLoading, isPlaying: isSpeechPlaying, playSpeeches, stopSpeeches, updateSpeeches, seekSpeeches } = useSpeechesPlayer({ lessonID, durationSec, speeches })
   const { isLoading: isMusicLoading, isPlaying: isMusicPlaying, playMusics, stopMusics, updateMusics, seekMusics } = useMusicsPlayer( { durationSec, musics, musicURLs })
   const { startPlaying, stopPlaying, handleMouseOver, handleMouseLeave, handleSeekChange: handlePlayerSeekChange, isPlaying, isPlayerHover, ...playerProps } =
-    useLessonPlayer({ startElapsedTime: 0, durationSec, avatars, drawings, graphics, updateSpeeches, updateMusics })
+    useLessonPlayer({ startElapsedTime: 0, durationSec, avatars, drawings, graphics, graphicURLs, updateSpeeches, updateMusics })
 
   function handlePlayButtonClick() {
     if (isPlaying) {
@@ -37,6 +38,11 @@ export default function Preview({ lessonID }) {
   }
 
   useEffect(() => {
+    setGraphicURLs(Object.keys(originalGraphicURLs)
+      .reduce((newObj, key) => ({ ...newObj, [key]: originalGraphicURLs[key].url }), {}))
+  }, [originalGraphicURLs])
+
+  useEffect(() => {
     if (isPlaying && (!isMusicPlaying || !isSpeechPlaying)) {
       if (isSpeechPlaying) stopSpeeches()
       if (isMusicPlaying) stopMusics()
@@ -50,7 +56,7 @@ export default function Preview({ lessonID }) {
 
   return (
     <div css={bodyStyle}>
-      <LessonPlayer isLoading={isSpeechLoading || isMusicLoading} isPlaying={isPlaying} durationSec={durationSec} backgroundImageURL={generalSetting.backgroundImageURL} graphics={graphics} drawings={drawings}
+      <LessonPlayer isLoading={isSpeechLoading || isMusicLoading} isPlaying={isPlaying} durationSec={durationSec} backgroundImageURL={generalSetting.backgroundImageURL} hasGraphics={true} hasDrawings={true}
         onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onPlayButtonClick={handlePlayButtonClick}
         controllerInvisible={!isPlayerHover} maxTime={parseFloat(durationSec.toFixed(2))} onSeekChange={handleSeekChange} onSeekUp={handleSeekUp} {...playerProps} />
     </div>

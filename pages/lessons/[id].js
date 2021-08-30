@@ -1,16 +1,21 @@
 import React from 'react'
 import Head from 'next/head'
-import Layout from '../../components/layout'
+import Footer from '../../components/footer'
+import Lesson from '../../components/lesson/index'
+import fetchPublicLessonAsProps from '../../libs/middlewares/fetchPublicLessonAsProps'
 
-const Page = () => (
+const Page = ({ lesson, errorStatus }) => (
   <>
     <Head>
-      <title>TERACONNECT</title>
+      <title>{lesson?.title} - TERACONNECT</title>
     </Head>
-    <Layout>
-      <div>プレイヤーページ</div>
-    </Layout>
+    <Lesson lesson={lesson} errorStatus={errorStatus} />
+    <Footer />
   </>
 )
 
 export default Page
+
+export async function getServerSideProps(context) {
+  return fetchPublicLessonAsProps(context)
+}

@@ -4,9 +4,11 @@ import { css } from '@emotion/core'
 
 export default function LessonGraphic({ graphic }) {
   return (
-    <div css={bodyStyle} className="image-z">
-      {graphic && <img src={graphic.src} css={imageStyle} alt='図表' />}
-    </div>
+    <>
+      {graphic && <div css={bodyStyle} className="image-z">
+        <img src={graphic.src} css={imageStyle} alt='図表' />
+      </div>}
+    </>
   )
 }
 
