@@ -107,7 +107,6 @@ export default function useDrawingEditor({ isRecording, setIsRecording, isPlayin
 
   useEffect(() => {
     if (isRecording) {
-      console.log(drawings)
       startPlaying() // 音声や画像を再生しながら収録を行う
     } else {
       if (!hasStartRecording.current) return // 初回読み込み時は何もしない
