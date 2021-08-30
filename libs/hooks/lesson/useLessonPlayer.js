@@ -100,6 +100,7 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
     if (graphics) seekGraphic(e)
 
     elapsedTimeRef.current = elapsedTime
+    updatePlayerElapsedTime()
 
     if (shouldResume) {
       startPlaying()
