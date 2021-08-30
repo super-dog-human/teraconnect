@@ -1,9 +1,12 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { css } from '@emotion/core'
 
 export default function ContextMenu({ labels=[], actions=[], position={}, disableMenuIndexes=[], handleDismiss }) {
   const [isShow, setIsShow] = useState(false)
+  const [menuPosition, setMenuPosition] = useState({})
+  const menuRef = useRef()
+  const positionAdjustedRef = useRef(false)
 
   const bodyStyle = css({
     position: position.fixed ? 'fixed' : 'absolute',
@@ -17,8 +20,8 @@ export default function ContextMenu({ labels=[], actions=[], position={}, disabl
 
   const menuStyle = css({
     position: 'absolute',
-    top: position.y,
-    left: position.x,
+    top: menuPosition.y,
+    left: menuPosition.x,
     borderRadius: '5px',
     backgroundColor: 'var(--dark-gray)',
     paddingTop: '5px',
@@ -27,16 +30,37 @@ export default function ContextMenu({ labels=[], actions=[], position={}, disabl
 
   useEffect(() => {
     if (Object.keys(labels).length > 0) {
+      setMenuPosition({ x: position.x, y: position.y })
       setIsShow(true)
+      positionAdjustedRef.current = false
     } else {
       setIsShow(false)
     }
-  }, [labels])
+  }, [labels, position])
+
+  useEffect(() => {
+    if (!isShow) return
+    if (positionAdjustedRef.current) return
+    positionAdjustedRef.current = true
+
+    // 表示後にしかmenuRefのサイズが確定しないのでuseEffect内で表示位置を調整
+    let x = menuPosition.x
+    let y = menuPosition.y
+    if (window.innerWidth <= menuPosition.x + menuRef.current.clientWidth) {
+      x = window.innerWidth - menuRef.current.clientWidth
+    }
+
+    if (window.innerHeight <= menuPosition.y + menuRef.current.clientHeight) {
+      y = window.innerHeight - menuRef.current.clientHeight
+    }
+
+    setMenuPosition({ x, y })
+  }, [isShow, menuPosition])
 
   return (
     <>
       {isShow && <div className='context-menu-z' css={bodyStyle} onClick={handleDismiss}>
-        <div css={menuStyle}>
+        <div css={menuStyle} ref={menuRef}>
           {labels.length > 0 && labels.map((label, i) => {
             const disabled = disableMenuIndexes.includes(i)
             const menuTextStyle = css({
@@ -48,6 +72,7 @@ export default function ContextMenu({ labels=[], actions=[], position={}, disabl
               marginBottom: '5px',
               padding: '5px 20px',
               cursor: disabled ? 'auto' : 'pointer',
+              whiteSpace: 'nowrap',
               ':hover': {
                 backgroundColor: disabled ? 'var(--dark-gray)' : 'var(--soft-white)',
                 color: disabled ? 'var(--text-gray)' : 'var(--dark-gray)',
