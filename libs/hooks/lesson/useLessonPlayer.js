@@ -1,10 +1,11 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
 import usePlayerController from './usePlayerController'
 import useDrawingPlayer from './useDrawingPlayer'
-import useGraphicPlayer from '../useGraphicPlayer'
+import useGraphicPlayer from './player/useGraphicPlayer'
+import useSubtitlePlayer from './player/useSubtitlePlayer'
 import { useUnmount } from 'react-use'
 
-export default function useLessonPlayer({ startElapsedTime=0, durationSec, avatars, drawings, graphics, graphicURLs, sameTimeIndex, updateSpeeches, updateMusics }) {
+export default function useLessonPlayer({ startElapsedTime=0, durationSec, avatars, drawings, graphics, speeches, graphicURLs, sameTimeIndex, updateSpeeches, updateMusics }) {
   const animationRequestRef = useRef(0)
   const elapsedTimeRef = useRef(startElapsedTime)
   const preStartElapsedTimeRef = useRef(startElapsedTime)
@@ -12,6 +13,7 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
   const { isPlayerHover, isPlaying, setIsPlaying, playerElapsedTime, setPlayerElapsedTime, deltaTime, resetClock, switchClock, handleMouseOver, handleMouseLeave } = usePlayerController()
   const { drawingRef, draw, initializeDrawing, finishDrawing, resetBeforeSeeking, resetBeforeUndo } = useDrawingPlayer({ drawings, sameTimeIndex, startElapsedTime, elapsedTimeRef })
   const { graphic, initializeGraphic, updateGraphic, seekGraphic } = useGraphicPlayer({ startElapsedTime, durationSec, graphics, graphicURLs })
+  const { subtitle, initializeSubtitle, updateSubtitle, seekSubtitle } = useSubtitlePlayer({ startElapsedTime, durationSec, speeches })
 
   useUnmount(() => {
     if (isPlaying) stopPlaying()
@@ -30,6 +32,7 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
     if (elapsedTimeRef.current === startElapsedTime) {
       if (drawings) initializeDrawing()
       if (graphics) initializeGraphic()
+      if (speeches) initializeSubtitle()
     }
 
     playFrame()
@@ -59,6 +62,7 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
     if (elapsedTimeRef.current <= startElapsedTime + durationSec) {
       if (drawings) draw(incrementalTime)
       if (graphics) updateGraphic(incrementalTime)
+      if (speeches) updateSubtitle(incrementalTime)
       if (updateSpeeches) updateSpeeches(incrementalTime)
       if (updateMusics) updateMusics(incrementalTime)
       updatePlayerElapsedTime()
@@ -98,6 +102,7 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
 
     if (drawings) resetBeforeSeeking()
     if (graphics) seekGraphic(e)
+    if (speeches) seekSubtitle(e)
 
     elapsedTimeRef.current = elapsedTime
     updatePlayerElapsedTime()
@@ -119,6 +124,6 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
     }
   }, [startElapsedTime, stopPlaying, updatePlayerElapsedTime])
 
-  return { drawingRef, isPlaying, isPlayerHover, isAvatarLoading, playerElapsedTime, graphic, setIsPlaying, startPlaying, stopPlaying, getElapsedTime,
+  return { drawingRef, isPlaying, isPlayerHover, isAvatarLoading, playerElapsedTime, graphic, subtitle, setIsPlaying, startPlaying, stopPlaying, getElapsedTime,
     resetBeforeUndo, handleMouseOver, handleMouseLeave, handleSeekChange }
 }
