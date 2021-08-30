@@ -21,22 +21,22 @@ export default function Controller(props) {
   return (
     <>
       {!disabledControl &&
-      <div css={bodyStyle} onMouseOver={onMouseOver} onMouseLeave={onMouseLeave} className='overay-ui-z'>
-        <div css={playButtonStyle} onClick={onPlayButtonClick} />
-        <div css={seekBarStyle}>
-          <SeekBar invisible={controllerInvisible} playerElapsedTime={playerElapsedTime} maxTime={maxTime} {...seekBarProps} />
-        </div>
-        {!controllerInvisible &&
-          <div css={bottomButtonsStyle}>
-            <Flex>
-              <Spacer width='20'/>
-              <PlainText size='12' color='var(--soft-white)'>
-                {floatSecondsToMinutesFormat(playerElapsedTime)} / {floatSecondsToMinutesFormat(maxTime)}
-              </PlainText>
-            </Flex>
+        <div css={bodyStyle} onMouseOver={onMouseOver} onMouseLeave={onMouseLeave} className='overay-ui-z'>
+          <div css={playButtonStyle} onClick={onPlayButtonClick} />
+          <div css={seekBarStyle}>
+            <SeekBar invisible={controllerInvisible} playerElapsedTime={playerElapsedTime} maxTime={maxTime} {...seekBarProps} />
           </div>
-        }
-      </div>
+          {!controllerInvisible &&
+            <div css={bottomButtonsStyle}>
+              <Flex>
+                <Spacer width='20'/>
+                <PlainText size='12' color='var(--soft-white)'>
+                  {floatSecondsToMinutesFormat(playerElapsedTime)} / {floatSecondsToMinutesFormat(maxTime)}
+                </PlainText>
+              </Flex>
+            </div>
+          }
+        </div>
       }
     </>
   )
