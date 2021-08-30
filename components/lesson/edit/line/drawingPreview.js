@@ -21,7 +21,7 @@ export default function DrawingPreview({ drawings, drawing, sameTimeIndex }) {
           <Drawing drawingRef={drawingRef} backgroundColor='lightgray' />
         </Container>
         <Container width='302' height='170' position='absolute'>
-          <PlayerController onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onPlayButtonClick={handlePlayButtonClick}
+          <PlayerController isPlaying={isPlaying} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onPlayButtonClick={handlePlayButtonClick}
             invisible={!isPlayerHover} playerElapsedTime={playerElapsedTime} maxTime={parseFloat((drawing.durationSec).toFixed(2))} onSeekChange={handleSeekChange} />
         </Container>
       </Container>

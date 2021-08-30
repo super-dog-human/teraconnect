@@ -76,7 +76,7 @@ export default function DrawingEditor({ config, selectedAction, setSelectedActio
         <Container invisible={selectedAction !== 'draw'}>
           <Flex>
             <Container width='500' height='281'>
-              <Player durationSec={previewDurationSecRef.current} backgroundImageURL={generalSetting.backgroundImageURL} hasGraphics={true} hasDrawings={true} graphic={graphic}
+              <Player isPlaying={isPlaying} durationSec={previewDurationSecRef.current} backgroundImageURL={generalSetting.backgroundImageURL} hasDrawings={true} graphic={graphic}
                 drawingRef={drawingRef} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing}
                 isPlayerHover={isPlayerHover} controllerInvisible={!isPlayerHover} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onPlayButtonClick={handlePlayButtonClick}
                 disabledControl={isRecording} playerElapsedTime={playerElapsedTime}
