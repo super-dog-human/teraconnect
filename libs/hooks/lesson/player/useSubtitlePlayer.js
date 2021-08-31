@@ -14,7 +14,14 @@ export default function useSubtitlePlayer({ startElapsedTime, durationSec, speec
     const newElapsedTime = elapsedTimeRef.current + incrementalTime
     const speech = speeches.slice().reverse().find(s => s.elapsedTime <= newElapsedTime && s.elapsedTime + s.durationSec >= newElapsedTime)
     if (speech) {
-      setSubtitle({ body: speech.subtitle, caption: speech.caption })
+      setSubtitle(subtitle => {
+        const newSubtite = { body: speech.subtitle, caption: speech.caption }
+        if (shouldUpdateState(subtitle, newSubtite)) {
+          return newSubtite
+        } else {
+          return subtitle
+        }
+      })
     } else {
       setSubtitle()
     }
@@ -26,6 +33,14 @@ export default function useSubtitlePlayer({ startElapsedTime, durationSec, speec
       return
     }
   }, [speeches, durationSec, startElapsedTime])
+
+  function shouldUpdateState(subtitle, newSubtitle) {
+    if (!subtitle) return true
+    if (subtitle.body !== newSubtitle.body) return true
+    return Object.keys(newSubtitle.caption).some(key => {
+      return newSubtitle.caption[key] !== subtitle.caption[key]
+    })
+  }
 
   function seekSubtitle(e) {
     elapsedTimeRef.current = startElapsedTime + parseFloat(e.target.value)
