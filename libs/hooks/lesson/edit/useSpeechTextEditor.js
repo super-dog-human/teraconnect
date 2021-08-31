@@ -1,3 +1,5 @@
+import { useCallback } from 'react'
+
 export default function useSpeechTextEditor(dispatchConfig) {
   function setSubtitle(e) {
     dispatchConfig({ type: 'subtitle', payload: e.target.value })
@@ -7,13 +9,13 @@ export default function useSpeechTextEditor(dispatchConfig) {
     dispatchConfig({ type: 'captionBody', payload: e.target.value })
   }
 
-  function setBodyColor(color) {
+  const setBodyColor = useCallback(color => {
     dispatchConfig({ type: 'captionBodyColor', payload: color })
-  }
+  }, [dispatchConfig])
 
-  function setBorderColor(color) {
+  const setBorderColor = useCallback(color => {
     dispatchConfig({ type: 'captionBorderColor', payload: color })
-  }
+  }, [dispatchConfig])
 
   function setHorizontalAlign(align) {
     dispatchConfig({ type: 'captionHorizontalAlign', payload: align })

@@ -27,10 +27,10 @@ export default function ColorPickerCube({ initialColor, isBorder=false, size=0, 
     window.removeEventListener('click', handleBackgroundClick)
   }, [unmountRef])
 
-  function handleColorChange(color) {
+  const handleColorChange = useCallback(color => {
     setColor(color)
     onChange(color)
-  }
+  }, [onChange])
 
   useEffect(() => {
     return () => {
