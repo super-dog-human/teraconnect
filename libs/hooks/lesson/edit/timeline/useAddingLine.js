@@ -78,8 +78,9 @@ export default function useAddingLine({ lessonRef, durationSec, targetMaterial }
     targetMaterial(kind).setter(materials => {
       const sameTimeLastIndex = materials.slice().reverse().findIndex(m => m.elapsedTime === newLine.elapsedTime)
       if (sameTimeLastIndex >= 0) {
-        sameTimeIndex = materials.length - sameTimeLastIndex
-        materials.splice(sameTimeIndex, 0, newLine) // 同じ時間帯があればその一番最後に要素を追加する
+        sameTimeIndex = materials.filter(m => m.elapsedTime === newLine.elapsedTime).length
+        const addingIndex = materials.length - sameTimeLastIndex
+        materials.splice(addingIndex, 0, newLine) // 同じ時間帯があればその一番最後に要素を追加する
       } else {
         sameTimeIndex = 0
         const nextTimeIndex = materials.findIndex(a => a.elapsedTime > newLine.elapsedTime)
