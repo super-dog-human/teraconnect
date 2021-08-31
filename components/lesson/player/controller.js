@@ -8,7 +8,7 @@ import PlainText from '../../plainText'
 import { floatSecondsToMinutesFormat } from '../../../libs/utils'
 
 export default function Controller(props) {
-  const { onMouseOver, onMouseLeave, onPlayButtonClick, disabledControl, controllerInvisible, playerElapsedTime, maxTime, ...seekBarProps } = props
+  const { showElapsedTime, onMouseOver, onMouseLeave, onPlayButtonClick, disabledControl, controllerInvisible, playerElapsedTime, maxTime, ...seekBarProps } = props
 
   const bodyStyle = css({
     position: 'absolute',
@@ -26,7 +26,7 @@ export default function Controller(props) {
           <div css={seekBarStyle}>
             <SeekBar invisible={controllerInvisible} playerElapsedTime={playerElapsedTime} maxTime={maxTime} {...seekBarProps} />
           </div>
-          {!controllerInvisible &&
+          {showElapsedTime && !controllerInvisible &&
             <div css={bottomButtonsStyle}>
               <Flex>
                 <Spacer width='20'/>

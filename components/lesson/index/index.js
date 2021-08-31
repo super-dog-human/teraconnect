@@ -10,11 +10,11 @@ import { useDialogContext } from '../../../libs/contexts/dialogContext'
 
 export default function Lesson({ lesson, errorStatus }) {
   const { showDialog } = useDialogContext()
-  const { isLoading: isBodyLoading, durationSec, backgroundImageURL, avatars, graphics, drawings, graphicURLs, speechURL } = usePlayer({ lesson, errorStatus, showDialog })
+  const { isLoading: isBodyLoading, durationSec, backgroundImageURL, avatars, drawings, graphics, speeches, graphicURLs, speechURL } = usePlayer({ lesson, errorStatus, showDialog })
   const { isPreparing, isPlaying: isSpeechPlaying, startPlaying: startSpeechPlaying, stopPlaying: stopSpeechPlaying, updateSpeeche, handleSeekChange: handleSpeechSeekChange }
     = useSpeechPlayer({ url: speechURL, durationSec })
   const { isPlaying, isPlayerHover, isAvatarLoading, startPlaying, stopPlaying, handleMouseOver, handleMouseLeave, handleSeekChange: handlePlayerSeekChange, ...playerProps }
-    = useLessonPlayer({ durationSec, avatars, drawings, graphics, graphicURLs, updateSpeeches: updateSpeeche })
+    = useLessonPlayer({ durationSec, avatars, drawings, graphics, speeches, graphicURLs, updateSpeeches: updateSpeeche })
 
   function handlePlayButtonClick() {
     if (isPlaying) {
@@ -46,8 +46,8 @@ export default function Lesson({ lesson, errorStatus }) {
       <Header />
       <main css={mainStyle}>
         <div css={bodyStyle}>
-          <LessonPlayer isLoading={isBodyLoading || isPreparing} isPlaying={isPlaying} showTitleBar={true} title={lesson.title}
-            durationSec={durationSec} backgroundImageURL={backgroundImageURL} hasGraphics={true} hasDrawings={true}
+          <LessonPlayer isLoading={isBodyLoading || isPreparing} isPlaying={isPlaying} showTitleBar={true} showElapsedTime={true} title={lesson.title}
+            durationSec={durationSec} backgroundImageURL={backgroundImageURL} hasDrawings={true}
             onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onPlayButtonClick={handlePlayButtonClick}
             controllerInvisible={!isPlayerHover} onSeekChange={handleSeekChange} {...playerProps} />
         </div>
