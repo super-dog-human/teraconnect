@@ -13,7 +13,7 @@ export default function Preview({ lessonID }) {
   const { isLoading: isSpeechLoading, isPlaying: isSpeechPlaying, playSpeeches, stopSpeeches, updateSpeeches, seekSpeeches } = useSpeechesPlayer({ lessonID, durationSec, speeches })
   const { isLoading: isMusicLoading, isPlaying: isMusicPlaying, playMusics, stopMusics, updateMusics, seekMusics } = useMusicsPlayer( { durationSec, musics, musicURLs })
   const { startPlaying, stopPlaying, handleMouseOver, handleMouseLeave, handleSeekChange: handlePlayerSeekChange, isPlaying, isPlayerHover, ...playerProps } =
-    useLessonPlayer({ startElapsedTime: 0, durationSec, avatars, drawings, graphics, graphicURLs, updateSpeeches, updateMusics })
+    useLessonPlayer({ startElapsedTime: 0, durationSec, avatars, drawings, graphics, graphicURLs, speeches, updateSpeeches, updateMusics })
 
   function handlePlayButtonClick() {
     if (isPlaying) {
@@ -56,7 +56,7 @@ export default function Preview({ lessonID }) {
 
   return (
     <div css={bodyStyle}>
-      <LessonPlayer isLoading={isSpeechLoading || isMusicLoading} isPlaying={isPlaying} durationSec={durationSec} backgroundImageURL={generalSetting.backgroundImageURL} hasGraphics={true} hasDrawings={true}
+      <LessonPlayer isLoading={isSpeechLoading || isMusicLoading} isPlaying={isPlaying} showElapsedTime={true} durationSec={durationSec} backgroundImageURL={generalSetting.backgroundImageURL} hasDrawings={true}
         onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onPlayButtonClick={handlePlayButtonClick}
         controllerInvisible={!isPlayerHover} maxTime={parseFloat(durationSec.toFixed(2))} onSeekChange={handleSeekChange} onSeekUp={handleSeekUp} {...playerProps} />
     </div>
