@@ -162,30 +162,33 @@ button.light:hover {
   z-index: 10000;
 }
 .indicator-z {
-  z-index: 1100;
+  z-index: 1200;
 }
 .context-menu-z {
-  z-index: 1000;
+  z-index: 1100;
 }
 .header-z {
-  z-index: 900;
+  z-index: 1000;
 }
 .modal-panel-z {
-  z-index: 800;
+  z-index: 900;
 }
 .overay-ui-z {
-  z-index: 700;
+  z-index: 800;
 }
 .subtitle-z {
-  z-index: 600;
+  z-index: 700;
 }
 .caption-z {
-  z-index: 500;
+  z-index: 600;
 }
 .drawing-z {
-  z-index: 400;
+  z-index: 500;
 }
 .avatar-z {
+  z-index: 400;
+}
+.embedding-z {
   z-index: 300;
 }
 .image-z {
