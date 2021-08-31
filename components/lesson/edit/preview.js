@@ -56,7 +56,7 @@ export default function Preview({ lessonID }) {
 
   return (
     <div css={bodyStyle}>
-      <LessonPlayer isLoading={isSpeechLoading || isMusicLoading} isPlaying={isPlaying} showElapsedTime={true} durationSec={durationSec} backgroundImageURL={generalSetting.backgroundImageURL} hasDrawings={true}
+      <LessonPlayer isLoading={isSpeechLoading || isMusicLoading} isPlaying={isPlaying} showFullController={true} durationSec={durationSec} backgroundImageURL={generalSetting.backgroundImageURL} hasDrawings={true}
         onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onPlayButtonClick={handlePlayButtonClick}
         controllerInvisible={!isPlayerHover} maxTime={parseFloat(durationSec.toFixed(2))} onSeekChange={handleSeekChange} onSeekUp={handleSeekUp} {...playerProps} />
     </div>

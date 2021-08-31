@@ -46,7 +46,7 @@ export default function Lesson({ lesson, errorStatus }) {
       <Header />
       <main css={mainStyle}>
         <div css={bodyStyle}>
-          <LessonPlayer isLoading={isBodyLoading || isPreparing} isPlaying={isPlaying} showTitleBar={true} showElapsedTime={true} title={lesson.title}
+          <LessonPlayer isLoading={isBodyLoading || isPreparing} isPlaying={isPlaying} showTitleBar={true} showFullController={true} title={lesson.title}
             durationSec={durationSec} backgroundImageURL={backgroundImageURL} hasDrawings={true}
             onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onPlayButtonClick={handlePlayButtonClick}
             controllerInvisible={!isPlayerHover} onSeekChange={handleSeekChange} {...playerProps} />
