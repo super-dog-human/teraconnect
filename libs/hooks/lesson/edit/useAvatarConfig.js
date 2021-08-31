@@ -1,37 +1,53 @@
 import { useState, useReducer, useEffect } from 'react'
 import { useLessonEditorContext } from '../../../contexts/lessonEditorContext'
 import useAvatar from '../../../hooks/lesson/useAvatar'
+import { deepCopy } from '../../../utils'
 
 export default function useAvatarConfig({ index, initialConfig, closeCallback }) {
   const [config, dispatchConfig] = useReducer(configReducer, initialConfig)
   const [durationSec, setDurationSec] = useState(initialConfig.durationSec)
   const [isLoading, setIsLoading] = useState(true)
-  const { generalSetting, updateLine } = useLessonEditorContext()
+  const { generalSetting, avatars, updateLine } = useLessonEditorContext()
   const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging } = useAvatar({ setIsLoading, movingCallback })
 
   function configReducer(state, { type, payload }) {
     switch (type) {
     case 'elapsedTime':
       return { ...state, elapsedTime: payload }
-    case 'durationSec':
-      return { ...state, durationSec: payload }
-    case 'moving':
-      return { ...state, moving: payload.moving, durationSec: payload.durationSec }
+    case 'positions':
+      return { ...state, positions: payload.positions, durationSec: payload.durationSec }
     default:
       throw new Error()
     }
   }
 
   async function initAvatar() {
-    const avatar = { ...generalSetting.avatar }
-    avatar.config.positions = Object.values(config.moving)
+    const avatar = deepCopy(generalSetting.avatar)
+
+    if (config.positions) {
+      avatar.config.positions = config.positions
+    } else {
+      const beforeAvatar = justBeforeAvatar()
+      if (beforeAvatar) {
+        avatar.config.positions = beforeAvatar.positions
+      }
+    }
     setAvatarConfig({ avatar, lightColor: generalSetting.avatarLightColor })
+    dispatchConfig({ type: 'positions', payload: { positions: avatar.config.positions, durationSec: 0 } })
   }
 
   function movingCallback(record) {
     const durationSec = record.durationMillisec / 1000
     setDurationSec(durationSec)
-    dispatchConfig({ type: 'moving', payload: { moving: record.value } })
+    dispatchConfig({ type: 'positions', payload: { positions: record.value, durationSec } })
+  }
+
+  function justBeforeAvatar() {
+    if (index > 0) {
+      return avatars.filter(a => a.elapsedTime === initialConfig.elapsedTime)[index - 1]
+    } else {
+      return avatars.slice().reverse().find(a => a.elapsedTime < initialConfig.elapsedTime)
+    }
   }
 
   function handleDurationChange(e) {
@@ -59,10 +75,6 @@ export default function useAvatarConfig({ index, initialConfig, closeCallback })
   useEffect(() => {
     initAvatar()
   }, [])
-
-  useEffect(() => {
-    dispatchConfig({ type: 'durationSec', payload: durationSec })
-  }, [durationSec])
 
   return { config, dispatchConfig, isLoading, avatarRef, durationSec, startDragging, inDragging, endDragging, handleDurationChange, handleConfirm, handleCancel }
 }

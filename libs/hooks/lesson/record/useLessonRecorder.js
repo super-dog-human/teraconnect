@@ -53,7 +53,7 @@ export default function useLessonRecorder() {
       const avatar = {
         elapsedTime: elapsedFloatTimeFromDuration(durationSec),
         durationSec: parseFloat(durationSec.toFixed(3)),
-        moving: record.value,
+        positions: record.value,
       }
 
       if (isRecording) {

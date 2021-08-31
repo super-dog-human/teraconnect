@@ -44,7 +44,7 @@ export default function useAvatar({ setIsLoading, isSpeaking, hasResize, movingC
         movingCallback({
           kind: 'avatarMoving',
           durationMillisec: new Date() - startDraggingTimeRef.current,
-          value: { ...avatarRef.current.currentPosition() },
+          value: Object.values(avatarRef.current.currentPosition()),
         })
       }
     }

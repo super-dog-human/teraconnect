@@ -2,7 +2,7 @@ export default function useAddingLine({ lessonRef, durationSec, targetMaterial }
   function addAvatarLine(elapsedTime) {
     const avatar = {
       durationSec: 0,
-      moving: { x: 0, y: 0, z: 0 },
+      positions: null, // 初期位置がない場合はアバターのデフォルト位置を使用するのでnullでよい
     }
     return addNewLine(elapsedTime, 'avatar', avatar)
   }
