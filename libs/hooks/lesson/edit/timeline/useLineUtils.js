@@ -5,7 +5,7 @@ export default function useLineUtils({ avatars, drawings, embeddings, graphics, 
     allMaterialNames().forEach(kind => {
       targetMaterial(kind).setter(materials => {
         materials.forEach(m => {
-          if (fromElapsedTime && m.elapsedTime <= fromElapsedTime) return // 対象の時間が自身以前のものはスキップ
+          if (m.elapsedTime <= fromElapsedTime) return // 対象の時間が自身以前のものはスキップ
 
           const newElapsedTime = calcTime(m.elapsedTime, offsetTime)
           // 変更後の時間が自身以前になってしまう場合はスキップ。通常は発生しないが、変更前の後続行の開始時間が自身の終了より前の場合に起こりうる
