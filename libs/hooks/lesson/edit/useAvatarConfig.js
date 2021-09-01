@@ -1,4 +1,4 @@
-import { useState, useReducer, useEffect } from 'react'
+import { useState, useReducer, useCallback, useEffect } from 'react'
 import { useLessonEditorContext } from '../../../contexts/lessonEditorContext'
 import useAvatar from '../../../hooks/lesson/useAvatar'
 import { deepCopy } from '../../../utils'
@@ -14,6 +14,8 @@ export default function useAvatarConfig({ index, initialConfig, closeCallback })
     switch (type) {
     case 'elapsedTime':
       return { ...state, elapsedTime: payload }
+    case 'durationSec':
+      return { ...state, durationSec: payload }
     case 'positions':
       return { ...state, positions: payload.positions, durationSec: payload.durationSec }
     default:
@@ -21,9 +23,9 @@ export default function useAvatarConfig({ index, initialConfig, closeCallback })
     }
   }
 
-  async function initAvatar() {
+  const initAvatar = useCallback(async () => {
     const avatar = deepCopy(generalSetting.avatar)
-    if (config.positions) {
+    if (config.positions.length > 0) {
       avatar.config.positions = config.positions
     } else {
       const lastAvatar = justBeforeAvatar()
@@ -33,7 +35,7 @@ export default function useAvatarConfig({ index, initialConfig, closeCallback })
     }
     setAvatarConfig({ avatar, lightColor: generalSetting.avatarLightColor })
     dispatchConfig({ type: 'positions', payload: { positions: avatar.config.positions, durationSec: initialConfig.durationSec } })
-  }
+  }, [])
 
   function movingCallback(record) {
     const durationSec = record.durationMillisec / 1000
@@ -74,6 +76,10 @@ export default function useAvatarConfig({ index, initialConfig, closeCallback })
   useEffect(() => {
     initAvatar()
   }, [])
+
+  useEffect(() => {
+    dispatchConfig({ type: 'durationSec', payload: durationSec })
+  }, [durationSec])
 
   return { config, dispatchConfig, isLoading, avatarRef, durationSec, startDragging, inDragging, endDragging, handleDurationChange, handleConfirm, handleCancel }
 }
