@@ -37,7 +37,7 @@ export default function useAvatarPlayer({ isPlaying, isLoading, setIsLoading, st
       }
 
       const realDurationSec = newMoving.elapsedTime + newMoving.durationSec - newElapsedTime
-      startMoving({ durationSec: newMoving.durationSec, realDurationSec, startPositions, destinationPositions: newMoving.positions })
+      startMoving({ durationSec: newMoving.durationSec, realDurationSec, startPositions, destinationPositions: newMoving.positions, animations: avatar.config.walkingAnimations })
       preMovingRef.current = newMoving
     } else if (newMoving && lastMoving) {
       // 自身の一つ前の移動後の位置
@@ -62,7 +62,7 @@ export default function useAvatarPlayer({ isPlaying, isLoading, setIsLoading, st
       preMovingRef.current = null
       prePositiosnRef.current = []
     }
-  }, [durationSec, startElapsedTime, avatars, avatar?.config?.positions, speeches, startMoving, stopMoving, setPosition])
+  }, [durationSec, startElapsedTime, avatars, avatar?.config, speeches, startMoving, stopMoving, setPosition])
 
   function seekAvatar(e) {
     elapsedTimeRef.current = startElapsedTime + parseFloat(e.target.value)

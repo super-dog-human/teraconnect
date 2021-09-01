@@ -116,7 +116,7 @@ export default class AvatarLoader {
     })
   }
 
-  setMovingAnimation(durationSec, startPositions, destinationPositions) {
+  setMovingAnimation({ durationSec, startPositions, destinationPositions, animations }) {
     if (this.animationClip.moving) this.animationClip.moving.stop()
 
     const rotationStartSec = durationSec > 0.2 ? durationSec - 0.2 : durationSec
@@ -142,11 +142,10 @@ export default class AvatarLoader {
     this.animationClip.movingRotation.play()
 
     if (this.animationClip.walking) this.animationClip.walking.stop()
-    const leftArmTrack = new THREE.VectorKeyframeTrack(`${this._getBone('leftShoulder').name}.rotation[x]`, [0, 0.35, 0.7], [0.5, -0.5, 0.5])
-    const rightArmTrack = new THREE.VectorKeyframeTrack(`${this._getBone('rightShoulder').name}.rotation[x]`, [0, 0.35, 0.7], [-0.5, 0.5, -0.5])
-    const leftFootTrack = new THREE.VectorKeyframeTrack(`${this._getBone('leftUpperLeg').name}.rotation[x]`, [0, 0.35, 0.7], [-0.3, 0.3, -0.3])
-    const rightFootTrack = new THREE.VectorKeyframeTrack(`${this._getBone('rightUpperLeg').name}.rotation[x]`, [0, 0.35, 0.7], [0.3, -0.3, 0.3])
-    const walkingClip = new THREE.AnimationClip('walking', 0.7, [leftArmTrack, rightArmTrack, leftFootTrack, rightFootTrack])
+    const clips = animations.map(a =>
+      new THREE.VectorKeyframeTrack(`${this._getBone(a.boneName).name}.rotation[${a.axis}]`, a.keyTimes, a.rotations)
+    )
+    const walkingClip = new THREE.AnimationClip('walking', animations[0].durationSec, clips)
     this.animationClip.walking = this.animationMixer.clipAction(walkingClip)
     this.animationClip.walking.setLoop(THREE.LoopRepeat)
     this.animationClip.walking.play()
