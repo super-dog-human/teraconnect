@@ -158,5 +158,5 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
     draw(0)
   }, [didUpdateDrawings, setPictureBeforeDrawing, draw])
 
-  return { drawingRef: canvasRef, draw, initializeDrawing, finishDrawing, resetBeforeSeeking, resetBeforeUndo: setCompletedPicture }
+  return { drawingRef: canvasRef, updateDrawing: draw, initializeDrawing, finishDrawing, resetBeforeSeeking, resetBeforeUndo: setCompletedPicture }
 }

@@ -67,6 +67,12 @@ export default class AvatarLoader {
     this._setBodyRotationByXPosition(mousePosition.x)
   }
 
+  movePositions(positions) {
+    this.vrm.scene.position.set(...positions)
+    const positionX = new THREE.Vector3(...positions).clone().project(this.camera).x
+    this._setBodyRotationByXPosition(positionX)
+  }
+
   switchSpeaking(isSpeaking) {
     if (!this.animationClip.speaking) return
 
@@ -100,25 +106,67 @@ export default class AvatarLoader {
     }
   }
 
-  jumpAnimationAt(timeSec) {
-    this.animationMixer._actions.forEach(action => {
-      action.time = timeSec
+  setDefaultPose(avatar) {
+    this._getBone('hips').rotation.y = Math.PI // どのアバターも真後ろを向いているので反転
+
+    this.vrm.scene.scale.set(...[...Array(3)].map(() => avatar.config.scale))
+    this.vrm.scene.position.set(...avatar.config.positions)
+    avatar.config.initialPoses.forEach(p => {
+      this._getBone(p.boneName).rotation.set(...p.rotations)
     })
-    this.animate(0)
+  }
+
+  setMovingAnimation(durationSec, startPositions, destinationPositions) {
+    if (this.animationClip.moving) this.animationClip.moving.stop()
+
+    const rotationStartSec = durationSec > 0.2 ? durationSec - 0.2 : durationSec
+
+    this.vrm.scene.position.set(...startPositions)
+    const track = new THREE.VectorKeyframeTrack('.position', [0, rotationStartSec, durationSec], [...startPositions, ...destinationPositions, ...destinationPositions])
+    const movingClip = new THREE.AnimationClip('moving', durationSec, [track])
+    this.animationClip.moving = this.animationMixer.clipAction(movingClip)
+    this.animationClip.moving.setLoop(THREE.LoopOnce)
+    this.animationClip.moving.clampWhenFinished = true
+    this.animationClip.moving.play()
+
+    if (this.animationClip.movingRotation) this.animationClip.movingRotation.stop()
+    const startX2D = new THREE.Vector3(...startPositions).clone().project(this.camera).x
+    const destX2D = new THREE.Vector3(...destinationPositions).clone().project(this.camera).x
+    const startX = this._bodyRotationByXPosition(startX2D > destX2D ? 1 : -1)
+    const destinationX = this._bodyRotationByXPosition(destX2D)
+    const rotationTrack = new THREE.VectorKeyframeTrack(`${this._getBone('hips').name}.rotation[y]`, [0, rotationStartSec, durationSec], [startX, startX, destinationX])
+    const rotationClip = new THREE.AnimationClip('movingRotation', durationSec, [rotationTrack])
+    this.animationClip.movingRotation = this.animationMixer.clipAction(rotationClip)
+    this.animationClip.movingRotation.setLoop(THREE.LoopOnce)
+    this.animationClip.movingRotation.clampWhenFinished = true
+    this.animationClip.movingRotation.play()
+
+    if (this.animationClip.walking) this.animationClip.walking.stop()
+    const leftArmTrack = new THREE.VectorKeyframeTrack(`${this._getBone('leftShoulder').name}.rotation[x]`, [0, 0.35, 0.7], [0.5, -0.5, 0.5])
+    const rightArmTrack = new THREE.VectorKeyframeTrack(`${this._getBone('rightShoulder').name}.rotation[x]`, [0, 0.35, 0.7], [-0.5, 0.5, -0.5])
+    const leftFootTrack = new THREE.VectorKeyframeTrack(`${this._getBone('leftUpperLeg').name}.rotation[x]`, [0, 0.35, 0.7], [-0.3, 0.3, -0.3])
+    const rightFootTrack = new THREE.VectorKeyframeTrack(`${this._getBone('rightUpperLeg').name}.rotation[x]`, [0, 0.35, 0.7], [0.3, -0.3, 0.3])
+    const walkingClip = new THREE.AnimationClip('walking', 0.7, [leftArmTrack, rightArmTrack, leftFootTrack, rightFootTrack])
+    this.animationClip.walking = this.animationMixer.clipAction(walkingClip)
+    this.animationClip.walking.setLoop(THREE.LoopRepeat)
+    this.animationClip.walking.play()
+  }
+
+  removeMovingAnimation() {
+    if (this.animationClip.moving) this.animationClip.moving.stop()
+    if (this.animationClip.movingRotation) this.animationClip.movingRotation.stop()
+    if (this.animationClip.walking) this.animationClip.walking.stop()
+    delete this.animationClip.moving
+    delete this.animationClip.movingRotation
+    delete this.animationClip.walking
   }
 
   play() {
     this.animationMixer.timeScale = 1
   }
 
-  pause() {
-    this.animationMixer.timeScale = 0
-  }
-
   stop() {
-    this.animationMixer._actions.forEach(action => {
-      action.paused = true
-    })
+    this.animationMixer.timeScale = 0
   }
 
   currentPosition() {
@@ -175,24 +223,18 @@ export default class AvatarLoader {
       })
     })
 
-    this._setDefaultPose(avatar)
+    this.setDefaultPose(avatar)
 
     this.scene.add(this.vrm.scene)
   }
 
-  _setDefaultPose(avatar) {
-    this._getBone('hips').rotation.y = Math.PI // どのアバターも真後ろを向いているので反転
-
-    this.vrm.scene.scale.set(...[...Array(3)].map(() => avatar.config.scale))
-    this.vrm.scene.position.set(...avatar.config.positions)
-    avatar.config.initialPoses.forEach(p => {
-      this._getBone(p.boneName).rotation.set(...p.rotations)
-    })
-  }
-
   _setBodyRotationByXPosition(x) {
     // xは-1〜+1の範囲をとる。完全に真横を向かないよう0.7をかけて使用する
-    this._getBone('hips').rotation.y = Math.PI - x * 0.7
+    this._getBone('hips').rotation.y = this._bodyRotationByXPosition(x)
+  }
+
+  _bodyRotationByXPosition(x) {
+    return Math.PI - x * 0.7
   }
 
   _getBone(boneName) {

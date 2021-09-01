@@ -13,7 +13,7 @@ import LoadingIndicator from './loadingIndicator'
 const isShowSubtitleInPlayer = 'isShowSubtitleInPlayer'
 
 export default function LessonPlayer(props) {
-  const { isLoading, isPlaying, showTitleBar, showFullController, title, durationSec, backgroundImageURL, graphic, subtitle, hahAvatars, hasDrawings, drawingRef, startDrawing, inDrawing, endDrawing, controllerInvisible, ...controllerProps } = props
+  const { isLoading, isPlaying, showFullController, title, durationSec, backgroundImageURL, avatarRef, graphic, subtitle, hasAvatars, hasDrawings, drawingRef, startDrawing, inDrawing, endDrawing, controllerInvisible, ...controllerProps } = props
   const [showSubtitle, setShowSubtitle] = useState(false)
   function handleSubtitleButtonClick() {
     setShowSubtitle(state => {
@@ -33,9 +33,9 @@ export default function LessonPlayer(props) {
 
   return (
     <Aspect16To9Container>
-      {showTitleBar && <Titlebar isPlaying={isPlaying} controllerInvisible={controllerInvisible} title={title} />}
+      {title && <Titlebar isPlaying={isPlaying} controllerInvisible={controllerInvisible} title={title} />}
       {backgroundImageURL && <BackgroundImage url={backgroundImageURL} />}
-      {hahAvatars && <Avatar />}
+      {hasAvatars && <Avatar ref={avatarRef} />}
       {hasDrawings && <Drawing drawingRef={drawingRef} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing} zKind='drawing' />}
       {graphic && <Graphic graphic={graphic}/>}
       {subtitle && <Caption caption={subtitle.caption} />}

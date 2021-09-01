@@ -1,20 +1,23 @@
 /** @jsxImportSource @emotion/react */
-import React, { useEffect } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { css } from '@emotion/core'
 import Header from '../../header'
 import LessonPlayer from '../player/'
 import useLessonPlayer from '../../../libs/hooks/lesson/useLessonPlayer'
 import usePlayer from '../../../libs/hooks/lesson/player/usePlayer'
 import useSpeechPlayer from '../../../libs/hooks/lesson/player/useSpeechPlayer'
+import useResizeDetector from '../../../libs/hooks/useResizeDetector'
 import { useDialogContext } from '../../../libs/contexts/dialogContext'
 
 export default function Lesson({ lesson, errorStatus }) {
   const { showDialog } = useDialogContext()
+  const containerRef = useRef()
+  const { hasResize } = useResizeDetector(containerRef)
   const { isLoading: isBodyLoading, durationSec, backgroundImageURL, avatars, drawings, graphics, speeches, graphicURLs, speechURL } = usePlayer({ lesson, errorStatus, showDialog })
   const { isPreparing, isPlaying: isSpeechPlaying, startPlaying: startSpeechPlaying, stopPlaying: stopSpeechPlaying, updateSpeeche, handleSeekChange: handleSpeechSeekChange }
     = useSpeechPlayer({ url: speechURL, durationSec })
   const { isPlaying, isPlayerHover, isAvatarLoading, startPlaying, stopPlaying, handleMouseOver, handleMouseLeave, handleSeekChange: handlePlayerSeekChange, ...playerProps }
-    = useLessonPlayer({ durationSec, avatars, drawings, graphics, speeches, graphicURLs, updateSpeeches: updateSpeeche })
+    = useLessonPlayer({ durationSec, hasResize, avatar: lesson?.avatar, avatarLightColor: lesson?.avatarLightColor, avatars, drawings, graphics, speeches, graphicURLs, updateSpeeches: updateSpeeche })
 
   function handlePlayButtonClick() {
     if (isPlaying) {
@@ -45,9 +48,9 @@ export default function Lesson({ lesson, errorStatus }) {
     <>
       <Header />
       <main css={mainStyle}>
-        <div css={bodyStyle}>
-          <LessonPlayer isLoading={isBodyLoading || isPreparing} isPlaying={isPlaying} showTitleBar={true} showFullController={true} title={lesson.title}
-            durationSec={durationSec} backgroundImageURL={backgroundImageURL} hasDrawings={true}
+        <div css={bodyStyle} ref={containerRef}>
+          <LessonPlayer isLoading={isBodyLoading || isPreparing || isAvatarLoading} isPlaying={isPlaying} showFullController={true} title={lesson?.title}
+            durationSec={durationSec} backgroundImageURL={backgroundImageURL} hasAvatars={true} hasDrawings={true}
             onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onPlayButtonClick={handlePlayButtonClick}
             controllerInvisible={!isPlayerHover} onSeekChange={handleSeekChange} {...playerProps} />
         </div>

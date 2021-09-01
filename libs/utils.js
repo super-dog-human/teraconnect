@@ -24,6 +24,10 @@ export function exceptObject(obj, keys) {
       }
     }, {})
 }
+export function equalArrays(lefts, rights) {
+  if (lefts.length !== rights.length) return false
+  return lefts.every((v, i) => v === rights[i])
+}
 
 export function pickFromArray(array) {
   return array[Math.floor(Math.random() * array.length)]

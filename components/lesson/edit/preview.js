@@ -11,9 +11,9 @@ export default function Preview({ lessonID }) {
   const [graphicURLs, setGraphicURLs] = useState({})
   const { durationSec, generalSetting, avatars, drawings, graphics, graphicURLs: originalGraphicURLs, musics, musicURLs, speeches } = useLessonEditorContext()
   const { isLoading: isSpeechLoading, isPlaying: isSpeechPlaying, playSpeeches, stopSpeeches, updateSpeeches, seekSpeeches } = useSpeechesPlayer({ lessonID, durationSec, speeches })
-  const { isLoading: isMusicLoading, isPlaying: isMusicPlaying, playMusics, stopMusics, updateMusics, seekMusics } = useMusicsPlayer( { durationSec, musics, musicURLs })
+  const { isLoading: isMusicLoading, isPlaying: isMusicPlaying, playMusics, stopMusics, updateMusics, seekMusics } = useMusicsPlayer({ durationSec, musics, musicURLs })
   const { startPlaying, stopPlaying, handleMouseOver, handleMouseLeave, handleSeekChange: handlePlayerSeekChange, isPlaying, isPlayerHover, ...playerProps } =
-    useLessonPlayer({ startElapsedTime: 0, durationSec, avatars, drawings, graphics, graphicURLs, speeches, updateSpeeches, updateMusics })
+    useLessonPlayer({ durationSec, avatar: generalSetting.avatar, avatarLightColor: generalSetting.avatarLightColor, avatars, drawings, graphics, speeches, graphicURLs, updateSpeeches, updateMusics })
 
   function handlePlayButtonClick() {
     if (isPlaying) {
@@ -56,9 +56,10 @@ export default function Preview({ lessonID }) {
 
   return (
     <div css={bodyStyle}>
-      <LessonPlayer isLoading={isSpeechLoading || isMusicLoading} isPlaying={isPlaying} showFullController={true} durationSec={durationSec} backgroundImageURL={generalSetting.backgroundImageURL} hasDrawings={true}
+      <LessonPlayer isLoading={isSpeechLoading || isMusicLoading} isPlaying={isPlaying} showFullController={true}
+        durationSec={durationSec} backgroundImageURL={generalSetting.backgroundImageURL} hasAvatars={true} hasDrawings={true}
         onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onPlayButtonClick={handlePlayButtonClick}
-        controllerInvisible={!isPlayerHover} maxTime={parseFloat(durationSec.toFixed(2))} onSeekChange={handleSeekChange} onSeekUp={handleSeekUp} {...playerProps} />
+        controllerInvisible={!isPlayerHover} onSeekChange={handleSeekChange} onSeekUp={handleSeekUp} {...playerProps} />
     </div>
   )
 }

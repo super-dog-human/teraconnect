@@ -1,17 +1,19 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
 import usePlayerController from './usePlayerController'
+import useAvatarPlayer from './player/useAvatarPlayer'
 import useDrawingPlayer from './useDrawingPlayer'
 import useGraphicPlayer from './player/useGraphicPlayer'
 import useSubtitlePlayer from './player/useSubtitlePlayer'
 import { useUnmount } from 'react-use'
 
-export default function useLessonPlayer({ startElapsedTime=0, durationSec, avatars, drawings, graphics, speeches, graphicURLs, sameTimeIndex, updateSpeeches, updateMusics }) {
+export default function useLessonPlayer({ startElapsedTime=0, durationSec, hasResize, avatar, avatarLightColor, avatars, drawings, graphics, speeches, graphicURLs, sameTimeIndex, updateSpeeches, updateMusics }) {
   const animationRequestRef = useRef(0)
   const elapsedTimeRef = useRef(startElapsedTime)
   const preStartElapsedTimeRef = useRef(startElapsedTime)
   const [isAvatarLoading, setIsAvatarLoading] = useState(!!avatars)
   const { isPlayerHover, isPlaying, setIsPlaying, playerElapsedTime, setPlayerElapsedTime, deltaTime, resetClock, switchClock, handleMouseOver, handleMouseLeave } = usePlayerController()
-  const { drawingRef, draw, initializeDrawing, finishDrawing, resetBeforeSeeking, resetBeforeUndo } = useDrawingPlayer({ drawings, sameTimeIndex, startElapsedTime, elapsedTimeRef })
+  const { avatarRef, initializeAvatar, updateAvatar, seekAvatar } = useAvatarPlayer({ isPlaying, isLoading: isAvatarLoading, setIsLoading: setIsAvatarLoading, startElapsedTime, durationSec, hasResize, avatar, avatarLightColor, avatars, speeches })
+  const { drawingRef, updateDrawing, initializeDrawing, finishDrawing, resetBeforeSeeking, resetBeforeUndo } = useDrawingPlayer({ drawings, sameTimeIndex, startElapsedTime, elapsedTimeRef })
   const { graphic, initializeGraphic, updateGraphic, seekGraphic } = useGraphicPlayer({ startElapsedTime, durationSec, graphics, graphicURLs })
   const { subtitle, initializeSubtitle, updateSubtitle, seekSubtitle } = useSubtitlePlayer({ startElapsedTime, durationSec, speeches })
 
@@ -30,6 +32,7 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
     }
 
     if (elapsedTimeRef.current === startElapsedTime) {
+      if (avatars) initializeAvatar()
       if (drawings) initializeDrawing()
       if (graphics) initializeGraphic()
       if (speeches) initializeSubtitle()
@@ -60,7 +63,8 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
     elapsedTimeRef.current += incrementalTime
 
     if (elapsedTimeRef.current <= startElapsedTime + durationSec) {
-      if (drawings) draw(incrementalTime)
+      if (avatars) updateAvatar(incrementalTime)
+      if (drawings) updateDrawing(incrementalTime)
       if (graphics) updateGraphic(incrementalTime)
       if (speeches) updateSubtitle(incrementalTime)
       if (updateSpeeches) updateSpeeches(incrementalTime)
@@ -100,6 +104,7 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
     // プレイヤーからのelapsedTimeは相対時間なので開始時間を加算する
     const elapsedTime = startElapsedTime + parseFloat(e.target.value)
 
+    if (avatars) seekAvatar(e)
     if (drawings) resetBeforeSeeking()
     if (graphics) seekGraphic(e)
     if (speeches) seekSubtitle(e)
@@ -110,7 +115,7 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
     if (shouldResume) {
       startPlaying()
     } else {
-      draw(0)
+      updateDrawing(0)
     }
   }
 
@@ -124,6 +129,6 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, avata
     }
   }, [startElapsedTime, stopPlaying, updatePlayerElapsedTime])
 
-  return { drawingRef, isPlaying, isPlayerHover, isAvatarLoading, playerElapsedTime, graphic, subtitle, setIsPlaying, startPlaying, stopPlaying, getElapsedTime,
-    resetBeforeUndo, handleMouseOver, handleMouseLeave, handleSeekChange }
+  return { avatarRef, drawingRef, isPlaying, isPlayerHover, isAvatarLoading, playerElapsedTime, graphic, subtitle,
+    setIsPlaying, startPlaying, stopPlaying, getElapsedTime, resetBeforeUndo, handleMouseOver, handleMouseLeave, handleSeekChange }
 }

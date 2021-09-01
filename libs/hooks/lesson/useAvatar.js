@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useCallback, useEffect } from 'react'
 import { Clock } from 'three'
 import AvatarLoader from '../../avatar/loader'
 import { switchSwipable, mouseOrTouchPositions, rgbToHex } from '../../utils'
@@ -50,11 +50,35 @@ export default function useAvatar({ setIsLoading, isSpeaking, hasResize, movingC
     }
   }
 
-  async function changeAvatar() {
+  function setPosition(positions) {
+    avatarRef.current.movePositions(positions)
+  }
+
+  function resetPosition(avatar) {
+    avatarRef.current.setDefaultPose(avatar)
+  }
+
+  function startMoving(durationSec, originalPositions, destinationPositions) {
+    avatarRef.current.setMovingAnimation(durationSec, originalPositions, destinationPositions)
+  }
+
+  function stopMoving() {
+    avatarRef.current.removeMovingAnimation()
+  }
+
+  function playAnimation() {
+    avatarRef.current.play()
+  }
+
+  function stopAnimation() {
+    avatarRef.current.stop()
+  }
+
+  async function changeAvatar(shouldStartAnimation) {
     setIsLoading(true)
 
     const dom = await avatarRef.current.render(config.avatar, containerRef.current)
-    avatarRef.current.play()
+    if (shouldStartAnimation) playAnimation()
     animate()
 
     removeCurrentCanvas()
@@ -67,14 +91,14 @@ export default function useAvatar({ setIsLoading, isSpeaking, hasResize, movingC
     avatarRef.current.setLightColor(color, config.lightColor.a * 2)
   }
 
-  function changeSpeakingMotion() {
+  const changeSpeakingMotion = useCallback(() => {
     avatarRef.current.switchSpeaking(isSpeaking)
-  }
+  }, [isSpeaking])
 
-  function changeScreenSize() {
+  const changeScreenSize = useCallback(() => {
     if (!hasResize) return
     avatarRef.current.updateSize(containerRef.current)
-  }
+  }, [hasResize])
 
   function animate() {
     avatarRef.current.animate(clock.getDelta())
@@ -98,13 +122,20 @@ export default function useAvatar({ setIsLoading, isSpeaking, hasResize, movingC
   }, [])
 
   useEffect(() => {
-    Object.keys(config).forEach(key => {
+    const keys = Object.keys(config)
+    keys.forEach(key => {
       switch(key) {
       case 'avatar':
-        changeAvatar()
+        changeAvatar(keys.includes('playAnimation'))
         break
       case 'lightColor':
         changeLightColor()
+        break
+      case 'playAnimation':
+        if (!keys.includes('avatar')) playAnimation()
+        break
+      case 'stopAnimation':
+        stopAnimation()
         break
       }
     })
@@ -112,11 +143,11 @@ export default function useAvatar({ setIsLoading, isSpeaking, hasResize, movingC
 
   useEffect(() => {
     changeSpeakingMotion()
-  }, [isSpeaking])
+  }, [isSpeaking, changeSpeakingMotion])
 
   useEffect(() => {
     changeScreenSize()
-  }, [hasResize])
+  }, [hasResize, changeScreenSize])
 
-  return { setAvatarConfig: setConfig, avatarRef: containerRef, startDragging, inDragging, endDragging }
+  return { setAvatarConfig: setConfig, avatarRef: containerRef, startDragging, inDragging, endDragging, setPosition, resetPosition, startMoving, stopMoving }
 }

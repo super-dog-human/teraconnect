@@ -20,7 +20,7 @@ export default function AvatarTab({ avatars, setConfig }) {
 
   function handleAvatarChange (e) {
     const id = parseInt(e.target.value)
-    setConfig({ avatar: avatars.find(a => a.id === id) })
+    setConfig({ avatar: avatars.find(a => a.id === id), playAnimation: 'true' })
     setRecord({ kind: 'avatarID', value: id })
   }
 
@@ -50,7 +50,7 @@ export default function AvatarTab({ avatars, setConfig }) {
       }
     )))
 
-    setConfig({ avatar: avatars[0] })
+    setConfig({ avatar: avatars[0], playAnimation: 'true' })
     setRecord({ kind: 'avatarID', value: avatars[0].id })
     setRecord({ kind: 'avatarLightColor', value: lightColor })
   }, [avatars, selectOptions.length, lightColor, setConfig, setRecord])
