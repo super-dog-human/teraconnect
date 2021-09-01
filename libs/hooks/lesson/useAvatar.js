@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
-import { Clock } from 'three'
+import { Clock, Vector3 } from 'three'
 import AvatarLoader from '../../avatar/loader'
 import { switchSwipable, mouseOrTouchPositions, rgbToHex } from '../../utils'
 
@@ -58,8 +58,13 @@ export default function useAvatar({ setIsLoading, isSpeaking, hasResize, movingC
     avatarRef.current.setDefaultPose(avatar)
   }
 
-  function startMoving(durationSec, originalPositions, destinationPositions) {
-    avatarRef.current.setMovingAnimation(durationSec, originalPositions, destinationPositions)
+  function startMoving({ durationSec, realDurationSec, startPositions, destinationPositions }) {
+    const startVector = new Vector3(...startPositions)
+    const destinationVector = new Vector3(...destinationPositions)
+
+    startVector.lerp(destinationVector, 1 - realDurationSec / durationSec)
+
+    avatarRef.current.setMovingAnimation(realDurationSec, Object.values(startVector), destinationPositions)
   }
 
   function stopMoving() {

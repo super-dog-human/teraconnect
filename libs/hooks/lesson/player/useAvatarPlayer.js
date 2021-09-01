@@ -1,5 +1,4 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
-import { Vector3 }  from 'three'
 import useAvatar from '../useAvatar'
 import { equalArrays } from '../../../utils'
 
@@ -38,12 +37,7 @@ export default function useAvatarPlayer({ isPlaying, isLoading, setIsLoading, st
       }
 
       const realDurationSec = newMoving.elapsedTime + newMoving.durationSec - newElapsedTime
-      const startVector = new Vector3(...startPositions)
-      const destinationVector = new Vector3(...newMoving.positions)
-
-      startVector.lerp(destinationVector, 1 - realDurationSec / newMoving.durationSec)
-      startMoving(realDurationSec, Object.values(startVector), newMoving.positions)
-
+      startMoving({ durationSec: newMoving.durationSec, realDurationSec, startPositions, destinationPositions: newMoving.positions })
       preMovingRef.current = newMoving
     } else if (newMoving && lastMoving) {
       // 自身の一つ前の移動後の位置
