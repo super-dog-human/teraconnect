@@ -87,8 +87,9 @@ export default function useAvatar({ setIsLoading, isSpeaking, hasResize, movingC
   }
 
   function changeLightColor() {
-    const color = parseInt(rgbToHex(Object.values(config.lightColor).slice(0, 3)), 16)
-    avatarRef.current.setLightColor(color, config.lightColor.a * 2)
+    const colors = config.lightColor.split(',')
+    const color = parseInt(rgbToHex(colors.slice(0, 3).map(c => parseInt(c))), 16)
+    avatarRef.current.setLightColor(color, colors[3] * 2)
   }
 
   const changeSpeakingMotion = useCallback(() => {

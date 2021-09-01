@@ -128,7 +128,7 @@ export default function useLessonPublishing({ lesson, material, setFormValue, ha
   }
 
   function handleColorChange(color) {
-    setAvatarConfig({ lightColor: color })
+    setAvatarConfig({ lightColor: Object.values(color).toString() })
     dispatchSetting({ type: 'avatarLightColor', payload: color })
   }
 
@@ -164,7 +164,7 @@ export default function useLessonPublishing({ lesson, material, setFormValue, ha
 
   useEffect(() => {
     if (!isExtendedOtherSetting) return
-    setAvatarConfig({ avatar: material.avatar, lightColor: avatarLight })
+    setAvatarConfig({ avatar: material.avatar, lightColor: Object.values(avatarLight).toString() })
   }, [isExtendedOtherSetting, material.avatar, avatarLight, setAvatarConfig])
 
   return { isExtendedOtherSetting, inputFileRef, newReferenceRef, isAddingReference, relationLessonThumbnailURL, isAvatarLoading, avatarRef, avatarLight,
