@@ -43,7 +43,7 @@ export default function Caption({ caption }) {
     case 'bottom':
       return 'flex-end'
     default:
-      return 'center'
+      return 'flex-end'
     }
   }
 
