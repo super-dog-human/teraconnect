@@ -26,7 +26,7 @@ export default function AvatarTab({ avatars, setConfig }) {
 
   function handleColorChange(color) {
     setLightColor(color)
-    setConfig({ lightColor: color })
+    setConfig({ lightColor: Object.values(color).toString() })
     setRecord({ kind: 'avatarLightColor', value: color })
   }
 
@@ -36,7 +36,7 @@ export default function AvatarTab({ avatars, setConfig }) {
 
   useEffect(() => {
     if (initializedRef.current) return
-    setConfig({ lightColor })
+    setConfig({ lightColor: Object.values(lightColor).toString() })
     initializedRef.current = true
   }, [setConfig, lightColor])
 
@@ -52,7 +52,7 @@ export default function AvatarTab({ avatars, setConfig }) {
 
     setConfig({ avatar: avatars[0], playAnimation: 'true' })
     setRecord({ kind: 'avatarID', value: avatars[0].id })
-    setRecord({ kind: 'avatarLightColor', value: lightColor })
+    setRecord({ kind: 'avatarLightColor', value: Object.values(lightColor).toString() })
   }, [avatars, selectOptions.length, lightColor, setConfig, setRecord])
 
   return (
