@@ -5,6 +5,7 @@ import BackgroundImage from '../backgroundImage'
 import Avatar from '../avatar'
 import Drawing from '../drawing'
 import Graphic from '../graphic'
+import Embedding from './embedding'
 import Subtitle from './subtitle'
 import Caption from './caption'
 import Controller from './controller'
@@ -13,7 +14,7 @@ import LoadingIndicator from './loadingIndicator'
 const isShowSubtitleInPlayer = 'isShowSubtitleInPlayer'
 
 export default function LessonPlayer(props) {
-  const { isLoading, isPlaying, showFullController, title, durationSec, backgroundImageURL, avatarRef, graphic, subtitle, hasAvatars, hasDrawings, drawingRef, startDrawing, inDrawing, endDrawing, controllerInvisible, ...controllerProps } = props
+  const { isLoading, isPlaying, showFullController, title, durationSec, backgroundImageURL, avatarRef, embedding, graphic, subtitle, hasAvatars, hasDrawings, drawingRef, startDrawing, inDrawing, endDrawing, controllerInvisible, ...controllerProps } = props
   const [showSubtitle, setShowSubtitle] = useState(false)
   function handleSubtitleButtonClick() {
     setShowSubtitle(state => {
@@ -37,6 +38,7 @@ export default function LessonPlayer(props) {
       {backgroundImageURL && <BackgroundImage url={backgroundImageURL} />}
       {hasAvatars && <Avatar ref={avatarRef} />}
       {hasDrawings && <Drawing drawingRef={drawingRef} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing} zKind='drawing' />}
+      {embedding && <Embedding isPlaying={isPlaying} embedding={embedding} />}
       {graphic && <Graphic graphic={graphic}/>}
       {subtitle && <Caption caption={subtitle.caption} />}
       {showSubtitle && subtitle && <Subtitle subtitle={subtitle.body} />}

@@ -12,6 +12,7 @@ export default function usePlayer({ lesson, errorStatus, showDialog }) {
   const [backgroundImageURL, setBackgroundImageURL] = useState('')
   const [avatars, setAvatars] = useState([])
   const [drawings, setDrawings] = useState([])
+  const [embeddings, setEmbeddings] = useState([])
   const [graphics, setGraphics] = useState([])
   const [graphicURLs, setGraphicURLs] = useState({})
   const [speeches, setSpeeches] = useState([])
@@ -39,6 +40,7 @@ export default function usePlayer({ lesson, errorStatus, showDialog }) {
 
     setAvatars(material.avatars || [])
     setDrawings(material.drawings || [])
+    setEmbeddings(material.embeddings || [])
     setGraphics(material.graphics || [])
     setSpeeches(material.speeches || [])
 
@@ -67,5 +69,5 @@ export default function usePlayer({ lesson, errorStatus, showDialog }) {
     }
   }, [errorStatus, lesson?.updated, lesson?.published, showDialog, fetchBody])
 
-  return { isLoading, durationSec, backgroundImageURL, avatars, drawings, graphics, speeches, graphicURLs, speechURL: lesson?.speechURL || '' }
+  return { isLoading, durationSec, backgroundImageURL, avatars, drawings, embeddings, graphics, speeches, graphicURLs, speechURL: lesson?.speechURL || '' }
 }

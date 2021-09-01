@@ -61,7 +61,6 @@ export default function useAvatar({ setIsLoading, isSpeaking, hasResize, movingC
   function startMoving({ durationSec, realDurationSec, startPositions, destinationPositions, animations }) {
     const startVector = new Vector3(...startPositions)
     const destinationVector = new Vector3(...destinationPositions)
-
     startVector.lerp(destinationVector, 1 - realDurationSec / durationSec)
 
     avatarRef.current.setMovingAnimation({ durationSec: realDurationSec, startPositions: Object.values(startVector), destinationPositions, animations } )
