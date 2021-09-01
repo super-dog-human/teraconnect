@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { switchSwipable, mouseOrTouchPositions } from '../../utils'
 import { drawToCanvas, drawEdgeCircle, clearCanvas } from '../../drawingUtils'
-import useMobileDetector from '../useMobileDetector'
+import useTouchDeviceDetector from '../useTouchDeviceDetector'
 const initialColor = '#ff0000'
 
 export default function useDrawingRecorder({ hasResize, drawingRef, startDragging, inDragging, endDragging, setRecord }) {
@@ -17,10 +17,10 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
   const [enableEraser, setEnableEraser] = useState(false)
   const [color, setColor] = useState(initialColor)
   const [lineWidth, setLineWidth] = useState(5)
-  const isMobile = useMobileDetector()
+  const isTouchDevice = useTouchDeviceDetector()
 
   function startDrawing(e) {
-    if (isMobile && e.type === 'mousedown') return // モバイルではtouchstart後にmousedownが呼ばれるのでスキップ
+    if (isTouchDevice && e.type === 'mousedown') return // モバイルではtouchstart後にmousedownが呼ばれるのでスキップ
     if ((enablePen || enableEraser) && !isDrawingHide) {
       switchSwipable(false)
       isClearedRef.current = false
@@ -53,7 +53,7 @@ export default function useDrawingRecorder({ hasResize, drawingRef, startDraggin
   }
 
   function endDrawing(e) {
-    if (isMobile && e.type === 'mouseup') return // モバイルではtouchend後にmouseupが呼ばれるのでスキップ
+    if (isTouchDevice && e.type === 'mouseup') return // モバイルではtouchend後にmouseupが呼ばれるのでスキップ
     if ((enablePen || enableEraser) && !isDrawingHide) {
       if (!isDrawingRef.current) return
       switchSwipable(true)
