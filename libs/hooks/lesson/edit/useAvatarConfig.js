@@ -23,17 +23,16 @@ export default function useAvatarConfig({ index, initialConfig, closeCallback })
 
   async function initAvatar() {
     const avatar = deepCopy(generalSetting.avatar)
-
     if (config.positions) {
       avatar.config.positions = config.positions
     } else {
-      const beforeAvatar = justBeforeAvatar()
-      if (beforeAvatar) {
-        avatar.config.positions = beforeAvatar.positions
+      const lastAvatar = justBeforeAvatar()
+      if (lastAvatar) {
+        avatar.config.positions = lastAvatar.positions
       }
     }
     setAvatarConfig({ avatar, lightColor: generalSetting.avatarLightColor })
-    dispatchConfig({ type: 'positions', payload: { positions: avatar.config.positions, durationSec: 0 } })
+    dispatchConfig({ type: 'positions', payload: { positions: avatar.config.positions, durationSec: initialConfig.durationSec } })
   }
 
   function movingCallback(record) {
