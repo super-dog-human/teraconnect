@@ -1,5 +1,6 @@
 import { useState, useReducer } from 'react'
 import { useLessonEditorContext } from '../../../contexts/lessonEditorContext'
+import { fetchDocument } from '../../../fetch'
 
 export default function useEmbeddingConfig({ index, initialConfig, closeCallback }) {
   const serviceOptions = [
@@ -55,6 +56,18 @@ export default function useEmbeddingConfig({ index, initialConfig, closeCallback
     if (config.action === 'hide') {
       delete config.serviceName
       delete config.contentID
+    }
+
+    if (config.serviceName === 'geogebra') {
+      console.log(config.contentID)
+      /*
+//const geogebraURL = 'https://www.geogebra.org/material/iframe/id/{contentID}/width/1600/height/715/border/888888/rc/false/ai/false/sdz/false/smb/false/stb/false/stbh/false/ld/false/sri/false/ctl/false/sfsb/false/szb/false'
+const geogebraURL = 'https://www.geogebra.org/material/iframe/id/'
+//const geogebraURL = 'https://www.geogebra.org/m/'
+*/
+      fetchDocument('https://www.geogebra.org/material/iframe/' + config.contentID + 'width/1600/height/715/border/888888/rc/false/ai/false/sdz/false/smb/false/stb/false/stbh/false/ld/false/sri/false/ctl/false/sfsb/false/szb/false').then(body => {
+        console.log(body)
+      })
     }
 
     updateLine({ kind: 'embedding', index, elapsedTime: initialConfig.elapsedTime, newValue: config, changeAfterLineElapsedTime })

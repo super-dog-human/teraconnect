@@ -19,6 +19,7 @@ export default function useAddingLine({ lessonRef, durationSec, targetMaterial }
   function addEmbeddingLine(elapsedTime) {
     const embedding = {
       action: 'show',
+      startAt: 0,
       serviceName: 'youtube',
       contentID: '',
     }

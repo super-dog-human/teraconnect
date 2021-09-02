@@ -43,7 +43,6 @@ export default function Embedding(props) {
                       placeholder='ビデオIDを入力' defaultValue={config.contentID} maxLength='11' onBlur={handleContentIDBlur} />
                   </Container>
                   <Spacer width='10' />
-                  <PlainText size='14' color='var(--soft-white)'>?autoplay=1&mute=1</PlainText>
                 </Flex>
                 <Spacer height='10' />
                 <PlainText size='12' color='var(--text-gray)'>仕様上の制限のため、ミュート状態で再生されます。</PlainText>
@@ -61,6 +60,9 @@ export default function Embedding(props) {
                       placeholder='教材IDを入力' defaultValue={config.contentID} maxLength='8' onChange={handleContentIDBlur} />
                   </Container>
                 </Flex>
+                <Spacer height='10' />
+                <PlainText size='12' color='var(--text-gray)'>ボタンやツールバーは操作できません</PlainText>
+                <Spacer height='10' />
                 {isInvalidInput && <PlainText size='13' color='var(--error-red)'>教材IDは8文字で入力してください。</PlainText>}
               </>
             }

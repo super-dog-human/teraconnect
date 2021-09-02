@@ -1,12 +1,13 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
+import { fetchFile } from '../../../fetch'
 
 const youtubeURL = 'https://www.youtube.com/embed/{contentID}?controls=0&autoplay=1&mute=1&start={startSec}'
-const geogebraURL = 'https://www.geogebra.org/material/iframe/id/{contentID}/width/1600/height/715/border/888888/rc/false/ai/false/sdz/false/smb/false/stb/false/stbh/false/ld/false/sri/false/ctl/false/sfsb/false/szb/false'
 
 export default function useEmbeddingPlayer({ durationSec, embeddings }) {
   const [embedding, setEmbedding] = useState()
   const elapsedTimeRef = useRef(0)
   const initializedRef = useRef(false)
+  const geogebraFileCacheRef = useRef({})
 
   function initializeEmbedding() {
     if (elapsedTimeRef.current >= durationSec) {
@@ -22,9 +23,19 @@ export default function useEmbeddingPlayer({ durationSec, embeddings }) {
       // requestAnimationFrame経由で呼ばれた場合、最新のstateが取得できないのでsetState中でgraphicを取得する
       if (newEmbedding && newEmbedding.action === 'show') {
         if (!currentEmbedding || currentEmbedding.serviceName !== newEmbedding.serviceName || currentEmbedding.contentID !== newEmbedding.contentID) {
-          const startSec = Math.round(newElapsedTime - newEmbedding.elapsedTime)
-          const url = createURL(newEmbedding, startSec)
-          return { contentID: newEmbedding.contentID, serviceName: newEmbedding.serviceName, url }
+          if (newEmbedding.serviceName === 'youtube') {
+            const startSec = Math.round(newElapsedTime - newEmbedding.elapsedTime)
+            const url = createYoutubeURL(newEmbedding, startSec)
+            return { contentID: newEmbedding.contentID, serviceName: newEmbedding.serviceName, url }
+          }
+          if (newEmbedding.serviceName == 'geogebra') {
+            const file = geogebraFileCacheRef.current[newEmbedding.contentID]
+            if (file) {
+              return { contentID: newEmbedding.contentID, serviceName: newEmbedding.serviceName, file }
+            } else { // キャッシュが読めていなければ今回は再生できない
+              return currentEmbedding
+            }
+          }
         } else {
           return currentEmbedding
         }
@@ -37,7 +48,6 @@ export default function useEmbeddingPlayer({ durationSec, embeddings }) {
       elapsedTimeRef.current = newElapsedTime
     } else {
       elapsedTimeRef.current = durationSec
-      setEmbedding()
     }
   }, [durationSec, embeddings])
 
@@ -47,29 +57,35 @@ export default function useEmbeddingPlayer({ durationSec, embeddings }) {
     updateEmbedding(0)
   }
 
-  function createURL(embedding, startSec) {
-    switch (embedding.serviceName) {
-    case 'youtube':
-      return youtubeURL.replace('{contentID}', embedding.contentID).replace('{startSec}', startSec)
-    case 'geogebra':
-      return geogebraURL.replace('{contentID}', embedding.contentID)
-    default:
-      throw new Error()
-    }
+  function createYoutubeURL(embedding, startSec=0) {
+    return youtubeURL.replace('{contentID}', embedding.contentID).replace('{startSec}', startSec)
   }
 
   const preloadEmbeddings = useCallback(() => {
     const urls = []
     Object.values(embeddings).forEach(emb => {
       if (emb.action !== 'show') return
-      const url = createURL(emb)
-      if (urls.includes(url)) return
-      urls.push(url)
+      switch (emb.serviceName) {
+      case 'youtube': {
+        const url = createYoutubeURL(emb)
+        if (urls.includes(url)) return
+        urls.push(url)
 
-      const prefetchLink = document.createElement('link')
-      prefetchLink.href = url
-      prefetchLink.rel = 'prefetch'
-      document.head.appendChild(prefetchLink)
+        const prefetchLink = document.createElement('link')
+        prefetchLink.href = url
+        prefetchLink.rel = 'prefetch'
+        document.head.appendChild(prefetchLink)
+        return
+      }
+      case 'geogebra': {
+        if (geogebraFileCacheRef.current[emb.contentID]) return
+        fetchFile(emb.fileURL).then(body => {
+          const reader = new FileReader()
+          reader.readAsDataURL(body)
+          reader.onload = (e => geogebraFileCacheRef.current[emb.contentID] = e.target.result.replace(/data:.*\/.*;base64,/, ''))
+        })
+        return
+      }}
     })
   }, [embeddings])
 
