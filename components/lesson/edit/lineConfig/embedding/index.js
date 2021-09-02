@@ -6,13 +6,14 @@ import Flex from '../../../../flex'
 import PlainText from '../../../../plainText'
 import Select from '../../../../form/select'
 import InputText from '../../../../form/inputText'
+import InputNumber from '../../../../form/inputNumber'
 import DialogHeader from '../configDialog/dialogHeader'
 import DialogFooter from '../configDialog/dialogFooter'
 import ActionSelector from './actionSelector'
 import useEmbeddingConfig from '../../../../../libs/hooks/lesson/edit/useEmbeddingConfig'
 
 export default function Embedding(props) {
-  const { config, dispatchConfig, serviceOptions, isInvalidInput, handleServiceChange, handleContentIDBlur, handleConfirm, handleCancel } = useEmbeddingConfig(props)
+  const { config, dispatchConfig, serviceOptions, isInvalidInput, handleServiceChange, handleContentIDBlur, handleStartAtSecBlur, handleConfirm, handleCancel } = useEmbeddingConfig(props)
 
   return (
     <>
@@ -42,7 +43,13 @@ export default function Embedding(props) {
                     <InputText size='16' textAlign='center' color='var(--soft-white)' borderColor='var(--soft-white)' borderWidth='0 0 1px 0'
                       placeholder='ビデオIDを入力' defaultValue={config.contentID} maxLength='11' onBlur={handleContentIDBlur} />
                   </Container>
+                  <Spacer width='50' />
+                  <PlainText size='12' color='var(--soft-white)'>開始時間</PlainText>
                   <Spacer width='10' />
+                  <Container width='50' height='30'>
+                    <InputNumber size='15' textAlign='center' color='var(--soft-white)' borderColor='var(--soft-white)' borderWidth='0 0 1px 0'
+                      placeholder='秒' defaultValue={config.startAtSec} maxLength='5' onBlur={handleStartAtSecBlur} />
+                  </Container>
                 </Flex>
                 <Spacer height='10' />
                 <PlainText size='12' color='var(--text-gray)'>仕様上の制限のため、ミュート状態で再生されます。</PlainText>

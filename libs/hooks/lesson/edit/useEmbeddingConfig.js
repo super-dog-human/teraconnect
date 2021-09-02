@@ -29,6 +29,8 @@ export default function useEmbeddingConfig({ index, initialConfig, closeCallback
       }
     case 'contentID':
       return { ...state, contentID: payload }
+    case 'startAtSec':
+      return { ...state, startAtSec: payload }
     default:
       throw new Error()
     }
@@ -51,6 +53,11 @@ export default function useEmbeddingConfig({ index, initialConfig, closeCallback
     dispatchConfig({ type: 'contentID', payload: id })
   }
 
+  function handleStartAtSecBlur(e) {
+    const startAtSec = parseInt(e.currentTarget.value)
+    dispatchConfig({ type: 'startAtSec', payload: startAtSec })
+  }
+
   function handleConfirm(changeAfterLineElapsedTime) {
     if (config.action === 'hide') {
       delete config.serviceName
@@ -65,5 +72,5 @@ export default function useEmbeddingConfig({ index, initialConfig, closeCallback
     closeCallback(true)
   }
 
-  return { config, dispatchConfig, serviceOptions, isInvalidInput, handleServiceChange, handleContentIDBlur, handleConfirm, handleCancel }
+  return { config, dispatchConfig, serviceOptions, isInvalidInput, handleServiceChange, handleContentIDBlur, handleStartAtSecBlur, handleConfirm, handleCancel }
 }

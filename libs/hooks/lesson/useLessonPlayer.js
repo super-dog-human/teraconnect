@@ -15,7 +15,7 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, hasRe
   const { isPlayerHover, isPlaying, setIsPlaying, playerElapsedTime, setPlayerElapsedTime, deltaTime, resetClock, switchClock, handleMouseOver, handleMouseLeave } = usePlayerController()
   const { avatarRef, initializeAvatar, updateAvatar, seekAvatar } = useAvatarPlayer({ isPlaying, isLoading: isAvatarLoading, setIsLoading: setIsAvatarLoading, startElapsedTime, durationSec, hasResize, avatar, avatarLightColor, avatars, speeches })
   const { drawingRef, updateDrawing, initializeDrawing, finishDrawing, resetBeforeSeeking, resetBeforeUndo } = useDrawingPlayer({ drawings, sameTimeIndex, startElapsedTime, elapsedTimeRef })
-  const { embedding, initializeEmbedding, updateEmbedding, seekEmbedding } = useEmbeddingPlayer({ durationSec, embeddings })
+  const { embedding, youtubeRef, initializeEmbedding, updateEmbedding, seekEmbedding } = useEmbeddingPlayer({ isPlaying, durationSec, embeddings })
   const { graphic, initializeGraphic, updateGraphic, seekGraphic } = useGraphicPlayer({ startElapsedTime, durationSec, graphics, graphicURLs })
   const { subtitle, initializeSubtitle, updateSubtitle, seekSubtitle } = useSubtitlePlayer({ startElapsedTime, durationSec, speeches })
 
@@ -134,6 +134,6 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, hasRe
     }
   }, [startElapsedTime, stopPlaying, updatePlayerElapsedTime])
 
-  return { avatarRef, drawingRef, isPlaying, isPlayerHover, isAvatarLoading, playerElapsedTime, embedding, graphic, subtitle,
+  return { avatarRef, drawingRef, isPlaying, isPlayerHover, isAvatarLoading, playerElapsedTime, embedding, youtubeRef, graphic, subtitle,
     setIsPlaying, startPlaying, stopPlaying, getElapsedTime, resetBeforeUndo, handleMouseOver, handleMouseLeave, handleSeekChange }
 }
