@@ -47,21 +47,7 @@ export async function post(resource, body, method='POST', header, option={}) {
   })
 }
 
-// GeoGebraのドキュメントダウンロードのみに使用
-export async function fetchDocument(url) {
-  const response = await isoFetch(url)
-
-  if (response.ok) {
-    return await response.text()
-  }
-
-  const error = new Error(response.statusText)
-  error.response = response
-
-  throw error
-}
-
-// Cloud Storageなどのファイルダウンロードに使用
+// Cloud Storageのファイルダウンロードのみに使用
 export async function fetchFile(url) {
   const response = await isoFetch(url)
 
