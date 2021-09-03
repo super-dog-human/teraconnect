@@ -2,7 +2,7 @@ import { useRef, useState, useCallback, useEffect } from 'react'
 import useAvatar from '../../lesson/useAvatar'
 import { filterObject, stringValueToRGBA, isValidISBN13 } from '../../../utils'
 import { imageToThumbnailURL } from '../../../graphicUtils'
-import { fetchBookTitle } from '../../../fetchGoogleBooks'
+import { fetchBook } from '../../../fetchGoogleBooks'
 
 const maxThumbnailSize = { width: 480, height: 270 }
 
@@ -82,8 +82,8 @@ export default function useLessonPublishing({ lesson, material, setFormValue, ha
 
     setIsAddingReference(true)
 
-    fetchBookTitle(isbn).then(name => {
-      dispatchSetting({ type: 'addReference', payload: { name, isbn } })
+    fetchBook(isbn).then(book => {
+      dispatchSetting({ type: 'addReference', payload: { name: book.name, isbn } })
     }).catch(e => {
       console.error(e) // エラーでも処理を続行する
       dispatchSetting({ type: 'addReference', payload: { name: '', isbn } })
