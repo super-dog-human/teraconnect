@@ -39,7 +39,9 @@ export default function Controller(props) {
                 <Flex>
                   <Spacer width='20' height='15' />
                   <PlainText size='12' color='var(--soft-white)'>
-                    {floatSecondsToMinutesFormat(playerElapsedTime)} / {floatSecondsToMinutesFormat(maxTime)}
+                    <div css={timeDisplayStyle}>
+                      {floatSecondsToMinutesFormat(playerElapsedTime)} / {floatSecondsToMinutesFormat(maxTime)}
+                    </div>
                   </PlainText>
                 </Flex>
                 <Flex justifyContent='flex-end' alignItems='bottom'>
@@ -65,4 +67,8 @@ const seekBarStyle = css({
 const bottomButtonsStyle = css({
   width: '100%',
   height: '35px',
+})
+
+const timeDisplayStyle = css({
+  whiteSpace: 'nowrap',
 })
