@@ -3,10 +3,10 @@ import { useState, useRef, useCallback, useEffect } from 'react'
 export default function useSpeechPlayer({ url, durationSec } ) {
   const audioRef = useRef()
   const elapsedTimeRef = useRef(0)
-  const [isPreparing, setIsPreparing] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
   const [isPlaying, setIsPlaying] = useState(false)
 
-  async function startPlaying() {
+  async function playSpeech() {
     if (elapsedTimeRef.current >= durationSec) {
       elapsedTimeRef.current = 0
       audioRef.current.currentTime = 0
@@ -16,9 +16,9 @@ export default function useSpeechPlayer({ url, durationSec } ) {
     await audioRef.current.play()
   }
 
-  const stopPlaying = useCallback(() => {
-    setIsPlaying(false)
+  const stopSpeech = useCallback(() => {
     audioRef.current.pause()
+    setIsPlaying(false)
   }, [])
 
   function updateSpeeche(incrementalTime) {
@@ -27,7 +27,7 @@ export default function useSpeechPlayer({ url, durationSec } ) {
     if (newElapsedTime < durationSec) {
       elapsedTimeRef.current = newElapsedTime
     } else {
-      stopPlaying()
+      stopSpeech()
       elapsedTimeRef.current = durationSec
     }
   }
@@ -35,19 +35,19 @@ export default function useSpeechPlayer({ url, durationSec } ) {
   const createAudio = useCallback(() => {
     audioRef.current = new Audio(url)
     audioRef.current.onwaiting = () => {
-      setIsPreparing(true)
+      setIsLoading(true)
       setIsPlaying(false)
     }
     audioRef.current.oncanplaythrough = () => {
-      setIsPreparing(false)
+      setIsLoading(false)
       if (!audioRef.current.paused) setIsPlaying(true)
     }
   }, [url])
 
-  function handleSeekChange(e) {
+  function seekSpeech(e) {
     let shouldResume = false
     if (isPlaying) {
-      stopPlaying()
+      stopSpeech()
       shouldResume = true
     }
 
@@ -55,7 +55,7 @@ export default function useSpeechPlayer({ url, durationSec } ) {
     audioRef.current.currentTime = elapsedTimeRef.current
 
     if (shouldResume) {
-      startPlaying()
+      playSpeech()
     }
   }
 
@@ -65,5 +65,5 @@ export default function useSpeechPlayer({ url, durationSec } ) {
     }
   }, [url, createAudio])
 
-  return { isPreparing, isPlaying, startPlaying, stopPlaying, updateSpeeche, handleSeekChange }
+  return { isLoading, isPlaying, playSpeech, stopSpeech, updateSpeeche, seekSpeech }
 }

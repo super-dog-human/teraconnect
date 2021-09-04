@@ -5,7 +5,8 @@ import BackgroundImage from '../backgroundImage'
 import Avatar from '../avatar'
 import Drawing from '../drawing'
 import Graphic from '../graphic'
-import Embedding from './embedding'
+import GeoGebra from './geoGebra'
+import YouTube from './youTube'
 import Subtitle from './subtitle'
 import Caption from './caption'
 import Controller from './controller'
@@ -14,7 +15,7 @@ import LoadingIndicator from './loadingIndicator'
 const isShowSubtitleInPlayer = 'isShowSubtitleInPlayer'
 
 export default function LessonPlayer(props) {
-  const { isLoading, isPlaying, showFullController, title, durationSec, backgroundImageURL, avatarRef, embedding, youtubeRef, graphic, subtitle, hasAvatars, hasDrawings, drawingRef, startDrawing, inDrawing, endDrawing, controllerInvisible, ...controllerProps } = props
+  const { isLoading, isPlaying, showFullController, title, durationSec, backgroundImageURL, avatarRef, geoGebra, youTubeIDs, graphic, subtitle, hasAvatars, hasDrawings, hasEmbedding, drawingRef, startDrawing, inDrawing, endDrawing, controllerInvisible, ...controllerProps } = props
   const [showSubtitle, setShowSubtitle] = useState(false)
   function handleSubtitleButtonClick() {
     setShowSubtitle(state => {
@@ -38,7 +39,8 @@ export default function LessonPlayer(props) {
       {backgroundImageURL && <BackgroundImage url={backgroundImageURL} />}
       {hasAvatars && <Avatar ref={avatarRef} />}
       {hasDrawings && <Drawing drawingRef={drawingRef} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing} zKind='drawing' />}
-      {embedding && <Embedding isPlaying={isPlaying} youtubeRef={youtubeRef} embedding={embedding} />}
+      {hasEmbedding && <GeoGebra isPlaying={isPlaying} geoGebra={geoGebra} />}
+      {hasEmbedding && <YouTube isPlaying={isPlaying} youTubeIDs={youTubeIDs}/>}
       {graphic && <Graphic graphic={graphic}/>}
       {subtitle && <Caption caption={subtitle.caption} />}
       {showSubtitle && subtitle && <Subtitle subtitle={subtitle.body} />}

@@ -37,7 +37,7 @@ export default function Embedding(props) {
             {config.action === 'show' && config.serviceName === 'youtube' &&
               <>
                 <Flex alignItems='center'>
-                  <PlainText size='14' color='var(--soft-white)'>https://www.youtube.com/embed/</PlainText>
+                  <PlainText size='14' color='var(--soft-white)'>https://www.youtube.com/watch?v=</PlainText>
                   <Spacer width='10' />
                   <Container width='130' height='30'>
                     <InputText size='16' textAlign='center' color='var(--soft-white)' borderColor='var(--soft-white)' borderWidth='0 0 1px 0'
@@ -60,7 +60,7 @@ export default function Embedding(props) {
             {config.action === 'show' && config.serviceName === 'geogebra' &&
               <>
                 <Flex alignItems='center'>
-                  <PlainText size='14' color='var(--soft-white)'>https://www.geogebra.org/material/iframe/id/</PlainText>
+                  <PlainText size='14' color='var(--soft-white)'>https://www.geogebra.org/m/</PlainText>
                   <Spacer width='4' />
                   <Container width='130' height='30'>
                     <InputText size='16' textAlign='center' color='var(--soft-white)' borderColor='var(--soft-white)' borderWidth='0 0 1px 0'
@@ -68,7 +68,7 @@ export default function Embedding(props) {
                   </Container>
                 </Flex>
                 <Spacer height='10' />
-                <PlainText size='12' color='var(--text-gray)'>ボタンやツールバーは操作できません</PlainText>
+                <PlainText size='12' color='var(--text-gray)'>ボタンやツールバーは操作できません。</PlainText>
                 <Spacer height='10' />
                 {isInvalidInput && <PlainText size='13' color='var(--error-red)'>教材IDは8文字で入力してください。</PlainText>}
               </>

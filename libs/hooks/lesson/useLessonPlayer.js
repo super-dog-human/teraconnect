@@ -2,12 +2,12 @@ import { useRef, useState, useCallback, useEffect } from 'react'
 import usePlayerController from './usePlayerController'
 import useAvatarPlayer from './player/useAvatarPlayer'
 import useDrawingPlayer from './useDrawingPlayer'
-import useEmbeddingPlayer from './player/useEmbeddingPlayer'
+import useGeoGebraPlayer from './player/useGeoGebraPlayer'
 import useGraphicPlayer from './player/useGraphicPlayer'
 import useSubtitlePlayer from './player/useSubtitlePlayer'
 import { useUnmount } from 'react-use'
 
-export default function useLessonPlayer({ startElapsedTime=0, durationSec, hasResize, avatar, avatarLightColor, avatars, drawings, embeddings, graphics, speeches, graphicURLs, sameTimeIndex, updateSpeeches, updateMusics }) {
+export default function useLessonPlayer({ startElapsedTime=0, durationSec, hasResize, avatar, avatarLightColor, avatars, drawings, embeddings, graphics, speeches, graphicURLs, sameTimeIndex, updateSpeeches, updateMusics, updateYouTube }) {
   const animationRequestRef = useRef(0)
   const elapsedTimeRef = useRef(startElapsedTime)
   const preStartElapsedTimeRef = useRef(startElapsedTime)
@@ -15,7 +15,7 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, hasRe
   const { isPlayerHover, isPlaying, setIsPlaying, playerElapsedTime, setPlayerElapsedTime, deltaTime, resetClock, switchClock, handleMouseOver, handleMouseLeave } = usePlayerController()
   const { avatarRef, initializeAvatar, updateAvatar, seekAvatar } = useAvatarPlayer({ isPlaying, isLoading: isAvatarLoading, setIsLoading: setIsAvatarLoading, startElapsedTime, durationSec, hasResize, avatar, avatarLightColor, avatars, speeches })
   const { drawingRef, updateDrawing, initializeDrawing, finishDrawing, resetBeforeSeeking, resetBeforeUndo } = useDrawingPlayer({ drawings, sameTimeIndex, startElapsedTime, elapsedTimeRef })
-  const { embedding, youtubeRef, initializeEmbedding, updateEmbedding, seekEmbedding } = useEmbeddingPlayer({ isPlaying, durationSec, embeddings })
+  const { geoGebra, initializeGeoGebra, seekEmbedding, updateGeoGebra } = useGeoGebraPlayer({ durationSec, embeddings })
   const { graphic, initializeGraphic, updateGraphic, seekGraphic } = useGraphicPlayer({ startElapsedTime, durationSec, graphics, graphicURLs })
   const { subtitle, initializeSubtitle, updateSubtitle, seekSubtitle } = useSubtitlePlayer({ startElapsedTime, durationSec, speeches })
 
@@ -36,7 +36,7 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, hasRe
     if (elapsedTimeRef.current === startElapsedTime) {
       if (avatars) initializeAvatar()
       if (drawings) initializeDrawing()
-      if (embeddings) initializeEmbedding()
+      if (embeddings) initializeGeoGebra()
       if (graphics) initializeGraphic()
       if (speeches) initializeSubtitle()
     }
@@ -68,11 +68,12 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, hasRe
     if (elapsedTimeRef.current <= startElapsedTime + durationSec) {
       if (avatars) updateAvatar(incrementalTime)
       if (drawings) updateDrawing(incrementalTime)
-      if (embeddings) updateEmbedding(incrementalTime)
+      if (embeddings) updateGeoGebra(incrementalTime)
       if (graphics) updateGraphic(incrementalTime)
       if (speeches) updateSubtitle(incrementalTime)
       if (updateSpeeches) updateSpeeches(incrementalTime)
       if (updateMusics) updateMusics(incrementalTime)
+      if (updateYouTube) updateYouTube(incrementalTime)
       updatePlayerElapsedTime()
     }
 
@@ -134,6 +135,6 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, hasRe
     }
   }, [startElapsedTime, stopPlaying, updatePlayerElapsedTime])
 
-  return { avatarRef, drawingRef, isPlaying, isPlayerHover, isAvatarLoading, playerElapsedTime, embedding, youtubeRef, graphic, subtitle,
+  return { avatarRef, drawingRef, isPlaying, isPlayerHover, isAvatarLoading, playerElapsedTime, geoGebra, graphic, subtitle,
     setIsPlaying, startPlaying, stopPlaying, getElapsedTime, resetBeforeUndo, handleMouseOver, handleMouseLeave, handleSeekChange }
 }

@@ -35,8 +35,7 @@ export default function useMusicsPlayer({ durationSec, musics: originalMusics, m
     audio.oncanplaythrough = () => {
       setMusics(musics => {
         const music = musics.find(v => v.audio === audio)
-        if (!music) return musics
-        if (music.canPlay) return musics
+        if (!music || music.canPlay) return musics
         music.canPlay = true
         return [...musics]
       })
@@ -45,8 +44,7 @@ export default function useMusicsPlayer({ durationSec, musics: originalMusics, m
       console.error(audio.error)
       setMusics(musics => {
         const music = musics.find(v => v.audio === audio)
-        if (!music) return musics
-        if (music.canPlay) return musics
+        if (!music || music.canPlay) return musics
         // 連続したシークなどでバッファが枯渇するときにエラーが起きる模様。
         // このままではローディングが解除されないなどの不具合を引き起こすので便宜上 canPlay: true にする
         music.canPlay = true

@@ -188,10 +188,10 @@ button.light:hover {
 .avatar-z {
   z-index: 400;
 }
-.embedding-z {
+.image-z {
   z-index: 300;
 }
-.image-z {
+.embedding-z {
   z-index: 200;
 }
 .bg-image-z {
