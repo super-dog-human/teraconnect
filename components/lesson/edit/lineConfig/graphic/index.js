@@ -33,11 +33,13 @@ export default function Graphic({ index, initialConfig, closeCallback }) {
   }
 
   function handleGraphicClick(e) {
-    const graphicID = parseInt(e.currentTarget.dataset.graphicId)
-    dispatchConfig({ type: 'graphicID', payload: graphicID })
+    const graphicID = e.currentTarget.dataset.graphicId
+    if (graphicID.startsWith('tmp_')) return false
+    dispatchConfig({ type: 'graphicID', payload: parseInt(graphicID) })
   }
 
   function handleConfirm(changeAfterLineElapsedTime) {
+
     if (config.action === 'hide') {
       delete config.graphicID
     }

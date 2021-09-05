@@ -44,7 +44,7 @@ export default function useGraphicUploader({ graphicURLs, setGraphicURLs }) {
 
     hasAddedRef.current = true
 
-    const tempIDs = validFiles.map(() => generateRandomID())
+    const tempIDs = validFiles.map(() => 'tmp_' + generateRandomID())
     setGraphicURLs(urls => {
       tempIDs.forEach(id => {
         urls[id] = { url: null, isUploading: true }
