@@ -22,9 +22,26 @@ export default function useYoutubePlayer({ durationSec, embeddings }) {
     })
   }, [])
 
+  function hasReadyPlayer(player) {
+    return Object.keys(player.playerInfo).length > 0
+  }
+
+  function startMuteVideo(player) {
+    player.mute()
+    player.playVideo()
+  }
+
+  const hideAllPlayers = useCallback(() => {
+    Object.values(playerRef.current).forEach(player => {
+      if (!hasReadyPlayer(player)) return
+      player.getIframe().style.display = 'none'
+    })
+  }, [])
+
   const playIfNeeded = useCallback(() => {
     if (elapsedTimeRef.current >= durationSec) {
       elapsedTimeRef.current = 0
+      hideAllPlayers()
     }
 
     setIsPlaying(true)
@@ -46,22 +63,24 @@ export default function useYoutubePlayer({ durationSec, embeddings }) {
       })
 
       const player = playerRef.current[youTube.contentID]
-      if (player.playerInfo.playerState === window.YT.PlayerState.BUFFERING) {
-        setIsLoading(true)
-        return
-      }
+      if (!hasReadyPlayer(player)) return
 
       player.getIframe().style.display = 'block'
       player.seekTo(elapsedTimeRef.current - youTube.elapsedTime + youTube.startAtSec, true)
-      player.playVideo()
+
+      if (player.playerInfo.playerState === window.YT.PlayerState.BUFFERING) {
+        setIsLoading(true)
+      } else {
+        startMuteVideo(player)
+      }
     })
-  }, [durationSec, youTubes, currentTimeYouTubes])
+  }, [durationSec, youTubes, hideAllPlayers, currentTimeYouTubes])
 
   const handlePlayerReady = useCallback((e, contentID) => {
     const iframe = e.target.getIframe()
     iframe.style.display = 'none'
 
-    e.target.playVideo() // 再生を開始しないとonStateChangeが実行されないため手動で実施。autoPlayパラメータもあるがモバイル環境では動作しない
+    startMuteVideo(e.target) // 再生を開始しないとonStateChangeが実行されないため手動で実施
 
     setYouTubes(youTubes => {
       youTubes.filter(y => y.contentID === contentID).forEach(y => y.isPlayerReady = true)
@@ -78,12 +97,14 @@ export default function useYoutubePlayer({ durationSec, embeddings }) {
         y.canPlay = canPlay
       })
 
-      if (!hasDiff && e.data === window.YT.PlayerState.ENDED) {
-        const player = playerRef.current[contentID]
+      if (!hasDiff && e.data === window.YT.PlayerState.ENDED) { // ループ再生
         const currentPlaying = currentTimeYouTubes(youTubes).find(y => y.contentID === contentID)
         if (currentPlaying) {
-          player.seekTo(currentPlaying.startAtSec)
-          player.playVideo() // ループ再生
+          const player = playerRef.current[contentID]
+          if (hasReadyPlayer(player)) {
+            player.seekTo(currentPlaying.startAtSec)
+            startMuteVideo(player)
+          }
         }
       }
 
@@ -99,7 +120,7 @@ export default function useYoutubePlayer({ durationSec, embeddings }) {
       document.getElementById(elementID).parentElement.style.display = 'none' // 親要素ごと非表示にしておき、読み込み中のプレーヤーが表示されるのを抑止
       playerRef.current[id] = new window.YT.Player(elementID, {
         videoId: id,
-        playerVars: { rel: 0, controls: 0, mute: 1, iv_load_policy: 3 },
+        playerVars: { rel: 0, controls: 0, autoplay: 1, mute: 1, iv_load_policy: 3 },
         events: {
           onReady: (e) => { handlePlayerReady(e, id) },
           onStateChange: e => { handlePlayerStateChange(e, id)},
@@ -108,11 +129,12 @@ export default function useYoutubePlayer({ durationSec, embeddings }) {
     })
   }, [youTubeIDs, handlePlayerReady, handlePlayerStateChange])
 
-  function stopAndHidePlayer(contentID) {
+  const stopAndHidePlayer = useCallback(contentID => {
     const player = playerRef.current[contentID]
+    if (!hasReadyPlayer(player)) return
     player.pauseVideo()
     player.getIframe().style.display = 'none'
-  }
+  }, [])
 
   const finishIfNeeded = useCallback(() => {
     setYouTubes(youTubes => {
@@ -124,11 +146,7 @@ export default function useYoutubePlayer({ durationSec, embeddings }) {
       })
       return hasDiff ? [...youTubes] : youTubes
     })
-  }, [])
-
-  function hasReadyPlayer(player) {
-    return Object.keys(player.playerInfo).length > 0
-  }
+  }, [stopAndHidePlayer])
 
   const stopYouTube = useCallback(() => {
     setIsPlaying(false)
@@ -163,12 +181,13 @@ export default function useYoutubePlayer({ durationSec, embeddings }) {
         if (elapsedTimeRef.current > youTube.elapsedTime + youTube.durationSec) return
 
         const player = playerRef.current[youTube.contentID]
+        if (!hasReadyPlayer(player)) return
         const seekAt = elapsedTimeRef.current - youTube.elapsedTime + youTube.startAtSec
         const durationSec = player.playerInfo.duration - youTube.startAtSec
         player.seekTo(seekAt % durationSec + youTube.startAtSec, allowSeekAhead) // ループを加味してシークする
 
         if (shouldResume) {
-          player.playVideo()
+          startMuteVideo(player)
           youTube.isPlaying = true
         }
 
@@ -196,18 +215,13 @@ export default function useYoutubePlayer({ durationSec, embeddings }) {
 
   const cleanAllPlayers = useCallback(() => {
     Object.values(playerRef.current).forEach(player => {
+      if (!hasReadyPlayer(player)) return
       player.stopVideo()
       player.destroy()
     })
     playerRef.current = {}
 
     shouldUpdatePlayerRef.current = true
-  }, [])
-
-  const hideAllPlayers = useCallback(() => {
-    Object.values(playerRef.current).forEach(player => {
-      player.getIframe().style.display = 'none'
-    })
   }, [])
 
   useEffect(() => {
@@ -250,7 +264,10 @@ export default function useYoutubePlayer({ durationSec, embeddings }) {
     setIsLoading(shouldLoading)
 
     if (youTubes.every(y => y.isPlayerReady) && youTubes.length > 0) {
-      playerRef.current[youTubes[0].contentID].getIframe().parentElement.style.display = 'block' // 全てのプレーヤーが準備できたので親要素の表示は元に戻す
+      const player = playerRef.current[youTubes[0].contentID]
+      if (hasReadyPlayer(player)) {
+        player.getIframe().parentElement.style.display = 'block' // 全てのプレーヤーが準備できたので親要素の表示は元に戻す
+      }
     }
   }, [youTubes, isPlaying, currentTimeYouTubes])
 

@@ -42,6 +42,7 @@ export default function useSpeechPlayer({ url, durationSec } ) {
       setIsLoading(false)
       if (!audioRef.current.paused) setIsPlaying(true)
     }
+    audioRef.current.load() // モバイル環境用
   }, [url])
 
   function seekSpeech(e) {
