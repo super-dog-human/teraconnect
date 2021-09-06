@@ -78,7 +78,7 @@ export default function MobileController(props) {
                 </PlainText>
               </Flex>
               <Flex justifyContent='flex-end' alignItems='bottom'>
-                <Container height='25'>
+                <Container width='25' height='25'>
                   <IconButton name='closed-caption' isToggle={isShowSubtitle} toggledBackgroundColor='gray' padding='2' onClick={onSubtitleButtonClick} />
                 </Container>
                 <Spacer width='20' />
