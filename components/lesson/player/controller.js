@@ -10,21 +10,23 @@ import Icon from '../../icon'
 import IconButton from '../../button/iconButton'
 import FadeOutContainer from '../../fadeOutContainer'
 import TransitionContainer from '../../transitionContainer'
+import MobileController from './mobileController'
 import { floatSecondsToMinutesFormat } from '../../../libs/utils'
 import useTouchDeviceDetector from '../../../libs/hooks/useTouchDeviceDetector'
 
 export default function Controller(props) {
   const [isShowIcon, setIsShowIcon] = useState(false)
+  const [isShowController, setIsShowController] = useState(isTouchDevice)
   const hideIconRef = useRef()
   const isTouchDevice = useTouchDeviceDetector()
-  const { isPlaying, isShow, isShowSubtitle, isShowFullController, onPlayButtonClick, playerElapsedTime, maxTime, setIsShow, onSubtitleButtonClick, ...seekBarProps } = props
+  const { isPlaying, isShowSubtitle, isShowFullController, onPlayButtonClick, playerElapsedTime, maxTime, onSubtitleButtonClick, ...seekBarProps } = props
 
   function handleMouseOver() {
-    setIsShow(true)
+    setIsShowController(true)
   }
 
   function handleMouseLeave() {
-    setIsShow(false)
+    setIsShowController(false)
   }
 
   function handlePlayButtonClick(e) {
@@ -39,14 +41,6 @@ export default function Controller(props) {
       setIsShowIcon(false)
     }, 500) // ボタンのフェードアウトが十分に完了してから非表示にする
   }, [isPlaying])
-
-  const bodyStyle = css({
-    position: 'absolute',
-    top: 0,
-    width: '100%',
-    height: '100%',
-    cursor: 'pointer',
-  })
 
   const playBlankButtonStyle = css({
     width: '100%',
@@ -70,20 +64,21 @@ export default function Controller(props) {
 
   return (
     <>
+      {isTouchDevice && <MobileController {...props} />}
       {!isTouchDevice &&
         <div css={bodyStyle} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} className='overay-ui-z'>
           <div css={playBlankButtonStyle} onClick={handlePlayButtonClick}>
             <div css={iconBackgroundStyle}>
               {isShowIcon &&
                 <FadeOutContainer isShow={isShowIcon} duration={300}>
-                  <div css={statunsIconStyle}>
+                  <div css={statusIconStyle}>
                     <Icon name='pause' />
                   </div>
                 </FadeOutContainer>
                 }
             </div>
           </div>
-          <TransitionContainer isShow={isShow} duration={100}>
+          <TransitionContainer isShow={isShowController} duration={100}>
             <div css={bottomButtonsStyle}>
               <div css={seekBarStyle}>
                 <SeekBar invisible={false} playerElapsedTime={playerElapsedTime} maxTime={maxTime} {...seekBarProps} />
@@ -116,7 +111,15 @@ export default function Controller(props) {
   )
 }
 
-const statunsIconStyle = css({
+const bodyStyle = css({
+  position: 'absolute',
+  top: 0,
+  width: '100%',
+  height: '100%',
+  cursor: 'pointer',
+})
+
+const statusIconStyle = css({
   backgroundColor: 'rgba(0, 0, 0, 0.5)',
   borderRadius: '50%',
   padding: '25%',

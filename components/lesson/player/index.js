@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Aspect16To9Container from '../../aspect16To9Container'
 import BackgroundImage from '../backgroundImage'
 import Avatar from '../avatar'
@@ -11,15 +11,12 @@ import Subtitle from './subtitle'
 import Caption from './caption'
 import Controller from './controller'
 import LoadingIndicator from './loadingIndicator'
-import useTouchDeviceDetector from '../../../libs/hooks/useTouchDeviceDetector'
 
 const isShowSubtitleInPlayer = 'isShowSubtitleInPlayer'
 
 export default function LessonPlayer(props) {
   const { isLoading, isPlaying, isShowFullController, durationSec, backgroundImageURL, avatarRef, geoGebra, youTubeIDs, graphic, subtitle, hasAvatars, hasDrawings, hasEmbedding, drawingRef, startDrawing, inDrawing, endDrawing, disabledControl, ...controllerProps } = props
   const [isShowSubtitle, setIsShowSubtitle] = useState(false)
-  const isTouchDevice = useTouchDeviceDetector()
-  const [isShowPlayer, setIsShowPlayer] = useState(isTouchDevice)
 
   function handleSubtitleButtonClick() {
     setIsShowSubtitle(state => {
@@ -47,7 +44,7 @@ export default function LessonPlayer(props) {
       {graphic && <Graphic graphic={graphic}/>}
       {subtitle && <Caption caption={subtitle.caption} />}
       {isShowSubtitle && subtitle && <Subtitle subtitle={subtitle.body} />}
-      {!isLoading && !disabledControl && <Controller isPlaying={isPlaying} isShow={isShowPlayer} setIsShow={setIsShowPlayer} isShowSubtitle={isShowSubtitle} isShowFullController={isShowFullController}
+      {!isLoading && !disabledControl && <Controller isPlaying={isPlaying} isShowSubtitle={isShowSubtitle} isShowFullController={isShowFullController}
         maxTime={parseFloat(durationSec.toFixed(2))} onSubtitleButtonClick={handleSubtitleButtonClick} {...controllerProps} />}
       {<LoadingIndicator isLoading={isLoading}/>}
     </Aspect16To9Container>
