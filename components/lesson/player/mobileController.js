@@ -42,7 +42,7 @@ export default function MobileController(props) {
     marginTop: isShowFullController ? `${15 + 35}px` : `15px`,
     minWidth: '50px',
     minHeight: 'auto',
-    width: '10%',
+    width: '15%',
     height: 'auto',
   })
 
