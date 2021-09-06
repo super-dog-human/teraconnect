@@ -146,3 +146,9 @@ export function isValidISBN13(isbn) {
   if (isbn.length !== 13) return false
   return /^[0-9]{12}[0-9Xx]{1}$/.test(isbn)
 }
+
+export function formatDate(date) {
+  const dateTimeFormat = new Intl.DateTimeFormat('ja-JP', { hour12: false, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
+  const [{ value: year }, , { value: month }, , { value: day }, , { value: hour }, , { value: minute }] = dateTimeFormat.formatToParts(date)
+  return `${year}-${month}-${day} ${hour}:${minute}`
+}
