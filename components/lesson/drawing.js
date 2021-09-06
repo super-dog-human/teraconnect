@@ -7,6 +7,7 @@ export default function LessonDrawing({ drawingRef, isHide, startDrawing, inDraw
     backgroundColor: backgroundColor,
     position: 'absolute',
     top: 0,
+    height: '100%',
   })
 
   const bodyStyle = css({
