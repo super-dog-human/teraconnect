@@ -12,7 +12,7 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, hasRe
   const elapsedTimeRef = useRef(startElapsedTime)
   const preStartElapsedTimeRef = useRef(startElapsedTime)
   const [isAvatarLoading, setIsAvatarLoading] = useState(!!avatars)
-  const { isPlayerHover, isPlaying, setIsPlaying, playerElapsedTime, setPlayerElapsedTime, deltaTime, resetClock, switchClock, handleMouseOver, handleMouseLeave } = usePlayerController()
+  const { isPlaying, setIsPlaying, playerElapsedTime, setPlayerElapsedTime, deltaTime, resetClock, switchClock } = usePlayerController()
   const { avatarRef, initializeAvatar, updateAvatar, seekAvatar } = useAvatarPlayer({ isPlaying, isLoading: isAvatarLoading, setIsLoading: setIsAvatarLoading, startElapsedTime, durationSec, hasResize, avatar, avatarLightColor, avatars, speeches })
   const { drawingRef, updateDrawing, initializeDrawing, finishDrawing, resetBeforeSeeking, resetBeforeUndo } = useDrawingPlayer({ drawings, sameTimeIndex, startElapsedTime, elapsedTimeRef })
   const { geoGebra, initializeGeoGebra, seekEmbedding, updateGeoGebra } = useGeoGebraPlayer({ durationSec, embeddings })
@@ -135,6 +135,6 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, hasRe
     }
   }, [startElapsedTime, stopPlaying, updatePlayerElapsedTime])
 
-  return { avatarRef, drawingRef, isPlaying, isPlayerHover, isAvatarLoading, playerElapsedTime, geoGebra, graphic, subtitle,
-    setIsPlaying, startPlaying, stopPlaying, getElapsedTime, resetBeforeUndo, handleMouseOver, handleMouseLeave, handleSeekChange }
+  return { avatarRef, drawingRef, isPlaying, isAvatarLoading, playerElapsedTime, geoGebra, graphic, subtitle,
+    setIsPlaying, startPlaying, stopPlaying, getElapsedTime, resetBeforeUndo, handleSeekChange }
 }

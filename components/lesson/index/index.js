@@ -24,7 +24,7 @@ export default function Lesson({ lesson, errorStatus }) {
   const { isLoading: isSpeechLoading, isPlaying: isSpeechPlaying, playSpeech, stopSpeech, updateSpeeche, seekSpeech }
     = useSpeechPlayer({ url: speechURL, durationSec })
   const { isLoading: isYouTubeLoading, isPlaying: isYouTubePlaying, youTubeIDs, playYouTube, stopYouTube, updateYouTube, seekYoutube } = useYoutubePlayer({ durationSec, embeddings })
-  const { isPlaying, isPlayerHover, isAvatarLoading, startPlaying, stopPlaying, handleMouseOver, handleMouseLeave, handleSeekChange: handlePlayerSeekChange, ...playerProps }
+  const { isPlaying, isAvatarLoading, startPlaying, stopPlaying, handleSeekChange: handlePlayerSeekChange, ...playerProps }
     = useLessonPlayer({ durationSec, hasResize, avatar: lesson?.avatar, avatarLightColor: lesson?.avatarLightColor, avatars, drawings, embeddings, graphics, speeches, graphicURLs, updateSpeeches: updateSpeeche, updateYouTube })
 
   function handlePlayButtonClick() {
@@ -75,10 +75,9 @@ export default function Lesson({ lesson, errorStatus }) {
       <Header />
       <main css={mainStyle}>
         <div css={bodyStyle} ref={containerRef}>
-          <LessonPlayer isLoading={isAvatarLoading || isBodyLoading || isSpeechLoading || isYouTubeLoading} isPlaying={isPlaying} showFullController={true} title={lesson?.title}
+          <LessonPlayer isLoading={isAvatarLoading || isBodyLoading || isSpeechLoading || isYouTubeLoading} isPlaying={isPlaying} isShowFullController={true}
             durationSec={durationSec} backgroundImageURL={backgroundImageURL} hasAvatars={true} hasDrawings={true} hasEmbedding={true}
-            onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onPlayButtonClick={handlePlayButtonClick}
-            controllerInvisible={!isPlayerHover} onSeekChange={handleSeekChange} onSeekUp={handleSeekUp} youTubeIDs={youTubeIDs} {...playerProps} />
+            onPlayButtonClick={handlePlayButtonClick} onSeekChange={handleSeekChange} onSeekUp={handleSeekUp} youTubeIDs={youTubeIDs} {...playerProps} />
           <div css={selectableStyle}>
             <Description description={lesson.description} />
             <Transcription speeches={speeches} />

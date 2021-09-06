@@ -16,7 +16,7 @@ export default function Preview({ lessonID }) {
   const { isLoading: isSpeechLoading, isPlaying: isSpeechPlaying, playSpeeches, stopSpeeches, updateSpeeches, seekSpeeches } = useSpeechesPlayer({ lessonID, durationSec, speeches })
   const { isLoading: isMusicLoading, isPlaying: isMusicPlaying, playMusics, stopMusics, updateMusics, seekMusics } = useMusicsPlayer({ durationSec, musics, musicURLs })
   const { isLoading: isYouTubeLoading, isPlaying: isYouTubePlaying, youTubeIDs, playYouTube, stopYouTube, updateYouTube, seekYoutube } = useYoutubePlayer({ durationSec, embeddings })
-  const { isAvatarLoading, startPlaying, stopPlaying, handleMouseOver, handleMouseLeave, handleSeekChange: handlePlayerSeekChange, isPlaying, isPlayerHover, ...playerProps } =
+  const { isAvatarLoading, startPlaying, stopPlaying, handleSeekChange: handlePlayerSeekChange, isPlaying, ...playerProps } =
     useLessonPlayer({ durationSec, avatar: generalSetting.avatar, avatarLightColor: generalSetting.avatarLightColor, avatars, drawings, embeddings, graphics, speeches, graphicURLs, updateSpeeches, updateMusics, updateYouTube })
 
   function handlePlayButtonClick() {
@@ -73,10 +73,9 @@ export default function Preview({ lessonID }) {
 
   return (
     <div css={bodyStyle}>
-      <LessonPlayer isLoading={isAvatarLoading || isSpeechLoading || isMusicLoading || isYouTubeLoading} isPlaying={isPlaying} showFullController={true}
+      <LessonPlayer isLoading={isAvatarLoading || isSpeechLoading || isMusicLoading || isYouTubeLoading} isPlaying={isPlaying} isShowFullController={true}
         durationSec={durationSec} backgroundImageURL={generalSetting.backgroundImageURL} hasAvatars={true} hasDrawings={true} hasEmbedding={true}
-        onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onPlayButtonClick={handlePlayButtonClick}
-        controllerInvisible={!isPlayerHover} onSeekChange={handleSeekChange} onSeekUp={handleSeekUp} youTubeIDs={youTubeIDs} {...playerProps} />
+        onPlayButtonClick={handlePlayButtonClick} onSeekChange={handleSeekChange} onSeekUp={handleSeekUp} youTubeIDs={youTubeIDs} {...playerProps} />
     </div>
   )
 }

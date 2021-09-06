@@ -1,16 +1,44 @@
 /** @jsxImportSource @emotion/react */
-import React from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { css } from '@emotion/core'
 import SeekBar from './seekBar'
 import Flex from '../../flex'
 import Container from '../../container'
 import Spacer from '../../spacer'
 import PlainText from '../../plainText'
+import Icon from '../../icon'
 import IconButton from '../../button/iconButton'
+import FadeOutContainer from '../../fadeOutContainer'
+import TransitionContainer from '../../transitionContainer'
 import { floatSecondsToMinutesFormat } from '../../../libs/utils'
+import useTouchDeviceDetector from '../../../libs/hooks/useTouchDeviceDetector'
 
 export default function Controller(props) {
-  const { showFullController, onMouseOver, onMouseLeave, onPlayButtonClick, disabledControl, controllerInvisible, playerElapsedTime, maxTime, showSubtitle, onSubtitleButtonClick, ...seekBarProps } = props
+  const [isShowIcon, setIsShowIcon] = useState(false)
+  const hideIconRef = useRef()
+  const isTouchDevice = useTouchDeviceDetector()
+  const { isPlaying, isShow, isShowSubtitle, isShowFullController, onPlayButtonClick, playerElapsedTime, maxTime, setIsShow, onSubtitleButtonClick, ...seekBarProps } = props
+
+  function handleMouseOver() {
+    setIsShow(true)
+  }
+
+  function handleMouseLeave() {
+    setIsShow(false)
+  }
+
+  function handlePlayButtonClick(e) {
+    clearTimeout(hideIconRef.current)
+    if (isPlaying) setIsShowIcon(true)
+    onPlayButtonClick(e)
+  }
+
+  useEffect(() => {
+    if (isPlaying) return
+    hideIconRef.current = setTimeout(() => {
+      setIsShowIcon(false)
+    }, 500) // ボタンのフェードアウトが十分に完了してから非表示にする
+  }, [isPlaying])
 
   const bodyStyle = css({
     position: 'absolute',
@@ -20,51 +48,88 @@ export default function Controller(props) {
     cursor: 'pointer',
   })
 
-  const playButtonStyle = css({
+  const playBlankButtonStyle = css({
     width: '100%',
-    height: showFullController ? 'calc(100% - 15px - 35px)' : 'calc(100% - 15px)',
+    height: isShowFullController ? 'calc(100% - 15px - 35px)' : 'calc(100% - 15px)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  })
+
+  const iconBackgroundStyle = css({
+    marginTop: isShowFullController ? `${15 + 35}px` : `15px`,
+    minWidth: '50px',
+    minHeight: 'auto',
+    width: '7%',
+    height: 'auto',
+  })
+
+  const bottomButtonsStyle = css({
+    background: isShowFullController && 'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8))',
   })
 
   return (
     <>
-      {!disabledControl &&
-        <div css={bodyStyle} onMouseOver={onMouseOver} onMouseLeave={onMouseLeave} className='overay-ui-z'>
-          <div css={playButtonStyle} onClick={onPlayButtonClick} />
-          <div css={seekBarStyle}>
-            <SeekBar invisible={controllerInvisible} playerElapsedTime={playerElapsedTime} maxTime={maxTime} {...seekBarProps} />
-          </div>
-          {showFullController && !controllerInvisible &&
-            <div css={bottomButtonsStyle}>
-              <Flex justifyContent='space-between'>
-                <Flex>
-                  <Spacer width='20' height='15' />
-                  <PlainText size='12' color='var(--soft-white)'>
-                    <div css={timeDisplayStyle}>
-                      {floatSecondsToMinutesFormat(playerElapsedTime)} / {floatSecondsToMinutesFormat(maxTime)}
-                    </div>
-                  </PlainText>
-                </Flex>
-                <Flex justifyContent='flex-end' alignItems='bottom'>
-                  <Container height='25'>
-                    <IconButton name='closed-caption' isToggle={showSubtitle} toggledBackgroundColor='gray' padding='2' onClick={onSubtitleButtonClick} />
-                  </Container>
-                  <Spacer width='20' />
-                </Flex>
-              </Flex>
+      {!isTouchDevice &&
+        <div css={bodyStyle} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} className='overay-ui-z'>
+          <div css={playBlankButtonStyle} onClick={handlePlayButtonClick}>
+            <div css={iconBackgroundStyle}>
+              {isShowIcon &&
+                <FadeOutContainer isShow={isShowIcon} duration={300}>
+                  <div css={statunsIconStyle}>
+                    <Icon name='pause' />
+                  </div>
+                </FadeOutContainer>
+                }
             </div>
-          }
+          </div>
+          <TransitionContainer isShow={isShow} duration={100}>
+            <div css={bottomButtonsStyle}>
+              <div css={seekBarStyle}>
+                <SeekBar invisible={false} playerElapsedTime={playerElapsedTime} maxTime={maxTime} {...seekBarProps} />
+              </div>
+              {isShowFullController &&
+              <div css={timeAndButtonsStyle}>
+                <Flex justifyContent='space-between'>
+                  <Flex>
+                    <Spacer width='20' height='15' />
+                    <PlainText size='12' color='var(--soft-white)'>
+                      <div css={timeDisplayStyle}>
+                        {floatSecondsToMinutesFormat(playerElapsedTime)} / {floatSecondsToMinutesFormat(maxTime)}
+                      </div>
+                    </PlainText>
+                  </Flex>
+                  <Flex justifyContent='flex-end' alignItems='bottom'>
+                    <Container height='25'>
+                      <IconButton name='closed-caption' isToggle={isShowSubtitle} toggledBackgroundColor='gray' padding='2' onClick={onSubtitleButtonClick} />
+                    </Container>
+                    <Spacer width='20' />
+                  </Flex>
+                </Flex>
+              </div>
+              }
+            </div>
+          </TransitionContainer>
         </div>
       }
     </>
   )
 }
 
+const statunsIconStyle = css({
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  borderRadius: '50%',
+  padding: '25%',
+  display: 'flex',
+  alignItems: 'center',
+})
+
 const seekBarStyle = css({
   width: '100%',
   height: '15px',
 })
 
-const bottomButtonsStyle = css({
+const timeAndButtonsStyle = css({
   width: '100%',
   height: '35px',
 })

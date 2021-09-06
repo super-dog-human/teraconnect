@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Container from '../../../container'
 import ContainerSpacer from '../../../containerSpacer'
 import PlainText from '../../../plainText'
@@ -7,7 +7,8 @@ import PlayerController from '../../player/controller'
 import useLessonPlayer from '../../../../libs/hooks/lesson/useLessonPlayer'
 
 export default function DrawingPreview({ drawings, drawing, sameTimeIndex }) {
-  const { drawingRef, isPlaying, startPlaying, stopPlaying, handleMouseOver, handleMouseLeave, isPlayerHover, playerElapsedTime, handleSeekChange }
+  const [isShowPlayer, setIsShowPlayer] = useState(false)
+  const { drawingRef, isPlaying, startPlaying, stopPlaying, playerElapsedTime, handleSeekChange }
     = useLessonPlayer({ startElapsedTime: drawing.elapsedTime, durationSec: drawing.durationSec, drawings, sameTimeIndex })
 
   function handlePlayButtonClick() {
@@ -21,8 +22,8 @@ export default function DrawingPreview({ drawings, drawing, sameTimeIndex }) {
           <Drawing drawingRef={drawingRef} backgroundColor='lightgray' />
         </Container>
         <Container width='302' height='170' position='absolute'>
-          <PlayerController isPlaying={isPlaying} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onPlayButtonClick={handlePlayButtonClick}
-            invisible={!isPlayerHover} playerElapsedTime={playerElapsedTime} maxTime={parseFloat((drawing.durationSec).toFixed(2))} onSeekChange={handleSeekChange} />
+          <PlayerController isPlaying={isPlaying} isShow={isShowPlayer} setIsShow={setIsShowPlayer} playerElapsedTime={playerElapsedTime}
+            maxTime={parseFloat((drawing.durationSec).toFixed(2))} onPlayButtonClick={handlePlayButtonClick} onSeekChange={handleSeekChange} />
         </Container>
       </Container>
       {drawing.units && drawing.units.some(d => d.action === 'draw' && d.durationSec === 0) &&

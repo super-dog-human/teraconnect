@@ -22,7 +22,7 @@ export default function DrawingEditor({ config, selectedAction, setSelectedActio
   const { generalSetting, graphics, graphicURLs: originalGraphicURLs } = useLessonEditorContext()
   const containerRef = useRef()
   const { hasResize } = useResizeDetector(containerRef)
-  const { drawingRef, isPlaying, isPlayerHover, startPlaying, stopPlaying, getElapsedTime, resetBeforeUndo, handleMouseOver, handleMouseLeave, handleSeekChange, ...playerProps } =
+  const { drawingRef, isPlaying, startPlaying, stopPlaying, getElapsedTime, resetBeforeUndo, handleSeekChange, ...playerProps } =
     useLessonPlayer({ startElapsedTime, durationSec: previewDurationSecRef.current, drawings, graphics, graphicURLs, sameTimeIndex })
   const { startRecording, stopRecording, setRecord } = useDrawingEditor({ isRecording, setIsRecording, isPlaying, startPlaying, stopPlaying, sameTimeIndex, startElapsedTime, getElapsedTime, previewDurationSecRef, drawings, setDrawings })
   const { enablePen, setEnablePen, enableEraser, setEnableEraser, undoDrawing, drawingColor, setDrawingColor, drawingLineWidth, setDrawingLineWidth, startDrawing, inDrawing, endDrawing, resetHistories } = useDrawingRecorder({ hasResize, drawingRef, setRecord })
@@ -76,11 +76,9 @@ export default function DrawingEditor({ config, selectedAction, setSelectedActio
         <Container invisible={selectedAction !== 'draw'}>
           <Flex>
             <Container width='500' height='281'>
-              <LessonPlayer isPlaying={isPlaying}
-                durationSec={previewDurationSecRef.current} backgroundImageURL={generalSetting.backgroundImageURL}
+              <LessonPlayer isPlaying={isPlaying} durationSec={previewDurationSecRef.current} backgroundImageURL={generalSetting.backgroundImageURL}
                 hasDrawings={true} drawingRef={drawingRef} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing}
-                onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} onPlayButtonClick={handlePlayButtonClick}
-                controllerInvisible={!isPlayerHover} onSeekChange={handleSeekChange} disabledControl={isRecording} {...playerProps} />
+                onPlayButtonClick={handlePlayButtonClick} onSeekChange={handleSeekChange} disabledControl={isRecording} {...playerProps} />
             </Container>
             <ContainerSpacer top='10' left='20'>
               <Flex>

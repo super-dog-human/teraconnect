@@ -3,17 +3,8 @@ import { Clock } from 'three'
 
 export default function usePlayerController() {
   const clockRef = useRef()
-  const [isPlayerHover, setIsPlayerHover] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [playerElapsedTime, setPlayerElapsedTime] = useState(0)
-
-  function handleMouseOver() {
-    setIsPlayerHover(true)
-  }
-
-  function handleMouseLeave() {
-    setIsPlayerHover(false)
-  }
 
   function deltaTime() {
     return clockRef.current.getDelta()
@@ -35,5 +26,5 @@ export default function usePlayerController() {
     resetClock()
   }, [])
 
-  return { isPlayerHover, isPlaying, setIsPlaying, playerElapsedTime, setPlayerElapsedTime, deltaTime, resetClock, switchClock, handleMouseOver, handleMouseLeave }
+  return { isPlaying, setIsPlaying, playerElapsedTime, setPlayerElapsedTime, deltaTime, resetClock, switchClock }
 }
