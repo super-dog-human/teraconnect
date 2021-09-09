@@ -4,7 +4,7 @@ import { css } from '@emotion/core'
 import Flex from '../../../flex'
 import Container from '../../../container'
 import IconButton from '../../../button/iconButton'
-import GraphicThumbnail from '../graphicThumbnail'
+import GraphicThumbnail from '../../graphicThumbnail'
 import AbsoluteContainer from '../../../absoluteContainer'
 import { useContextMenuContext } from '../../../../libs/contexts/contextMenuContext'
 import { useImageViewerContext } from '../../../../libs/contexts/imageViewerContext'
@@ -41,7 +41,7 @@ export default function ThumbnailController({ graphicID, graphic, swapGraphic, r
   }
 
   return (
-    <div css={bodyStyle} data-url={graphic.url} onMouseOver={handleEnter} onMouseLeave={handleLeave} onClick={handleThumbnailClick}>
+    <div css={bodyStyle} data-url={graphic.url} onMouseEnter={handleEnter} onMouseLeave={handleLeave} onClick={handleThumbnailClick}>
       <Container width='185' height='100'>
         <Flex justifyContent='center'>
           <GraphicThumbnail url={graphic.url} isProcessing={graphic.isUploading} />

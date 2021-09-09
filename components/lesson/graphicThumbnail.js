@@ -1,13 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState } from 'react'
 import { css } from '@emotion/core'
-import Image from 'next/image'
-import Container from '../../container'
-import LoadingIndicator from '../../loadingIndicator'
-import AbsoluteContainer from '../../absoluteContainer'
-import ColorFilter from '../../colorFilter'
+import Container from '../container'
+import LoadingIndicator from '../loadingIndicator'
+import AbsoluteContainer from '../absoluteContainer'
+import ColorFilter from '../colorFilter'
 
-const GraphicThumbnail = React.memo(function GraphicThumbnail({ url, isProcessing=false, isServerCaching=false }) {
+const GraphicThumbnail = React.memo(function GraphicThumbnail({ url, isProcessing=false }) {
   const [isLoaded, setIsLoaded] = useState(false)
 
   function handleLoad() {
@@ -16,10 +15,7 @@ const GraphicThumbnail = React.memo(function GraphicThumbnail({ url, isProcessin
 
   return (
     <Container position='relative' width='175' height='100'>
-      {url && isServerCaching &&
-        <Image src={url} width="175" height="100" objectFit="contain" draggable={false} onLoad={handleLoad} alt='図表サムネイル' />
-      }
-      {url && !isServerCaching &&
+      {url &&
         <img src={url} css={imageStyle} draggable={false} onLoad={handleLoad} alt='図表サムネイル' />
       }
       {(!isLoaded || isProcessing) &&

@@ -23,9 +23,7 @@ const bodyStyle = css({
 
 const imageStyle = css({
   margin: 'auto',
-  minWidth: '20%',
-  minHeight: '20%',
-  maxWidth: '90%',
-  maxHeight: '90%',
+  width: '90%',
+  height: '90%',
   objectFit: 'contain',
 })

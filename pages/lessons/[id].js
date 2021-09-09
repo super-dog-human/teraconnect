@@ -7,7 +7,7 @@ import fetchPublicLessonAsProps from '../../libs/middlewares/fetchPublicLessonAs
 const Page = ({ lesson, errorStatus }) => (
   <>
     <Head>
-      <title>{lesson?.title} - TERACONNECT</title>
+      <title>{lesson?.author?.name} の {lesson?.title} - TERACONNECT</title>
     </Head>
     <Lesson lesson={lesson} errorStatus={errorStatus} />
     <Footer />

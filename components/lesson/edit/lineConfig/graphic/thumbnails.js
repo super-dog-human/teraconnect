@@ -5,7 +5,7 @@ import Flex from '../../../../flex'
 import FlexItem from '../../../../flexItem'
 import Container from '../../../../container'
 import ContainerSpacer from '../../../../containerSpacer'
-import GraphicThumbnail from '../../graphicThumbnail'
+import GraphicThumbnail from '../../../graphicThumbnail'
 
 export default function Thumbnails({ config, graphicURLs, onClick }) {
   const bodyStyle = css({

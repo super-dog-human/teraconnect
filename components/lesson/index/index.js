@@ -4,15 +4,21 @@ import { css } from '@emotion/core'
 import Header from '../../header'
 import LessonPlayer from '../player/'
 import Description from './description'
+import Navigator from './navigator'
+import Heading from './heading'
 import Transcription from './transcription'
 import Graphics from './graphics'
+import Embeddings from './embeddings'
 import ReferenceBooks from './referenceBooks'
+import Author from './author'
+import ImageViwer from '../../imageViewer'
 import useLessonPlayer from '../../../libs/hooks/lesson/useLessonPlayer'
 import usePlayer from '../../../libs/hooks/lesson/player/usePlayer'
 import useSpeechPlayer from '../../../libs/hooks/lesson/player/useSpeechPlayer'
 import useYoutubePlayer from '../../../libs/hooks/lesson/player/useYouTubePlayer'
 import useResizeDetector from '../../../libs/hooks/useResizeDetector'
 import { useDialogContext } from '../../../libs/contexts/dialogContext'
+import { ImageViewerProvider } from '../../../libs/contexts/imageViewerContext'
 
 export default function Lesson({ lesson, errorStatus }) {
   const { showDialog } = useDialogContext()
@@ -74,17 +80,35 @@ export default function Lesson({ lesson, errorStatus }) {
     <>
       <Header />
       <main css={mainStyle}>
-        <div css={bodyStyle} ref={containerRef}>
-          <LessonPlayer isLoading={isAvatarLoading || isBodyLoading || isSpeechLoading || isYouTubeLoading} isPlaying={isPlaying} isShowFullController={true}
-            durationSec={durationSec} backgroundImageURL={backgroundImageURL} hasAvatars={true} hasDrawings={true} hasEmbedding={true}
-            onPlayButtonClick={handlePlayButtonClick} onSeekChange={handleSeekChange} onSeekUp={handleSeekUp} youTubeIDs={youTubeIDs} {...playerProps} />
-          <div css={selectableStyle}>
-            <Description description={lesson.description} />
-            <Transcription speeches={speeches} />
-            <Graphics graphics={graphics} graphicURLs={graphicURLs} />
-            <ReferenceBooks references={lesson.references} />
+        <ImageViewerProvider>
+          <div css={bodyStyle} ref={containerRef}>
+            <LessonPlayer isLoading={isAvatarLoading || isBodyLoading || isSpeechLoading || isYouTubeLoading} isPlaying={isPlaying} isShowFullController={true}
+              durationSec={durationSec} backgroundImageURL={backgroundImageURL} hasAvatars={true} hasDrawings={true} hasEmbedding={true}
+              onPlayButtonClick={handlePlayButtonClick} onSeekChange={handleSeekChange} onSeekUp={handleSeekUp} youTubeIDs={youTubeIDs} {...playerProps} />
+            {lesson &&
+              <div css={selectableStyle}>
+                <Description lesson={lesson} />
+                <Navigator lesson={lesson} />
+                <Heading name='講義全文'>
+                  <Transcription speeches={speeches} />
+                </Heading>
+                {graphics.length > 0 && <Heading name='スライド'>
+                  <Graphics graphics={graphics} graphicURLs={graphicURLs} />
+                </Heading>}
+                {embeddings.length > 0 && <Heading name='動画'>
+                  <Embeddings embeddings={embeddings} />
+                </Heading>}
+                {lesson.references && <Heading name='参考図書'>
+                  <ReferenceBooks references={lesson.references} />
+                </Heading>}
+                <Heading name='作者'>
+                  <Author author={lesson.author} />
+                </Heading>
+              </div>
+            }
           </div>
-        </div>
+          <ImageViwer />
+        </ImageViewerProvider>
       </main>
     </>
   )
