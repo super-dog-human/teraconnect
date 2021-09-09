@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import TransitionContainer from './transitionContainer'
+import TransitionContainer from './transition/transitionContainer'
 
 export default function FlashContainer({ children, isShow, timeoutMs, transitionDuration }) {
   const [isContainerShow, setIsContainerShow] = useState(false)

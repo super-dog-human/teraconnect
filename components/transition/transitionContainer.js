@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useTransition, animated } from 'react-spring'
-import useUnmountRef from '../libs/hooks/useUnmountRef'
+import useUnmountRef from '../../libs/hooks/useUnmountRef'
 
 export default function TransitionContainer({ isShow, duration, children }) {
   const [isContainerShow, setIsContainerShow] = useState(false)

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useTransition, animated } from 'react-spring'
-import useUnmountRef from '../libs/hooks/useUnmountRef'
+import useUnmountRef from '../../libs/hooks/useUnmountRef'
 
 export default function FadeOutContainer({ duration, children }) {
   const [isContainerShow, setIsContainerShow] = useState(true)

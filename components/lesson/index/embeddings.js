@@ -10,7 +10,7 @@ import Icon from '../../icon'
 
 export default function Embeddings({ embeddings }) {
   return (
-    <Flex flexWrap='wrap' gap='30px 30px'>
+    <Flex flexWrap='wrap' gap='50px 30px'>
       {embeddings.filter(e => e.action === 'show').map((embedding, i) => {
         const iframeURL = embedding.serviceName === 'youtube' ?
           `https://www.youtube.com/embed/${embedding.contentID}?autoplay=0` :

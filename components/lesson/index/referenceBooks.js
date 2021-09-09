@@ -24,7 +24,7 @@ export default function ReferenceBooks({ references }) {
   }, [references])
 
   return (
-    <Flex>
+    <Flex flexWrap='wrap' gap='20px 0px'>
       {references.map((reference, i) => (
         <Fragment key={i}>
           <div css={bookStyle}>

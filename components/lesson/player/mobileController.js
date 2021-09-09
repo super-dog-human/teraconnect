@@ -8,7 +8,7 @@ import Spacer from '../../spacer'
 import PlainText from '../../plainText'
 import Icon from '../../icon'
 import IconButton from '../../button/iconButton'
-import TransitionContainer from '../../transitionContainer'
+import TransitionContainer from '../../transition/transitionContainer'
 import { floatSecondsToMinutesFormat } from '../../../libs/utils'
 import useTouchDeviceDetector from '../../../libs/hooks/useTouchDeviceDetector'
 
