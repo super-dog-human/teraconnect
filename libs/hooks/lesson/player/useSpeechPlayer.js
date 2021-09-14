@@ -1,10 +1,16 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
+import { useUnmount } from 'react-use'
 
 export default function useSpeechPlayer({ url, durationSec } ) {
   const audioRef = useRef()
   const elapsedTimeRef = useRef(0)
   const [isLoading, setIsLoading] = useState(true)
   const [isPlaying, setIsPlaying] = useState(false)
+
+  useUnmount(() => {
+    if (isPlaying) stopSpeech()
+  })
+
 
   async function playSpeech() {
     if (elapsedTimeRef.current >= durationSec) {

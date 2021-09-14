@@ -11,6 +11,7 @@ export default function useSpeechesPlayer({ lessonID, durationSec, speeches }) {
   const [voices, setVoices] = useState([])
   const [isPlaying, setIsPlaying] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+
   useUnmount(() => {
     if (isPlaying) stopSpeeches()
   })
