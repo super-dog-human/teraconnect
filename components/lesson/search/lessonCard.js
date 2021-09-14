@@ -59,7 +59,7 @@ export default function LessonCard(hit) {
         <Link href={'/lessons/' + hit.objectID} passHref>
           <a>
             <div css={omitOverflowStyle}>
-              <PlainText color='gray' size='17'>{hit.title}</PlainText>
+              <PlainText color='gray' size='17'><Highlight hit={hit} attribute='title'/></PlainText>
             </div>
             <Spacer height='5' />
             <Container height='100'>

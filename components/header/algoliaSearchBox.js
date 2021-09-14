@@ -9,7 +9,7 @@ import ExpandContainer from '../transition/expandContainer'
 import Spacer from '../spacer'
 import LoadingIndicator from '../loadingIndicator'
 
-const AlgoliaSearchBox = ({ currentRefinement, isSearchStalled, refine }) => {
+const AlgoliaSearchBox = ({ isSearchStalled, refine }) => {
   const inputRef = useRef()
   const [isFocus, setIsFocus] = useState(false)
   const router = useRouter()
@@ -19,28 +19,37 @@ const AlgoliaSearchBox = ({ currentRefinement, isSearchStalled, refine }) => {
   }
 
   function handleBlur() {
-    setIsFocus(false)
-  }
-
-  function handleChange(e) {
-    refine(e.currentTarget.value)
-    router.push({
-      pathname: '/search',
-      query: { q: e.currentTarget.value },
-    })
+    if (!inputRef.current.value) setIsFocus(false)
   }
 
   function handleSubmit(e) {
     e.preventDefault()
+    search(inputRef.current.value)
   }
 
   function handleSearchButtonClick() {
-    inputRef.current.focus()
+    if (inputRef.current.value) {
+      search(inputRef.current.value)
+    } else {
+      inputRef.current.focus()
+    }
+  }
+
+  function search(keyword) {
+    refine(keyword)
+    router.push({
+      pathname: '/search',
+      query: { q: keyword },
+    })
   }
 
   useEffect(() => {
     const keyword = router.query.q
-    if (keyword) refine(keyword)
+    if (keyword) {
+      setIsFocus(true)
+      inputRef.current.value = keyword
+      refine(keyword)
+    }
   }, [router, refine])
 
   return (
@@ -49,7 +58,7 @@ const AlgoliaSearchBox = ({ currentRefinement, isSearchStalled, refine }) => {
         <Container height='40'>
           <ExpandContainer isExpand={isFocus} initialWidth='100px' expandedWidth='300px'>
             <InputSearch size='15' padding='10' color='var(--dark-gray)' borderColor={isFocus ? 'var(--soft-white)' : 'white'} borderWidth='1px'
-              value={currentRefinement} onFocus={handleFocus} onBlur={handleBlur} onChange={handleChange} ref={inputRef} />
+              onFocus={handleFocus} onBlur={handleBlur} ref={inputRef} />
           </ExpandContainer>
         </Container>
       </form>

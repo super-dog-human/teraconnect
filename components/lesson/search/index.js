@@ -1,41 +1,67 @@
 /** @jsxImportSource @emotion/react */
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/core'
 import { connectInfiniteHits, PoweredBy } from 'react-instantsearch-dom'
+import { useInView } from 'react-intersection-observer'
 import Flex from '../../flex'
 import PlainText from '../../plainText'
 import Spacer from '../../spacer'
 import Container from '../../container'
 import ContainerSpacer from '../../containerSpacer'
+import LoadingIndicator from '../../loadingIndicator'
 import LessonCard from './lessonCard'
+import { useRouter } from 'next/router'
 
-const LessonSearch = ({ hits, hasMore, refineNext }) => (
-  <div css={backgroundStyle}>
-    <div css={bodyStyle}>
-      <Spacer height='20' />
-      <Flex justifyContent='space-evenly' flexWrap='wrap' gap='30px'>
-        {hits.map(hit => <LessonCard key={hit.objectID} {...hit}/>)}
-        {[...Array(3 - hits.length % 3)].map((_, i) => <Container width='370' key={i} />)}
-      </Flex>
+const LessonSearch = ({ hits, hasMore, refineNext }) => {
+  const { ref: terminationRef, inView } = useInView()
+  const [shouldFetchNext, setShouldFetchNext] = useState(false)
+  const router = useRouter()
 
-      {hits.length === 0 && <>
-        <PlainText color='gray' size='15'>授業が見つかりませんでした。</PlainText>
-      </>}
+  useEffect(() => {
+    if (!inView || !hasMore) return
+    setShouldFetchNext(true)
+  }, [inView, hasMore])
 
-      {hasMore &&
-        <button onClick={refineNext}>
-          Show more
-        </button>
-      }
+  useEffect(() => {
+    if (!shouldFetchNext) return
+    refineNext()
+    setShouldFetchNext(false)
+  }, [shouldFetchNext, refineNext])
 
-      <ContainerSpacer top='50' bottom='50'>
-        <Flex justifyContent='right'>
-          <PoweredBy />
+  return (
+    <div css={backgroundStyle}>
+      <div css={bodyStyle}>
+        <Spacer height='50' />
+
+        <Flex justifyContent='space-evenly' flexWrap='wrap' gap='30px'>
+          {hits.map(hit => <LessonCard key={hit.objectID} {...hit}/>)}
+          {[...Array(3 - hits.length % 3)].map((_, i) => <Container width='370' key={i} />)}
         </Flex>
-      </ContainerSpacer>
+
+        {hits.length > 0 && hasMore &&
+          <div ref={terminationRef}>
+            <Spacer height='100' />
+            <Flex justifyContent='center'>
+              <Container width='40' height='40'>
+                <LoadingIndicator />
+              </Container>
+            </Flex>
+          </div>
+        }
+
+        {hits.length === 0 && router.query.q &&
+          <PlainText color='gray' size='15'>「{router.query.q}」に関連する授業が見つかりませんでした。</PlainText>
+        }
+
+        <ContainerSpacer top='50' bottom='50'>
+          <Flex justifyContent='right'>
+            <PoweredBy />
+          </Flex>
+        </ContainerSpacer>
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
 const backgroundStyle = css({
   margin: 'auto',

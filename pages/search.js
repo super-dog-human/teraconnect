@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
 import { css } from '@emotion/core'
-import { InstantSearch } from 'react-instantsearch-dom'
+import { Configure, InstantSearch } from 'react-instantsearch-dom'
 import Head from 'next/head'
 import Layout from '../components/layout'
 import algoliasearch from 'algoliasearch/lite'
@@ -12,8 +12,8 @@ const Page = () => (
     <Head>
       <title>授業検索 | TERACONNECT</title>
     </Head>
-    <InstantSearch searchClient={algoliasearch(process.env.NEXT_PUBLIC_ALGOLIA_APPLICATION_ID, process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY)}
-      indexName={process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME}>
+    <InstantSearch searchClient={algoliasearch(process.env.NEXT_PUBLIC_ALGOLIA_APPLICATION_ID, process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY)} indexName={process.env.NEXT_PUBLIC_ALGOLIA_INDEX_NAME}>
+      <Configure hitsPerPage='18' />
       <Layout>
         <div css={bodyStyle}>
           <LessonSearch />
