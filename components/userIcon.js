@@ -16,7 +16,7 @@ export default function UserIcon({ id, name }) {
   return (
     <div css={bodyStyle}>
       {!hasError && <img src={iconURL + id + '.png'} onError={handleError} alt={name} css={imageStyle} />}
-      {hasError && <NoImage />}
+      {hasError && <NoImage textSize='10' color='var(--soft-white)' backgroundColor='gray' />}
     </div>
   )
 }
