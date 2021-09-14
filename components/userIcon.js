@@ -9,7 +9,6 @@ export default function UserIcon({ id, name }) {
   const [hasError, setHasError] = useState(false)
 
   function handleError() {
-    console.log('error...')
     setHasError(true)
   }
 

@@ -6,7 +6,7 @@ const InputSearch = React.forwardRef(function inputSearch(props, ref) {
   const { size, color, textAlign, backgroundColor, borderColor, borderWidth, padding, ...inputProps } = props
   const bodyStyle = css({
     '::-webkit-search-cancel-button': {
-      '-webkit-appearance': 'none'
+      WebkitAppearance: 'none'
     },
     width: 'calc(100% - 2px)',
     height: '100%',
