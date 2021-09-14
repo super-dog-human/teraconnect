@@ -39,7 +39,7 @@ export default function useSpeechPlayer({ url, durationSec } ) {
   }
 
   const createAudio = useCallback(() => {
-    audioRef.current = new Audio(url)
+    audioRef.current = new Audio(url + '?' + Date.now())
     audioRef.current.onwaiting = () => {
       setIsLoading(true)
       setIsPlaying(false)
