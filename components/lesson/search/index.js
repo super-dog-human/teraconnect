@@ -35,7 +35,7 @@ const LessonSearch = ({ hits, hasMore, refineNext }) => {
 
         <Flex justifyContent='space-evenly' flexWrap='wrap' gap='30px'>
           {hits.map(hit => <LessonCard key={hit.objectID} {...hit}/>)}
-          {[...Array(3 - hits.length % 3)].map((_, i) => <Container width='370' key={i} />)}
+          {[...Array(3 - hits.length % 3)].map((_, i) => <Container width='330' key={i} />)}
         </Flex>
 
         {hits.length > 0 && hasMore &&
