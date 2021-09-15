@@ -34,7 +34,7 @@ export default function LessonCard(hit) {
 
   return (
     <div css={containerStyle}>
-      <Container width='340' height='430'>
+      <Container width='300' height='430'>
         <Link href={`/subjects/${hit.subjectID}/categories/${hit.categoryID}`} passHref>
           <a>
             <Flex>
@@ -51,8 +51,8 @@ export default function LessonCard(hit) {
         <Spacer height='10' />
         <Link href={'/lessons/' + hit.objectID} passHref>
           <a>
-            {!isThumbnailError && <Image src={lessonImageURL + hit.objectID + '/thumbnail.png'} alt={hit.title} width='340' height='191' onError={handleThumbnailError} />}
-            {isThumbnailError && <Container width='340' height='191'><NoImage color='var(--soft-white)' backgroundColor='gray' /></Container>}
+            {!isThumbnailError && <Image src={lessonImageURL + hit.objectID + '/thumbnail.png'} alt={hit.title} width='300' height='169' onError={handleThumbnailError} />}
+            {isThumbnailError && <Container width='300' height='191'><NoImage color='var(--soft-white)' backgroundColor='gray' /></Container>}
           </a>
         </Link>
         <Spacer height='5' />
@@ -122,7 +122,7 @@ const hideOverflowStyle = css({
 })
 
 const userNameStyle = css({
-  width: '294px',
+  width: `${300 - 36 - 10}px`,
   lineHeight: '12px',
   whiteSpace: 'nowrap',
   overflow: 'hidden',
@@ -130,7 +130,7 @@ const userNameStyle = css({
 })
 
 const clippingTextStyle = css({
-  width: '294px',
+  width: `${300 - 36 - 10}px`,
   lineHeight: '13px',
   whiteSpace: 'nowrap',
   overflow: 'hidden',
