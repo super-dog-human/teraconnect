@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import Head from 'next/head'
+import Script from 'next/script'
 import { useRouter } from 'next/router'
 import { Provider } from 'next-auth/client'
 import { ErrorDialogContext, ErrorDialogProvider } from '../libs/contexts/errorDialogContext'
@@ -14,6 +15,8 @@ if (process.env.NODE_ENV === 'development') {
   const whyDidYouRender = require('@welldone-software/why-did-you-render')
   whyDidYouRender(React)
 }
+
+const youTubePlayerSrc = 'https://www.youtube.com/iframe_api'
 
 export default function App ({ Component, pageProps }) {
   const router = useRouter()
@@ -32,6 +35,7 @@ export default function App ({ Component, pageProps }) {
       <Head>
         <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0" />
       </Head>
+      <Script src={youTubePlayerSrc} strategy="beforeInteractive" />
       <Provider session={pageProps.session}>
         <ErrorDialogProvider>
           <DialogProvider>
