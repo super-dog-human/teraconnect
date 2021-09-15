@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import { useRouter } from 'next/router'
 import Flex from '../flex'
 import IconButton from '../button/iconButton'
@@ -6,9 +6,8 @@ import Container from '../container'
 import Spacer from '../spacer'
 import SearchForm from './searchForm'
 
-export default function SearchBox() {
+export default function SearchBox({ isFocus, setIsFocus, onClose }) {
   const inputRef = useRef()
-  const [isFocus, setIsFocus] = useState(false)
   const router = useRouter()
 
   function handleFocus() {
@@ -41,8 +40,8 @@ export default function SearchBox() {
 
   return (
     <Flex alignItems='center'>
-      <SearchForm isFocus={isFocus} inputRef={inputRef} onFocus={handleFocus} onBlur={handleBlur} onSubmit={handleSubmit} />
-      <Spacer width='10' />
+      <SearchForm isFocus={isFocus} inputRef={inputRef} onClose={onClose} onFocus={handleFocus} onBlur={handleBlur} onSubmit={handleSubmit} />
+      <Spacer width='10' height='60' />
       <Container width='25' height='25'>
         <IconButton name='search' onClick={handleSearchButtonClick} />
       </Container>

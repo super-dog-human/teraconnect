@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { connectSearchBox } from 'react-instantsearch-dom'
 import Flex from '../flex'
@@ -8,9 +8,8 @@ import Spacer from '../spacer'
 import LoadingIndicator from '../loadingIndicator'
 import SearchForm from './searchForm'
 
-const AlgoliaSearchBox = ({ isSearchStalled, refine }) => {
+const AlgoliaSearchBox = ({ isFocus, setIsFocus, onClose, isSearchStalled, refine }) => {
   const inputRef = useRef()
-  const [isFocus, setIsFocus] = useState(false)
   const router = useRouter()
 
   function handleFocus() {
@@ -49,12 +48,12 @@ const AlgoliaSearchBox = ({ isSearchStalled, refine }) => {
       inputRef.current.value = keyword
       refine(keyword)
     }
-  }, [router, refine])
+  }, [router, setIsFocus, refine])
 
   return (
     <Flex alignItems='center'>
-      <SearchForm isFocus={isFocus} inputRef={inputRef} onFocus={handleFocus} onBlur={handleBlur} onSubmit={handleSubmit} />
-      <Spacer width='10' />
+      <SearchForm isFocus={isFocus} inputRef={inputRef} onClose={onClose} onFocus={handleFocus} onBlur={handleBlur} onSubmit={handleSubmit} />
+      <Spacer width='10' height='60' />
       <Container width='25' height='25'>
         {isSearchStalled &&
           <Container width='20' height='20'>

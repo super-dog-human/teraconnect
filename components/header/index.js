@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { css } from '@emotion/core'
+import { useScreenClass } from 'react-grid-system'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/client'
@@ -18,8 +19,11 @@ import ContainerSpacer from '../containerSpacer'
 
 export default function Header({ currentPage }) {
   const router = useRouter()
+  const screenClass = useScreenClass()
   const [session, loading] = useSession()
   const [isHover, setIsHover] = useState(false)
+  const [isSearchBoxFocus, setIsSearchBoxFocus] = useState(!!router.query.q)
+  const [isShowMenus, setIsShowMenus] = useState(true)
 
   function handleMouseEnter() {
     setIsHover(true)
@@ -29,55 +33,73 @@ export default function Header({ currentPage }) {
     setIsHover(false)
   }
 
+  function handleCloseSearchBox() {
+    if (isSearchBoxFocus) return
+    setIsShowMenus(true)
+  }
+
+  useEffect(() => {
+    if (!isSearchBoxFocus) return
+    if (screenClass !== 'md') return
+    setIsShowMenus(false)
+  }, [isSearchBoxFocus, screenClass])
+
   return (
     <header css={headerStyle} className="header-z">
-      <div css={bodyStyle}>
-        <Flex justifyContent='space-between' alignItems='center'>
-          <FlexItem flexBasis='201px'>
-            <TopLogoLink color="black" />
-          </FlexItem>
-          <FlexItem />
-          <FlexItem flexBasis='40%'>
-            <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-              <Flex justifyContent='space-evenly'>
-                <MenuLink isHover={isHover} page='analytics' currentPage={currentPage} path='/categories'>
-                  <Flex justifyContent='center'>
-                    <Container width='18'><Icon name='book' /></Container>
-                    <Spacer width='10' />
-                    <LinkLabel label='教科で探す' />
+      {!['xs', 'sm'].includes(screenClass) &&
+        <div css={bodyStyle}>
+          <Flex justifyContent='space-between' alignItems='center'>
+            <FlexItem flexBasis='201px'>
+              <TopLogoLink color="black" />
+            </FlexItem>
+            <FlexItem />
+            {isShowMenus &&
+              <FlexItem flexBasis='40%'>
+                <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                  <Flex justifyContent='space-evenly'>
+                    <MenuLink isHover={isHover} page='analytics' currentPage={currentPage} path='/categories'>
+                      <Flex justifyContent='center'>
+                        <Container width='18'><Icon name='book' /></Container>
+                        <Spacer width='10' />
+                        <LinkLabel label='教科で探す' />
+                      </Flex>
+                    </MenuLink>
+                    <MenuLink isHover={isHover} page='edit' currentPage={currentPage} path='/users'>
+                      <Flex justifyContent='center'>
+                        <Container width='22'><Icon name='graduation-hat' /></Container>
+                        <Spacer width='10' />
+                        <LinkLabel label='人で探す' />
+                      </Flex>
+                    </MenuLink>
                   </Flex>
-                </MenuLink>
-                <MenuLink isHover={isHover} page='edit' currentPage={currentPage} path='/users'>
-                  <Flex justifyContent='center'>
-                    <Container width='22'><Icon name='graduation-hat' /></Container>
-                    <Spacer width='10' />
-                    <LinkLabel label='人で探す' />
-                  </Flex>
-                </MenuLink>
+                </div>
+              </FlexItem>
+            }
+            <FlexItem>
+              <Flex justifyContent='end' alignItems='center'>
+                {router.pathname === '/search' && <AlgoliaSearchBox isFocus={isSearchBoxFocus} setIsFocus={setIsSearchBoxFocus} onClose={handleCloseSearchBox} />}
+                {router.pathname !== '/search' && <SearchBox isFocus={isSearchBoxFocus} setIsFocus={setIsSearchBoxFocus} onClose={handleCloseSearchBox} />}
+                <FlexItem flexBasis='150px'>
+                  <ContainerSpacer left='30' right='10'>
+                    <Container width='110'>
+                      {!loading && !session &&
+                        <Link href="/login" passHref><a>
+                          <button className="dark" css={buttonStyle}>授業をつくる</button>
+                        </a></Link>
+                      }
+                      {!loading && session &&
+                        <Link href="/dashboard" passHref><a>
+                          <button className="light" css={buttonStyle}>マイページ</button>
+                        </a></Link>
+                      }
+                    </Container>
+                  </ContainerSpacer>
+                </FlexItem>
               </Flex>
-            </div>
-          </FlexItem>
-          <FlexItem>
-            <Flex justifyContent='end'>
-              {router.pathname === '/search' ? <AlgoliaSearchBox /> : <SearchBox />}
-            </Flex>
-          </FlexItem>
-          <FlexItem flexBasis='130px'>
-            <ContainerSpacer left='10' right='10'>
-              {!loading && !session &&
-                <Link href="/login" passHref><a>
-                  <button className="dark" css={buttonStyle}>授業をつくる</button>
-                </a></Link>
-              }
-              {!loading && session &&
-                <Link href="/dashboard" passHref><a>
-                  <button className="light" css={buttonStyle}>マイページ</button>
-                </a></Link>
-              }
-            </ContainerSpacer>
-          </FlexItem>
-        </Flex>
-      </div>
+            </FlexItem>
+          </Flex>
+        </div>
+      }
     </header>
   )
 }
