@@ -10,6 +10,11 @@ $ yarn -s run jose newkey -t RSA -s 2048 -a RS256 -K > dev.jwk
 $ yarn -s run jose findkey -p -j dev.jwk | yarn -s run pem-jwk | openssl rsa -RSAPublicKey_in -pubout > dev_public.pkcs8
 ```
 
+### Recue avatar size
+```bash
+$ python3 vreducer.py foo.vrm -s -t 64,64
+```
+
 ### Deploy to GAE
 
 ```bash
