@@ -30,7 +30,7 @@ export default function usePlayer({ lesson, errorStatus, showDialog }) {
   }, [lesson?.id, lesson?.viewKey, graphicURLs, fetch])
 
   const fetchBody = useCallback(async () => {
-    const response = await fetchFile(lesson.bodyURL + '?' + Date.now())
+    const response = await fetchFile(lesson.bodyURL)
     const compressed = new Uint8Array(await response.arrayBuffer())
     await decoder.init()
     const material = JSON.parse(new TextDecoder().decode(decoder.decode(compressed)))
