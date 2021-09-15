@@ -35,6 +35,7 @@ import FormGroup from './formGroup'
 import NoImage from '../../noImage'
 import ErrorText from './errorText'
 import SynthesisVoiceConfig from '../../synthesisVoiceConfig'
+import { isDataURL } from '../../../libs/utils'
 
 export default function LessonPublishing({ lesson, material }) {
   const screenClass = useScreenClass()
@@ -67,7 +68,8 @@ export default function LessonPublishing({ lesson, material }) {
                   <Aspect16To9Container>
                     <AbsoluteContainer top='0' left='0'>
                       <Container width='300' height='169'>
-                        {setting.thumbnailURL && <img src={setting.thumbnailURL} alt='授業のサムネイル画像' css={thumbnailStyle} />}
+                        {setting.thumbnailURL && !isDataURL(setting.thumbnailURL) && <img src={setting.thumbnailURL + '?' + Date.now()} alt='授業のサムネイル画像' css={thumbnailStyle} />}
+                        {setting.thumbnailURL && isDataURL(setting.thumbnailURL) && <img src={setting.thumbnailURL} alt='授業のサムネイル画像' css={thumbnailStyle} />}
                         {!setting.thumbnailURL && <NoImage textSize='16' color='gray' backgroundColor='lightgray' />}
                       </Container>
                     </AbsoluteContainer>
