@@ -11,7 +11,7 @@ export default function TopLogoLink({ color }) {
       <PageLink path='/'>
         <Container width='181' height='25'>
           <div css={backgroundStyle}>
-            <img css={logoStyle} src={`/img/logo_${color}.png`} srcSet={`/img/logo_${color}.png 1x, /img/logo_${color}@2x.png 2x`} alt='サービスロゴ' />
+            <img css={logoStyle} src={`/img/logo_${color}.png`} srcSet={`/img/logo_${color}.png 1x, /img/logo_${color}@2x.png 2x`} alt='TERACONNECTロゴ' />
           </div>
         </Container>
       </PageLink>

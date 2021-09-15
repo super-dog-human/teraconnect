@@ -1,11 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import React, { useRef, useState } from 'react'
 import { css } from '@emotion/core'
-import { useScreenClass } from 'react-grid-system'
 import { useRouter } from 'next/router'
 import Container from '../container'
 import Spacer from '../spacer'
 import Flex from '../flex'
+import FlexItem from '../flexItem'
 import Icon from '../icon'
 import PlainText from '../plainText'
 import TopLogoLink from '../topLogoLink'
@@ -19,8 +19,6 @@ export default function Header({ currentPage, showBadge, isUpdating, updateLesso
   const lessonIDRef = useRef(parseInt(router.query.id))
   const [isHover, setIsHover] = useState(false)
   const { setContextMenu } = useContextMenuContext()
-  const screenClass = useScreenClass()
-
 
   function handleMouseEnter() {
     setIsHover(true)
@@ -44,38 +42,39 @@ export default function Header({ currentPage, showBadge, isUpdating, updateLesso
     <header css={headerStyle} className="header-z">
       <div css={bodyStyle}>
         <Flex justifyContent='space-between' alignItems='center'>
-          <div>
+          <FlexItem flexBasis='201px'>
             <TopLogoLink color="white" />
-          </div>
-          <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-            <Flex>
-              <MenuLink isHover={isHover} page='analytics' currentPage={currentPage} path='/'>
-                <Flex justifyContent='center'>
-                  <Container width='20' height='60'><Icon name='analytics' /></Container>
-                  <Spacer width='10' />
-                  <PlainText color='white' size='14' lineHeight='60'>レポート</PlainText>
-                </Flex>
-              </MenuLink>
-              {['lg', 'xl', 'xxl'].includes(screenClass) && <Spacer width='100' />}
-              <MenuLink isHover={isHover} page='edit' currentPage={currentPage} path={`/lessons/${lessonIDRef.current}/edit`}>
-                <Flex justifyContent='center'>
-                  <Container width='18' height='60'><Icon name='edit' /></Container>
-                  <Spacer width='20' />
-                  <PlainText color='white' size='14' lineHeight='60' letterSpacing='5'>編集</PlainText>
-                </Flex>
-              </MenuLink>
-              {['lg', 'xl', 'xxl'].includes(screenClass) && <Spacer width='100' />}
-              <MenuLink isHover={isHover} page='publishing' currentPage={currentPage} path={`/lessons/${lessonIDRef.current}/publishing`}>
-                <Flex justifyContent='center'>
-                  <Container width='23' height='60'><Icon name='cloud-upload' /></Container>
-                  <Spacer width='10' />
-                  <PlainText color='white' size='13' lineHeight='60'>公開設定</PlainText>
-                </Flex>
-              </MenuLink>
-            </Flex>
-          </div>
-          <Container width='100' height='40'>
-            {currentPage === 'edit' &&
+          </FlexItem>
+          <FlexItem flexBasis='40%'>
+            <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+              <Flex justifyContent='space-between'>
+                <MenuLink isHover={isHover} page='analytics' currentPage={currentPage} path='/'>
+                  <Flex justifyContent='center'>
+                    <Container width='20' height='60'><Icon name='analytics' /></Container>
+                    <Spacer width='10' />
+                    <PlainText color='white' size='14' lineHeight='60'>レポート</PlainText>
+                  </Flex>
+                </MenuLink>
+                <MenuLink isHover={isHover} page='edit' currentPage={currentPage} path={`/lessons/${lessonIDRef.current}/edit`}>
+                  <Flex justifyContent='center'>
+                    <Container width='18' height='60'><Icon name='edit' /></Container>
+                    <Spacer width='20' />
+                    <PlainText color='white' size='14' lineHeight='60' letterSpacing='5'>編集</PlainText>
+                  </Flex>
+                </MenuLink>
+                <MenuLink isHover={isHover} page='publishing' currentPage={currentPage} path={`/lessons/${lessonIDRef.current}/publishing`}>
+                  <Flex justifyContent='center'>
+                    <Container width='23' height='60'><Icon name='cloud-upload' /></Container>
+                    <Spacer width='10' />
+                    <PlainText color='white' size='13' lineHeight='60'>公開設定</PlainText>
+                  </Flex>
+                </MenuLink>
+              </Flex>
+            </div>
+          </FlexItem>
+          <FlexItem flexBasis='100px'>
+            <Container width='100' height='40'>
+              {currentPage === 'edit' &&
               <Flex>
                 <Container width='40' height='40'>
                   <IconWithBadgeButton name='save' padding='10' showBadge={showBadge} isProcessing={isUpdating} disabled={isUpdating} onClick={updateLesson} />
@@ -84,8 +83,9 @@ export default function Header({ currentPage, showBadge, isUpdating, updateLesso
                   <IconButton name='sort-down' disabled={isUpdating} onMouseDown={handleSortDownClick} />
                 </Container>
               </Flex>
-            }
-          </Container>
+              }
+            </Container>
+          </FlexItem>
         </Flex>
       </div>
     </header>

@@ -11,7 +11,7 @@ export default function MenuLink({ isHover, page, currentPage, path, children })
     <>
       {page === currentPage &&
         <div css={isHover ? null : underLineStyle }>
-          <Container width='120' height='60'>
+          <Container width='150' height='60'>
             <AlignContainer textAlign='center'>
               {children}
             </AlignContainer>
@@ -21,9 +21,9 @@ export default function MenuLink({ isHover, page, currentPage, path, children })
       {page !== currentPage &&
         <PageLink path={path}>
           <div css={hoverUnderLineStyle}>
-            <Container width='120' height='60'>
+            <Container width='150' height='60'>
               <AlignContainer textAlign='center'>
-                <ColorFilter opacity='0.6' hoverOpacity='1'>
+                <ColorFilter opacity='1' hoverOpacity='1'>
                   {children}
                 </ColorFilter>
               </AlignContainer>
@@ -39,7 +39,7 @@ const underLineStyle = css({
   '::after': {
     display: 'block',
     content: '""',
-    backgroundColor: 'white',
+    backgroundColor: 'gray',
     marginTop: '-15px',
     height: '1px',
   },
@@ -48,7 +48,7 @@ const hoverUnderLineStyle = css({
   ':hover:after': {
     display: 'block',
     content: '""',
-    backgroundColor: 'white',
+    backgroundColor: 'gray',
     marginTop: '-15px',
     height: '1px',
   }
