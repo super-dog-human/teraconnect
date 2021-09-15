@@ -1,13 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { connectSearchBox } from 'react-instantsearch-dom'
-import InputSearch from '../form/inputSearch'
 import Flex from '../flex'
 import IconButton from '../button/iconButton'
 import Container from '../container'
-import ExpandContainer from '../transition/expandContainer'
 import Spacer from '../spacer'
 import LoadingIndicator from '../loadingIndicator'
+import SearchForm from './searchForm'
 
 const AlgoliaSearchBox = ({ isSearchStalled, refine }) => {
   const inputRef = useRef()
@@ -54,14 +53,7 @@ const AlgoliaSearchBox = ({ isSearchStalled, refine }) => {
 
   return (
     <Flex alignItems='center'>
-      <form noValidate action="" role="search" onSubmit={handleSubmit}>
-        <Container height='40'>
-          <ExpandContainer isExpand={isFocus} initialWidth='100px' expandedWidth='300px'>
-            <InputSearch size='15' padding='10' color='var(--dark-gray)' borderColor={isFocus ? 'var(--soft-white)' : 'white'} borderWidth='1px'
-              onFocus={handleFocus} onBlur={handleBlur} ref={inputRef} />
-          </ExpandContainer>
-        </Container>
-      </form>
+      <SearchForm isFocus={isFocus} inputRef={inputRef} onFocus={handleFocus} onBlur={handleBlur} onSubmit={handleSubmit} />
       <Spacer width='10' />
       <Container width='25' height='25'>
         {isSearchStalled &&

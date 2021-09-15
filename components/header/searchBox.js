@@ -1,11 +1,10 @@
 import React, { useRef, useState } from 'react'
 import { useRouter } from 'next/router'
-import InputSearch from '../form/inputSearch'
 import Flex from '../flex'
 import IconButton from '../button/iconButton'
 import Container from '../container'
-import ExpandContainer from '../transition/expandContainer'
 import Spacer from '../spacer'
+import SearchForm from './searchForm'
 
 export default function SearchBox() {
   const inputRef = useRef()
@@ -42,14 +41,7 @@ export default function SearchBox() {
 
   return (
     <Flex alignItems='center'>
-      <form noValidate action="" role="search" onSubmit={handleSubmit}>
-        <Container height='40'>
-          <ExpandContainer isExpand={isFocus} initialWidth='100px' expandedWidth='300px'>
-            <InputSearch size='15' padding='10' color='var(--dark-gray)' borderColor={isFocus ? 'var(--soft-white)' : 'white'} borderWidth='1px'
-              onFocus={handleFocus} onBlur={handleBlur} ref={inputRef} />
-          </ExpandContainer>
-        </Container>
-      </form>
+      <SearchForm isFocus={isFocus} inputRef={inputRef} onFocus={handleFocus} onBlur={handleBlur} onSubmit={handleSubmit} />
       <Spacer width='10' />
       <Container width='25' height='25'>
         <IconButton name='search' onClick={handleSearchButtonClick} />
