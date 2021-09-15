@@ -41,7 +41,7 @@ export default function Navigator({ lesson }) {
                   <Flex alignItems='start'>
                     <Container width='150' height='84'>
                       {!thumbnailErrors.prev && <img src={thumbnailURLs.prev} alt={lesson.prevLessonTitle} css={thumbnailStyle} onError={handleThumbnailError} />}
-                      {thumbnailErrors.prev && <NoImage textSize='13' color='var(--soft-white)' backgroundColor='darkgray' />}
+                      {thumbnailErrors.prev && <NoImage textSize='13' color='var(--soft-white)' backgroundColor='gray' />}
                     </Container>
                     <Spacer width='15'/>
                     <div css={labelStyle}>
@@ -66,7 +66,7 @@ export default function Navigator({ lesson }) {
                   <Flex alignItems='start'>
                     <Container width='150' height='84'>
                       {!thumbnailErrors.next && <img src={thumbnailURLs.next} alt={lesson.nextLessonTitle} css={thumbnailStyle} onError={handleThumbnailError} />}
-                      {thumbnailErrors.next && <NoImage textSize='13' color='var(--soft-white)' backgroundColor='darkgray' />}
+                      {thumbnailErrors.next && <NoImage textSize='13' color='var(--soft-white)' backgroundColor='gray' />}
                     </Container>
                     <Spacer width='15'/>
                     <div css={labelStyle}>
