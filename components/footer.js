@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import Link from 'next/link'
 import { css } from '@emotion/core'
 import { useSession } from 'next-auth/client'
 import useMobileDetector from '../libs/hooks/useMobileDetector'
@@ -80,17 +79,17 @@ export default function Footer() {
           <PlainText color='var(--border-gray)' size='16' fontWeight='bold' whiteSpace='nowrap'>サービスについて</PlainText>
           <ContainerSpacer top='10' bottom='5'>
             <PlainText size='14' whiteSpace='nowrap'>
-              <Link href="/">TERACONNECTとは</Link>
+              <PageLink path="/">TERACONNECTとは</PageLink>
             </PlainText>
           </ContainerSpacer>
           <ContainerSpacer top='5' bottom='5'>
             <PlainText size='14' whiteSpace='nowrap'>
-              <Link href="/">ライセンス表記</Link>
+              <PageLink path="/">ライセンス表記</PageLink>
             </PlainText>
           </ContainerSpacer>
           <ContainerSpacer top='5' bottom='5'>
             <PlainText size='14' whiteSpace='nowrap'>
-              <Link href="/">運営者</Link>
+              <PageLink path="/">運営者</PageLink>
             </PlainText>
           </ContainerSpacer>
         </FlexItem>
@@ -98,7 +97,7 @@ export default function Footer() {
           <PlainText color='var(--border-gray)' size='16' fontWeight='bold' whiteSpace='nowrap'>ご利用にあたって</PlainText>
           <ContainerSpacer top='10' bottom='5'>
             <PlainText size='14' whiteSpace='nowrap'>
-              <Link href="/terms_of_use">利用規約</Link>
+              <PageLink path="/terms_of_use">利用規約</PageLink>
             </PlainText>
           </ContainerSpacer>
           <ContainerSpacer top='5' bottom='5'>
