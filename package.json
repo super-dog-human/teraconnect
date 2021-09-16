@@ -11,7 +11,7 @@
     "@emotion/core": "^10.0.27",
     "@emotion/react": "^11.1.4",
     "@emotion/styled": "^10.0.27",
-    "@pixiv/three-vrm": "^0.6.2",
+    "@pixiv/three-vrm": "^0.5.6",
     "@welldone-software/why-did-you-render": "^6.0.5",
     "algoliasearch": "^4.10.5",
     "clone-deep": "^4.0.1",
