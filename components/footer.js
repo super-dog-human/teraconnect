@@ -3,23 +3,23 @@ import React from 'react'
 import Link from 'next/link'
 import { useSession } from 'next-auth/client'
 import { css } from '@emotion/core'
-import { useScreenClass, Container, Row, Col } from 'react-grid-system'
+import { Container, Row, Col } from 'react-grid-system'
+import useMobileDetector from '../libs/hooks/useMobileDetector'
 
 export default function Footer() {
   const [ session, loading ] = useSession()
-  const screenClass = useScreenClass()
+  const isMobile = useMobileDetector()
 
   const backgroundStyle = css({
     width: '100%',
-    minHeight: '140px',
     backgroundColor: 'var(--dark-gray)',
     paddingTop: '30px',
     paddingBottom: '30px',
-    textAlign: ['xs', 'sm'].includes(screenClass) ? 'center' : 'left',
+    textAlign: isMobile ? 'center' : 'left',
   })
 
   return (
-    <footer className="text-align-center" css={backgroundStyle}>
+    <footer className="footer-z" css={backgroundStyle}>
       <Container fluid css={bodyStyle}>
         <Row justify="center" css={rowStyle}>
           <Col md={4} css={logoContainerStyle}>

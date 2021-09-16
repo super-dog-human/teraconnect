@@ -22,26 +22,6 @@
   font-weight: 100;
   font-display: auto;
 }
-@keyframes fadeIn {
-  0% {
-    display: none;
-    opacity: 0;
-  }
-  100% {
-    display: block;
-    opacity: 1;
-  }
-}
-@keyframes fadeOut {
-  0% {
-    display: block;
-    opacity: 1;
-  }
-  100% {
-    display: none;
-    opacity: 0;
-  }
-}
 @keyframes rotation {
   0% {
     transform:rotate(0);
@@ -73,7 +53,6 @@ header {
   height: 60px;
 }
 main {
-  margin-top: 60px;
   flex: 1;
 }
 :root {
@@ -90,9 +69,6 @@ main {
   --back-movie-black: #141414;
   --error-red: #dc143c;
   --error-light-pink: #ecd2d2;
-}
-.color-text-gray {
-  color: var(--text-gray);
 }
 a {
   text-decoration: none;
@@ -135,25 +111,6 @@ button.light:hover {
   background-color: var(--text-gray);
   color: white;
 }
-.text-align-center {
-  text-align: center;
-}
-.text-align-left {
-  text-align: left;
-}
-.text-align-right {
-  text-align: right;
-}
-.flex {
-  display: -webkit-flex;
-  display: -moz-flex;
-  display: -ms-flex;
-  display: -o-flex;
-  display: flex;
-}
-.displayFlexNone {
-  flex: none;
-}
 .react-colorful__pointer {
   width: 18px !important;
   height: 18px !important;
@@ -162,12 +119,15 @@ button.light:hover {
   z-index: 10000;
 }
 .indicator-z {
-  z-index: 1200;
+  z-index: 1300;
 }
 .context-menu-z {
-  z-index: 1100;
+  z-index: 1200;
 }
 .header-z {
+  z-index: 1100;
+}
+.footer-z {
   z-index: 1000;
 }
 .modal-panel-z {
