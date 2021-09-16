@@ -34,7 +34,7 @@ export default function LessonCard(hit) {
 
   return (
     <div css={containerStyle}>
-      <Container width='300' height='430'>
+      <Container width='300' height='410'>
         <Link href={`/subjects/${hit.subjectID}/categories/${hit.categoryID}`} passHref>
           <a>
             <Flex>
@@ -51,8 +51,8 @@ export default function LessonCard(hit) {
         <Spacer height='10' />
         <Link href={'/lessons/' + hit.objectID} passHref>
           <a>
-            {!isThumbnailError && <Image src={lessonImageURL + hit.objectID + '/thumbnail.png'} alt={hit.title} width='300' height='169' onError={handleThumbnailError} />}
-            {isThumbnailError && <Container width='300' height='191'><NoImage color='var(--soft-white)' backgroundColor='gray' /></Container>}
+            {!isThumbnailError && <img src={lessonImageURL + hit.objectID + '/thumbnail.png'} alt={hit.title} css={thumbnailStyle} onError={handleThumbnailError} />}
+            {isThumbnailError && <Container width='300' height='169'><NoImage color='var(--soft-white)' backgroundColor='gray' /></Container>}
           </a>
         </Link>
         <Spacer height='5' />
@@ -108,6 +108,12 @@ const containerStyle = css({
   '.ais-Highlight-highlighted': {
     backgroundColor: '#ffc168',
   }
+})
+
+const thumbnailStyle = css({
+  width: '300px',
+  height: '169px',
+  objectFit: 'contain',
 })
 
 const omitOverflowStyle = css({
