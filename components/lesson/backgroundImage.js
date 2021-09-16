@@ -17,8 +17,10 @@ const bodyStyle = css({
 })
 
 const imageStyle = css({
-  width: '1280',
-  height: '720',
+  width: '100%',
+  height: 'auto',
+  maxWidth: '1280px',
+  maxHeight: '720px',
   objectFit: 'contain',
 })
 
