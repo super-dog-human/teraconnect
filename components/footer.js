@@ -1,120 +1,119 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
 import Link from 'next/link'
-import { useSession } from 'next-auth/client'
 import { css } from '@emotion/core'
-import { Container, Row, Col } from 'react-grid-system'
+import { useSession } from 'next-auth/client'
 import useMobileDetector from '../libs/hooks/useMobileDetector'
+import FlexItem from './flexItem'
+import PlainText from './plainText'
+import PageLink from './pageLink'
+import Spacer from './spacer'
+import ContainerSpacer from './containerSpacer'
 
 export default function Footer() {
-  const [ session, loading ] = useSession()
+  const [session, loading] = useSession()
   const isMobile = useMobileDetector()
 
   const backgroundStyle = css({
     width: '100%',
     backgroundColor: 'var(--dark-gray)',
-    paddingTop: '30px',
-    paddingBottom: '30px',
+    paddingTop: '45px',
+    paddingBottom: '45px',
     textAlign: isMobile ? 'center' : 'left',
   })
 
-  return (
-    <footer className="footer-z" css={backgroundStyle}>
-      <Container fluid css={bodyStyle}>
-        <Row justify="center" css={rowStyle}>
-          <Col md={4} css={logoContainerStyle}>
-            {!loading && !session && <div>
-              <div css={logoCopyStyle}>君の光をさがそう。</div>
-              <img src="/img/logo_black.png" srcSet="/img/logo_black.png 1x, /img/logo_black@2x.png 2x" alt='TERACONNECTロゴ' />
-            </div>
-            }
+  const bodyStyle = css({
+    maxWidth: '1280px',
+    height: '100%',
+    margin: 'auto',
+    display: 'flex',
+    justifyContent: 'space-evenly',
+    alignItems: isMobile ? 'center' : 'start',
+    flexWrap: 'wrap',
+    flexDirection: isMobile ? 'column' : 'row',
+    gap: '30px 0px',
+    a: {
+      color: 'var(--border-gray)',
+      opacity: 0.6,
+    },
+    'a:hover': {
+      opacity: 1,
+    },
+  })
 
-            {!loading && session && <div>
-              <div css={logoCopyStyle}>あなたの知識が、誰かを照らす。</div>
-              <img src="/img/logo_black.png" srcSet="/img/logo_black.png 1x, /img/logo_black@2x.png 2x" alt='TERACONNECTロゴ' />
-            </div>
-            }
-          </Col>
-          <Col md={2}>
-            <div css={categoryStyle}>使いかた</div>
-            <div css={linkStyle}>
-              <Link href="/">授業をさがす</Link>
-            </div>
-            <div css={linkStyle}>
-              <Link href="/">授業をつくる</Link>
-            </div>
-            <div css={linkStyle}>
-              <Link href="/">よくある質問</Link>
-            </div>
-          </Col>
-          <Col md={2}>
-            <div css={categoryStyle}>サービスについて</div>
-            <div css={linkStyle}>
+  return (
+    <footer css={backgroundStyle} className="footer-z">
+      <div css={bodyStyle}>
+        <div css={logoStyle}>
+          {!loading && !session && <div>
+            <PlainText size='13' color='var(--text-gray)' whiteSpace='nowrap'>君の光をさがそう。</PlainText>
+            <Spacer height='15' />
+            <img src="/img/logo_black.png" srcSet="/img/logo_black.png 1x, /img/logo_black@2x.png 2x" alt='TERACONNECTロゴ' />
+          </div>
+          }
+          {!loading && session && <div>
+            <PlainText size='13' color='var(--text-gray)' whiteSpace='nowrap'>あなたの知識が、誰かを照らす。</PlainText>
+            <Spacer height='15' />
+            <img src="/img/logo_black.png" srcSet="/img/logo_black.png 1x, /img/logo_black@2x.png 2x" alt='TERACONNECTロゴ' />
+          </div>
+          }
+        </div>
+        <FlexItem>
+          <PlainText color='var(--border-gray)' size='16' fontWeight='bold' whiteSpace='nowrap'>使いかた</PlainText>
+          <ContainerSpacer top='10' bottom='5'>
+            <PlainText size='14' whiteSpace='nowrap'>
+              <PageLink path='/search'>授業を探す</PageLink>
+            </PlainText>
+          </ContainerSpacer>
+          <ContainerSpacer top='5' bottom='5'>
+            <PlainText size='14' whiteSpace='nowrap'>
+              <PageLink path='/lessons/new'>授業をつくる</PageLink>
+            </PlainText>
+          </ContainerSpacer>
+          <ContainerSpacer top='5' bottom='5'>
+            <PlainText size='14' whiteSpace='nowrap'>
+              <PageLink path='/'>よくある質問</PageLink>
+            </PlainText>
+          </ContainerSpacer>
+        </FlexItem>
+        <FlexItem>
+          <PlainText color='var(--border-gray)' size='16' fontWeight='bold' whiteSpace='nowrap'>サービスについて</PlainText>
+          <ContainerSpacer top='10' bottom='5'>
+            <PlainText size='14' whiteSpace='nowrap'>
               <Link href="/">TERACONNECTとは</Link>
-            </div>
-            <div css={linkStyle}>
+            </PlainText>
+          </ContainerSpacer>
+          <ContainerSpacer top='5' bottom='5'>
+            <PlainText size='14' whiteSpace='nowrap'>
               <Link href="/">ライセンス表記</Link>
-            </div>
-            <div css={linkStyle}>
+            </PlainText>
+          </ContainerSpacer>
+          <ContainerSpacer top='5' bottom='5'>
+            <PlainText size='14' whiteSpace='nowrap'>
               <Link href="/">運営者</Link>
-            </div>
-          </Col>
-          <Col md={2}>
-            <div css={categoryStyle}>ご利用にあたって</div>
-            <div css={linkStyle}>
+            </PlainText>
+          </ContainerSpacer>
+        </FlexItem>
+        <FlexItem>
+          <PlainText color='var(--border-gray)' size='16' fontWeight='bold' whiteSpace='nowrap'>ご利用にあたって</PlainText>
+          <ContainerSpacer top='10' bottom='5'>
+            <PlainText size='14' whiteSpace='nowrap'>
               <Link href="/terms_of_use">利用規約</Link>
-            </div>
-            <div css={linkStyle}>
+            </PlainText>
+          </ContainerSpacer>
+          <ContainerSpacer top='5' bottom='5'>
+            <PlainText size='14' whiteSpace='nowrap'>
               <a href="https://goo.gl/forms/Rmp3dNKN7ZsDoF2k2">お問い合わせ</a>
-            </div>
-          </Col>
-        </Row>
-      </Container>
+            </PlainText>
+          </ContainerSpacer>
+        </FlexItem>
+      </div>
     </footer>
   )
 }
 
-const bodyStyle = css({
-  maxWidth: '1280px',
-  height: '100%',
+const logoStyle = css({
   display: 'flex',
-  justifyContent: 'center',
   alignItems: 'center',
-  a: {
-    color: 'var(--border-gray)',
-    opacity: 0.6,
-  },
-  'a:hover': {
-    opacity: 1,
-  },
-})
-
-const rowStyle = css({
-  width: '100%',
-})
-
-const logoContainerStyle = css({
-  display: 'flex',
-  justifyContent: 'space-around',
-  alignItems: 'center',
-})
-
-const logoCopyStyle = css({
-  color: 'var(--text-gray)',
-  fontSize: '13px',
-  marginBottom: '15px',
-})
-
-const categoryStyle = css({
-  color: 'var(--border-gray)',
-  fontSize: '16px',
-  fontWeight: 'bold',
-  marginTop: '15px',
-  marginBottom: '15px',
-})
-
-const linkStyle = css({
-  fontSize: '14px',
-  marginTop: '5px',
-  marginBottom: '5px',
+  height: '126px',
 })
