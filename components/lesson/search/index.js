@@ -54,7 +54,7 @@ const LessonSearch = ({ hits, hasMore, refineNext }) => {
         }
 
         <ContainerSpacer top='50' bottom='50'>
-          <Flex justifyContent='right'>
+          <Flex justifyContent='flex-end'>
             <PoweredBy />
           </Flex>
         </ContainerSpacer>
