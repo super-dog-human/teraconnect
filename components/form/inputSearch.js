@@ -8,7 +8,7 @@ const InputSearch = React.forwardRef(function inputSearch(props, ref) {
     '::-webkit-search-cancel-button': {
       WebkitAppearance: 'none'
     },
-    webkitAppearance: 'none',
+    WebkitAppearance: 'none',
     width: 'calc(100% - 2px)',
     height: '100%',
     fontSize: `${size}px`,
