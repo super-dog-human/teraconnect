@@ -31,8 +31,11 @@ export default class AvatarLoader {
     await this._setupAvatar(avatar)
 
     this._setDefaultAnimation()
+    const dom = this._createDom()
 
-    return this._createDom()
+    this.setDefaultPose(avatar)
+
+    return dom
   }
 
   setLightColor(color, intensity) {
@@ -221,8 +224,6 @@ export default class AvatarLoader {
         })
       })
     })
-
-    this.setDefaultPose(avatar)
 
     this.scene.add(this.vrm.scene)
   }

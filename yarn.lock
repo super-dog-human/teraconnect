@@ -505,10 +505,10 @@
   resolved "https://registry.yarnpkg.com/@panva/asn1.js/-/asn1.js-1.0.0.tgz#dd55ae7b8129e02049f009408b97c61ccf9032f6"
   integrity sha512-UdkG3mLEqXgnlKsWanWcgb6dOjUzJ+XC5f+aWw30qrtjxeNUSfKX1cd5FBzOaXQumoe9nIqeZUvrRJS03HCCtw==
 
-"@pixiv/three-vrm@^0.6.2":
-  version "0.6.6"
-  resolved "https://registry.yarnpkg.com/@pixiv/three-vrm/-/three-vrm-0.6.6.tgz#1ddeb08b92e3c0fb5ad18db814553a0fb6a26ee0"
-  integrity sha512-bCyV/BUwABCvPXhp/YPn5m0uQo9+Se/MxmsUVeiuKmHF06Mc3Igy/awMaUQnAS8yu/9GAu3fAxSk917MhirQxQ==
+"@pixiv/three-vrm@^0.5.6":
+  version "0.5.6"
+  resolved "https://registry.yarnpkg.com/@pixiv/three-vrm/-/three-vrm-0.5.6.tgz#84aa56841387c842d2ab70fdf9fba70255eeba00"
+  integrity sha512-0DGCE9jZYKG/1ZT7shSWuBzf+1W3vTSsDot9vi2lYSbPL6+ZKmrYdqAt8MNhfLkyhZq2x3crfHs103vMSAOBiA==
 
 "@react-spring/animated@~9.2.0":
   version "9.2.4"

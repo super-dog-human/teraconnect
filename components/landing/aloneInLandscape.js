@@ -3,6 +3,12 @@ import React from 'react'
 import { css } from '@emotion/core'
 import AloneAvatar from '../avatar/aloneAvatar'
 
+const AloneInLandscape = () => (
+  <div css={bodyStyle}>
+    <AloneAvatar />
+  </div>
+)
+
 const bodyStyle = css({
   width: '100%',
   height: '450px',
@@ -13,11 +19,5 @@ const bodyStyle = css({
   backgroundPositionX: 'center',
   backgroundPositionY: 'bottom'
 })
-
-const AloneInLandscape = () => (
-  <div css={bodyStyle}>
-    <AloneAvatar />
-  </div>
-)
 
 export default AloneInLandscape
