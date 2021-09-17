@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { GLTFLoader } from 'ThreejsExample/jsm/loaders/GLTFLoader'
 import { VRM, VRMSchema } from '@pixiv/three-vrm'
-import * as Const from '../constants'
+import * as Const from './constants'
 
 const raycaster = new THREE.Raycaster()
 const mousePosition = new THREE.Vector2()
@@ -20,7 +20,7 @@ export default class AvatarLoader {
     this.scene = new THREE.Scene()
     this.renderer
     this.animationMixer
-    this.animationClip = {}
+    this.animationAction = {}
     this.light
   }
 
@@ -77,12 +77,12 @@ export default class AvatarLoader {
   }
 
   switchSpeaking(isSpeaking) {
-    if (!this.animationClip.speaking) return
+    if (!this.animationAction.speaking) return
 
     if (isSpeaking) {
-      this.animationClip.speaking.play()
+      this.animationAction.speaking.play()
     } else {
-      this.animationClip.speaking.stop()
+      this.animationAction.speaking.stop()
     }
   }
 
@@ -103,7 +103,7 @@ export default class AvatarLoader {
     this.renderer.render(this.scene, this.camera)
   }
 
-  clearBeforeUnload() {
+  clearCurrent() {
     if (this.scene) {
       this.scene.remove(this.scene.children)
     }
@@ -120,54 +120,56 @@ export default class AvatarLoader {
   }
 
   setMovingAnimation({ durationSec, startPositions, destinationPositions, animations }) {
-    if (this.animationClip.moving) this.animationClip.moving.stop()
+    if (this.animationAction.moving) this.animationAction.moving.stop()
 
     const rotationStartSec = durationSec > 0.2 ? durationSec - 0.2 : durationSec
 
     this.vrm.scene.position.set(...startPositions)
     const track = new THREE.VectorKeyframeTrack('.position', [0, rotationStartSec, durationSec], [...startPositions, ...destinationPositions, ...destinationPositions])
     const movingClip = new THREE.AnimationClip('moving', durationSec, [track])
-    this.animationClip.moving = this.animationMixer.clipAction(movingClip)
-    this.animationClip.moving.setLoop(THREE.LoopOnce)
-    this.animationClip.moving.clampWhenFinished = true
-    this.animationClip.moving.play()
+    this.animationAction.moving = this.animationMixer.clipAction(movingClip)
+    this.animationAction.moving.setLoop(THREE.LoopOnce)
+    this.animationAction.moving.clampWhenFinished = true
+    this.animationAction.moving.play()
 
-    if (this.animationClip.movingRotation) this.animationClip.movingRotation.stop()
+    if (this.animationAction.movingRotation) this.animationAction.movingRotation.stop()
     const startX2D = new THREE.Vector3(...startPositions).clone().project(this.camera).x
     const destX2D = new THREE.Vector3(...destinationPositions).clone().project(this.camera).x
     const startX = this._bodyRotationByXPosition(startX2D > destX2D ? 1 : -1)
     const destinationX = this._bodyRotationByXPosition(destX2D)
     const rotationTrack = new THREE.VectorKeyframeTrack(`${this._getBone('hips').name}.rotation[y]`, [0, rotationStartSec, durationSec], [startX, startX, destinationX])
     const rotationClip = new THREE.AnimationClip('movingRotation', durationSec, [rotationTrack])
-    this.animationClip.movingRotation = this.animationMixer.clipAction(rotationClip)
-    this.animationClip.movingRotation.setLoop(THREE.LoopOnce)
-    this.animationClip.movingRotation.clampWhenFinished = true
-    this.animationClip.movingRotation.play()
+    this.animationAction.movingRotation = this.animationMixer.clipAction(rotationClip)
+    this.animationAction.movingRotation.setLoop(THREE.LoopOnce)
+    this.animationAction.movingRotation.clampWhenFinished = true
+    this.animationAction.movingRotation.play()
 
-    if (this.animationClip.walking) this.animationClip.walking.stop()
+    if (this.animationAction.walking) this.animationAction.walking.stop()
     const clips = animations.map(a =>
       new THREE.VectorKeyframeTrack(`${this._getBone(a.boneName).name}.rotation[${a.axis}]`, a.keyTimes, a.rotations)
     )
     const walkingClip = new THREE.AnimationClip('walking', animations[0].durationSec, clips)
-    this.animationClip.walking = this.animationMixer.clipAction(walkingClip)
-    this.animationClip.walking.setLoop(THREE.LoopRepeat)
-    this.animationClip.walking.play()
+    this.animationAction.walking = this.animationMixer.clipAction(walkingClip)
+    this.animationAction.walking.setLoop(THREE.LoopRepeat)
+    this.animationAction.walking.play()
   }
 
   removeMovingAnimation() {
-    if (this.animationClip.moving) this.animationClip.moving.stop()
-    if (this.animationClip.movingRotation) this.animationClip.movingRotation.stop()
-    if (this.animationClip.walking) this.animationClip.walking.stop()
-    delete this.animationClip.moving
-    delete this.animationClip.movingRotation
-    delete this.animationClip.walking
+    if (this.animationAction.moving) this.animationAction.moving.stop()
+    if (this.animationAction.movingRotation) this.animationAction.movingRotation.stop()
+    if (this.animationAction.walking) this.animationAction.walking.stop()
+    delete this.animationAction.moving
+    delete this.animationAction.movingRotation
+    delete this.animationAction.walking
   }
 
   play() {
+    if (!this.animationMixer) return
     this.animationMixer.timeScale = 1
   }
 
   stop() {
+    if (!this.animationMixer) return
     this.animationMixer.timeScale = 0
   }
 
@@ -285,8 +287,8 @@ export default class AvatarLoader {
     )
 
     const clip = new THREE.AnimationClip('breath', 6.0, [headTrack, chestTrack])
-    this.animationClip = {}
-    this.animationClip.initial = this.animationMixer.clipAction(clip)
+    this.animationAction = {}
+    this.animationAction.initial = this.animationMixer.clipAction(clip)
   }
 
   _setSpeakingAnimation() {
@@ -299,11 +301,11 @@ export default class AvatarLoader {
         values: [0, 1.0, 0],
       }],
     })
-    this.animationClip.speaking = this.animationMixer.clipAction(clip)
+    this.animationAction.speaking = this.animationMixer.clipAction(clip)
   }
 
   _initAnimationPlaying() {
-    this.animationClip.initial.paused = false
-    this.animationClip.initial.play() // playを実行しても、mixerのtimescaleが0ならアニメーションは開始されない
+    this.animationAction.initial.paused = false
+    this.animationAction.initial.play() // playを実行しても、mixerのtimescaleが0ならアニメーションは開始されない
   }
 }

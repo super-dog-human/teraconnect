@@ -1,11 +1,12 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
 import { Clock, Vector3 } from 'three'
-import AvatarLoader from '../../avatar/loader'
+import AvatarLoader from '../../avatarLoader'
 import { switchSwipable, mouseOrTouchPositions, rgbToHex } from '../../utils'
 
 export default function useAvatar({ setIsLoading, isSpeaking, hasResize, movingCallback }) {
   const clock = new Clock()
   const avatarRef = useRef()
+  const animationIDRef = useRef()
   const startDraggingTimeRef = useRef()
   const isDraggingRef = useRef(false)
   const [config, setConfig] = useState({})
@@ -107,8 +108,14 @@ export default function useAvatar({ setIsLoading, isSpeaking, hasResize, movingC
 
   function animate() {
     avatarRef.current.animate(clock.getDelta())
-    requestAnimationFrame(() => animate())
+    animationIDRef.current = requestAnimationFrame(() => animate())
   }
+
+  const cleanAvatar = useCallback(() => {
+    cancelAnimationFrame(animationIDRef.current)
+    avatarRef.current.clearCurrent()
+    removeCurrentCanvas()
+  }, [])
 
   function removeCurrentCanvas() {
     if (!containerRef.current) return
@@ -121,10 +128,9 @@ export default function useAvatar({ setIsLoading, isSpeaking, hasResize, movingC
   useEffect(() => {
     avatarRef.current = new AvatarLoader()
     return () => {
-      avatarRef.current.clearBeforeUnload()
-      removeCurrentCanvas()
+      cleanAvatar()
     }
-  }, [])
+  }, [cleanAvatar])
 
   useEffect(() => {
     const keys = Object.keys(config)
@@ -154,5 +160,5 @@ export default function useAvatar({ setIsLoading, isSpeaking, hasResize, movingC
     changeScreenSize()
   }, [hasResize, changeScreenSize])
 
-  return { setAvatarConfig: setConfig, avatarRef: containerRef, startDragging, inDragging, endDragging, setPosition, resetPosition, startMoving, stopMoving }
+  return { setAvatarConfig: setConfig, avatarRef: containerRef, cleanAvatar, startDragging, inDragging, endDragging, setPosition, resetPosition, startMoving, stopMoving }
 }

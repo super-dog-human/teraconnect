@@ -110,8 +110,6 @@ export default function useYoutubePlayer({ durationSec, embeddings }) {
 
       return hasDiff ? [...youTubes] : youTubes
     })
-
-
   }, [currentTimeYouTubes])
 
   const preloadYouTubes = useCallback(() => {
@@ -162,7 +160,7 @@ export default function useYoutubePlayer({ durationSec, embeddings }) {
     })
   }, [])
 
-  function seekYoutube(e, allowSeekAhead) {
+  const seekYoutube = useCallback((e, allowSeekAhead) => {
     elapsedTimeRef.current = parseFloat(e.target.value)
 
     const shouldResume = isPlaying
@@ -198,7 +196,7 @@ export default function useYoutubePlayer({ durationSec, embeddings }) {
 
       return [...youTubes]
     })
-  }
+  }, [isPlaying, stopAndHidePlayer])
 
   const updateYouTube = useCallback((incrementalTime) => {
     const newElapsedTime = elapsedTimeRef.current + incrementalTime
@@ -270,6 +268,14 @@ export default function useYoutubePlayer({ durationSec, embeddings }) {
       }
     }
   }, [youTubes, isPlaying, currentTimeYouTubes])
+
+  useEffect(() => {
+    if (embeddings.length > 0) return
+    // 別の授業に遷移時、embeddingsがクリアされるタイミングで動画を停止し、経過時間をリセット
+    stopYouTube()
+    cleanAllPlayers()
+    elapsedTimeRef.current = 0
+  }, [embeddings, stopYouTube, cleanAllPlayers])
 
   return { isLoading, isPlaying, youTubeIDs, playYouTube: playIfNeeded, stopYouTube, updateYouTube, seekYoutube }
 }

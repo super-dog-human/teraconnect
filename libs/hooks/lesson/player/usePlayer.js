@@ -6,8 +6,7 @@ const decoder = new ZSTDDecoder()
 
 export default function usePlayer({ id, viewKey, showDialog }) {
   const { fetch } = useFetch()
-  const lessonLoadingRef = useRef(false)
-  const initialLoadingRef = useRef(false)
+  const loadedRef = useRef(false)
   const [isLoading, setIsLoading] = useState(true)
   const [lesson, setLesson] = useState()
   const [errorStatus, setErrorStatus] = useState()
@@ -60,31 +59,53 @@ export default function usePlayer({ id, viewKey, showDialog }) {
   }, [lesson?.bodyURL, fetchGraphicURLs])
 
   useEffect(() => {
-    if (lessonLoadingRef.current) return
-    lessonLoadingRef.current = true
     fetchLesson()
   }, [fetchLesson])
 
   useEffect(() => {
-    if (!lesson) return
-    if (initialLoadingRef.current) return
-    initialLoadingRef.current = true
+    if (loadedRef.current) return
+
     if (errorStatus) {
+      loadedRef.current = true
+
+      setIsLoading(false)
       showDialog({
         title: '閲覧エラー',
         message: '授業が存在しないか、閲覧キーが不足しています。',
-        canDismiss: false,
+        canDismiss: true,
       })
-    } else if (lesson.published === '0001-01-01T00:00:00Z') {
+    } else if (lesson?.published === '0001-01-01T00:00:00Z') {
+      loadedRef.current = true
+
+      setIsLoading(false)
       showDialog({
         title: '授業の準備中',
         message: '授業を準備しています。10分ほど経ってから再度読み込んでください。',
-        canDismiss: false,
+        canDismiss: true,
       })
-    } else {
+    } else if (lesson) {
+      loadedRef.current = true
+
       fetchBody()
     }
   }, [errorStatus, lesson, showDialog, fetchBody])
 
-  return { lesson, isLoading, durationSec, backgroundImageURL, avatars, drawings, embeddings, graphics, speeches, graphicURLs, speechURL: lesson?.speechURL || '' }
+  function initializeLesson() {
+    // 初回は必要ないが、別の授業に遷移した際に現在のデータをリセットする必要がある
+    setLesson()
+    setErrorStatus()
+    setDurationSec(0)
+    setBackgroundImageURL('')
+    setAvatars([])
+    setDrawings([])
+    setEmbeddings([])
+    setGraphics([])
+    setGraphicURLs({})
+    setSpeeches([])
+
+    setIsLoading(true)
+    loadedRef.current = false
+  }
+
+  return { lesson, isLoading, durationSec, backgroundImageURL, avatars, drawings, embeddings, graphics, speeches, graphicURLs, speechURL: lesson?.speechURL || '', initializeLesson }
 }

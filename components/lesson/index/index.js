@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useRef, useEffect } from 'react'
+import React, { useState, useRef, useCallback, useEffect } from 'react'
 import { css } from '@emotion/core'
 import LessonPlayer from '../player/'
 import Description from './description'
@@ -21,41 +21,54 @@ import { ImageViewerProvider } from '../../../libs/contexts/imageViewerContext'
 
 export default function Lesson({ id, viewKey }) {
   const { showDialog } = useDialogContext()
+  const [shouldRefleshPlayer, setShouldRefleshPlayer] = useState(false)
   const containerRef = useRef()
   const preCanPlayRef = useRef()
   const { hasResize } = useResizeDetector(containerRef)
   const shouldResumeRef = useRef(false)
-  const { lesson, isLoading: isBodyLoading, durationSec, backgroundImageURL, avatars, drawings, embeddings, graphics, speeches, graphicURLs, speechURL } = usePlayer({ id, viewKey, showDialog })
-  const { isLoading: isSpeechLoading, isPlaying: isSpeechPlaying, playSpeech, stopSpeech, updateSpeeche, seekSpeech }
-    = useSpeechPlayer({ url: speechURL, durationSec })
+  const { lesson, isLoading: isBodyLoading, durationSec, backgroundImageURL, avatars, drawings, embeddings, graphics, speeches, graphicURLs, speechURL, initializeLesson } = usePlayer({ id, viewKey, showDialog })
+  const { isLoading: isSpeechLoading, isPlaying: isSpeechPlaying, playSpeech, stopSpeech, updateSpeeche, seekSpeech } = useSpeechPlayer({ url: speechURL, durationSec })
   const { isLoading: isYouTubeLoading, isPlaying: isYouTubePlaying, youTubeIDs, playYouTube, stopYouTube, updateYouTube, seekYoutube } = useYoutubePlayer({ durationSec, embeddings })
-  const { isPlaying, isAvatarLoading, startPlaying, stopPlaying, handleSeekChange: handlePlayerSeekChange, ...playerProps }
+  const { isPlaying, isAvatarLoading, initializeElapsedTime, startPlaying, stopPlaying, handleSeekChange: handlePlayerSeekChange, ...playerProps }
     = useLessonPlayer({ durationSec, hasResize, avatar: lesson?.avatar, avatarLightColor: lesson?.avatarLightColor, avatars, drawings, embeddings, graphics, speeches, graphicURLs, updateSpeeches: updateSpeeche, updateYouTube })
 
-  function handlePlayButtonClick() {
+  const handlePlayButtonClick = useCallback(() => {
     if (isPlaying) {
+      stopPlaying()
+
       stopSpeech()
       stopYouTube()
-
-      stopPlaying()
     } else {
       startPlaying()
 
       playSpeech()
       playYouTube()
     }
-  }
+  }, [isPlaying, stopSpeech, stopYouTube, stopPlaying, startPlaying, playSpeech, playYouTube])
 
   function handleSeekChange(e) {
     handlePlayerSeekChange(e)
     seekYoutube(e, false)
   }
 
-  function handleSeekUp(e) {
+  const handleSeekUp = useCallback(e => {
     seekSpeech(e)
     seekYoutube(e, true)
     handlePlayerSeekChange(e)
-  }
+  }, [seekSpeech, seekYoutube, handlePlayerSeekChange])
+
+  useEffect(() => {
+    setShouldRefleshPlayer(true)
+  }, [id])
+
+  useEffect(() => {
+    if (!shouldRefleshPlayer) return
+    setShouldRefleshPlayer(false)
+
+    if (isPlaying) stopPlaying()
+    initializeElapsedTime()
+    initializeLesson()
+  }, [shouldRefleshPlayer, isPlaying, stopPlaying, initializeElapsedTime, initializeLesson])
 
   useEffect(() => {
     const canPlay = [isAvatarLoading, isBodyLoading, isSpeechLoading, isYouTubeLoading].every(l => !l)

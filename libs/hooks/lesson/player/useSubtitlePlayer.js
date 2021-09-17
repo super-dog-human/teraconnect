@@ -1,18 +1,10 @@
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 
-export default function useSubtitlePlayer({ startElapsedTime, durationSec, speeches }) {
+export default function useSubtitlePlayer({ elapsedTimeRef, speeches }) {
   const [subtitle, setSubtitle] = useState()
-  const elapsedTimeRef = useRef(startElapsedTime)
 
-  function initializeSubtitle() {
-    if (elapsedTimeRef.current >= startElapsedTime + durationSec) {
-      elapsedTimeRef.current = startElapsedTime
-    }
-  }
-
-  const updateSubtitle = useCallback(incrementalTime => {
-    const newElapsedTime = elapsedTimeRef.current + incrementalTime
-    const speech = speeches.slice().reverse().find(s => s.elapsedTime <= newElapsedTime && s.elapsedTime + s.durationSec >= newElapsedTime)
+  const updateSubtitle = useCallback(() => {
+    const speech = speeches.slice().reverse().find(s => s.elapsedTime <= elapsedTimeRef.current && s.elapsedTime + s.durationSec >= elapsedTimeRef.current)
     if (speech) {
       setSubtitle(subtitle => {
         const newSubtite = { body: speech.subtitle, caption: speech.caption }
@@ -25,14 +17,7 @@ export default function useSubtitlePlayer({ startElapsedTime, durationSec, speec
     } else {
       setSubtitle()
     }
-
-    if (newElapsedTime < startElapsedTime + durationSec) {
-      elapsedTimeRef.current = newElapsedTime
-    } else {
-      elapsedTimeRef.current = startElapsedTime + durationSec
-      return
-    }
-  }, [speeches, durationSec, startElapsedTime])
+  }, [elapsedTimeRef, speeches])
 
   function shouldUpdateState(subtitle, newSubtitle) {
     if (!subtitle) return true
@@ -42,8 +27,7 @@ export default function useSubtitlePlayer({ startElapsedTime, durationSec, speec
     })
   }
 
-  function seekSubtitle(e) {
-    elapsedTimeRef.current = startElapsedTime + parseFloat(e.target.value)
+  function seekSubtitle() {
     updateSubtitle(0)
   }
 
@@ -52,5 +36,5 @@ export default function useSubtitlePlayer({ startElapsedTime, durationSec, speec
     updateSubtitle(0)
   }, [speeches, updateSubtitle])
 
-  return { subtitle, initializeSubtitle, updateSubtitle, seekSubtitle }
+  return { subtitle, updateSubtitle, seekSubtitle }
 }

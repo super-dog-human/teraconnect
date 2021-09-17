@@ -8,16 +8,16 @@ import useSubtitlePlayer from './player/useSubtitlePlayer'
 import { useUnmount } from 'react-use'
 
 export default function useLessonPlayer({ startElapsedTime=0, durationSec, hasResize, avatar, avatarLightColor, avatars, drawings, embeddings, graphics, speeches, graphicURLs, sameTimeIndex, updateSpeeches, updateMusics, updateYouTube }) {
-  const animationRequestRef = useRef(0)
+  const animationIDRef = useRef(0)
   const elapsedTimeRef = useRef(startElapsedTime)
   const preStartElapsedTimeRef = useRef(startElapsedTime)
   const [isAvatarLoading, setIsAvatarLoading] = useState(!!avatars)
   const { isPlaying, setIsPlaying, playerElapsedTime, setPlayerElapsedTime, deltaTime, resetClock, switchClock } = usePlayerController()
-  const { avatarRef, initializeAvatar, updateAvatar, seekAvatar } = useAvatarPlayer({ isPlaying, isLoading: isAvatarLoading, setIsLoading: setIsAvatarLoading, startElapsedTime, durationSec, hasResize, avatar, avatarLightColor, avatars, speeches })
-  const { drawingRef, updateDrawing, initializeDrawing, finishDrawing, resetBeforeSeeking, resetBeforeUndo } = useDrawingPlayer({ drawings, sameTimeIndex, startElapsedTime, elapsedTimeRef })
-  const { geoGebra, initializeGeoGebra, seekEmbedding, updateGeoGebra } = useGeoGebraPlayer({ durationSec, embeddings })
-  const { graphic, initializeGraphic, updateGraphic, seekGraphic } = useGraphicPlayer({ startElapsedTime, durationSec, graphics, graphicURLs })
-  const { subtitle, initializeSubtitle, updateSubtitle, seekSubtitle } = useSubtitlePlayer({ startElapsedTime, durationSec, speeches })
+  const { avatarRef, initializeAvatar, updateAvatar, seekAvatar } = useAvatarPlayer({ isPlaying, isLoading: isAvatarLoading, setIsLoading: setIsAvatarLoading, durationSec, elapsedTimeRef, hasResize, avatar, avatarLightColor, avatars, speeches })
+  const { drawingRef, updateDrawing, initializeDrawing, seekDrawing, resetBeforeUndo } = useDrawingPlayer({ drawings, sameTimeIndex, durationSec, startElapsedTime, elapsedTimeRef })
+  const { geoGebra, seekEmbedding, updateGeoGebra } = useGeoGebraPlayer({ elapsedTimeRef, embeddings })
+  const { graphic, updateGraphic, seekGraphic } = useGraphicPlayer({ elapsedTimeRef, graphics, graphicURLs })
+  const { subtitle, updateSubtitle, seekSubtitle } = useSubtitlePlayer({ elapsedTimeRef, speeches })
 
   useUnmount(() => {
     if (isPlaying) stopPlaying()
@@ -34,11 +34,8 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, hasRe
     }
 
     if (elapsedTimeRef.current === startElapsedTime) {
-      if (avatars) initializeAvatar()
+      if (avatar && avatars) initializeAvatar()
       if (drawings) initializeDrawing()
-      if (embeddings) initializeGeoGebra()
-      if (graphics) initializeGraphic()
-      if (speeches) initializeSubtitle()
     }
 
     playFrame()
@@ -48,9 +45,9 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, hasRe
     setIsPlaying(false)
     switchClock(false)
 
-    if (animationRequestRef.current !== 0) {
-      cancelAnimationFrame(animationRequestRef.current)
-      animationRequestRef.current = 0
+    if (animationIDRef.current !== 0) {
+      cancelAnimationFrame(animationIDRef.current)
+      animationIDRef.current = 0
     }
   }, [setIsPlaying, switchClock])
 
@@ -60,32 +57,31 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, hasRe
     if (elapsedTimeRef.current + incrementalTime - startElapsedTime > durationSec) {
       incrementalTime = startElapsedTime + durationSec - elapsedTimeRef.current // 経過時間の積算が収録時間を超えてしまう場合の調整
     } else {
-      animationRequestRef.current = requestAnimationFrame(playFrame)
+      animationIDRef.current = requestAnimationFrame(playFrame)
     }
 
-    elapsedTimeRef.current += incrementalTime
+    const newElapsedTime = elapsedTimeRef.current + incrementalTime
 
-    if (elapsedTimeRef.current <= startElapsedTime + durationSec) {
-      if (avatars) updateAvatar(incrementalTime)
-      if (drawings) updateDrawing(incrementalTime)
-      if (embeddings) updateGeoGebra(incrementalTime)
-      if (graphics) updateGraphic(incrementalTime)
-      if (speeches) updateSubtitle(incrementalTime)
+    if (newElapsedTime <= startElapsedTime + durationSec) {
+      elapsedTimeRef.current = newElapsedTime
+
+      if (avatar && avatars) updateAvatar()
+      if (drawings) updateDrawing()
+      if (embeddings) updateGeoGebra()
+      if (graphics) updateGraphic()
+      if (speeches) updateSubtitle()
       if (updateSpeeches) updateSpeeches(incrementalTime)
       if (updateMusics) updateMusics(incrementalTime)
       if (updateYouTube) updateYouTube(incrementalTime)
       updatePlayerElapsedTime()
     }
 
-    if (elapsedTimeRef.current >= startElapsedTime + durationSec) {
+    if (elapsedTimeRef.current === startElapsedTime + durationSec) {
       finishPlaying()
-      return
     }
   }
 
   function finishPlaying() {
-    if (drawings) finishDrawing()
-
     stopPlaying()
     resetClock()
   }
@@ -109,11 +105,11 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, hasRe
     // プレイヤーからのelapsedTimeは相対時間なので開始時間を加算する
     const elapsedTime = startElapsedTime + parseFloat(e.target.value)
 
-    if (avatars) seekAvatar(e)
-    if (drawings) resetBeforeSeeking()
-    if (embeddings) seekEmbedding(e)
-    if (graphics) seekGraphic(e)
-    if (speeches) seekSubtitle(e)
+    if (avatar && avatars) seekAvatar()
+    if (drawings) seekDrawing()
+    if (embeddings) seekEmbedding()
+    if (graphics) seekGraphic()
+    if (speeches) seekSubtitle()
 
     elapsedTimeRef.current = elapsedTime
     updatePlayerElapsedTime()
@@ -124,6 +120,17 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, hasRe
       updateDrawing(0)
     }
   }
+
+  const initializeElapsedTime = useCallback(() => {
+    // 初回読み込み時は必要ないが、別の授業に遷移した場合に経過時間のリセットが必要になる
+    elapsedTimeRef.current = startElapsedTime
+    setPlayerElapsedTime(0)
+    seekAvatar()
+    seekDrawing()
+    seekEmbedding()
+    seekGraphic()
+    seekSubtitle()
+  }, [elapsedTimeRef, startElapsedTime, setPlayerElapsedTime, seekAvatar, seekDrawing, seekEmbedding, seekGraphic, seekSubtitle])
 
   useEffect(() => {
     // drawingの開始時間を変更すると、再生中の時間がずれるので停止して初期位置に戻す
@@ -136,5 +143,5 @@ export default function useLessonPlayer({ startElapsedTime=0, durationSec, hasRe
   }, [startElapsedTime, stopPlaying, updatePlayerElapsedTime])
 
   return { avatarRef, drawingRef, isPlaying, isAvatarLoading, playerElapsedTime, geoGebra, graphic, subtitle,
-    setIsPlaying, startPlaying, stopPlaying, getElapsedTime, resetBeforeUndo, handleSeekChange }
+    setIsPlaying, startPlaying, stopPlaying, getElapsedTime, initializeElapsedTime, resetBeforeUndo, handleSeekChange }
 }

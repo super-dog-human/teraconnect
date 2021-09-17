@@ -3,7 +3,7 @@ import { drawToCanvas, clearCanvas } from '../../drawingUtils'
 import useDrawingPicture from './useDrawingPicture'
 import { deepCopy } from '../../utils'
 
-export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElapsedTime, elapsedTimeRef }) {
+export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, durationSec, startElapsedTime, elapsedTimeRef }) {
   const [didUpdateDrawings, setDidUpdateDrawings] = useState(false)
   const canvasRef = useRef()
   const canvasCtxRef = useRef()
@@ -50,7 +50,7 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
     preUndoRef.current = { drawingIndex, unitIndex }
   }, [sameTimeIndex, drawings, startElapsedTime, drawPicture])
 
-  const draw = useCallback(incrementalTime =>{
+  const draw = useCallback(() =>{
     const targetDrawings = []
     if (sameTimeIndex >= 0) {
       // 編集中の一部再生
@@ -61,20 +61,19 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
     }
 
     targetDrawings.forEach((drawing, drawingIndex) => {
-      const currentElapsedTime = elapsedTimeRef.current + incrementalTime
-      if (currentElapsedTime < drawing.elapsedTime) return
+      if (elapsedTimeRef.current < drawing.elapsedTime) return
 
       switch(drawing.action) {
       case 'draw':
         drawing.units.forEach((unit, unitIndex) => {
-          if (currentElapsedTime < unit.elapsedTime) return
+          if (elapsedTimeRef.current < unit.elapsedTime) return
 
           if (unit.action === 'draw') {
             let positionIndex
-            if (currentElapsedTime < unit.elapsedTime + unit.durationSec) {
+            if (elapsedTimeRef.current < unit.elapsedTime + unit.durationSec) {
               // 経過時間がunitの途中までなら、時間を案分して描画するstrokeの数を求める
               const timePerUnit = unit.stroke.positions.length / unit.durationSec
-              const diffTime = currentElapsedTime - unit.elapsedTime
+              const diffTime = elapsedTimeRef.current - unit.elapsedTime
               positionIndex = Math.round(timePerUnit * diffTime)
             } else {
               // 経過時間がunitの終端ちょうどか次のunitをまたいでいるなら、このunitのstrokeは全数が対象になる
@@ -84,7 +83,7 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
               drawStrokePart({ stroke: unit.stroke, drawingIndex, unitIndex, positionIndex })
             }
           } else {
-            undo({ drawingIndex, unitIndex, currentElapsedTime })
+            undo({ drawingIndex, unitIndex, currentElapsedTime: elapsedTimeRef.current })
           }
         })
         return
@@ -102,7 +101,11 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
         return
       }
     })
-  }, [sameTimeIndex, drawings, startElapsedTime, elapsedTimeRef, undo])
+
+    if (elapsedTimeRef.current === startElapsedTime + durationSec) {
+      clearHistory()
+    }
+  }, [sameTimeIndex, drawings, startElapsedTime, elapsedTimeRef, durationSec, undo])
 
   function drawStrokePart({ stroke, drawingIndex, unitIndex, positionIndex }) {
     if (drawingIndex < preStrokeRef.current.drawingIndex) return
@@ -121,12 +124,7 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
     clearHistory()
   }
 
-  function finishDrawing() {
-    draw(0) // 経過時間が終了時間に達した際、描写しきれなかったものが発生しうるので最後にもう一度描写する
-    clearHistory()
-  }
-
-  function resetBeforeSeeking() {
+  function seekDrawing() {
     setPictureBeforeDrawing()
     clearHistory()
   }
@@ -155,8 +153,8 @@ export default function useDrawingPlayer({ drawings, sameTimeIndex=-1, startElap
     setDidUpdateDrawings(false)
     setPictureBeforeDrawing()
     clearHistory()
-    draw(0)
+    draw()
   }, [didUpdateDrawings, setPictureBeforeDrawing, draw])
 
-  return { drawingRef: canvasRef, updateDrawing: draw, initializeDrawing, finishDrawing, resetBeforeSeeking, resetBeforeUndo: setCompletedPicture }
+  return { drawingRef: canvasRef, updateDrawing: draw, initializeDrawing, seekDrawing, resetBeforeUndo: setCompletedPicture }
 }

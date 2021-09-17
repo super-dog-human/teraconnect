@@ -2,20 +2,12 @@ import { useState, useRef, useCallback, useEffect } from 'react'
 
 const geogebraURL = 'https://www.geogebra.org/material/iframe/rc/false/ai/false/sdz/false/smb/false/stb/false/stbh/false/ld/false/sri/false/ctl/false/sfsb/false/szb/false/id/'
 
-export default function useGeoGebraPlayer({ durationSec, embeddings }) {
+export default function useGeoGebraPlayer({ elapsedTimeRef, embeddings }) {
   const [geoGebra, setGeoGebra] = useState()
-  const elapsedTimeRef = useRef(0)
   const initializedRef = useRef(false)
 
-  function initializeGeoGebra() {
-    if (elapsedTimeRef.current >= durationSec) {
-      elapsedTimeRef.current = 0
-    }
-  }
-
-  const updateGeoGebra = useCallback(incrementalTime => {
-    const newElapsedTime = elapsedTimeRef.current + incrementalTime
-    const newEmbedding = embeddings.filter(e => e.serviceName === 'geogebra').reverse().find(e => e.elapsedTime <= newElapsedTime)
+  const updateGeoGebra = useCallback(() => {
+    const newEmbedding = embeddings.filter(e => e.serviceName === 'geogebra').reverse().find(e => e.elapsedTime <= elapsedTimeRef.current)
 
     setGeoGebra(currentEmbedding => {
       // requestAnimationFrame経由で呼ばれた場合、最新のstateが取得できないのでsetState中でembeddingを取得する
@@ -29,20 +21,13 @@ export default function useGeoGebraPlayer({ durationSec, embeddings }) {
         return
       }
     })
-
-    if (newElapsedTime < durationSec) {
-      elapsedTimeRef.current = newElapsedTime
-    } else {
-      elapsedTimeRef.current = durationSec
-    }
-  }, [durationSec, embeddings])
+  }, [elapsedTimeRef, embeddings])
 
   function createURL(embedding) {
     return geogebraURL + embedding.contentID
   }
 
-  function seekEmbedding(e) {
-    elapsedTimeRef.current = parseFloat(e.target.value)
+  function seekEmbedding() {
     setGeoGebra()
     updateGeoGebra(0)
   }
@@ -74,5 +59,5 @@ export default function useGeoGebraPlayer({ durationSec, embeddings }) {
     updateGeoGebra(0)
   }, [embeddings, updateGeoGebra])
 
-  return { geoGebra, initializeGeoGebra, seekEmbedding, updateGeoGebra }
+  return { geoGebra, seekEmbedding, updateGeoGebra }
 }

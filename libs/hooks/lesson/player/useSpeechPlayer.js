@@ -11,8 +11,7 @@ export default function useSpeechPlayer({ url, durationSec } ) {
     if (isPlaying) stopSpeech()
   })
 
-
-  async function playSpeech() {
+  const playSpeech = useCallback(async() => {
     if (elapsedTimeRef.current >= durationSec) {
       elapsedTimeRef.current = 0
       audioRef.current.currentTime = 0
@@ -20,10 +19,12 @@ export default function useSpeechPlayer({ url, durationSec } ) {
 
     setIsPlaying(true)
     await audioRef.current.play()
-  }
+  }, [durationSec])
 
   const stopSpeech = useCallback(() => {
-    audioRef.current.pause()
+    if (audioRef.current) {
+      audioRef.current.pause()
+    }
     setIsPlaying(false)
   }, [])
 
@@ -51,7 +52,7 @@ export default function useSpeechPlayer({ url, durationSec } ) {
     audioRef.current.load() // モバイル環境用
   }, [url])
 
-  function seekSpeech(e) {
+  const seekSpeech = useCallback(e => {
     let shouldResume = false
     if (isPlaying) {
       stopSpeech()
@@ -64,13 +65,21 @@ export default function useSpeechPlayer({ url, durationSec } ) {
     if (shouldResume) {
       playSpeech()
     }
-  }
+  }, [isPlaying, stopSpeech, playSpeech])
 
   useEffect(() => {
+    if (!url) return
     if (audioRef.current === undefined || audioRef.current.src !== url) {
       createAudio()
     }
   }, [url, createAudio])
+
+  useEffect(() => {
+    if (url) return
+    // 別の授業に遷移時、urlがクリアされるタイミングで現在の音声を停止し、経過時間をリセット
+    stopSpeech()
+    elapsedTimeRef.current = 0
+  }, [url, stopSpeech])
 
   return { isLoading, isPlaying, playSpeech, stopSpeech, updateSpeeche, seekSpeech }
 }

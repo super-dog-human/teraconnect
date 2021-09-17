@@ -2,27 +2,21 @@ import { useState, useRef, useCallback, useEffect } from 'react'
 import useAvatar from '../useAvatar'
 import { equalArrays } from '../../../utils'
 
-export default function useAvatarPlayer({ isPlaying, isLoading, setIsLoading, startElapsedTime, durationSec, hasResize, avatar, avatarLightColor, avatars, speeches }) {
+export default function useAvatarPlayer({ isPlaying, isLoading, setIsLoading, durationSec, elapsedTimeRef, hasResize, avatar, avatarLightColor, avatars, speeches }) {
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [shouldUpdateAvatar, setShouldUpdateAvatar] = useState(false)
   const preMovingRef = useRef()
   const prePositiosnRef = useRef([])
-  const { setAvatarConfig, avatarRef, setPosition, resetPosition, startMoving, stopMoving } = useAvatar({ setIsLoading, isSpeaking, hasResize })
-  const elapsedTimeRef = useRef(startElapsedTime)
+  const { setAvatarConfig, avatarRef, cleanAvatar, setPosition, resetPosition, startMoving, stopMoving } = useAvatar({ setIsLoading, isSpeaking, hasResize })
 
   function initializeAvatar() {
-    if (elapsedTimeRef.current >= startElapsedTime + durationSec) {
-      elapsedTimeRef.current = startElapsedTime
-      stopMoving()
-      resetPosition(avatar)
-    }
+    stopMoving()
+    resetPosition(avatar)
   }
 
-  const updateAvatar = useCallback(incrementalTime => {
-    const newElapsedTime = elapsedTimeRef.current + incrementalTime
-
+  const updateAvatar = useCallback(() => {
     const reversedAvatars = avatars.slice().reverse()
-    const indexFromLast = reversedAvatars.findIndex(a => a.elapsedTime <= newElapsedTime && a.elapsedTime + a.durationSec >= newElapsedTime)
+    const indexFromLast = reversedAvatars.findIndex(a => a.elapsedTime <= elapsedTimeRef.current && a.elapsedTime + a.durationSec >= elapsedTimeRef.current)
     const newMoving = reversedAvatars[indexFromLast]
     const lastMoving = reversedAvatars[indexFromLast + 1]
 
@@ -36,13 +30,13 @@ export default function useAvatarPlayer({ isPlaying, isLoading, setIsLoading, st
         startPositions = avatar.config.positions
       }
 
-      const realDurationSec = newMoving.elapsedTime + newMoving.durationSec - newElapsedTime
+      const realDurationSec = newMoving.elapsedTime + newMoving.durationSec - elapsedTimeRef.current
       startMoving({ durationSec: newMoving.durationSec, realDurationSec, startPositions, destinationPositions: newMoving.positions, animations: avatar.config.walkingAnimations })
       preMovingRef.current = newMoving
     } else if (newMoving && lastMoving) {
       // 自身の一つ前の移動後の位置
     } else {
-      const lastMoving = reversedAvatars.find(a => a.elapsedTime + a.durationSec < newElapsedTime)
+      const lastMoving = reversedAvatars.find(a => a.elapsedTime + a.durationSec < elapsedTimeRef.current)
       if (lastMoving && !equalArrays(prePositiosnRef.current, lastMoving.positions)) {
         stopMoving()
         setPosition(lastMoving.positions)
@@ -51,37 +45,40 @@ export default function useAvatarPlayer({ isPlaying, isLoading, setIsLoading, st
     }
 
     const isSpeakingNow = speeches.some(speech => (
-      speech.elapsedTime <= newElapsedTime && speech.elapsedTime + speech.durationSec >= newElapsedTime
+      speech.elapsedTime <= elapsedTimeRef.current && speech.elapsedTime + speech.durationSec >= elapsedTimeRef.current
     ))
     setIsSpeaking(isSpeakingNow)
 
-    if (newElapsedTime < startElapsedTime + durationSec) {
-      elapsedTimeRef.current = newElapsedTime
-    } else {
-      elapsedTimeRef.current = startElapsedTime + durationSec
+    if (elapsedTimeRef.current === durationSec) {
       preMovingRef.current = null
       prePositiosnRef.current = []
     }
-  }, [durationSec, startElapsedTime, avatars, avatar?.config, speeches, startMoving, stopMoving, setPosition])
+  }, [durationSec, elapsedTimeRef, avatars, avatar?.config, speeches, startMoving, stopMoving, setPosition])
 
-  function seekAvatar(e) {
-    elapsedTimeRef.current = startElapsedTime + parseFloat(e.target.value)
+  function seekAvatar() {
     preMovingRef.current = null
     prePositiosnRef.current = []
-    stopMoving()
-    resetPosition(avatar)
-    updateAvatar(0)
+    if (avatar) {
+      stopMoving()
+      resetPosition(avatar)
+      updateAvatar(0)
+    }
   }
 
   useEffect(() => {
+    if (!avatar) cleanAvatar() // 別授業に遷移した際、以前のアバターをクリアする
+  }, [avatar, cleanAvatar])
+
+  useEffect(() => {
     if (isLoading) return
+    if (!avatar) return
     if (!avatars) return
     if (isPlaying) {
       setAvatarConfig({ playAnimation: true })
     } else {
       setAvatarConfig({ stopAnimation: true })
     }
-  }, [isLoading, isPlaying, avatars, setAvatarConfig])
+  }, [isLoading, isPlaying, avatar, avatars, setAvatarConfig])
 
   useEffect(() => {
     if (!shouldUpdateAvatar) return

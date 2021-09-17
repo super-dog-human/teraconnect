@@ -24,7 +24,7 @@ export default function Description({ lesson }) {
             <Spacer width='20' />
             <div>
               <PlainText size='18' color='gray'>{lesson?.title}</PlainText><br />
-              <PlainText size='13' color='darkgray'>{lesson && formatDate(new Date(lesson?.published))} 更新</PlainText>
+              <PlainText size='13' color='darkgray'>{lesson && formatDate(new Date(lesson?.published)) + ' 更新'}</PlainText>
             </div>
           </Flex>
         </FlexItem>
