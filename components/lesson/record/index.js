@@ -77,6 +77,7 @@ const mainStyle = css({
   position: 'relative',
   width: '100%',
   height: '100%',
+  marginTop: '60px',
   backgroundColor: 'var(--back-movie-black)',
   userSelect: 'none',
 })

@@ -1,6 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
-import Footer from '../../components/footer'
+import Layout from '../../components/layout'
 import Lesson from '../../components/lesson/index'
 import fetchPublicLessonAsProps from '../../libs/middlewares/fetchPublicLessonAsProps'
 
@@ -9,8 +9,9 @@ const Page = ({ lesson, errorStatus }) => (
     <Head>
       <title>{lesson?.author?.name} の {lesson?.title} - TERACONNECT</title>
     </Head>
-    <Lesson lesson={lesson} errorStatus={errorStatus} />
-    <Footer />
+    <Layout>
+      <Lesson lesson={lesson} errorStatus={errorStatus} />
+    </Layout>
   </>
 )
 

@@ -3,7 +3,7 @@ import React from 'react'
 import { css } from '@emotion/core'
 import Image from 'next/image'
 import { useForm } from 'react-hook-form'
-import { useScreenClass } from 'react-grid-system'
+import useMobileDetector from '../../../libs/hooks/useMobileDetector'
 import useResourceLoader from '../../../libs/hooks/lesson/publishing/useResourceLoader'
 import useLessonPublishing from '../../../libs/hooks/lesson/publishing/useLessonPublishing'
 import useSynthesisVoiceEditor from '../../../libs/hooks/lesson/useSynthesisVoiceEditor'
@@ -38,7 +38,7 @@ import SynthesisVoiceConfig from '../../synthesisVoiceConfig'
 import { isDataURL } from '../../../libs/utils'
 
 export default function LessonPublishing({ lesson, material }) {
-  const screenClass = useScreenClass()
+  const isMobile = useMobileDetector()
   const { isLoading, subjects, categories, allLessons, allLessonOptions, bgImages, bgImageOptions, avatars, avatarOptions, handleSubjectChange: onSubjectChange } = useResourceLoader({ lesson })
   const { isUpdating, isUpdated, isDisabledPublsishing, sampleTextForSynthesisRef, setting, dispatchSetting, handleSubmitClick } = useSettingUpdater({ lesson, material, bgImages, isLoading })
   const defaultValues = { title: lesson.title, description: lesson.description, ...Object.fromEntries(lesson.references?.map((ref, i) => [`reference${i}`, ref.isbn]) || []) }
@@ -52,7 +52,7 @@ export default function LessonPublishing({ lesson, material }) {
       useLessonPublishing({ lesson, material, setFormValue: setValue, handleTitleInputChange, handleDescriptionTextChange, handleCategorySelectChange, isLoading, isUpdating, onSubjectChange, avatars, allLessons, setting, dispatchSetting })
   const { setLanguageCode, setName, setSpeakingRate, setPitch, setVolumeGainDb, playVoice, isSynthesizing } =
     useSynthesisVoiceEditor({ dispatchConfig: dispatchSetting, subtitle: sampleTextForSynthesisRef.current, synthesisConfig: setting.voiceSynthesisConfig, dispatchSetting })
-  const flexDirection = ['lg', 'xl', 'xxl'].includes(screenClass) ? 'row' : 'column'
+  const flexDirection = isMobile ? 'column' : 'row'
 
   return (
     <>
@@ -304,6 +304,7 @@ const mainStyle = css({
 
 const bodyStyle = css({
   margin: 'auto',
+  marginTop: '60px', // ヘッダ分をオフセット
   maxWidth: '900px',
   height: '100%',
 })

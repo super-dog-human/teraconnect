@@ -1,9 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import React, { useEffect, useState } from 'react'
-import Link from 'next/link'
 import { Highlight } from 'react-instantsearch-dom'
 import Image from 'next/image'
 import { css } from '@emotion/core'
+import PageLink from '../../pageLink'
 import Flex from '../../flex'
 import FlexItem from '../../flexItem'
 import Container from '../../container'
@@ -35,8 +35,7 @@ export default function LessonCard(hit) {
   return (
     <div css={containerStyle}>
       <Container width='300' height='410'>
-        <Link href={`/subjects/${hit.subjectID}/categories/${hit.categoryID}`} passHref>
-          <a>
+        <PageLink path={`/subjects/${hit.subjectID}/categories/${hit.categoryID}`}>
             <Flex>
               <PlainText color='gray' size='13'>
                 <Highlight hit={hit} attribute='subjectName' />
@@ -46,18 +45,16 @@ export default function LessonCard(hit) {
                 <Highlight hit={hit} attribute='categoryName'/>
               </PlainText>
             </Flex>
-          </a>
-        </Link>
+        </PageLink>
         <Spacer height='10' />
-        <Link href={'/lessons/' + hit.objectID} passHref>
+        <PageLink path={'/lessons/' + hit.objectID} passHref>
           <a>
             {!isThumbnailError && <img src={lessonImageURL + hit.objectID + '/thumbnail.png'} alt={hit.title} css={thumbnailStyle} onError={handleThumbnailError} />}
             {isThumbnailError && <Container width='300' height='169'><NoImage color='var(--soft-white)' backgroundColor='gray' /></Container>}
           </a>
-        </Link>
+        </PageLink>
         <Spacer height='5' />
-        <Link href={'/lessons/' + hit.objectID} passHref>
-          <a>
+        <PageLink path={'/lessons/' + hit.objectID}>
             <div css={omitOverflowStyle}>
               <PlainText color='gray' size='17'><Highlight hit={hit} attribute='title'/></PlainText>
             </div>
@@ -67,29 +64,24 @@ export default function LessonCard(hit) {
                 <PlainText color='gray' size='13'><Highlight hit={hit} attribute='description'/></PlainText>
               </div>
             </Container>
-          </a>
-        </Link>
+        </PageLink>
         <Spacer height='20' />
         <div>
           <Flex>
             <FlexItem column='3' flexBasis='36px'>
-              <Link href={'/users/' + hit.userID} passHref>
-                <a>
+              <PageLink path={'/users/' + hit.userID}>
                   <Container widht='36' height='36'>
                     <UserIcon id={hit.userID} />
                   </Container>
-                </a>
-              </Link>
+              </PageLink>
             </FlexItem>
             <FlexItem column='3' flexBasis='10px' />
             <FlexItem column='3'>
-              <Link href={'/users/' + hit.userID} passHref>
-                <a>
+              <PageLink path={'/users/' + hit.userID}>
                   <div css={userNameStyle}>
                     <PlainText color='gray' size='12'><Highlight hit={hit} attribute='userName'/></PlainText><br />
                   </div>
-                </a>
-              </Link>
+              </PageLink>
               <Spacer height='5' />
               <div css={clippingTextStyle}>
                 <PlainText color='gray'   size='13'><Highlight hit={bodyHit} attribute='body'/></PlainText>

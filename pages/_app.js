@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Script from 'next/script'
 import { useRouter } from 'next/router'
 import { Provider } from 'next-auth/client'
+import { ScreenClassProvider } from 'react-grid-system'
 import { ErrorDialogContext, ErrorDialogProvider } from '../libs/contexts/errorDialogContext'
 import ErrorBoundary from '../components/errorBoundary'
 import ErrorDialog from '../components/errorDialog'
@@ -37,19 +38,21 @@ export default function App ({ Component, pageProps }) {
       </Head>
       <Script src={youTubePlayerSrc} strategy="beforeInteractive" />
       <Provider session={pageProps.session}>
-        <ErrorDialogProvider>
-          <DialogProvider>
-            <ErrorDialogContext.Consumer>
-              {({ showError }) => (
-                <ErrorBoundary showError={showError}>
-                  <ErrorDialog />
-                  <Dialog />
-                  <Component {...pageProps} />
-                </ErrorBoundary>
-              )}
-            </ErrorDialogContext.Consumer>
-          </DialogProvider>
-        </ErrorDialogProvider>
+        <ScreenClassProvider>
+          <ErrorDialogProvider>
+            <DialogProvider>
+              <ErrorDialogContext.Consumer>
+                {({ showError }) => (
+                  <ErrorBoundary showError={showError}>
+                    <ErrorDialog />
+                    <Dialog />
+                    <Component {...pageProps} />
+                  </ErrorBoundary>
+                )}
+              </ErrorDialogContext.Consumer>
+            </DialogProvider>
+          </ErrorDialogProvider>
+        </ScreenClassProvider>
       </Provider>
     </>
   )

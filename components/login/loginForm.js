@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import Link from 'next/link'
+import PageLink from '../pageLink'
 import { css } from '@emotion/core'
 
 const bodyStyle = css({
@@ -17,9 +17,9 @@ export default class LoginForm extends React.Component {
           <input type="" />
         </form>
 
-        <Link href="/sign_up">
-          <a>ユーザー登録</a>
-        </Link>
+        <PageLink path="/sign_up">
+          ユーザー登録
+        </PageLink>
       </div>
     )
   }

@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from 'react'
-import Link from 'next/link'
 import { css } from '@emotion/core'
+import PageLink from '../../pageLink'
 import PlainText from '../../plainText'
 import Flex from '../../flex'
 import Container from '../../container'
@@ -36,52 +36,48 @@ export default function Navigator({ lesson }) {
         <div css={containerStyle}>
           {(lesson.prevLessonID !== 0) &&
             <div css={navigateItemStyle}>
-              <Link href={'/lessons/' + lesson.prevLessonID} passHref>
-                <a>
-                  <Flex alignItems='start'>
-                    <Container width='150' height='84'>
-                      {!thumbnailErrors.prev && <img src={thumbnailURLs.prev} alt={lesson.prevLessonTitle} css={thumbnailStyle} onError={handleThumbnailError} />}
-                      {thumbnailErrors.prev && <NoImage textSize='13' color='var(--soft-white)' backgroundColor='gray' />}
-                    </Container>
-                    <Spacer width='15'/>
-                    <div css={labelStyle}>
-                      <PlainText size='13' lineHeight='13' color='gray'>
-                        <AlignContainer verticalAlign='top'>
+              <PageLink path={'/lessons/' + lesson.prevLessonID}>
+                <Flex alignItems='start'>
+                  <Container width='150' height='84'>
+                    {!thumbnailErrors.prev && <img src={thumbnailURLs.prev} alt={lesson.prevLessonTitle} css={thumbnailStyle} onError={handleThumbnailError} />}
+                    {thumbnailErrors.prev && <NoImage textSize='13' color='var(--soft-white)' backgroundColor='gray' />}
+                  </Container>
+                  <Spacer width='15'/>
+                  <div css={labelStyle}>
+                    <PlainText size='13' lineHeight='13' color='gray'>
+                      <AlignContainer verticalAlign='top'>
                         前の授業
-                        </AlignContainer>
-                      </PlainText>
-                      <div css={lessonTitleStyle}>
-                        {lesson.prevLessonTitle}
-                      </div>
+                      </AlignContainer>
+                    </PlainText>
+                    <div css={lessonTitleStyle}>
+                      {lesson.prevLessonTitle}
                     </div>
-                  </Flex>
-                </a>
-              </Link>
+                  </div>
+                </Flex>
+              </PageLink>
             </div>
           }
           {(lesson.nextLessonID !== 0) &&
             <div css={navigateItemStyle}>
-              <Link href={'/lessons/' + lesson.nextLessonID} passHref>
-                <a>
-                  <Flex alignItems='start'>
-                    <Container width='150' height='84'>
-                      {!thumbnailErrors.next && <img src={thumbnailURLs.next} alt={lesson.nextLessonTitle} css={thumbnailStyle} onError={handleThumbnailError} />}
-                      {thumbnailErrors.next && <NoImage textSize='13' color='var(--soft-white)' backgroundColor='gray' />}
-                    </Container>
-                    <Spacer width='15'/>
-                    <div css={labelStyle}>
-                      <PlainText size='13' lineHeight='13' color='gray'>
-                        <AlignContainer verticalAlign='top'>
+              <PageLink path={'/lessons/' + lesson.nextLessonID}>
+                <Flex alignItems='start'>
+                  <Container width='150' height='84'>
+                    {!thumbnailErrors.next && <img src={thumbnailURLs.next} alt={lesson.nextLessonTitle} css={thumbnailStyle} onError={handleThumbnailError} />}
+                    {thumbnailErrors.next && <NoImage textSize='13' color='var(--soft-white)' backgroundColor='gray' />}
+                  </Container>
+                  <Spacer width='15'/>
+                  <div css={labelStyle}>
+                    <PlainText size='13' lineHeight='13' color='gray'>
+                      <AlignContainer verticalAlign='top'>
                         次の授業
-                        </AlignContainer>
-                      </PlainText>
-                      <div css={lessonTitleStyle}>
-                        {lesson.nextLessonTitle}
-                      </div>
+                      </AlignContainer>
+                    </PlainText>
+                    <div css={lessonTitleStyle}>
+                      {lesson.nextLessonTitle}
                     </div>
-                  </Flex>
-                </a>
-              </Link>
+                  </div>
+                </Flex>
+              </PageLink>
             </div>
           }
         </div>

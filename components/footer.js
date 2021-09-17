@@ -61,7 +61,7 @@ export default function Footer() {
           <PlainText color='var(--border-gray)' size='16' fontWeight='bold' whiteSpace='nowrap'>使いかた</PlainText>
           <ContainerSpacer top='10' bottom='5'>
             <PlainText size='14' whiteSpace='nowrap'>
-              <PageLink path='/search'>授業を探す</PageLink>
+              <PageLink path='/search'>授業をさがす</PageLink>
             </PlainText>
           </ContainerSpacer>
           <ContainerSpacer top='5' bottom='5'>

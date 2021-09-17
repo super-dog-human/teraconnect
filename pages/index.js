@@ -3,11 +3,12 @@ import React from 'react'
 import { css } from '@emotion/core'
 import Head from 'next/head'
 import Layout from '../components/layout'
-import AloneInLandscape from '../components/landing/aloneInLandscape'
-import CopyForStudent from '../components/landing/copyForStudent'
-import PickedOutLesson from '../components/landing/pickedOutLesson'
-import CopyForTeacher from '../components/landing/copyForTeacher'
-import { BrowserView } from 'react-device-detect'
+import Container from '../components/container'
+import AloneAvatar from '../components/index/aloneAvatar'
+import CopyForStudent from '../components/index/copyForStudent'
+import PickedOutLesson from '../components/index/pickedOutLesson'
+import CopyForTeacher from '../components/index/copyForTeacher'
+import ZContainer from '../components/zContainer'
 
 const Page = () => (
   <>
@@ -16,12 +17,15 @@ const Page = () => (
     </Head>
     <Layout>
       <div css={bodyStyle}>
-        <AloneInLandscape />
-        <BrowserView>
+        <ZContainer zIndex='0' position='fixed'>
+          <AloneAvatar />
+        </ZContainer>
+        <ZContainer zIndex='1' position='relative'>
+          <Container height='450'/>
           <CopyForStudent />
-        </BrowserView>
-        <PickedOutLesson />
-        <CopyForTeacher />
+          <PickedOutLesson />
+          <CopyForTeacher />
+        </ZContainer>
       </div>
     </Layout>
   </>
@@ -30,6 +34,8 @@ const Page = () => (
 const bodyStyle = css({
   width: '100%',
   height: '100%',
+  backgroundColor: 'var(--bg-light-gray)',
+  userSelect: 'none',
 })
 
 export default Page

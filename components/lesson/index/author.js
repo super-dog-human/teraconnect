@@ -1,5 +1,5 @@
 import React from 'react'
-import Link from 'next/link'
+import PageLink from '../../pageLink'
 import Flex from '../../flex'
 import FlexItem from '../../flexItem'
 import Container from '../../container'
@@ -12,13 +12,11 @@ export default function Author({ author }) {
   return (
     <Flex>
       <FlexItem flexBasis='73px'>
-        <Link href={'/users/' + author.id} passHref>
-          <a>
-            <Container width='73' height='73'>
-              <UserIcon id={author.id} name={author.name} />
-            </Container>
-          </a>
-        </Link>
+        <PageLink path={'/users/' + author.id}>
+          <Container width='73' height='73'>
+            <UserIcon id={author.id} name={author.name} />
+          </Container>
+        </PageLink>
       </FlexItem>
       <Spacer width='20' />
       <div>

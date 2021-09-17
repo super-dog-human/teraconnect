@@ -4,12 +4,13 @@ import { css } from '@emotion/core'
 import useResizeDetector from '../../libs/hooks/useResizeDetector'
 import useAvatar from '../../libs/hooks/lesson/useAvatar'
 import Flex from '../flex'
+import CopyForAvatar from './copyForAvatar'
 
 const avatar = {
   url: '/model/alone.vrm',
   config: {
     scale: 1,
-    positions: [0.5, -1.05, 0],
+    positions: [0.38, -1.09, 0],
     initialPoses: [
       { 'boneName': 'hips',                    'rotations': [-0.1, -2.5, -0.1] },
       { 'boneName': 'chest',                   'rotations': [0, -1.24, 2] },
@@ -57,6 +58,7 @@ const avatar = {
 }
 const lightColor = '136,136,136,0.5'
 
+
 export default function AloneAvatar() {
   const containerRef = useRef()
   const { hasResize } = useResizeDetector(containerRef)
@@ -80,19 +82,35 @@ export default function AloneAvatar() {
     startAnimation()
   }, [avatarRef, isLoading, startAnimation])
 
+
   return (
-    <div css={bodyStyle} ref={containerRef}>
-      <Flex justifyContent='center'>
-        <div css={canvasStyle} ref={avatarRef} />
-      </Flex>
+    <div css={backgroundStyle}>
+      <div css={bodyStyle} ref={containerRef}>
+        <Flex justifyContent='center'>
+          <div css={canvasStyle} ref={avatarRef} className='avatar-z' />
+        </Flex>
+      </div>
+      <CopyForAvatar />
     </div>
   )
 }
 
-const bodyStyle = css({
+const backgroundStyle = css({
   width: '100%',
+  height: '450px',
+  backgroundColor: 'var(--dark-blue)',
+  backgroundImage: 'url("/img/landscape_starry_sky.jpg")',
+  backgroundRepeat: 'no-repeat',
+  backgroundSize: 'cover',
+  backgroundPositionX: 'center',
+  backgroundPositionY: 'bottom',
+})
+
+const bodyStyle = css({
+  margin: 'auto',
+  maxWidth: '1280px',
   height: '100%',
-  textAlign: 'center'
+  textAlign: 'center',
 })
 
 const canvasStyle = css({

@@ -21,7 +21,6 @@
     "next-auth": "^3.4.1",
     "react": "^17.0.1",
     "react-colorful": "^4.4.4",
-    "react-device-detect": "^1.14",
     "react-dom": "^17.0.1",
     "react-draggable": "^4.4.3",
     "react-ga": "^3.3.0",

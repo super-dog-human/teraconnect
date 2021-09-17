@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { useRef, useState, useEffect } from 'react'
 import { css } from '@emotion/core'
-import { useScreenClass } from 'react-grid-system'
+import useMobileDetector from '../../../libs/hooks/useMobileDetector'
 import useLessonCacheController from '../../../libs/hooks/lesson/edit/useLessonCacheController'
 import useLessonUpdater from '../../../libs/hooks/lesson/edit/useLessonUpdater'
 import { useContextMenuContext } from '../../../libs/contexts/contextMenuContext'
@@ -19,7 +19,7 @@ import Timeline from './timeline'
 
 export default function LessonEdit({ lesson }) {
   const fetchedRef = useRef(false)
-  const screenClass = useScreenClass()
+  const isMobile = useMobileDetector()
   const [isLoading, setIsLoading] = useState(true)
   const { clearDiffFlag, clearCache } = useLessonCacheController({ isLoading, lessonID: lesson.id })
   const { contextMenu, handleDismiss } = useContextMenuContext()
@@ -32,14 +32,14 @@ export default function LessonEdit({ lesson }) {
     maxWidth: '1280px',
     height: '100%',
     display: 'flex',
-    flexDirection: ['xs', 'sm'].includes(screenClass) ? 'column' : 'row',
+    flexDirection: isMobile ? 'column' : 'row',
   })
 
   const leftSideStyle = css({
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 4,
-    maxWidth: ['xs', 'sm'].includes(screenClass) ? '100%' : '450px',
+    maxWidth: isMobile ? '100%' : '450px',
     height: 'calc(100% - 80px)',
     marginTop: '40px',
     marginLeft: '10px',
@@ -48,7 +48,7 @@ export default function LessonEdit({ lesson }) {
 
   const rightSideStyle = css({
     flexGrow: 6,
-    maxWidth: ['xs', 'sm'].includes(screenClass) ? '100%' : '830px',
+    maxWidth: isMobile ? '100%' : '830px',
     height: 'calc(100% - 80px)',
     marginTop: '40px',
     marginLeft: '50px',
@@ -95,6 +95,7 @@ export default function LessonEdit({ lesson }) {
 const mainStyle = css({
   width: '100%',
   height: 'calc(100vh - 60px)', // ヘッダの分を差し引いた画面の高さいっぱいに要素を表示
+  marginTop: '60px',
   backgroundColor: 'var(--bg-light-gray)',
   userSelect: 'none',
 })

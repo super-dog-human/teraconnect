@@ -1,7 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useRef, useEffect } from 'react'
 import { css } from '@emotion/core'
-import Header from '../../header'
 import LessonPlayer from '../player/'
 import Description from './description'
 import Navigator from './navigator'
@@ -78,14 +77,12 @@ export default function Lesson({ lesson, errorStatus }) {
 
   return (
     <>
-      <Header />
-      <main css={mainStyle}>
-        <ImageViewerProvider>
-          <div css={bodyStyle} ref={containerRef}>
-            <LessonPlayer isLoading={isAvatarLoading || isBodyLoading || isSpeechLoading || isYouTubeLoading} isPlaying={isPlaying} isShowFullController={true}
-              durationSec={durationSec} backgroundImageURL={backgroundImageURL} hasAvatars={true} hasDrawings={true} hasEmbedding={true}
-              onPlayButtonClick={handlePlayButtonClick} onSeekChange={handleSeekChange} onSeekUp={handleSeekUp} youTubeIDs={youTubeIDs} {...playerProps} />
-            {lesson &&
+      <ImageViewerProvider>
+        <div css={bodyStyle} ref={containerRef}>
+          <LessonPlayer isLoading={isAvatarLoading || isBodyLoading || isSpeechLoading || isYouTubeLoading} isPlaying={isPlaying} isShowFullController={true}
+            durationSec={durationSec} backgroundImageURL={backgroundImageURL} hasAvatars={true} hasDrawings={true} hasEmbedding={true}
+            onPlayButtonClick={handlePlayButtonClick} onSeekChange={handleSeekChange} onSeekUp={handleSeekUp} youTubeIDs={youTubeIDs} {...playerProps} />
+          {lesson &&
               <div css={selectableStyle}>
                 <Description lesson={lesson} />
                 <Navigator lesson={lesson} />
@@ -105,19 +102,13 @@ export default function Lesson({ lesson, errorStatus }) {
                   <Author author={lesson.author} />
                 </Heading>
               </div>
-            }
-          </div>
-          <ImageViwer />
-        </ImageViewerProvider>
-      </main>
+          }
+        </div>
+        <ImageViwer />
+      </ImageViewerProvider>
     </>
   )
 }
-
-const mainStyle = css({
-  backgroundColor: 'var(--bg-light-gray)',
-  userSelect: 'none',
-})
 
 const bodyStyle = css({
   margin: 'auto',

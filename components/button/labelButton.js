@@ -1,8 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
 import { css } from '@emotion/core'
+import useTouchDeviceDetector from '../../libs/hooks/useTouchDeviceDetector'
 
 export default function LabelButton(props) {
+  const isTouchDevice = useTouchDeviceDetector()
   const { children, fontSize, backgroundColor, color, borderColor, hoverBackgroundColor, hoverColor, hoverBorderColor, disabled, ...buttonProps } = props
 
   const bodyStyle = css({
@@ -21,7 +23,7 @@ export default function LabelButton(props) {
     padding: '6px 12px',
     fontSize: fontSize && `${fontSize}px`,
     color,
-    opacity: 0.7,
+    opacity: isTouchDevice ? 1 : 0.8,
     ':hover': {
       backgroundColor: !disabled && hoverBackgroundColor,
       color: !disabled && hoverColor,
