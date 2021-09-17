@@ -19,13 +19,13 @@ import useResizeDetector from '../../../libs/hooks/useResizeDetector'
 import { useDialogContext } from '../../../libs/contexts/dialogContext'
 import { ImageViewerProvider } from '../../../libs/contexts/imageViewerContext'
 
-export default function Lesson({ lesson, errorStatus }) {
+export default function Lesson({ id, viewKey }) {
   const { showDialog } = useDialogContext()
   const containerRef = useRef()
   const preCanPlayRef = useRef()
   const { hasResize } = useResizeDetector(containerRef)
   const shouldResumeRef = useRef(false)
-  const { isLoading: isBodyLoading, durationSec, backgroundImageURL, avatars, drawings, embeddings, graphics, speeches, graphicURLs, speechURL } = usePlayer({ lesson, errorStatus, showDialog })
+  const { lesson, isLoading: isBodyLoading, durationSec, backgroundImageURL, avatars, drawings, embeddings, graphics, speeches, graphicURLs, speechURL } = usePlayer({ id, viewKey, showDialog })
   const { isLoading: isSpeechLoading, isPlaying: isSpeechPlaying, playSpeech, stopSpeech, updateSpeeche, seekSpeech }
     = useSpeechPlayer({ url: speechURL, durationSec })
   const { isLoading: isYouTubeLoading, isPlaying: isYouTubePlaying, youTubeIDs, playYouTube, stopYouTube, updateYouTube, seekYoutube } = useYoutubePlayer({ durationSec, embeddings })
@@ -82,27 +82,25 @@ export default function Lesson({ lesson, errorStatus }) {
           <LessonPlayer isLoading={isAvatarLoading || isBodyLoading || isSpeechLoading || isYouTubeLoading} isPlaying={isPlaying} isShowFullController={true}
             durationSec={durationSec} backgroundImageURL={backgroundImageURL} hasAvatars={true} hasDrawings={true} hasEmbedding={true}
             onPlayButtonClick={handlePlayButtonClick} onSeekChange={handleSeekChange} onSeekUp={handleSeekUp} youTubeIDs={youTubeIDs} {...playerProps} />
-          {lesson &&
-              <div css={selectableStyle}>
-                <Description lesson={lesson} />
-                <Navigator lesson={lesson} />
-                <Heading name='講義全文'>
-                  <Transcription speeches={speeches} />
-                </Heading>
-                {graphics.length > 0 && <Heading name='スライド'>
-                  <Graphics graphics={graphics} graphicURLs={graphicURLs} />
-                </Heading>}
-                {embeddings.length > 0 && <Heading name='動画'>
-                  <Embeddings embeddings={embeddings} />
-                </Heading>}
-                {lesson.references && <Heading name='参考図書'>
-                  <ReferenceBooks references={lesson.references} />
-                </Heading>}
-                <Heading name='作者'>
-                  <Author author={lesson.author} />
-                </Heading>
-              </div>
-          }
+          <div css={selectableStyle}>
+            <Description lesson={lesson} />
+            <Navigator lesson={lesson} />
+            <Heading name='講義全文'>
+              <Transcription speeches={speeches} />
+            </Heading>
+            {graphics.length > 0 && <Heading name='スライド'>
+              <Graphics graphics={graphics} graphicURLs={graphicURLs} />
+            </Heading>}
+            {embeddings.length > 0 && <Heading name='動画'>
+              <Embeddings embeddings={embeddings} />
+            </Heading>}
+            {lesson?.references && <Heading name='参考図書'>
+              <ReferenceBooks references={lesson?.references} />
+            </Heading>}
+            <Heading name='作者'>
+              <Author author={lesson?.author} />
+            </Heading>
+          </div>
         </div>
         <ImageViwer />
       </ImageViewerProvider>

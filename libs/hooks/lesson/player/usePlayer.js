@@ -4,10 +4,13 @@ import { fetchFile } from '../../../fetch'
 import { ZSTDDecoder } from 'zstddec'
 const decoder = new ZSTDDecoder()
 
-export default function usePlayer({ lesson, errorStatus, showDialog }) {
+export default function usePlayer({ id, viewKey, showDialog }) {
   const { fetch } = useFetch()
+  const lessonLoadingRef = useRef(false)
   const initialLoadingRef = useRef(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [lesson, setLesson] = useState()
+  const [errorStatus, setErrorStatus] = useState()
   const [durationSec, setDurationSec] = useState(0)
   const [backgroundImageURL, setBackgroundImageURL] = useState('')
   const [avatars, setAvatars] = useState([])
@@ -16,6 +19,14 @@ export default function usePlayer({ lesson, errorStatus, showDialog }) {
   const [graphics, setGraphics] = useState([])
   const [graphicURLs, setGraphicURLs] = useState({})
   const [speeches, setSpeeches] = useState([])
+
+  const fetchLesson = useCallback(() => {
+    const result = viewKey ? fetch(`/lessons/${id}?view_key=${viewKey}`) : fetch(`/lessons/${id}`)
+    result.then(l => {
+      document.title = `${l.author.name} の ${l.title} - TERACONNECT`
+      setLesson(l)
+    }).catch(e => setErrorStatus(e.response.status))
+  }, [id, viewKey, fetch])
 
   const fetchGraphicURLs = useCallback(async graphics => {
     if (!graphics) return
@@ -34,7 +45,6 @@ export default function usePlayer({ lesson, errorStatus, showDialog }) {
     const compressed = new Uint8Array(await response.arrayBuffer())
     await decoder.init()
     const material = JSON.parse(new TextDecoder().decode(decoder.decode(compressed)))
-
     setDurationSec(material.durationSec)
     setBackgroundImageURL(material.backgroundImageURL)
 
@@ -50,6 +60,13 @@ export default function usePlayer({ lesson, errorStatus, showDialog }) {
   }, [lesson?.bodyURL, fetchGraphicURLs])
 
   useEffect(() => {
+    if (lessonLoadingRef.current) return
+    lessonLoadingRef.current = true
+    fetchLesson()
+  }, [fetchLesson])
+
+  useEffect(() => {
+    if (!lesson) return
     if (initialLoadingRef.current) return
     initialLoadingRef.current = true
     if (errorStatus) {
@@ -67,7 +84,7 @@ export default function usePlayer({ lesson, errorStatus, showDialog }) {
     } else {
       fetchBody()
     }
-  }, [errorStatus, lesson?.updated, lesson?.published, showDialog, fetchBody])
+  }, [errorStatus, lesson, showDialog, fetchBody])
 
-  return { isLoading, durationSec, backgroundImageURL, avatars, drawings, embeddings, graphics, speeches, graphicURLs, speechURL: lesson?.speechURL || '' }
+  return { lesson, isLoading, durationSec, backgroundImageURL, avatars, drawings, embeddings, graphics, speeches, graphicURLs, speechURL: lesson?.speechURL || '' }
 }

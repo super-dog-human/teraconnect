@@ -2,15 +2,15 @@ import React from 'react'
 import Head from 'next/head'
 import Layout from '../../components/layout'
 import Lesson from '../../components/lesson/index'
-import fetchPublicLessonAsProps from '../../libs/middlewares/fetchPublicLessonAsProps'
+import getQueryParamsAsProps from '../../libs/middlewares/getQueryParamsAsProps'
 
-const Page = ({ lesson, errorStatus }) => (
+const Page = ({ id, viewKey }) => (
   <>
     <Head>
-      <title>{lesson?.author?.name} の {lesson?.title} - TERACONNECT</title>
+      <title>授業の再生 - TERACONNECT</title>
     </Head>
     <Layout>
-      <Lesson lesson={lesson} errorStatus={errorStatus} />
+      <Lesson id={id} viewKey={viewKey} />
     </Layout>
   </>
 )
@@ -18,5 +18,5 @@ const Page = ({ lesson, errorStatus }) => (
 export default Page
 
 export async function getServerSideProps(context) {
-  return fetchPublicLessonAsProps(context)
+  return getQueryParamsAsProps(context)
 }

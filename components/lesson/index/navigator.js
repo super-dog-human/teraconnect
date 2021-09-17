@@ -24,6 +24,7 @@ export default function Navigator({ lesson }) {
   }
 
   useEffect(() => {
+    if (!lesson) return
     setThumbnailURLs({
       prev: lessonImageURL + lesson.prevLessonID + '/thumbnail.png',
       next: lessonImageURL + lesson.nextLessonID + '/thumbnail.png',
@@ -32,7 +33,7 @@ export default function Navigator({ lesson }) {
 
   return (
     <>
-      {(lesson.prevLessonID !== 0 || lesson.nextLessonID !== 0) &&
+      {lesson && (lesson?.prevLessonID !== 0 || lesson?.nextLessonID !== 0) &&
         <div css={containerStyle}>
           {(lesson.prevLessonID !== 0) &&
             <div css={navigateItemStyle}>
