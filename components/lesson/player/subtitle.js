@@ -20,11 +20,13 @@ export default function Subtitle({ subtitle }) {
     <>
       {subtitle &&
         <div css={containerStyle} className="subtitle-z" ref={containerRef}>
-          <PlainText color='var(--soft-white)' size={fontSize}>
-            <div css={backgroundStyle}>
-              <div css={subtitleStyle}>{subtitle}</div>
-            </div>
-          </PlainText>
+          <div css={marginStyle}>
+            <PlainText color='var(--soft-white)' size={fontSize}>
+              <div css={backgroundStyle}>
+                <div css={subtitleStyle}>{subtitle}</div>
+              </div>
+            </PlainText>
+          </div>
         </div>
       }
     </>
@@ -41,9 +43,12 @@ const containerStyle = css({
   alignItems: 'flex-end',
 })
 
+const marginStyle = css({
+  marginBottom: '2%',
+})
+
 const backgroundStyle = css({
   backgroundColor: 'rgba(0, 0, 0, 0.8)',
-  marginBottom: '20%',
 })
 
 const subtitleStyle = css({

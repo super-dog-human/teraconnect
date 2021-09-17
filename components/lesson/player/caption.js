@@ -56,7 +56,7 @@ export default function Caption({ caption }) {
     <>
       {caption &&
         <div css={containerStyle} className="subtitle-z" ref={containerRef}>
-          <div css={captionStyle}>
+          <div css={marginStyle}>
             <StrokeText sizeVW={fontSizeVW} color={caption.bodyColor || defaultColor} parentWidth={containerWidth} borderColor={caption.borderColor || defaultBorderColor}>
               {caption.body}
             </StrokeText></div>
@@ -66,6 +66,6 @@ export default function Caption({ caption }) {
   )
 }
 
-const captionStyle = css({
+const marginStyle = css({
   margin: '1%',
 })
