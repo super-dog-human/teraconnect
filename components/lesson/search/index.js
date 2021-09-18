@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/core'
-import { connectInfiniteHits, PoweredBy } from 'react-instantsearch-dom'
+import { connectInfiniteHits, connectSearchBox, PoweredBy } from 'react-instantsearch-dom'
 import { useInView } from 'react-intersection-observer'
 import Flex from '../../flex'
 import PlainText from '../../plainText'
@@ -12,7 +12,7 @@ import LoadingIndicator from '../../loadingIndicator'
 import LessonCard from './lessonCard'
 import { useRouter } from 'next/router'
 
-const LessonSearch = ({ hits, hasMore, refineNext }) => {
+const LessonSearch = ({ isSearchStalled, hits, hasMore, refineNext }) => {
   const { ref: terminationRef, inView } = useInView()
   const [shouldFetchNext, setShouldFetchNext] = useState(false)
   const router = useRouter()
@@ -40,29 +40,38 @@ const LessonSearch = ({ hits, hasMore, refineNext }) => {
 
         {hits.length > 0 && hasMore &&
           <div ref={terminationRef}>
-            <Spacer height='100' />
-            <Flex justifyContent='center'>
-              <Container width='40' height='40'>
-                <LoadingIndicator />
-              </Container>
-            </Flex>
+            <ContainerSpacer top='30' botom='30'>
+              <Flex justifyContent='center'>
+                <Container width='40' height='40'>
+                  <LoadingIndicator />
+                </Container>
+              </Flex>
+            </ContainerSpacer>
           </div>
         }
 
-        {hits.length === 0 && router.query.q &&
-          <PlainText color='gray' size='15'>「{router.query.q}」に関連する授業が見つかりませんでした。</PlainText>
+        {isSearchStalled &&
+          <div css={loadingStyle}>
+            <Container width='60' height='60'>
+              <LoadingIndicator />
+            </Container>
+          </div>
         }
 
-        <ContainerSpacer top='50' bottom='50'>
-          <Flex justifyContent='flex-end'>
-            <PoweredBy />
-          </Flex>
-        </ContainerSpacer>
+        {!isSearchStalled && hits.length === 0 && router.query.q &&
+          <>
+            <PlainText color='gray' size='15'>「{router.query.q}」に関連する授業が見つかりませんでした。</PlainText>
+            <ContainerSpacer top='50' bottom='50'>
+              <Flex justifyContent='flex-end'>
+                <PoweredBy />
+              </Flex>
+            </ContainerSpacer>
+          </>
+        }
       </div>
     </div>
   )
 }
-
 const backgroundStyle = css({
   margin: 'auto',
   maxWidth: '1280px',
@@ -70,8 +79,18 @@ const backgroundStyle = css({
 })
 
 const bodyStyle = css({
+  height: 'calc(100% - 50px)',
   marginLeft: '20px',
   marginRight: '20px',
+  marginBottom: '50px',
 })
 
-export default connectInfiniteHits(LessonSearch)
+const loadingStyle = css({
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+})
+
+export default connectSearchBox(connectInfiniteHits(LessonSearch))
