@@ -34,6 +34,7 @@ export default function App ({ Component, pageProps }) {
   return (
     <>
       <Head>
+        <meta name="description" content="アバターを通じて簡単に授業を収録・編集し、公開できるプラットフォームです。" />
         <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0" />
       </Head>
       <Script src={youTubePlayerSrc} strategy="beforeInteractive" />

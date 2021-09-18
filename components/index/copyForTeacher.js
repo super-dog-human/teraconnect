@@ -50,7 +50,7 @@ const CopyForTeacher = () => {
             <Flex justifyContent='center' flexWrap='wrap' gap='50px'>
               <FlexItem flexBasis='320px'>
                 <Flex>
-                  <img src="/img/yeti.png" width="80px" height="80px" alt="雪男でも、岩でも、何にでも" />
+                  <img src="/img/yeti.webp" width="80px" height="80px" alt="雪男でも、岩でも、何にでも" />
                   <Spacer width='30' />
                   <div>
                     <PlainText size='17' whiteSpace='nowrap'>アバターで自由な姿に。</PlainText>
@@ -69,7 +69,7 @@ const CopyForTeacher = () => {
               </FlexItem>
               <FlexItem flexBasis='320px'>
                 <Flex>
-                  <img src="/img/microphone.png" width="80px" height="80px" alt="マイクを使って声を吹き込もう" />
+                  <img src="/img/microphone.webp" width="80px" height="80px" alt="マイクを使って声を吹き込もう" />
                   <Spacer width='30' />
                   <div>
                     <PlainText size='17' whiteSpace='nowrap'>声に想いをのせよう。</PlainText>
@@ -85,7 +85,7 @@ const CopyForTeacher = () => {
               </FlexItem>
               <FlexItem flexBasis='320px'>
                 <Flex>
-                  <img src="/img/blackboard.png" width="80px" height="80px" alt="もっと分かりやすく" />
+                  <img src="/img/blackboard.webp" width="80px" height="80px" alt="もっと分かりやすく" />
                   <Spacer width='30' />
                   <div>
                     <PlainText size='17' whiteSpace='nowrap'>動きでもっと伝えよう。</PlainText>
@@ -102,7 +102,7 @@ const CopyForTeacher = () => {
               </FlexItem>
               <FlexItem flexBasis='320px'>
                 <Flex>
-                  <img src="/img/no-fee.png" width="80px" height="80px" alt="お金はかからないよ" />
+                  <img src="/img/no-fee.webp" width="80px" height="80px" alt="お金はかからないよ" />
                   <Spacer width='30' />
                   <div>
                     <PlainText size='17' whiteSpace='nowrap'>無料で作ろう。</PlainText>

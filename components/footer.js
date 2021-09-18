@@ -33,7 +33,7 @@ export default function Footer() {
     gap: '30px 0px',
     a: {
       color: 'var(--border-gray)',
-      opacity: 0.6,
+      opacity: 0.9,
     },
     'a:hover': {
       opacity: 1,
@@ -47,30 +47,30 @@ export default function Footer() {
           {!loading && !session && <div>
             <PlainText size='13' color='var(--text-gray)' whiteSpace='nowrap'>君の光をさがそう。</PlainText>
             <Spacer height='15' />
-            <img src="/img/logo_black.png" srcSet="/img/logo_black.png 1x, /img/logo_black@2x.png 2x" alt='TERACONNECTロゴ' />
+            <img src="/img/logo_black.png" srcSet="/img/logo_black.png 1x, /img/logo_black@2x.png 2x" width="181" height="25" alt='TERACONNECTロゴ' />
           </div>
           }
           {!loading && session && <div>
             <PlainText size='13' color='var(--text-gray)' whiteSpace='nowrap'>あなたの知識が、誰かを照らす。</PlainText>
             <Spacer height='15' />
-            <img src="/img/logo_black.png" srcSet="/img/logo_black.png 1x, /img/logo_black@2x.png 2x" alt='TERACONNECTロゴ' />
+            <img src="/img/logo_black.png" srcSet="/img/logo_black.png 1x, /img/logo_black@2x.png 2x" width="181" height="25" alt='TERACONNECTロゴ' />
           </div>
           }
         </div>
         <FlexItem>
           <PlainText color='var(--border-gray)' size='16' fontWeight='bold' whiteSpace='nowrap'>使いかた</PlainText>
           <ContainerSpacer top='10' bottom='5'>
-            <PlainText size='14' whiteSpace='nowrap'>
+            <PlainText size='14' lineHeight='25' whiteSpace='nowrap'>
               <PageLink path='/search'>授業をさがす</PageLink>
             </PlainText>
           </ContainerSpacer>
           <ContainerSpacer top='5' bottom='5'>
-            <PlainText size='14' whiteSpace='nowrap'>
+            <PlainText size='14' lineHeight='25' whiteSpace='nowrap'>
               <PageLink path='/lessons/new'>授業をつくる</PageLink>
             </PlainText>
           </ContainerSpacer>
           <ContainerSpacer top='5' bottom='5'>
-            <PlainText size='14' whiteSpace='nowrap'>
+            <PlainText size='14' lineHeight='25' whiteSpace='nowrap'>
               <PageLink path='/'>よくある質問</PageLink>
             </PlainText>
           </ContainerSpacer>
@@ -78,17 +78,17 @@ export default function Footer() {
         <FlexItem>
           <PlainText color='var(--border-gray)' size='16' fontWeight='bold' whiteSpace='nowrap'>サービスについて</PlainText>
           <ContainerSpacer top='10' bottom='5'>
-            <PlainText size='14' whiteSpace='nowrap'>
+            <PlainText size='14' lineHeight='25' whiteSpace='nowrap'>
               <PageLink path="/">TERACONNECTとは</PageLink>
             </PlainText>
           </ContainerSpacer>
           <ContainerSpacer top='5' bottom='5'>
-            <PlainText size='14' whiteSpace='nowrap'>
+            <PlainText size='14' lineHeight='25' whiteSpace='nowrap'>
               <PageLink path="/">ライセンス表記</PageLink>
             </PlainText>
           </ContainerSpacer>
           <ContainerSpacer top='5' bottom='5'>
-            <PlainText size='14' whiteSpace='nowrap'>
+            <PlainText size='14' lineHeight='25' whiteSpace='nowrap'>
               <PageLink path="/">運営者</PageLink>
             </PlainText>
           </ContainerSpacer>
@@ -96,12 +96,12 @@ export default function Footer() {
         <FlexItem>
           <PlainText color='var(--border-gray)' size='16' fontWeight='bold' whiteSpace='nowrap'>ご利用にあたって</PlainText>
           <ContainerSpacer top='10' bottom='5'>
-            <PlainText size='14' whiteSpace='nowrap'>
+            <PlainText size='14' lineHeight='25' whiteSpace='nowrap'>
               <PageLink path="/terms_of_use">利用規約</PageLink>
             </PlainText>
           </ContainerSpacer>
           <ContainerSpacer top='5' bottom='5'>
-            <PlainText size='14' whiteSpace='nowrap'>
+            <PlainText size='14' lineHeight='25' whiteSpace='nowrap'>
               <a href="https://goo.gl/forms/Rmp3dNKN7ZsDoF2k2">お問い合わせ</a>
             </PlainText>
           </ContainerSpacer>

@@ -25,4 +25,6 @@ const backgroundStyle = css({
 
 const logoStyle = css({
   verticalAlign: 'middle',
+  width: '181px',
+  height: '25px',
 })

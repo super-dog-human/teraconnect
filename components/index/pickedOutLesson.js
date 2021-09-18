@@ -14,7 +14,7 @@ const PickupedLesson = () => (
 
       <ContainerSpacer left='30' right='30'>
         <PlainText size='24' letterSpacing='1' whiteSpace='nowrap'>
-          見やすさは分かりやすさ。
+          見やすさは、分かりやすさ。
         </PlainText>
       </ContainerSpacer>
 

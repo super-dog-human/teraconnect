@@ -5,7 +5,9 @@ import Flex from '../../flex'
 import FlexItem from '../../flexItem'
 import AlignContainer from '../../alignContainer'
 import PlainText from '../../plainText'
+import ContainerSpacer from '../../containerSpacer'
 import ExpandContainer from '../../transition/expandContainer'
+import Spacer from '../../spacer'
 import { floatSecondsToMinutesFormat } from '../../../libs/utils'
 
 export default function Transcription({ speeches }) {
@@ -28,18 +30,19 @@ export default function Transcription({ speeches }) {
             <div key={i} css={lineStyle}>
               <Flex>
                 <FlexItem flexBasis='50px'>
-                  <div css={elapsedTimeStyle}>
-                    <PlainText size='14' color='var(--text-gray)' letterSpacing='1'>
+                  <ContainerSpacer right='40'>
+                    <PlainText size='14' lineHeight='14' color='var(--text-gray)' letterSpacing='1'>
                       {floatSecondsToMinutesFormat(speech.elapsedTime)}
                     </PlainText>
-                  </div>
+                  </ContainerSpacer>
                 </FlexItem>
-                <PlainText size='14' color='var(--text-gray)'>
+                <PlainText size='14' lineHeight='14' color='var(--text-gray)'>
                   {speech.subtitle}
                 </PlainText>
               </Flex>
             </div>
           ))}
+          <Spacer height='10' />
         </ExpandContainer>
       </div>
     </div>
@@ -60,10 +63,6 @@ const bodyStyle = css({
 const lineStyle = css({
   marginTop: '5px',
   marginBottom: '5px',
-})
-
-const elapsedTimeStyle = css({
-  marginRight: '40px',
 })
 
 const expandButtonStyle = css({

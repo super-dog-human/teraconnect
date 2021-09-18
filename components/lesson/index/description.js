@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
 import { css } from '@emotion/core'
+import useMobileDetector from '../../../libs/hooks/useMobileDetector'
 import Flex from '../../flex'
 import FlexItem from '../../flexItem'
 import Spacer from '../../spacer'
@@ -11,10 +12,12 @@ import MultilineText from '../../multilineText'
 import { formatDate } from '../../../libs/utils'
 
 export default function Description({ lesson }) {
+  const isMobile = useMobileDetector()
+
   return (
     <div css={containerStyle}>
-      <Flex>
-        <FlexItem flexBasis='30%'>
+      <Flex flexWrap='wrap' gap='20px' flexDirection={isMobile ? 'column' : 'row'}>
+        <FlexItem flexBasis='40%'>
           <Flex>
             <FlexItem flexBasis='73px'>
               <Container width='73' height='73'>
@@ -28,8 +31,7 @@ export default function Description({ lesson }) {
             </div>
           </Flex>
         </FlexItem>
-        <Spacer width='20' />
-        <FlexItem>
+        <FlexItem flexBasis='calc(60% - 20px)'>
           <PlainText size='13' color='gray'>
             {lesson && <MultilineText texts={lesson?.description} />}
           </PlainText>
@@ -42,5 +44,6 @@ export default function Description({ lesson }) {
 const containerStyle = css({
   marginTop: '30px',
   marginLeft: '20px',
-  marginBottom: '20px',
+  marginRight: '20px',
+  marginBottom: '50px',
 })

@@ -25,7 +25,7 @@ const AppCopy = () => {
             </Container>
           </ContainerSpacer>
           <div>
-            <PlainText color='var(--text-gray)'>
+            <PlainText color='gray'>
               {isMobile &&
                 <>
                   <Spacer height='20' />
