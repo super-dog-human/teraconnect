@@ -7,7 +7,7 @@ import Flex from '../flex'
 import CopyForAvatar from './copyForAvatar'
 
 const avatar = {
-  url: '/model/alone.vrm',
+  url: '/model/alone.zst',
   config: {
     scale: 1,
     positions: [0.38, -1.09, 0],
@@ -99,7 +99,7 @@ const backgroundStyle = css({
   width: '100%',
   height: '450px',
   backgroundColor: 'var(--dark-blue)',
-  backgroundImage: 'url("/img/landscape_starry_sky.jpg")',
+  backgroundImage: 'url("/img/landscape_starry_sky.webp")',
   backgroundRepeat: 'no-repeat',
   backgroundSize: 'cover',
   backgroundPositionX: 'center',
