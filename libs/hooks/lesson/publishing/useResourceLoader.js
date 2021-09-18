@@ -36,6 +36,7 @@ export default function useResourceLoader({ lesson }) {
         label: l.title,
       })))
     }).catch(e => {
+      if (e.name === 'AbortError') return
       showError({
         message: '授業情報の読み込みに失敗しました。',
         original: e,
@@ -54,6 +55,7 @@ export default function useResourceLoader({ lesson }) {
         label: i.name,
       })))
     }).catch(e => {
+      if (e.name === 'AbortError') return
       showError({
         message: '背景情報の読み込みに失敗しました。',
         original: e,
@@ -72,6 +74,7 @@ export default function useResourceLoader({ lesson }) {
         label: a.name,
       })))
     }).catch(e => {
+      if (e.name === 'AbortError') return
       showError({
         message: 'アバター情報の読み込みに失敗しました。',
         original: e,
