@@ -1,7 +1,10 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
 import { Clock, Vector3 } from 'three'
 import AvatarLoader from '../../avatarLoader'
+import { fetchFile } from '../../fetch'
 import { switchSwipable, mouseOrTouchPositions, rgbToHex } from '../../utils'
+import { decompressZstd } from '../../decompressUtil'
+
 
 export default function useAvatar({ setIsLoading, isSpeaking, hasResize, movingCallback }) {
   const clock = new Clock()
@@ -81,8 +84,10 @@ export default function useAvatar({ setIsLoading, isSpeaking, hasResize, movingC
 
   async function changeAvatar(shouldStartAnimation) {
     setIsLoading(true)
-
-    const dom = await avatarRef.current.render(config.avatar, containerRef.current)
+    const response = await fetchFile(config.avatar.url)
+    const decompressed = await decompressZstd(await response.arrayBuffer())
+    const url = URL.createObjectURL(new Blob([decompressed]), { type: 'application/octet-stream' })
+    const dom = await avatarRef.current.render({ url, config: config.avatar.config }, containerRef.current)
     if (shouldStartAnimation) playAnimation()
     animate()
 

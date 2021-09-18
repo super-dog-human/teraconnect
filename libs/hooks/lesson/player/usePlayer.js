@@ -1,8 +1,7 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
 import useFetch from '../../useFetch'
 import { fetchFile } from '../../../fetch'
-import { ZSTDDecoder } from 'zstddec'
-const decoder = new ZSTDDecoder()
+import { decompressZstd } from '../../../decompressUtil'
 
 export default function usePlayer({ id, viewKey, showDialog }) {
   const { fetch } = useFetch()
@@ -41,9 +40,7 @@ export default function usePlayer({ id, viewKey, showDialog }) {
 
   const fetchBody = useCallback(async () => {
     const response = await fetchFile(lesson.bodyURL)
-    const compressed = new Uint8Array(await response.arrayBuffer())
-    await decoder.init()
-    const material = JSON.parse(new TextDecoder().decode(decoder.decode(compressed)))
+    const material = JSON.parse(new TextDecoder().decode(await decompressZstd(await response.arrayBuffer())))
     setDurationSec(material.durationSec)
     setBackgroundImageURL(material.backgroundImageURL)
 
