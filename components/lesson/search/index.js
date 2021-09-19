@@ -31,23 +31,25 @@ const LessonSearch = ({ isSearchStalled, hits, hasMore, refineNext }) => {
   return (
     <div css={backgroundStyle}>
       <div css={bodyStyle}>
-        <Spacer height='50' />
+        {hits.length > 0 &&
+          <>
+            <Flex justifyContent='space-evenly' flexWrap='wrap' gap='30px'>
+              {hits.map(hit => <LessonCard key={hit.objectID} {...hit}/>)}
+              {[...Array(3 - hits.length % 3)].map((_, i) => <Container width='330' key={i} />)}
+            </Flex>
 
-        <Flex justifyContent='space-evenly' flexWrap='wrap' gap='30px'>
-          {hits.map(hit => <LessonCard key={hit.objectID} {...hit}/>)}
-          {[...Array(3 - hits.length % 3)].map((_, i) => <Container width='330' key={i} />)}
-        </Flex>
-
-        {hits.length > 0 && hasMore &&
-          <div ref={terminationRef}>
-            <ContainerSpacer top='30' botom='30'>
-              <Flex justifyContent='center'>
-                <Container width='40' height='40'>
-                  <LoadingIndicator />
-                </Container>
-              </Flex>
-            </ContainerSpacer>
-          </div>
+            {hasMore &&
+              <div ref={terminationRef}>
+                <ContainerSpacer top='30' bottom='30'>
+                  <Flex justifyContent='center'>
+                    <Container width='40' height='40'>
+                      <LoadingIndicator />
+                    </Container>
+                  </Flex>
+                </ContainerSpacer>
+              </div>
+            }
+          </>
         }
 
         {isSearchStalled &&
@@ -79,10 +81,11 @@ const backgroundStyle = css({
 })
 
 const bodyStyle = css({
-  height: 'calc(100% - 50px)',
+  height: 'calc(100% - 100px)',
   marginLeft: '20px',
   marginRight: '20px',
-  marginBottom: '50px',
+  paddingTop: '50px',
+  paddingBottom: '50px',
 })
 
 const loadingStyle = css({
