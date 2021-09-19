@@ -6,6 +6,11 @@ export default class ErrorBoundary extends React.Component {
     super(props)
   }
 
+  static getDerivedStateFromError(error) {
+    console.error(error)
+    return { hasError: true }
+  }
+
   componentDidCatch(error) {
     this.props.showError(
       {
