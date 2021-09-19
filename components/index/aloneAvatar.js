@@ -58,7 +58,6 @@ const avatar = {
 }
 const lightColor = '136,136,136,0.5'
 
-
 export default function AloneAvatar() {
   const containerRef = useRef()
   const { hasResize } = useResizeDetector(containerRef)
@@ -81,7 +80,6 @@ export default function AloneAvatar() {
     if (isLoading) return
     startAnimation()
   }, [avatarRef, isLoading, startAnimation])
-
 
   return (
     <div css={backgroundStyle}>
