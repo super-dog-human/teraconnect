@@ -2,28 +2,34 @@
 import React, { useEffect, useState } from 'react'
 import { css } from '@emotion/core'
 import { useScreenClass } from 'react-grid-system'
-import Link from 'next/link'
+import useMobileDetector from '../../libs/hooks/useMobileDetector'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/client'
 import Container from '../container'
+import AbsoluteContainer from '../absoluteContainer'
 import Spacer from '../spacer'
 import Flex from '../flex'
 import FlexItem from '../flexItem'
 import Icon from '../icon'
+import IconButton from '../button/iconButton'
+import PageLink from '../pageLink'
 import TopLogoLink from '../topLogoLink'
 import MenuLink from './menuLink'
 import LinkLabel from './linkLabel'
 import SearchBox from './searchBox'
 import AlgoliaSearchBox from './algoliaSearchBox'
 import ContainerSpacer from '../containerSpacer'
+import MobileMenu from './mobileMenu'
 
 export default function Header({ currentPage }) {
   const router = useRouter()
   const screenClass = useScreenClass()
   const [session, loading] = useSession()
   const [isHover, setIsHover] = useState(false)
+  const [isMobileMenuShow, setIsMobileMenuShow] = useState(false)
   const [isSearchBoxFocus, setIsSearchBoxFocus] = useState(!!router.query.q)
   const [isShowMenus, setIsShowMenus] = useState(true)
+  const isMobile = useMobileDetector()
 
   function handleMouseEnter() {
     setIsHover(true)
@@ -38,6 +44,15 @@ export default function Header({ currentPage }) {
     setIsShowMenus(true)
   }
 
+  function handleMenuDismiss() {
+    setIsMobileMenuShow(false)
+  }
+
+  function handleMenuTouchEnd(e) {
+    setIsMobileMenuShow(s => !s)
+    e.stopPropagation()
+  }
+
   useEffect(() => {
     if (!isSearchBoxFocus) return
     if (screenClass !== 'md') return
@@ -45,8 +60,29 @@ export default function Header({ currentPage }) {
   }, [isSearchBoxFocus, screenClass])
 
   return (
-    <header css={headerStyle} className="header-z">
-      {!['xs', 'sm'].includes(screenClass) &&
+    <header css={headerStyle} className="header-z" onTouchEnd={handleMenuDismiss}>
+      {isMobile === true && router.pathname !== '/search' &&
+        <>
+          <div>
+            <PageLink path='/'>
+              <Flex justifyContent='center' alignItems='center'>
+                <Spacer height='60' />
+                <img src={'/img/logo_black.png'} srcSet={'/img/logo_black.png 1x, /img/logo_black@2x.png 2x'} alt='TERACONNECTロゴ' css={logoStyle} />
+              </Flex>
+            </PageLink>
+            <AbsoluteContainer top='0' right='0'>
+              <Flex alignItems='center'>
+                <Spacer height='60'/>
+                <Container width='40'>
+                  <IconButton name='menu' padding='11' onTouchEnd={handleMenuTouchEnd} />
+                </Container>
+              </Flex>
+            </AbsoluteContainer>
+          </div>
+          <MobileMenu isShow={isMobileMenuShow} setIsShow={setIsMobileMenuShow} />
+        </>
+      }
+      {isMobile === false &&
         <div css={bodyStyle}>
           <Flex justifyContent='space-between' alignItems='center'>
             <FlexItem flexBasis='201px'>
@@ -83,14 +119,14 @@ export default function Header({ currentPage }) {
                   <ContainerSpacer left='30' right='10'>
                     <Container width='110'>
                       {!loading && !session &&
-                        <Link href="/login" passHref><a>
-                          <button className="dark" css={buttonStyle}>授業をつくる</button>
-                        </a></Link>
+                        <PageLink path='/login'>
+                          <button className="light" css={buttonStyle}>授業をつくる</button>
+                        </PageLink>
                       }
                       {!loading && session &&
-                        <Link href="/dashboard" passHref><a>
-                          <button className="light" css={buttonStyle}>マイページ</button>
-                        </a></Link>
+                        <PageLink path='/dashboard'>
+                          <button className="dark" css={buttonStyle}>マイページ</button>
+                        </PageLink>
                       }
                     </Container>
                   </ContainerSpacer>
@@ -125,4 +161,9 @@ const buttonStyle = css({
   height: '39px',
   fontSize: '15px',
   lineHeight: '15px',
+})
+
+const logoStyle = css({
+  width: '181px',
+  height: '25px',
 })
