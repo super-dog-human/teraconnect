@@ -47,13 +47,17 @@ export default function Footer() {
           {!loading && !session && <div>
             <PlainText size='13' color='var(--text-gray)' whiteSpace='nowrap'>君の光をさがそう。</PlainText>
             <Spacer height='15' />
-            <img src="/img/logo_black.png" srcSet="/img/logo_black.png 1x, /img/logo_black@2x.png 2x" width="181" height="25" alt='TERACONNECTロゴ' />
+            <PageLink path='/'>
+              <img src="/img/logo_black.png" srcSet="/img/logo_black.png 1x, /img/logo_black@2x.png 2x" width="181" height="25" alt='TERACONNECTロゴ' />
+            </PageLink>
           </div>
           }
           {!loading && session && <div>
             <PlainText size='13' color='var(--text-gray)' whiteSpace='nowrap'>あなたの知識が、誰かを照らす。</PlainText>
             <Spacer height='15' />
-            <img src="/img/logo_black.png" srcSet="/img/logo_black.png 1x, /img/logo_black@2x.png 2x" width="181" height="25" alt='TERACONNECTロゴ' />
+            <PageLink path='/'>
+              <img src="/img/logo_black.png" srcSet="/img/logo_black.png 1x, /img/logo_black@2x.png 2x" width="181" height="25" alt='TERACONNECTロゴ' />
+            </PageLink>
           </div>
           }
         </div>
