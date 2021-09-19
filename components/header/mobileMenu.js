@@ -9,6 +9,7 @@ import Flex from '../flex'
 import Icon from '../icon'
 import PlainText from '../plainText'
 import PageLink from '../pageLink'
+import ContainerSpacer from '../containerSpacer'
 
 export default function MobileMenu({ isShow, setIsShow }) {
   const [session, loading] = useSession()
@@ -52,16 +53,15 @@ export default function MobileMenu({ isShow, setIsShow }) {
                   <PlainText color='gray' size='18' lineHeight='35'>キーワード検索</PlainText>
                 </div>
               </PageLink>
-              <Spacer height='20'/>
+              <Spacer height='10'/>
               {!loading && session &&
-                <>
-                  <Flex justifyContent='center'>
-                    <PageLink path='/dashboard'>
-                      <button className="dark" css={buttonStyle}>マイページ</button>
-                    </PageLink>
-                  </Flex>
-                  <Spacer height='10'/>
-                </>
+                  <ContainerSpacer top='10' bottom='10'>
+                    <Flex justifyContent='center'>
+                      <PageLink path='/dashboard'>
+                        <button className="dark" css={buttonStyle}>マイページ</button>
+                      </PageLink>
+                    </Flex>
+                  </ContainerSpacer>
               }
             </div>
           </Flex>
