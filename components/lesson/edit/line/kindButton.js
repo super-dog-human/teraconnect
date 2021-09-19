@@ -18,7 +18,7 @@ export default function KindButton({ kind, isLoading, isPlaying, status, onClick
   return (
     <ContainerSpacer left='10' right='15'>
       <Flex>
-        {isLoading && <Container width='20' height='20'><LoadingIndicator /></Container>}
+        {isLoading && <Container width='20' height='20'><LoadingIndicator size='100'/></Container>}
         {!isLoading && <Container width='20' height='20'><img src={`/img/icon/timeline-${kind}.svg`} css={imageStyle} onClick={onClick} draggable={false} alt={`${kind}ボタン`} /></Container>}
       </Flex>
     </ContainerSpacer>

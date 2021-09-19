@@ -57,7 +57,7 @@ const AlgoliaSearchBox = ({ isFocus, setIsFocus, onClose, isSearchStalled, refin
       <Container width='25' height='25'>
         {isSearchStalled &&
           <Container width='20' height='20'>
-            <LoadingIndicator />
+            <LoadingIndicator size='100'/>
           </Container>
         }
         {!isSearchStalled &&

@@ -43,7 +43,7 @@ const LessonSearch = ({ isSearchStalled, hits, hasMore, refineNext }) => {
                 <ContainerSpacer top='30' bottom='30'>
                   <Flex justifyContent='center'>
                     <Container width='40' height='40'>
-                      <LoadingIndicator />
+                      <LoadingIndicator size='100' />
                     </Container>
                   </Flex>
                 </ContainerSpacer>
@@ -55,7 +55,7 @@ const LessonSearch = ({ isSearchStalled, hits, hasMore, refineNext }) => {
         {isSearchStalled &&
           <div css={loadingStyle}>
             <Container width='60' height='60'>
-              <LoadingIndicator />
+              <LoadingIndicator size='100' />
             </Container>
           </div>
         }
