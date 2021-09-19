@@ -8,9 +8,9 @@ import Spacer from '../../spacer'
 import PlainText from '../../plainText'
 import Icon from '../../icon'
 
-export default function Embeddings({ embeddings }) {
+export default function Embeddings({ isMobile, embeddings }) {
   return (
-    <Flex flexWrap='wrap' gap='50px 30px'>
+    <Flex justifyContent={isMobile && 'center'} flexWrap='wrap' gap='50px 30px'>
       {Array.from(new Set(embeddings.filter(e => e.action === 'show' && e.serviceName === 'youtube').map(e => e.contentID))).map((contentID, i) => {
         const iframeURL = `https://www.youtube.com/embed/${contentID}?autoplay=0`
         const linkURL = 'https://www.youtube.com/watch?v=' + contentID

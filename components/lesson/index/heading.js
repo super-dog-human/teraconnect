@@ -3,7 +3,16 @@ import React from 'react'
 import { css } from '@emotion/core'
 import PlainText from '../../plainText'
 
-export default function Heading({ name, children }) {
+export default function Heading({ isMobile, name, children }) {
+  const containerStyle = css({
+    margin: isMobile ?  '70px 10px' : '70px 30px',
+  })
+
+  const bodyStyle = css({
+    marginLeft: !isMobile && '20px',
+    marginRight: !isMobile && '20px',
+  })
+
   return (
     <div css={containerStyle}>
       <div css={headingStyle}>
@@ -16,15 +25,6 @@ export default function Heading({ name, children }) {
   )
 }
 
-const containerStyle = css({
-  margin: '70px 30px',
-})
-
 const headingStyle = css({
   marginBottom: '15px',
-})
-
-const bodyStyle = css({
-  marginLeft: '20px',
-  marginRight: '20px',
 })

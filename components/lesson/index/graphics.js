@@ -1,12 +1,14 @@
 /** @jsxImportSource @emotion/react */
-import React, { Fragment } from 'react'
+import React from 'react'
 import { css } from '@emotion/core'
 import GraphicThumbnail from '../graphicThumbnail'
+import MobileGraphicThumbnail from './mobileGraphicThumbnail'
 import Container from '../../container'
 import Flex from '../../flex'
+import FlexItem from '../../flexItem'
 import { useImageViewerContext } from '../../../libs/contexts/imageViewerContext'
 
-export default function Graphics({ graphics, graphicURLs }) {
+export default function Graphics({ isMobile, graphics, graphicURLs }) {
   const { setImage } = useImageViewerContext()
 
   function handleClick(e) {
@@ -16,19 +18,20 @@ export default function Graphics({ graphics, graphicURLs }) {
   }
 
   return (
-    <Flex alignContent='flex-start' flexWrap='wrap' gap='10px 0px'>
+    <Flex justifyContent={isMobile && 'space-between'} alignContent='flex-start' flexWrap='wrap' gap={isMobile ? '10px 5px' : '20px'}>
       {Array.from(new Set(graphics.filter(g => g.action === 'show').map(g => g.graphicID))).map((id, i) => {
         const url = graphicURLs[id]
         return (
-          <Fragment key={i}>
-            <Container width='185' height='100'>
+          <FlexItem key={i} column={isMobile && '2 - 10px'}>
+            <Container>
               <Flex justifyContent='center'>
                 <button css={bodyStyle} data-url={url} onClick={handleClick}>
-                  <GraphicThumbnail url={url} isProcessing={!url} />
+                  {!isMobile && <GraphicThumbnail url={url} />}
+                  {isMobile && <MobileGraphicThumbnail url={url} />}
                 </button>
               </Flex>
             </Container>
-          </Fragment>
+          </FlexItem>
         )
       })}
     </Flex>
@@ -40,6 +43,4 @@ const bodyStyle = css({
   cursor: 'pointer',
   border: 'none',
   padding: 0,
-  marginLeft: '10px',
-  marginRight: '10px',
 })

@@ -12,7 +12,7 @@ import { fetchBookFast } from '../../../libs/fetchBook'
 
 const calilBookURL = 'https://calil.jp/book/'
 
-export default function ReferenceBooks({ references }) {
+export default function ReferenceBooks({ isMobile, references }) {
   const [books, setBooks] = useState({})
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function ReferenceBooks({ references }) {
   }, [references])
 
   return (
-    <Flex flexWrap='wrap' gap='20px 0px'>
+    <Flex justifyContent={isMobile && 'center'} flexWrap='wrap' gap='20px 0px'>
       {references.map((reference, i) => (
         <Fragment key={i}>
           <div css={bookStyle}>

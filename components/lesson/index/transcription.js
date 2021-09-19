@@ -36,9 +36,11 @@ export default function Transcription({ speeches }) {
                     </PlainText>
                   </ContainerSpacer>
                 </FlexItem>
-                <PlainText size='14' lineHeight='14' color='var(--text-gray)'>
-                  {speech.subtitle}
-                </PlainText>
+                <div>
+                  <PlainText size='14' lineHeight='14' color='var(--text-gray)'>
+                    {speech.subtitle}
+                  </PlainText>
+                </div>
               </Flex>
             </div>
           ))}

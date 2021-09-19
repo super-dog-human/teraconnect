@@ -21,7 +21,7 @@ export default function Description({ lesson }) {
           <Flex>
             <FlexItem flexBasis='73px'>
               <Container width='73' height='73'>
-                <UserIcon id={lesson?.author.id} name={lesson?.author.name} />
+                {lesson && <UserIcon id={lesson?.author.id} name={lesson?.author.name} />}
               </Container>
             </FlexItem>
             <Spacer width='20' />

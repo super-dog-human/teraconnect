@@ -16,6 +16,7 @@ import usePlayer from '../../../libs/hooks/lesson/player/usePlayer'
 import useSpeechPlayer from '../../../libs/hooks/lesson/player/useSpeechPlayer'
 import useYoutubePlayer from '../../../libs/hooks/lesson/player/useYouTubePlayer'
 import useResizeDetector from '../../../libs/hooks/useResizeDetector'
+import useMobileDetector from '../../../libs/hooks/useMobileDetector'
 import { useDialogContext } from '../../../libs/contexts/dialogContext'
 import { ImageViewerProvider } from '../../../libs/contexts/imageViewerContext'
 
@@ -25,6 +26,7 @@ export default function Lesson({ id, viewKey }) {
   const containerRef = useRef()
   const preCanPlayRef = useRef()
   const { hasResize } = useResizeDetector(containerRef)
+  const isMobile = useMobileDetector()
   const shouldResumeRef = useRef(false)
   const { lesson, isLoading: isBodyLoading, durationSec, backgroundImageURL, avatars, drawings, embeddings, graphics, speeches, graphicURLs, speechURL, initializeLesson } = usePlayer({ id, viewKey, showDialog })
   const { isLoading: isSpeechLoading, isPlaying: isSpeechPlaying, playSpeech, stopSpeech, updateSpeeche, seekSpeech } = useSpeechPlayer({ url: speechURL, durationSec })
@@ -97,20 +99,20 @@ export default function Lesson({ id, viewKey }) {
             onPlayButtonClick={handlePlayButtonClick} onSeekChange={handleSeekChange} onSeekUp={handleSeekUp} youTubeIDs={youTubeIDs} {...playerProps} />
           <div css={selectableStyle}>
             <Description lesson={lesson} />
-            <Navigator lesson={lesson} />
-            <Heading name='講義全文'>
+            <Navigator isMobile={isMobile} lesson={lesson} />
+            <Heading isMobile={isMobile} name='講義全文'>
               <Transcription speeches={speeches} />
             </Heading>
-            {graphics.length > 0 && <Heading name='スライド'>
-              <Graphics graphics={graphics} graphicURLs={graphicURLs} />
+            {graphics.length > 0 && <Heading isMobile={isMobile} name='スライド'>
+              <Graphics isMobile={isMobile} graphics={graphics} graphicURLs={graphicURLs} />
             </Heading>}
-            {embeddings.length > 0 && <Heading name='動画'>
-              <Embeddings embeddings={embeddings} />
+            {embeddings.length > 0 && <Heading isMobile={isMobile} name='動画'>
+              <Embeddings isMobile={isMobile} embeddings={embeddings} />
             </Heading>}
-            {lesson?.references && <Heading name='参考図書'>
-              <ReferenceBooks references={lesson?.references} />
+            {lesson?.references && <Heading isMobile={isMobile} name='参考図書'>
+              <ReferenceBooks isMobile={isMobile} references={lesson?.references} />
             </Heading>}
-            <Heading name='作者'>
+            <Heading isMobile={isMobile} name='作者'>
               <Author author={lesson?.author} />
             </Heading>
           </div>
@@ -125,6 +127,7 @@ const bodyStyle = css({
   margin: 'auto',
   maxWidth: '1280px',
   height: '100%',
+  userSelect: 'none',
 })
 
 const selectableStyle = css({

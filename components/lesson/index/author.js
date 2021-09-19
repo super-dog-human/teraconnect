@@ -14,7 +14,7 @@ export default function Author({ author }) {
       <FlexItem flexBasis='73px'>
         <PageLink path={'/users/' + author?.id}>
           <Container width='73' height='73'>
-            <UserIcon id={author?.id} name={author?.name} />
+            {author && <UserIcon id={author?.id} name={author?.name} />}
           </Container>
         </PageLink>
       </FlexItem>
