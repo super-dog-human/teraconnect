@@ -6,10 +6,10 @@ import AlignContainer from '../alignContainer'
 import PageLink from '../pageLink'
 import ColorFilter from '../colorFilter'
 
-export default function MenuLink({ isHover, page, currentPage, path, children }) {
+export default function MenuLink({ isHover, isCurrent, path, children }) {
   return (
     <>
-      {page === currentPage &&
+      {isCurrent &&
         <div css={isHover ? null : underLineStyle }>
           <Container width='150' height='60'>
             <AlignContainer textAlign='center'>
@@ -18,7 +18,7 @@ export default function MenuLink({ isHover, page, currentPage, path, children })
           </Container>
         </div>
       }
-      {page !== currentPage &&
+      {!isCurrent &&
         <PageLink path={path}>
           <div css={hoverUnderLineStyle}>
             <Container width='150' height='60'>

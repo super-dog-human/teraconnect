@@ -19,7 +19,7 @@ import SearchBox from './searchBox'
 import AlgoliaSearchBox from './algoliaSearchBox'
 import ContainerSpacer from '../containerSpacer'
 
-export default function Header({ currentPage }) {
+export default function Header() {
   const router = useRouter()
   const screenClass = useScreenClass()
   const [session, loading] = useSession()
@@ -62,14 +62,14 @@ export default function Header({ currentPage }) {
                 <FlexItem flexBasis='40%'>
                   <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                     <Flex justifyContent='space-evenly'>
-                      <MenuLink isHover={isHover} page='analytics' currentPage={currentPage} path='/categories'>
+                      <MenuLink isHover={isHover} isCurrent={router.pathname === '/categories'} path='/categories'>
                         <Flex justifyContent='center'>
                           <Container width='18'><Icon name='book' /></Container>
                           <Spacer width='10' />
                           <LinkLabel label='教科で探す' />
                         </Flex>
                       </MenuLink>
-                      <MenuLink isHover={isHover} page='edit' currentPage={currentPage} path='/users'>
+                      <MenuLink isHover={isHover} isCurrent={router.pathname === '/users'} path='/users'>
                         <Flex justifyContent='center'>
                           <Container width='22'><Icon name='graduation-hat' /></Container>
                           <Spacer width='10' />
