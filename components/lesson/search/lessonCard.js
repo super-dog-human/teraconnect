@@ -48,12 +48,10 @@ export default function LessonCard(hit) {
         </PageLink>
         <Spacer height='10' />
         <PageLink path={'/lessons/' + hit.objectID} passHref>
-          <a>
-            <Container width='300' height='169'>
-              {!isThumbnailError && <img src={lessonImageURL + hit.objectID + '/thumbnail.png'} alt={hit.title} css={thumbnailStyle} onError={handleThumbnailError} />}
-              {isThumbnailError && <NoImage color='var(--soft-white)' backgroundColor='gray' />}
-            </Container>
-          </a>
+          <Container width='300' height='169'>
+            {!isThumbnailError && <img src={lessonImageURL + hit.objectID + '/thumbnail.png'} alt={hit.title} css={thumbnailStyle} onError={handleThumbnailError} />}
+            {isThumbnailError && <NoImage color='var(--soft-white)' backgroundColor='gray' />}
+          </Container>
         </PageLink>
         <Spacer height='5' />
         <PageLink path={'/lessons/' + hit.objectID}>
