@@ -2,16 +2,16 @@
 import React from 'react'
 import { css } from '@emotion/core'
 import { useSession } from 'next-auth/client'
-import Container from '../container'
-import Spacer from '../spacer'
-import TransitionContainer from '../transition/transitionContainer'
-import Flex from '../flex'
-import Icon from '../icon'
-import PlainText from '../plainText'
-import PageLink from '../pageLink'
-import ContainerSpacer from '../containerSpacer'
+import Container from '../../container'
+import Spacer from '../../spacer'
+import TransitionContainer from '../../transition/transitionContainer'
+import Flex from '../../flex'
+import Icon from '../../icon'
+import PlainText from '../../plainText'
+import PageLink from '../../pageLink'
+import ContainerSpacer from '../../containerSpacer'
 
-export default function MobileMenu({ isShow, setIsShow }) {
+export default function Menu({ isShow, setIsShow, currentPage }) {
   const [session, loading] = useSession()
 
   function handleBackgroundTouchEnd(e) {
@@ -42,17 +42,32 @@ export default function MobileMenu({ isShow, setIsShow }) {
                 </div>
               </PageLink>
               <Spacer height='10'/>
-              <PageLink path='/search'>
-                <div css={lineStyle}>
-                  <Flex justifyContent='center'>
-                    <div css={iconStyle}>
-                      <Container width='25' height='25'><Icon name='search'/></Container>
-                    </div>
-                  </Flex>
-                  <Spacer width='15'/>
-                  <PlainText color='gray' size='18' lineHeight='35'>キーワード検索</PlainText>
-                </div>
-              </PageLink>
+              {currentPage === '/search' &&
+                <PageLink path='/'>
+                  <div css={lineStyle}>
+                    <Flex justifyContent='center'>
+                      <div css={iconStyle}>
+                        <Container width='25' height='25'><Icon name='home'/></Container>
+                      </div>
+                    </Flex>
+                    <Spacer width='15'/>
+                    <PlainText color='gray' size='18' lineHeight='35'>ホーム</PlainText>
+                  </div>
+                </PageLink>
+              }
+              {currentPage !== '/search' &&
+                <PageLink path='/search'>
+                  <div css={lineStyle}>
+                    <Flex justifyContent='center'>
+                      <div css={iconStyle}>
+                        <Container width='25' height='25'><Icon name='search'/></Container>
+                      </div>
+                    </Flex>
+                    <Spacer width='15'/>
+                    <PlainText color='gray' size='18' lineHeight='35'>キーワード検索</PlainText>
+                  </div>
+                </PageLink>
+              }
               <Spacer height='10'/>
               {!loading && session &&
                   <ContainerSpacer top='10' bottom='10'>
