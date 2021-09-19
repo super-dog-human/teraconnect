@@ -94,7 +94,7 @@ const CopyForTeacher = () => {
                       <PlainText size='13' whiteSpace='nowrap'>
                         文字を書き込んだり、YouTubeや<br />
                         GeoGebraを授業内に埋め込んで、<br />
-                        さらに分かりやすい授業にしよう。
+                        さらに分かりやすい授業に。
                       </PlainText>
                     </div>
                   </div>
