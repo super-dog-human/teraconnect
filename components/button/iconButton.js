@@ -3,8 +3,10 @@ import React from 'react'
 import { css } from '@emotion/core'
 import Icon from '../icon'
 import LoadingIndicator from '../loadingIndicator'
+import useTouchDeviceDetector from '../../libs/hooks/useTouchDeviceDetector'
 
 export default function IconButton(props) {
+  const isTouchDevice = useTouchDeviceDetector()
   const { name, backgroundColor, hoverBackgroundColor, toggledBackgroundColor, borderColor, padding, disabled, isToggle, isProcessing, ...buttonProps } = props
   const buttonDisable = disabled || isProcessing
   const bodyStyle = css({
@@ -15,7 +17,7 @@ export default function IconButton(props) {
     fontSize: 0,
     borderColor: borderColor,
     backgroundColor: isToggle ? toggledBackgroundColor : backgroundColor,
-    opacity: isToggle ? 1 : 0.7,
+    opacity: isToggle || isTouchDevice ? 1 : 0.7,
     ':hover': {
       backgroundColor: !buttonDisable && (isToggle && toggledBackgroundColor) || !buttonDisable && hoverBackgroundColor,
       opacity: !buttonDisable && 1,
