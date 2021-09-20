@@ -36,6 +36,7 @@ export default function App ({ Component, pageProps }) {
       <Head>
         <meta name="description" content="アバターを通じて簡単に授業を収録・編集し、公開できるプラットフォームです。" />
         <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0" />
+        <meta name="google-site-verification" content={process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION} />
       </Head>
       <Script src={youTubePlayerSrc} strategy="beforeInteractive" />
       <Provider session={pageProps.session}>
