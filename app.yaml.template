@@ -4,6 +4,8 @@ automatic_scaling:
   min_instances: 1
 env_variables:
   NEXTAUTH_URL: ""
+  GOOGLE_CLIENT_ID: ""
+  GOOGLE_CLIENT_SECRET: ""
   TWITTER_CLIENT_ID: ""
   TWITTER_CLIENT_SECRET: ""
   AUTH_SECRET: ""
