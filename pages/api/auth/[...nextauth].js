@@ -3,10 +3,6 @@ import Providers from 'next-auth/providers'
 
 const options = {
   providers: [
-    Providers.Apple({
-      clientId: process.env.APPLE_CLIENT_ID,
-      clientSecret: process.env.APPLE_CLIENT_SECRET
-    }),
     Providers.Google({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET
