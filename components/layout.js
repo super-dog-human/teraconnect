@@ -4,9 +4,9 @@ import { css } from '@emotion/core'
 import Header from './header/'
 import Footer from './footer'
 
-const Layout = ({ currentPage, children }) => (
+const Layout = ({ children }) => (
   <>
-    <Header currentPage={currentPage} />
+    <Header />
     <main css={marginStyle}>
       { children }
     </main>
