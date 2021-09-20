@@ -10,7 +10,7 @@ export default function MenuLink({ isHover, page, currentPage, path, children })
   return (
     <>
       {page === currentPage &&
-        <div css={isHover ? null : underLineStyle }>
+        <div css={!isHover && underLineStyle }>
           <Container width='120' height='60'>
             <AlignContainer textAlign='center'>
               {children}

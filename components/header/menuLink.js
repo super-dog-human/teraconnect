@@ -4,13 +4,12 @@ import { css } from '@emotion/core'
 import Container from '../container'
 import AlignContainer from '../alignContainer'
 import PageLink from '../pageLink'
-import ColorFilter from '../colorFilter'
 
 export default function MenuLink({ isHover, isCurrent, path, children }) {
   return (
     <>
       {isCurrent &&
-        <div css={isHover ? null : underLineStyle }>
+        <div css={!isHover && underLineStyle}>
           <Container width='150' height='60'>
             <AlignContainer textAlign='center'>
               {children}
@@ -23,9 +22,7 @@ export default function MenuLink({ isHover, isCurrent, path, children }) {
           <div css={hoverUnderLineStyle}>
             <Container width='150' height='60'>
               <AlignContainer textAlign='center'>
-                <ColorFilter opacity='1' hoverOpacity='1'>
-                  {children}
-                </ColorFilter>
+                {children}
               </AlignContainer>
             </Container>
           </div>
@@ -44,6 +41,7 @@ const underLineStyle = css({
     height: '1px',
   },
 })
+
 const hoverUnderLineStyle = css({
   ':hover:after': {
     display: 'block',

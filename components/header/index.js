@@ -69,6 +69,7 @@ export default function Header() {
                           <LinkLabel label='教科で探す' />
                         </Flex>
                       </MenuLink>
+                      <Spacer height='60' />
                       <MenuLink isHover={isHover} isCurrent={router.pathname === '/users'} path='/users'>
                         <Flex justifyContent='center'>
                           <Container width='22'><Icon name='graduation-hat' /></Container>
