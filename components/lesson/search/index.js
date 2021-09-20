@@ -5,7 +5,6 @@ import { connectInfiniteHits, connectSearchBox, PoweredBy } from 'react-instants
 import { useInView } from 'react-intersection-observer'
 import Flex from '../../flex'
 import PlainText from '../../plainText'
-import Spacer from '../../spacer'
 import Container from '../../container'
 import ContainerSpacer from '../../containerSpacer'
 import LoadingIndicator from '../../loadingIndicator'

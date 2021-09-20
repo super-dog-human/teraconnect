@@ -1,6 +1,6 @@
 import { useRef, useCallback, useEffect } from 'react'
 import { fetch as isoFetch, fetchToken as isoFetchToken, fetchWithAuth as isoFetchWithAuth, post as isoPost } from '../fetch'
-import { createVoice as isoCreateVoice, createGraphics as isoCreateGraphics, createMusic as isoCreateMusic } from '../fetchResource'
+import { createVoice as isoCreateVoice, createGraphics as isoCreateGraphics, createMusic as isoCreateMusic } from '../postResource'
 
 const timeoutMillisec = 1000 * 60
 

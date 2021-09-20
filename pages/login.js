@@ -12,9 +12,6 @@ export default function Page() {
       <Layout>
         <div>
           <div>
-            <button onClick={() => signIn('apple')}>Apple</button>
-          </div>
-          <div>
             <button onClick={() => signIn('google')}>Google</button>
           </div>
           <div>

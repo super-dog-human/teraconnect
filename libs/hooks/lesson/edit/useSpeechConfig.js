@@ -7,7 +7,7 @@ import useAudioPlayer from '../../useAudioPlayer'
 import { isBlobURL } from '../../../utils'
 import fetch from 'isomorphic-unfetch'
 import { putFile } from '../../../fetch'
-import { createVoice } from '../../../fetchResource'
+import { createVoice } from '../../../postResource'
 import { wavToMp3 } from '../../../audioUtils'
 import { voiceURL } from '../../../speechUtils'
 
