@@ -44,7 +44,7 @@ export default function LessonPlayer(props) {
       {graphic && <Graphic graphic={graphic}/>}
       {subtitle && <Caption caption={subtitle.caption} />}
       {isShowSubtitle && subtitle && <Subtitle subtitle={subtitle.body} />}
-      {!isLoading && !disabledControl && <Controller isPlaying={isPlaying} isShowSubtitle={isShowSubtitle} isShowFullController={isShowFullController}
+      {!disabledControl && <Controller isLoading={isLoading} isPlaying={isPlaying} isShowSubtitle={isShowSubtitle} isShowFullController={isShowFullController}
         maxTime={parseFloat(durationSec.toFixed(2))} onSubtitleButtonClick={handleSubtitleButtonClick} {...controllerProps} />}
       {<LoadingIndicator size='100' isLoading={isLoading}/>}
     </Aspect16To9Container>

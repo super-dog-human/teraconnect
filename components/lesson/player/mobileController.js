@@ -10,25 +10,36 @@ import Icon from '../../icon'
 import IconButton from '../../button/iconButton'
 import TransitionContainer from '../../transition/transitionContainer'
 import { floatSecondsToMinutesFormat } from '../../../libs/utils'
-import useTouchDeviceDetector from '../../../libs/hooks/useTouchDeviceDetector'
+import useMobileDetector from '../../../libs/hooks/useMobileDetector'
 
 export default function MobileController(props) {
+  const isMobile = useMobileDetector()
   const [isShowController, setIsShowController] = useState(true)
   const hideIconRef = useRef()
-  const { isPlaying, isShowSubtitle, isShowFullController, onPlayButtonClick, playerElapsedTime, maxTime, onSubtitleButtonClick, ...seekBarProps } = props
+  const { isLoading, isPlaying, isShowSubtitle, isShowFullController, onPlayButtonClick, playerElapsedTime, maxTime, onSubtitleButtonClick, ...seekBarProps } = props
 
   function handleBakgroundTouchEnd() {
     setIsShowController(s => !s)
   }
 
   function handlePlayButtonTouchStart(e) {
-    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)'
+    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.4)'
   }
 
   function handlePlayButtonTouchEnd(e) {
+    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.5)'
     clearTimeout(hideIconRef.current)
     onPlayButtonClick(e)
   }
+
+  const bodyStyle = css({
+    visibility: isLoading ? 'hidden' : 'visible',
+    position: 'absolute',
+    top: 0,
+    width: '100%',
+    height: '100%',
+    cursor: 'pointer',
+  })
 
   const playBlankButtonStyle = css({
     width: '100%',
@@ -40,14 +51,20 @@ export default function MobileController(props) {
 
   const iconBackgroundStyle = css({
     marginTop: isShowFullController ? `${15 + 35}px` : `15px`,
-    minWidth: '50px',
-    minHeight: 'auto',
-    width: '15%',
-    height: 'auto',
   })
 
   const bottomButtonsStyle = css({
     background: isShowFullController && 'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8))',
+  })
+
+  const statusIconStyle = css({
+    width: isMobile ? '40px' : '60px',
+    height: isMobile ? '40px' : '60px',
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: '50%',
+    padding: isMobile ? '25px' : '30px',
   })
 
   return (
@@ -91,22 +108,6 @@ export default function MobileController(props) {
     </div>
   )
 }
-
-const bodyStyle = css({
-  position: 'absolute',
-  top: 0,
-  width: '100%',
-  height: '100%',
-  cursor: 'pointer',
-})
-
-const statusIconStyle = css({
-  display: 'flex',
-  alignItems: 'center',
-  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  borderRadius: '50%',
-  padding: '25%',
-})
 
 const seekBarStyle = css({
   width: '100%',

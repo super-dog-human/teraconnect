@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { css } from '@emotion/core'
 import SeekBar from './seekBar'
 import Flex from '../../flex'
@@ -15,11 +15,11 @@ import { floatSecondsToMinutesFormat } from '../../../libs/utils'
 import useTouchDeviceDetector from '../../../libs/hooks/useTouchDeviceDetector'
 
 export default function Controller(props) {
-  const [isShowIcon, setIsShowIcon] = useState(false)
-  const [isShowController, setIsShowController] = useState(isTouchDevice)
   const hideIconRef = useRef()
+  const [isShowIcon, setIsShowIcon] = useState(false)
   const isTouchDevice = useTouchDeviceDetector()
-  const { isPlaying, isShowSubtitle, isShowFullController, onPlayButtonClick, playerElapsedTime, maxTime, onSubtitleButtonClick, ...seekBarProps } = props
+  const [isShowController, setIsShowController] = useState(isTouchDevice)
+  const { isLoading, isPlaying, isShowSubtitle, isShowFullController, onPlayButtonClick, playerElapsedTime, maxTime, onSubtitleButtonClick, ...seekBarProps } = props
 
   function handleMouseOver() {
     setIsShowController(true)
@@ -42,6 +42,15 @@ export default function Controller(props) {
     }, 500) // ボタンのフェードアウトが十分に完了してから非表示にする
   }, [isPlaying])
 
+  const bodyStyle = css({
+    visibility: isLoading ? 'hidden' : 'visible',
+    position: 'absolute',
+    top: 0,
+    width: '100%',
+    height: '100%',
+    cursor: 'pointer',
+  })
+
   const playBlankButtonStyle = css({
     width: '100%',
     height: isShowFullController ? 'calc(100% - 15px - 35px)' : 'calc(100% - 15px)',
@@ -52,10 +61,6 @@ export default function Controller(props) {
 
   const iconBackgroundStyle = css({
     marginTop: isShowFullController ? `${15 + 35}px` : `15px`,
-    minWidth: '50px',
-    minHeight: 'auto',
-    width: '7%',
-    height: 'auto',
   })
 
   const bottomButtonsStyle = css({
@@ -75,7 +80,7 @@ export default function Controller(props) {
                     <Icon name='pause' />
                   </div>
                 </FadeOutContainer>
-                }
+              }
             </div>
           </div>
           <TransitionContainer isShow={isShowController} duration={100}>
@@ -111,18 +116,12 @@ export default function Controller(props) {
   )
 }
 
-const bodyStyle = css({
-  position: 'absolute',
-  top: 0,
-  width: '100%',
-  height: '100%',
-  cursor: 'pointer',
-})
-
 const statusIconStyle = css({
   backgroundColor: 'rgba(0, 0, 0, 0.5)',
   borderRadius: '50%',
-  padding: '25%',
+  width: '46px',
+  height: '46px',
+  padding: '22px',
   display: 'flex',
   alignItems: 'center',
 })
