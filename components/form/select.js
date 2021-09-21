@@ -28,17 +28,23 @@ const Select = React.forwardRef((props, ref) => {
   return (
     <select ref={ref} css={bodyStyle} {...selectProps}>
       {topLabel && (
-        <option label={topLabel} value={topValue}></option>
+        <option label={topLabel} value={topValue}>
+          {topLabel}
+        </option>
       )}
 
       {Array.isArray(options) && options.map((opt, i) => (
-        <option value={ opt.value } key={ i } label={ opt.label } />
+        <option value={opt.value} key={i} label={opt.label}>
+          {opt.label}
+        </option>
       ))}
 
       {!Array.isArray(options) && Object.keys(options).map((key, i) => (
         <optgroup label={ key } key={ i }>
           {options[key].map((opt, i) => (
-            <option value={ opt.value } key={ i } label={ opt.label } />
+            <option value={opt.value} key={i} label={opt.label}>
+              {opt.label}
+            </option>
           ))}
         </optgroup>
       ))}
