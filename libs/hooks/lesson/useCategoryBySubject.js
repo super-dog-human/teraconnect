@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import useSWR from 'swr'
 import useFetch from '../useFetch'
+import { ONE_DAY_SECONDS } from '../../constants'
 
 export default function useCategoryBySubject(setValue) {
   const [subjectID, setSubjectID] = useState()
@@ -23,8 +24,8 @@ export default function useCategoryBySubject(setValue) {
   }
 
   const { data: categories, error } = useSWR(
-    () => subjectID ? `/categories?subject_id=${subjectID}` : null,
-    fetcher, { dedupingInterval: 86400000 }
+    subjectID ? `/categories?subject_id=${subjectID}` : '',
+    fetcher, { dedupingInterval: ONE_DAY_SECONDS }
   )
 
   function handleSubjectChange(e) {

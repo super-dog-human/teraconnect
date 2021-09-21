@@ -28,7 +28,7 @@ const Select = React.forwardRef((props, ref) => {
   return (
     <select ref={ref} css={bodyStyle} {...selectProps}>
       {topLabel && (
-        <option label={ topLabel } value={topValue}></option>
+        <option label={topLabel} value={topValue}></option>
       )}
 
       {Array.isArray(options) && options.map((opt, i) => (
