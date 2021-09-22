@@ -7,7 +7,7 @@ export default function Page() {
   return (
     <>
       <Head>
-        <title>ユーザー登録 | TERACONNECT</title>
+        <title>ユーザー登録 - TERACONNECT</title>
       </Head>
       <Layout>
         <SignUpForm />

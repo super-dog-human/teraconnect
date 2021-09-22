@@ -57,7 +57,6 @@ const Page = () => {
                         <PlainText size='45' lineHeight='45' color='var(--border-dark-gray)'>{s.subject.japaneseName}</PlainText>
                       </a>
                     </div>
-
                     {s.categories.map((categoryForGroup, i) => {
                       const isNewGroup = groupName !== categoryForGroup.groupName
                       if (isNewGroup) {
@@ -65,7 +64,6 @@ const Page = () => {
                       } else {
                         return // グループ単位でレンダリングするため、次のグループになるまで何もしない
                       }
-
                       const categories = []
                       s.categories.slice(i).some(c => {
                         if (c.groupName === groupName) {

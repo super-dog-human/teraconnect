@@ -10,7 +10,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>ユーザー編集 | TERACONNECT</title>
+        <title>ユーザー編集 - TERACONNECT</title>
       </Head>
       <Layout>
         <h1>Profile</h1>

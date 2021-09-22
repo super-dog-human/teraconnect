@@ -8,20 +8,29 @@ import LessonCategory from '../../components/lesson/category'
 const Page = () => (
   <>
     <Head>
-      <title>教科・単元 | TERACONNECT</title>
+      <title>教科・単元 - TERACONNECT</title>
     </Head>
     <Layout>
-      <div css={bodyStyle}>
-        <LessonCategory />
+      <div css={backgroundStyle}>
+        <div css={bodyStyle}>
+          <LessonCategory />
+        </div>
       </div>
     </Layout>
   </>
 )
 
-const bodyStyle = css({
+const backgroundStyle = css({
   width: '100%',
+  minHeight: 'calc(100vh - 60px)',
   height: '100%',
   backgroundColor: 'var(--bg-light-gray)',
+})
+
+const bodyStyle = css({
+  margin: 'auto',
+  maxWidth: '1280px',
+  height: '100%',
 })
 
 export default Page

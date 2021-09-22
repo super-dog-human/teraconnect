@@ -7,7 +7,7 @@ export default function Page() {
   return (
     <>
       <Head>
-        <title>ログイン | TERACONNECT</title>
+        <title>ログイン - TERACONNECT</title>
       </Head>
       <Layout>
         <div>

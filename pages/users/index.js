@@ -5,7 +5,7 @@ import Layout from '../../components/layout'
 const Page = () => (
   <>
     <Head>
-      <title>ユーザー | TERACONNECT</title>
+      <title>ユーザー - TERACONNECT</title>
     </Head>
     <Layout>
       <h1>Profile</h1>
