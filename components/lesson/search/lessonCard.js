@@ -1,7 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useEffect, useState } from 'react'
 import { Highlight } from 'react-instantsearch-dom'
-import Image from 'next/image'
 import { css } from '@emotion/core'
 import PageLink from '../../pageLink'
 import Flex from '../../flex'
