@@ -13,7 +13,14 @@ import Spacer from '../components/spacer'
 import useSubjects from '../libs/hooks/lesson/useSubjects'
 
 const Page = () => {
-  const { selectOptions, subjects, handleSubjectChange } = useSubjects()
+  const { selectRef, selectOptions, subjects, handleSubjectChange } = useSubjects()
+
+  const selectBarStyle = css({
+    position: 'fixed',
+    opacity: selectOptions.length > 0 ? 1 : 0,
+    width: '100%',
+    backgroundColor: 'var(--bg-light-gray)',
+  })
 
   return (
     <>
@@ -23,21 +30,19 @@ const Page = () => {
       <Layout>
         <div css={backgroundStyle}>
           <div css={bodyStyle}>
-            {selectOptions.length > 0 &&
-              <div css={selectBarStyle}>
-                <Container width='300'>
-                  <ContainerSpacer left='20'>
-                    <Spacer height='20' />
-                    <Flex alignItems='center'>
-                      <PlainText size='20' color='gray' whiteSpace='nowrap'>教科</PlainText>
-                      <Spacer width='20' />
-                      <Select size='25' topLabel='' color='gray' options={selectOptions} onChange={handleSubjectChange} />
-                    </Flex>
-                    <Spacer height='20' />
-                  </ContainerSpacer>
-                </Container>
-              </div>
-            }
+            <div css={selectBarStyle}>
+              <Container width='300'>
+                <ContainerSpacer left='20'>
+                  <Spacer height='20' />
+                  <Flex alignItems='center'>
+                    <PlainText size='20' color='gray' whiteSpace='nowrap'>教科</PlainText>
+                    <Spacer width='20' />
+                    <Select size='25' topLabel='' color='gray' options={selectOptions} onChange={handleSubjectChange} ref={selectRef} />
+                  </Flex>
+                  <Spacer height='20' />
+                </ContainerSpacer>
+              </Container>
+            </div>
 
             <Spacer height='70' />
 
@@ -48,7 +53,7 @@ const Page = () => {
                 <div key={i}>
                   <ContainerSpacer top='20' bottom='20' left='20' right='20'>
                     <div>
-                      <a id={'subject-head-' + s.subject.id}>
+                      <a id={'subject-' + s.subject.id}>
                         <PlainText size='45' lineHeight='45' color='var(--border-dark-gray)'>{s.subject.japaneseName}</PlainText>
                       </a>
                     </div>
@@ -79,7 +84,7 @@ const Page = () => {
                           <Flex flexDirection='column' gap='15px'>
                             {categories.map((category, i) => (
                               <div key={i}>
-                                <PageLink path={'/lessons/category/' + category.id} key={i}>
+                                <PageLink path={`/lessons?subject_id=${s.subject.id}&category_id=${category.id}`} key={i}>
                                   <PlainText size='22' color='gray' lineHeight='25'>{category.name}</PlainText>
                                 </PageLink>
                               </div>
@@ -111,12 +116,6 @@ const bodyStyle = css({
   maxWidth: '1280px',
   height: '100%',
   margin: 'auto',
-})
-
-const selectBarStyle = css({
-  position: 'fixed',
-  width: '100%',
-  backgroundColor: 'var(--bg-light-gray)',
 })
 
 export default Page

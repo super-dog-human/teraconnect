@@ -26,7 +26,7 @@ const Page = () => (
 const bodyStyle = css({
   width: '100%',
   height: '100%',
-  backgroundColor: 'var(--soft-white)',
+  backgroundColor: 'var(--bg-light-gray)',
 })
 
 export default Page

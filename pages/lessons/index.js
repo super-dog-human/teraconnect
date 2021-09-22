@@ -3,17 +3,16 @@ import React from 'react'
 import { css } from '@emotion/core'
 import Head from 'next/head'
 import Layout from '../../components/layout'
-import Lesson from '../../components/lesson/index'
-import getQueryParamsAsProps from '../../libs/middlewares/getQueryParamsAsProps'
+import LessonCategory from '../../components/lesson/category'
 
-const Page = ({ id, viewKey }) => (
+const Page = () => (
   <>
     <Head>
-      <title>授業の再生 - TERACONNECT</title>
+      <title>教科・単元 | TERACONNECT</title>
     </Head>
     <Layout>
       <div css={bodyStyle}>
-        <Lesson id={id} viewKey={viewKey} />
+        <LessonCategory />
       </div>
     </Layout>
   </>
@@ -26,7 +25,3 @@ const bodyStyle = css({
 })
 
 export default Page
-
-export async function getServerSideProps(context) {
-  return getQueryParamsAsProps(context)
-}
