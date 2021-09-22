@@ -1,6 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
+import { useRouter } from 'next/router'
 import { css } from '@emotion/core'
+import useLessonsByCategory from '../../../libs/hooks/lesson/useLessonsByCategory'
+import useTouchDeviceDetector from '../../../libs/hooks/useTouchDeviceDetector'
 import Flex from '../../flex'
 import PlainText from '../../plainText'
 import Container from '../../container'
@@ -8,9 +11,6 @@ import ContainerSpacer from '../../containerSpacer'
 import LoadingIndicator from '../../loadingIndicator'
 import PageLink from '../../pageLink'
 import LessonCard from './lessonCard'
-import { useRouter } from 'next/router'
-import useLessonsByCategory from '../../../libs/hooks/lesson/useLessonsByCategory'
-import useTouchDeviceDetector from '../../../libs/hooks/useTouchDeviceDetector'
 import Spacer from '../../spacer'
 import Hr from '../../hr'
 
@@ -48,11 +48,9 @@ export default function LessonCategory() {
 
       {lessons.length > 0 &&
         <>
-          <Flex justifyContent='space-evenly' flexWrap='wrap' gap='30px'>
+          <Flex justifyContent='space-evenly' flexWrap='wrap' gap='30px' afterWidth={!hasMore && '330px'}>
             {lessons.map(lesson => <LessonCard key={lesson.id} {...lesson}/>)}
-            {!isTouchDevice && lessons.length % 3 > 0 && [...Array(3 - lessons.length % 3)].map((_, i) => <Container width='330' key={i} />)}
           </Flex>
-
 
           {hasMore &&
             <ContainerSpacer top={isTouchDevice ? 50 : 80} bottom={isTouchDevice ? 0 : 30}>
@@ -65,7 +63,7 @@ export default function LessonCategory() {
             </ContainerSpacer>
           }
           {!hasMore &&
-            <ContainerSpacer top={isTouchDevice ? 70 : 100} bottom={(isTouchDevice ? 20 : 50) - 1}>
+            <ContainerSpacer top={isTouchDevice ? 40 : 100} bottom={(isTouchDevice ? 20 : 50) - 1}>
               <Hr width='calc(100% - 20px)' color='gray' />
             </ContainerSpacer>
           }
@@ -75,7 +73,6 @@ export default function LessonCategory() {
       {!isLoading && lessons.length === 0 &&
         <PlainText color='gray' size='15'>この単元の授業はまだありません。</PlainText>
       }
-
       <Spacer height='50' />
     </div>
   )

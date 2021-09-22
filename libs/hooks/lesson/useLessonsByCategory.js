@@ -21,7 +21,7 @@ export default function useLessonsByCategory({ subjectID, categoryID }) {
       setIsLoading(false)
       if (result.lessons) {
         fetchCursorRef.current = result.nextCursor
-        setHasMore(true)
+        setHasMore(result.lessons.length % 18 === 0)
         setLessons(l => [...l, ...result.lessons])
       } else {
         setHasMore(false)

@@ -2,7 +2,7 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-export default function Flex({ children, flexDirection, justifyContent, alignItems, alignContent, flexWrap, gap }) {
+export default function Flex({ children, flexDirection, justifyContent, alignItems, alignContent, flexWrap, gap, afterWidth }) {
   const bodyStyle = css({
     display: 'flex',
     flexDirection,
@@ -11,6 +11,12 @@ export default function Flex({ children, flexDirection, justifyContent, alignIte
     alignContent,
     flexWrap,
     gap,
+    '::after': afterWidth && {
+      content: '""',
+      display: 'block',
+      width: afterWidth,
+      height: 0,
+    }
   })
 
   return (

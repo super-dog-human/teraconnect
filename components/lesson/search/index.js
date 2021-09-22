@@ -33,9 +33,8 @@ const LessonSearch = ({ isSearchStalled, hits, hasMore, refineNext }) => {
       <Container height='50' />
       {hits.length > 0 &&
           <>
-            <Flex justifyContent='space-evenly' flexWrap='wrap' gap='30px'>
+            <Flex justifyContent='space-evenly' flexWrap='wrap' gap='30px' afterWidth={!hasMore && '330px'}>
               {hits.map(hit => <LessonCard key={hit.objectID} {...hit}/>)}
-              {hits.length % 3 > 0 && [...Array(3 - hits.length % 3)].map((_, i) => <Container width='330' key={i} />)}
             </Flex>
 
             {hasMore &&
@@ -84,6 +83,7 @@ const bodyStyle = css({
 const loadingStyle = css({
   width: '100%',
   height: '100%',
+  marginTop: '-50px', // トップマージンの高さをオフセット
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
