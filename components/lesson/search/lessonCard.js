@@ -34,7 +34,7 @@ export default function LessonCard(hit) {
   return (
     <div css={containerStyle}>
       <Container width='300' height='410'>
-        <PageLink path={`/subjects/${hit.subjectID}/categories/${hit.categoryID}`}>
+        <PageLink path={`/lessons?subject_id=${hit.subjectID}&category_id=${hit.categoryID}`}>
             <Flex>
               <PlainText color='gray' size='13'>
                 <Highlight hit={hit} attribute='subjectName' />
