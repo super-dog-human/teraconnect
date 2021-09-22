@@ -2,6 +2,8 @@
 import React from 'react'
 import { css } from '@emotion/core'
 import Head from 'next/head'
+import useSubjects from '../libs/hooks/lesson/useSubjects'
+import useTouchDeviceDetector from '../libs/hooks/useTouchDeviceDetector'
 import Layout from '../components/layout'
 import Container from '../components/container'
 import ContainerSpacer from '../components/containerSpacer'
@@ -10,9 +12,9 @@ import Select from '../components/form/select'
 import PlainText from '../components/plainText'
 import PageLink from '../components/pageLink'
 import Spacer from '../components/spacer'
-import useSubjects from '../libs/hooks/lesson/useSubjects'
 
 const Page = () => {
+  const isTouchDevice = useTouchDeviceDetector()
   const { selectRef, selectOptions, subjects, handleSubjectChange } = useSubjects()
 
   const selectBarStyle = css({
@@ -83,7 +85,7 @@ const Page = () => {
                             {categories.map((category, i) => (
                               <div key={i}>
                                 <PageLink path={`/lessons?subject_id=${s.subject.id}&category_id=${category.id}`} key={i}>
-                                  <PlainText size='22' color='gray' lineHeight='25'>{category.name}</PlainText>
+                                  <PlainText size={isTouchDevice ? 20 : 18} color='gray' lineHeight='25'>{category.name}</PlainText>
                                 </PageLink>
                               </div>
                             ))}

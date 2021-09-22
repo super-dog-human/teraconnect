@@ -64,7 +64,7 @@ export default function LessonCategory() {
           }
           {!hasMore &&
             <ContainerSpacer top={isTouchDevice ? 40 : 100} bottom={(isTouchDevice ? 20 : 50) - 1}>
-              <Hr width='calc(100% - 20px)' color='gray' />
+              <Hr width='calc(100% - 20px)' color='var(--border-gray)' />
             </ContainerSpacer>
           }
         </>
