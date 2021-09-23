@@ -65,6 +65,8 @@ export default function AloneAvatar() {
   const { setAvatarConfig, avatarRef } = useAvatar({ setIsLoading, hasResize })
 
   const startAnimation = useCallback(() => {
+    if (!avatarRef.current) return // unmountされていたら何もせず終了
+
     const canvasStyle = avatarRef.current.children[0].style
     const opacity = parseFloat(canvasStyle.opacity) || 0
     if (opacity >= 1) return
