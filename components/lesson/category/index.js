@@ -26,7 +26,7 @@ export default function LessonCategory() {
         {category &&
             <Flex alignItems='center'>
               <PageLink path={'/categories?subject_id=' + category.subjectID}>
-                <PlainText color='gray' size='22'>
+                <PlainText color='gray' size='22' whiteSpace='nowrap'>
                   {category.subjectName}
                 </PlainText>
               </PageLink>

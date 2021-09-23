@@ -5,7 +5,6 @@ import { fetchFile } from '../../fetch'
 import { switchSwipable, mouseOrTouchPositions, rgbToHex } from '../../utils'
 import { decompressZstd } from '../../decompressUtil'
 
-
 export default function useAvatar({ setIsLoading, isSpeaking, hasResize, movingCallback }) {
   const clock = new Clock()
   const avatarRef = useRef()
