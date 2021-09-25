@@ -1,17 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import React, { useEffect, useState } from 'react'
 import { css } from '@emotion/core'
-import NoImage from './noImage'
+import FallbackImage from './fallbackImage'
 
 const iconURL = process.env.NEXT_PUBLIC_GOOGLE_STORAGE_BUCKET_URL + '/user/'
 
 export default function UserIcon({ id, name }) {
   const [url ,setURL] = useState('')
-  const [hasError, setHasError] = useState(false)
-
-  function handleError() {
-    setHasError(true)
-  }
 
   useEffect(() => {
     setURL(iconURL + id + '.png')
@@ -19,8 +14,7 @@ export default function UserIcon({ id, name }) {
 
   return (
     <div css={bodyStyle}>
-      {!hasError && <img src={url} onError={handleError} alt={name} css={imageStyle} />}
-      {hasError && <NoImage textSize='10' color='var(--soft-white)' backgroundColor='gray' />}
+      <FallbackImage url={url} name={name} />
     </div>
   )
 }
@@ -30,10 +24,4 @@ const bodyStyle = css({
   height: '100%',
   borderRadius: '50%',
   overflow: 'hidden',
-})
-
-const imageStyle = css({
-  width: '100%',
-  height: '100%',
-  objectFit: 'contain',
 })
