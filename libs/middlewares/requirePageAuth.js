@@ -15,15 +15,15 @@ export default async function requirePageAuth(context) {
   const secret = process.env.SECRET
   const token = await jwt.getToken({ req, secret, raw: true })
 
-  if (req.url === '/users/new') {
-    return { props: { token } }
+  if (req.url === '/users/edit') {
+    return { props: { user: session.user } }
   }
 
   return fetchWithAuth('/users/me', token)
     .then(user => ({ props: { user, token } }))
     .catch(e => {
       if (e.response?.status === 404) {
-        context.res.writeHead(307, { Location: '/users/new' })
+        context.res.writeHead(307, { Location: '/users/edit' })
         context.res.end()
         return { props: {} }
       } else {
