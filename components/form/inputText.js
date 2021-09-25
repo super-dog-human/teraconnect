@@ -5,6 +5,7 @@ import { css } from '@emotion/core'
 const InputText = React.forwardRef(function inputText(props, ref) {
   const { size, color, textAlign, backgroundColor, borderColor, borderWidth, padding, ...inputProps } = props
   const bodyStyle = css({
+    WebkitAppearance: 'none',
     width: 'calc(100% - 2px)',
     height: '100%',
     fontSize: `${size}px`,
@@ -15,6 +16,7 @@ const InputText = React.forwardRef(function inputText(props, ref) {
     borderColor,
     borderWidth,
     borderStyle: 'solid',
+    borderRadius: 0,
     padding: padding ? `${padding}px` : '0px',
     margin: '0px',
     ':focus': {

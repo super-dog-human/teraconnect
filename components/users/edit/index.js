@@ -54,11 +54,11 @@ export default function EditUser({ user }) {
 
           <Flex justifyContent='center'>
             <FlexItem flexBasis='100%'>
-              <Container height='20'>
+              <Container height='25'>
                 <InputText size='20' color='gray' borderWidth='0px 0px 1px 0px' placeholder='名前を入力' onChange={handleNameChange} {...nameInputProps } />
               </Container>
               <Spacer height='30' />
-              <Container height='20'>
+              <Container height='25'>
                 <InputEmail size='20' color='gray' borderWidth='0px 0px 1px 0px' placeholder='メールアドレスを入力' onChange={handleEmailChange} {...emailInputProps } />
               </Container>
               <Spacer height='40' />
