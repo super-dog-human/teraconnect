@@ -6,7 +6,7 @@ import { fetchBookTitle } from '../../../fetchBook'
 
 const maxThumbnailSize = { width: 480, height: 270 }
 
-export default function useLessonPublishing({ lesson, material, setFormValue, handleTitleInputChange, handleDescriptionTextChange, handleCategorySelectChange, isLoading, isUpdating, onSubjectChange, avatars, allLessons, setting, dispatchSetting }) {
+export default function useLessonPublishing({ lesson, material, setFormValue, handleTitleInputChange, handleDescriptionTextChange, handleCategorySelectChange, isLoading, onSubjectChange, avatars, allLessons, setting, dispatchSetting }) {
   const inputFileRef = useRef()
   const newReferenceRef = useRef()
   const [isExtendedOtherSetting, setIsExtendedOtherSetting] = useState(false)
