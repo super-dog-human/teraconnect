@@ -1,8 +1,8 @@
-import { TEN_MB as maxFileByteSize } from './constants'
+import { TEN_MB as maxFileByteSize, SUPPORTED_IMAGE_FILES } from './constants'
 
 export function filterAvailableImages(files) {
   return Array.from(files)
-    .filter(f => ['image/jpeg', 'image/png', 'image/gif'].includes(f.type))
+    .filter(f => SUPPORTED_IMAGE_FILES.split(',').includes(f.type))
     .filter(f => f.size <= maxFileByteSize)
 }
 
