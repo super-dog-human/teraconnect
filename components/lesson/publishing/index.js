@@ -36,6 +36,7 @@ import NoImage from '../../noImage'
 import ErrorText from './errorText'
 import SynthesisVoiceConfig from '../../synthesisVoiceConfig'
 import { isDataURL } from '../../../libs/utils'
+import { SUPPORTED_IMAGE_FILES } from '../../../libs/constants'
 
 export default function LessonPublishing({ lesson, material }) {
   const isMobile = useMobileDetector()
@@ -75,7 +76,7 @@ export default function LessonPublishing({ lesson, material }) {
                     </AbsoluteContainer>
                     <AbsoluteContainer top='125px' left='260px'>
                       <Container width='35'>
-                        <InputFile accept="image/jpeg,image/png,image/gif" onChange={handleThumbnailChange} ref={inputFileRef} />
+                        <InputFile accept={SUPPORTED_IMAGE_FILES} onChange={handleThumbnailChange} ref={inputFileRef} />
                         <IconButton name='photo-upload' onClick={handleThumbnailUploadingClick} />
                       </Container>
                     </AbsoluteContainer>

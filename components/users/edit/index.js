@@ -18,6 +18,7 @@ import LabelButton from '../../button/labelButton'
 import LoadingIndicator from '../../loadingIndicator'
 import FallbackImage from '../../fallbackImage'
 import useUserEditor from '../../../libs/hooks/user/useUserEditor'
+import { SUPPORTED_IMAGE_FILES } from '../../../libs/constants'
 
 export default function EditUser({ user }) {
   const { initialLoading, isNewUser, isUpdating, isUpdated, account, inputFileRef, handleNameChange, handleEmailChange, handleProfileChange, handleThumbnailChange, handleThumbnailUploadingClick, handleSubmit, handleSubmitClick,
@@ -43,7 +44,7 @@ export default function EditUser({ user }) {
               </div>
               <AbsoluteContainer right='0' bottom='0'>
                 <Container width='25'>
-                  <InputFile accept="image/jpeg,image/png,image/gif" onChange={handleThumbnailChange} ref={inputFileRef} />
+                  <InputFile accept={SUPPORTED_IMAGE_FILES} onChange={handleThumbnailChange} ref={inputFileRef} />
                   <IconButton name='photo-upload-gray' onClick={handleThumbnailUploadingClick} />
                 </Container>
               </AbsoluteContainer>

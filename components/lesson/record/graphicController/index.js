@@ -11,19 +11,19 @@ import UploadingButton from './uploadingButton'
 import ScrollArrow from './scrollArrow'
 import SelectorThumbnail from './selectorThumbnail'
 import DragSwappable from '../../../dragSwappable'
+import { SUPPORTED_IMAGE_FILES } from '../../../../libs/constants'
 
 export default function LessonRecordGraphicController({ id, setSelectedGraphic, hasDragOver }) {
   const selectImageBarRef = useRef(null)
   const inputFileRef = useRef(null)
   const { imageID, selectImage, removeImage, images, setImages, moveImage } = useImageControllerBar(setSelectedGraphic)
-  const { handleDragOver, handleDragLeave, handleDrop, handleFileChange, handleUploadButtonClick } =
-    useImageUploaderBar(id, images, setImages, inputFileRef, selectImageBarRef)
+  const { handleDragOver, handleDragLeave, handleDrop, handleFileChange, handleUploadButtonClick } = useImageUploaderBar(id, images, setImages, inputFileRef, selectImageBarRef)
   const { isFinishing } = useLessonRecorderContext()
 
   return (
     <div css={bodyStyle}>
       <div css={controllerStyle}>
-        <InputFile accept="image/jpeg,image/png,image/gif" multiple={true} onChange={handleFileChange} ref={inputFileRef} />
+        <InputFile accept={SUPPORTED_IMAGE_FILES} multiple={true} onChange={handleFileChange} ref={inputFileRef} />
 
         {images.length === 0 && (
           <UploadingWideButton hasDragOver={hasDragOver} onDragOver={handleDragOver} onDragLeave={handleDragLeave}

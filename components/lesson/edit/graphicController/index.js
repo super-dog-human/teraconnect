@@ -15,6 +15,7 @@ import useGraphicUploader from '../../../../libs/hooks/lesson/edit/useGraphicUpl
 import { useLessonEditorContext } from '../../../../libs/contexts/lessonEditorContext'
 import { useErrorDialogContext } from '../../../../libs/contexts/errorDialogContext'
 import { useDialogContext } from '../../../../libs/contexts/dialogContext'
+import { SUPPORTED_IMAGE_FILES } from '../../../../libs/constants'
 
 export default function GraphicController() {
   const { setGraphics, graphicURLs, setGraphicURLs } = useLessonEditorContext()
@@ -44,11 +45,11 @@ export default function GraphicController() {
             <Spacer width='15' />
             <PlainText size='14'>画像アップロード</PlainText>
           </Flex>
-          <InputFile accept="image/jpeg,image/png,image/gif" multiple={true} onChange={handleFileChange} ref={inputMultiFileRef} />
+          <InputFile accept={SUPPORTED_IMAGE_FILES} multiple={true} onChange={handleFileChange} ref={inputMultiFileRef} />
         </LabelButton>
       </div>
       <div>
-        <InputFile accept="image/jpeg,image/png,image/gif" onChange={confirmSwappingGraphic} ref={inputFileRef} />
+        <InputFile accept={SUPPORTED_IMAGE_FILES} onChange={confirmSwappingGraphic} ref={inputFileRef} />
       </div>
     </div>
   )
