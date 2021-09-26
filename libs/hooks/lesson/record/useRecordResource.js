@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 import useFetch from '../../useFetch'
 
@@ -8,7 +8,7 @@ export default function useRecordResource(setBgImageURL) {
   const [avatars, setAvatars] = useState([])
   const { fetch, fetchWithAuth }  = useFetch()
 
-  function loadBackgroundImages() {
+  const fetchBackgroundImages = useCallback(() => {
     fetch('/background_images').then(r => {
       setBgImages(r)
       setBgImageURL(r[0].url)
@@ -17,13 +17,13 @@ export default function useRecordResource(setBgImageURL) {
         message: '背景情報の読み込みに失敗しました。',
         original: e,
         canDismiss: false,
-        callback: loadBackgroundImages,
+        callback: fetchBackgroundImages,
       })
       console.error(e)
     })
-  }
+  }, [fetch, setBgImageURL, showError])
 
-  function loadAvatars() {
+  const fetchAvatars = useCallback(() => {
     fetchWithAuth('/avatars').then(r => {
       setAvatars(r)
     }).catch(e => {
@@ -31,16 +31,16 @@ export default function useRecordResource(setBgImageURL) {
         message: 'アバター情報の読み込みに失敗しました。',
         original: e,
         canDismiss: false,
-        callback: loadAvatars,
+        callback: fetchAvatars,
       })
       console.error(e)
     })
-  }
+  }, [fetchWithAuth, showError])
 
   useEffect(() => {
-    loadBackgroundImages()
-    loadAvatars()
-  }, [])
+    fetchBackgroundImages()
+    fetchAvatars()
+  }, [fetchBackgroundImages, fetchAvatars])
 
 
   return { bgImages, avatars }

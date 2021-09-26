@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useCallback, useContext } from 'react'
 import { event } from '../gtag'
 
 const ErrorDialogContext = React.createContext({
@@ -12,11 +12,11 @@ const errors = []
 const ErrorDialogProvider = ({ children }) => {
   const [error, setError] = useState()
 
-  function showError(err) {
+  const showError = useCallback(err => {
     errors.push(err)
     setError(errors[0])
     event('error', 'expected', err.message, 1)
-  }
+  }, [])
 
   async function resolveError(callback) {
     if (callback) await callback()
