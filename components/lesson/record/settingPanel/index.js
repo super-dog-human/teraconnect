@@ -13,7 +13,7 @@ import BgImageTab from './bgImageTab'
 import AvatarTab from './avatarTab'
 import VoiceRecorderTab from './voiceRecorderTab'
 
-export default function SettingPanel({ isShow, setIsShow, bgImages, setBgImageURL, avatars, setAvatarConfig,
+export default function SettingPanel({ isShow, setIsShow, bgImages, setBgImageURL, avatars, setAvatarConfig, cleanAvatar,
   setMicDeviceID, setSilenceThresholdSec, isShowVoiceSpectrum, silenceThresholdSec, setIsShowVoiceSpectrum }) {
 
   function handleClose() {
@@ -52,7 +52,7 @@ export default function SettingPanel({ isShow, setIsShow, bgImages, setBgImageUR
               <BgImageTab images={bgImages} setImageURL={setBgImageURL} />
             </TabPanel>
             <TabPanel>
-              <AvatarTab avatars={avatars} setConfig={setAvatarConfig} />
+              <AvatarTab avatars={avatars} setConfig={setAvatarConfig} cleanAvatar={cleanAvatar} />
             </TabPanel>
             <TabPanel>
               <VoiceRecorderTab setMicDeviceID={setMicDeviceID} setSilenceThresholdSec={setSilenceThresholdSec}
