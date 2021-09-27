@@ -2,10 +2,11 @@ import { useState, useCallback, useEffect } from 'react'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 import useFetch from '../../useFetch'
 
-export default function useRecordResource(setBgImageURL) {
+export default function useRecordResource({ lessonID, setBgImageURL }) {
   const { showError } = useErrorDialogContext()
   const [bgImages, setBgImages] = useState([])
   const [avatars, setAvatars] = useState([])
+  const [graphics, setGraphics] = useState([])
   const { fetch, fetchWithAuth }  = useFetch()
 
   const fetchBackgroundImages = useCallback(() => {
@@ -37,11 +38,26 @@ export default function useRecordResource(setBgImageURL) {
     })
   }, [fetchWithAuth, showError])
 
+  const fetchGraphics = useCallback(() => {
+    fetchWithAuth('/graphics?lesson_id=' + lessonID).then(r => {
+      setGraphics(r)
+    }).catch(e => {
+      showError({
+        message: '画像情報の読み込みに失敗しました。',
+        original: e,
+        canDismiss: false,
+        callback: fetchGraphics,
+      })
+      console.error(e)
+    })
+  }, [lessonID, fetchWithAuth, showError])
+
   useEffect(() => {
     fetchBackgroundImages()
     fetchAvatars()
-  }, [fetchBackgroundImages, fetchAvatars])
+    fetchGraphics()
+  }, [fetchBackgroundImages, fetchAvatars, fetchGraphics])
 
 
-  return { bgImages, avatars }
+  return { bgImages, avatars, graphics }
 }

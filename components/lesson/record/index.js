@@ -31,7 +31,7 @@ const LessonRecord = React.forwardRef(function LessonRecord({ lesson, hasResize 
   useLessonRecordChangeTabDetector()
   const { isRecording, realElapsedTime, setRecord } = useLessonRecorderContext()
   const { hasDragOver, handleAreaDragOver, handleAreaDragLeave, handleAreaDrop } = useDragOverDetector()
-  const { bgImages, avatars } = useRecordResource(setBgImageURL)
+  const { bgImages, avatars, graphics } = useRecordResource({ lessonID: lesson.id, setBgImageURL })
   const { isMicReady, isSpeaking, micDeviceID, setMicDeviceID, silenceThresholdSec, setSilenceThresholdSec } = useVoiceRecorder({ lessonID: lesson.id, isRecording, realElapsedTime })
   const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging, cleanAvatar } = useAvatar({ setIsLoading, isSpeaking, hasResize, movingCallback: setRecord })
   const { isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, enableEraser, setEnableEraser, undoDrawing, clearDrawing, drawingColor, setDrawingColor, drawingLineWidth, setDrawingLineWidth,
@@ -64,7 +64,7 @@ const LessonRecord = React.forwardRef(function LessonRecord({ lesson, hasResize 
               setSilenceThresholdSec={setSilenceThresholdSec} isShowVoiceSpectrum={isShowVoiceSpectrum} setIsShowVoiceSpectrum={setIsShowVoiceSpectrum} />
           </Aspect16To9Container>
         </div>
-        <LessonRecordGraphicController id={lesson.id} setSelectedGraphic={setSelectedGraphic} hasDragOver={hasDragOver} />
+        <LessonRecordGraphicController id={lesson.id} setSelectedGraphic={setSelectedGraphic} initialGraphics={graphics} hasDragOver={hasDragOver} />
         <LessonRandomTips />
       </main>
     </>

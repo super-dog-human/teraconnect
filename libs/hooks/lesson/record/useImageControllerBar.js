@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useLessonRecorderContext } from '../../../contexts/lessonRecorderContext'
 
-export default function useImageControllerBar(setSelectedGraphic) {
+export default function useImageControllerBar({ initialGraphics, setSelectedGraphic }) {
   const [isShow, setIsShow] = useState(false)
   const [imageID, setImageID] = useState()
   const [images, setImages] = useState([])
@@ -42,9 +42,20 @@ export default function useImageControllerBar(setSelectedGraphic) {
     })
   }
 
+  const setInitialGraphics = useCallback(() => {
+    // idは一時的にランダム文字列になることがあるのでstringで統一する
+    setImages(initialGraphics.map(g => ({ src: g.url, thumbnail: g.url, id: g.id.toString() })))
+  }, [initialGraphics])
+
   useEffect(() => {
+    if (initialGraphics.length === 0) return
+    setInitialGraphics()
+  }, [initialGraphics, setInitialGraphics])
+
+  useEffect(() => {
+    console.log(images, imageID)
     setSelectedGraphic(images.find(i => i.id === imageID))
-  }, [imageID])
+  }, [images, imageID, setSelectedGraphic])
 
   return { imageID, selectImage, removeImage, images, setImages, moveImage }
 }
