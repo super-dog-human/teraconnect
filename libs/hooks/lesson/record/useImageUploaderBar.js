@@ -59,17 +59,7 @@ export default function useImageUploaderBar(id, images, setImages, inputFileRef,
     createGraphics(id, validFiles).then(results => {
       results.signedURLs.forEach((r, i) => {
         const tmpID = temporaryIDs[i]
-
-        uploadImage(validFiles[i], tmpID, r.fileID, r.signedURL).catch(e => {
-          showError({
-            message: `ファイル「${validFiles[i].name}」のアップロードに失敗しました。`,
-            original: e,
-            canDismiss: true,
-            dismissCallback: () => { setImages(images => images.filter(i => i.id != tmpID)) },
-            callback: () => { uploadImage(validFiles[i], tmpID, r.fileID, r.signedURL) },
-          })
-          console.error(e)
-        })
+        uploadImage(validFiles[i], tmpID, r.fileID, r.signedURL)
       })
     }).catch(e => {
       showError({
@@ -84,17 +74,26 @@ export default function useImageUploaderBar(id, images, setImages, inputFileRef,
   }
 
   async function uploadImage(file, tmpID, imageID, url) {
-    await putFile(url, file, file.type)
-
-    setImages(images => {
-      const newImages = [...images]
-      const foundTarget = newImages.some(i => {
-        if (i.id != tmpID) return false
-        i.id = imageID
-        i.isUploading = false
-        return true
+    await putFile(url, file, file.type).then(() => {
+      setImages(images => {
+        const newImages = [...images]
+        const foundTarget = newImages.some(i => {
+          if (i.id != tmpID) return false
+          i.id = imageID
+          i.isUploading = false
+          return true
+        })
+        return foundTarget ? newImages : images
       })
-      return foundTarget ? newImages : images
+    }).catch(e => {
+      showError({
+        message: `ファイル「${file.name}」のアップロードに失敗しました。`,
+        original: e,
+        canDismiss: true,
+        dismissCallback: () => { setImages(images => images.filter(i => i.id != tmpID)) },
+        callback: () => { uploadImage(file, tmpID, imageID, url) },
+      })
+      console.error(e)
     })
   }
 
