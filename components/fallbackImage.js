@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/core'
 import NoImage from './noImage'
 
@@ -9,6 +9,10 @@ export default function UserIcon({ url, name }) {
   function handleError() {
     setHasError(true)
   }
+
+  useEffect(() => {
+    setHasError(false)
+  }, [url])
 
   return (
     <div css={bodyStyle}>
