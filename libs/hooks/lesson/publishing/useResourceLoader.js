@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import useFetch from '../../useFetch'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
-import useCategoryBySubject from '../useCategoryBySubject'
+import useSubjectsAndCategories from '../useSubjectsAndCategories'
 
 export default function useResourceLoader({ lesson }) {
   const { showError } = useErrorDialogContext()
@@ -12,21 +12,13 @@ export default function useResourceLoader({ lesson }) {
   const [avatarOptions, setAvatarOptions] = useState([])
   const [bgImages, setBgImages] = useState([])
   const [bgImageOptions, setBgImageOptions] = useState([])
-  const [subjects, setSubjects] = useState([])
   const [categories, setCategories] = useState([])
   const { fetch, fetchWithAuth } = useFetch()
-  const { categories: fullCategories, handleSubjectChange } = useCategoryBySubject()
+  const { subjects, categories: fullCategories, handleSubjectChange } = useSubjectsAndCategories({})
 
-  const fetchSubjects = useCallback(async() => {
-    setSubjects(Array.from(await(fetch('/subjects'))).map((sub) => {
-      return {
-        value: sub.id,
-        label: sub.japaneseName
-      }
-    }))
-
+  const setSubjectID = useCallback(async() => {
     handleSubjectChange({ target: { value: lesson.subjectID } })
-  }, [fetch, handleSubjectChange, lesson.subjectID])
+  }, [handleSubjectChange, lesson.subjectID])
 
   const fetchLessons = useCallback(async () => {
     fetchWithAuth('/users/me/lessons').then(r => {
@@ -37,6 +29,7 @@ export default function useResourceLoader({ lesson }) {
       })))
     }).catch(e => {
       if (e.name === 'AbortError') return
+      if (e.response?.status === 404) return
       showError({
         message: '授業情報の読み込みに失敗しました。',
         original: e,
@@ -88,13 +81,13 @@ export default function useResourceLoader({ lesson }) {
   useEffect(() => {
     if (!isLoading) return
 
-    fetchSubjects()
+    setSubjectID()
     fetchLessons()
     fetchBgImages()
     fetchAvatars()
 
     setIsLoading(false)
-  }, [isLoading, fetchSubjects, fetchLessons, fetchBgImages, fetchAvatars])
+  }, [isLoading, setSubjectID, fetchLessons, fetchBgImages, fetchAvatars])
 
   useEffect(() => {
     if (!fullCategories) return
