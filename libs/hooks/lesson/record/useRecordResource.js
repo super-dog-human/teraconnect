@@ -42,6 +42,9 @@ export default function useRecordResource({ lessonID, setBgImageURL }) {
     fetchWithAuth('/graphics?lesson_id=' + lessonID).then(r => {
       setGraphics(r)
     }).catch(e => {
+      if (e.response?.status === 404) {
+        return
+      }
       showError({
         message: '画像情報の読み込みに失敗しました。',
         original: e,

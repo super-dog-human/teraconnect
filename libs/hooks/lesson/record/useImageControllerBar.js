@@ -53,7 +53,7 @@ export default function useImageControllerBar({ initialGraphics, setSelectedGrap
   }, [initialGraphics, setInitialGraphics])
 
   useEffect(() => {
-    console.log(images, imageID)
+    if (images.length === 0) return
     setSelectedGraphic(images.find(i => i.id === imageID))
   }, [images, imageID, setSelectedGraphic])
 
