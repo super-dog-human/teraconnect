@@ -8,9 +8,11 @@ import Flex from '../../flex'
 import FlexItem from '../../flexItem'
 import PlainText from '../../plainText'
 import PageLink from '../../pageLink'
-
+import useTouchDeviceDetector from '../../../libs/hooks/useTouchDeviceDetector'
 
 export default function ModeSelector({ isIntroduction, onClick }) {
+  const isTouchDevice = useTouchDeviceDetector()
+
   return (
     <>
       <Flex justifyContent='center' flexWrap='wrap' gap='30px'>
@@ -80,7 +82,7 @@ export default function ModeSelector({ isIntroduction, onClick }) {
       {isIntroduction &&
         <>
           <Spacer height='10' />
-          <Flex justifyContent='center' flexWrap='wrap' gap='30px'>
+          <Flex justifyContent='center' flexWrap='wrap' gap={!isTouchDevice && '30px'}>
             <div css={skipContainerStyle} />
             <div css={skipContainerStyle}>
               <Flex justifyContent='flex-end'>
@@ -92,6 +94,12 @@ export default function ModeSelector({ isIntroduction, onClick }) {
           </Flex>
         </>
       }
+
+      <Spacer height={isTouchDevice ? '10' : '50'} />
+
+      <Flex justifyContent='center'>
+        <PageLink path='/' target='_blank'><PlainText color='gray' size='17'>各モードの使い方</PlainText></PageLink>
+      </Flex>
     </>
   )
 }

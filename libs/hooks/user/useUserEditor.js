@@ -162,7 +162,7 @@ export default function useUserEditor({ user } ) {
   function finalizeUploading() {
     newSettingRef.current = {}
     if (isNewUser) {
-      router.push('/dashboard')
+      router.push('/lessons/new?is_introduction=true')
     }
     setIsNewUser(false)
     setIsUpdating(false)

@@ -107,11 +107,11 @@ export default function LessonPublishing({ lesson, material }) {
             <FormGroup name='カテゴリ'>
               <Flex>
                 <FlexItem flexBasis='25%'>
-                  <Select size='15' color='gray' options={subjects} value={setting.subjectID} topLabel={null} onChange={handleSubjectChange} />
+                  <Select size='17' color='gray' options={subjects} value={setting.subjectID} topLabel={null} onChange={handleSubjectChange} />
                 </FlexItem>
                 <Spacer width='30' />
                 <FlexItem flexBasis='75%'>
-                  <Select size='15' color='gray' options={categories} value={setting.categoryID} key={setting.categoryID} {...categoryIDSelectProps} onChange={handleCategoryChange} />
+                  <Select size='17' color='gray' options={categories} value={setting.categoryID} key={setting.categoryID} {...categoryIDSelectProps} onChange={handleCategoryChange} />
                 </FlexItem>
               </Flex>
               <Flex>

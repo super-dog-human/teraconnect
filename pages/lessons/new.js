@@ -1,9 +1,10 @@
+/** @jsxImportSource @emotion/react */
 import React from 'react'
+import { css } from '@emotion/core'
 import Head from 'next/head'
 import Layout from '../../components/layout'
-import LessonNewForm from '../../components/lesson/new/form'
+import NewLesson from '../../components/lesson/new/'
 import requirePageAuth from '../../libs/middlewares/requirePageAuth'
-import { fetch } from '../../libs/fetch'
 import useSessionExpireChecker from '../../libs/hooks/useTokenExpireChecker'
 
 const Page = (props) => {
@@ -15,22 +16,31 @@ const Page = (props) => {
         <title>TERACONNECT</title>
       </Head>
       <Layout>
-        <LessonNewForm {...props} subjects={props.subjects} />
+        <div css={backgroundStyle}>
+          <div css={bodyStyle}>
+            <NewLesson user={props.user} />
+          </div>
+        </div>
       </Layout>
     </>
   )
 }
 
+const backgroundStyle = css({
+  width: '100%',
+  minHeight: 'calc(100vh - 60px)',
+  height: '100%',
+  backgroundColor: 'var(--bg-light-gray)',
+})
+
+const bodyStyle = css({
+  margin: 'auto',
+  maxWidth: '1280px',
+  height: '100%',
+})
+
 export default Page
 
 export async function getServerSideProps(context) {
-  const authProps = await requirePageAuth(context)
-  const subjects = Array.from(await(fetch('/subjects'))).map((sub) => {
-    return {
-      value: sub.id,
-      label: sub.japaneseName
-    }
-  })
-
-  return { props: { ...authProps.props, subjects } }
+  return await requirePageAuth(context)
 }

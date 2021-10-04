@@ -1,9 +1,9 @@
 import React from 'react'
 import Link from 'next/link'
 
-const PageLink = ({ path, children }) => (
+const PageLink = ({ path, target, children }) => (
   <Link href={path} passHref>
-    <a>{children}</a>
+    <a target={target}>{children}</a>
   </Link>
 )
 

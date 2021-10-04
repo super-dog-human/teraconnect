@@ -130,7 +130,7 @@ export default function useLessonRecorder() {
     lessonRef.current.durationSec = elapsedFloatTime()
     lessonRef.current.drawings = reCalcDrawingsTime(lessonRef.current.drawings)
 
-    post(`/lessons/${lessonID}/materials`, lessonRef.current, 'POST')
+    post(`/lessons/${lessonID}/materials`, lessonRef.current, 'PATCH')
       .then(() => {
         router.push(`/lessons/${lessonID}/edit`)
       }).catch(e => {

@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Layout from '../components/layout'
 import requirePageAuth from '../libs/middlewares/requirePageAuth'
 import { signOut } from 'next-auth/client'
+import PageLink from '../components/pageLink'
 
 const Page = () => {
   return (
@@ -12,7 +13,8 @@ const Page = () => {
       </Head>
       <Layout>
         <>
-          <button className="light" onClick={() => signOut()}>ログアウト</button>
+          <button onClick={() => signOut()}>ログアウト</button>
+          <PageLink path='/users/edit'>編集</PageLink>
         </>
       </Layout>
     </>
