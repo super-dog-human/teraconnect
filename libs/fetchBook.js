@@ -26,6 +26,7 @@ export async function fetchBookFast(isbn) {
   if (response.ok) {
     const body = await response.json()
     if (!body[0]) return {}
+    if (!body[0].onix.CollateralDetail.SupportingResource) return {}
     const url =  body[0].onix.CollateralDetail.SupportingResource[0].ResourceVersion[0].ResourceLink
     const author = body[0].summary.author
     return { url, author }
