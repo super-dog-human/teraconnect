@@ -4,12 +4,12 @@ import { css } from '@emotion/core'
 import Head from 'next/head'
 import Layout from '../../components/layout'
 import requirePageAuth from '../../libs/middlewares/requirePageAuth'
-import EditUser from '../../components/users/edit'
+import EditUser from '../../components/user/edit'
 
 const Page = ({ user }) => (
   <>
     <Head>
-      <title>ユーザー登録 - TERACONNECT</title>
+      <title>サインアップ - TERACONNECT</title>
     </Head>
     <Layout>
       <div css={backgroundStyle}>

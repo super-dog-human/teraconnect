@@ -11,7 +11,7 @@ import { useErrorDialogContext } from '../../contexts/errorDialogContext'
 const maxThumbnailSize = { width: 250, height: 250 }
 const emailRegEx = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-export default function useUserEditor({ user } ) {
+export default function useUserEditor(currentUser) {
   const router = useRouter()
   const newSettingRef = useRef({})
   const inputFileRef = useRef()
@@ -19,6 +19,7 @@ export default function useUserEditor({ user } ) {
   const [isNewUser, setIsNewUser] = useState(false)
   const [isUpdating, setIsUpdating] = useState(false)
   const [isUpdated, setIsUpdated] = useState(false)
+  const [introductionID, setIntroductionID] = useState()
   const { register, handleSubmit, formState: { errors }, setValue } = useForm({})
   const { onChange: handleNameInputChange, ...nameInputProps } = register('name', { required: true })
   const { onChange: handleEmailInputChange, ...emailInputProps } = register('email', { required: true, pattern: emailRegEx })
@@ -176,16 +177,17 @@ export default function useUserEditor({ user } ) {
       setValue('email', user.email)
       setValue('profile', user.profile)
       setValue('thumbnailURL', thumbnailURL)
+      setIntroductionID(user.introductionID)
       dispatchAccount({ type: 'initialize', payload: { id: user.id, name: user.name, email: user.email, thumbnailURL } })
       setInitialLoading(false)
     }).catch(e => {
       if (e.response.status === 404) {
         setIsNewUser(true)
         setInitialLoading(false)
-        setValue('name', user.name)
-        setValue('email', user.email)
-        setValue('thumbnailURL', user.image)
-        dispatchAccount({ type: 'initialize', payload: { name: user.name, email: user.email, thumbnailURL: user.image } })
+        setValue('name', currentUser.name)
+        setValue('email', currentUser.email)
+        setValue('thumbnailURL', currentUser.image)
+        dispatchAccount({ type: 'initialize', payload: { name: currentUser.name, email: currentUser.email, thumbnailURL: currentUser.image } })
       } else {
         showError({
           message: 'ユーザー情報の取得に失敗しました。',
@@ -197,14 +199,14 @@ export default function useUserEditor({ user } ) {
         })
       }
     })
-  }, [user, setValue, fetchWithAuth, dispatchAccount, showError])
+  }, [currentUser, setValue, fetchWithAuth, dispatchAccount, showError])
 
   useEffect(() => {
     if (Object.keys(account).length > 0) return
     fetchProfile()
   }, [account, fetchProfile])
 
-  return { initialLoading, isNewUser, isUpdating, isUpdated, account, inputFileRef,
+  return { initialLoading, isNewUser, isUpdating, isUpdated, introductionID, account, inputFileRef,
     handleNameChange, handleEmailChange, handleProfileChange, handleThumbnailChange, handleThumbnailUploadingClick, handleSubmit, handleSubmitClick,
     nameInputProps, emailInputProps, profileInputProps, formErrors: errors }
 }

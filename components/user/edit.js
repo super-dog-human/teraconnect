@@ -1,28 +1,29 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
 import { css } from '@emotion/core'
-import Spacer from '../../spacer'
-import PlainText from '../../plainText'
-import Container from '../../container'
-import ContainerSpacer from '../../containerSpacer'
-import AbsoluteContainer from '../../absoluteContainer'
-import FlashContainer from '../../flashContainer'
-import Flex from '../../flex'
-import FlexItem from '../../flexItem'
-import InputFile from '../../form/inputFile'
-import InputText from '../../form/inputText'
-import InputEmail from '../../form/inputEmail'
-import Textarea from '../../form/textarea'
-import IconButton from '../../button/iconButton'
-import LabelButton from '../../button/labelButton'
-import LoadingIndicator from '../../loadingIndicator'
-import FallbackImage from '../../fallbackImage'
-import useUserEditor from '../../../libs/hooks/user/useUserEditor'
-import { SUPPORTED_IMAGE_FILES } from '../../../libs/constants'
+import Spacer from '../spacer'
+import PlainText from '../plainText'
+import Container from '../container'
+import ContainerSpacer from '../containerSpacer'
+import AbsoluteContainer from '../absoluteContainer'
+import FlashContainer from '../flashContainer'
+import Flex from '../flex'
+import FlexItem from '../flexItem'
+import InputFile from '../form/inputFile'
+import InputText from '../form/inputText'
+import InputEmail from '../form/inputEmail'
+import Textarea from '../form/textarea'
+import IconButton from '../button/iconButton'
+import LabelButton from '../button/labelButton'
+import LoadingIndicator from '../loadingIndicator'
+import FallbackImage from '../fallbackImage'
+import useUserEditor from '../../libs/hooks/user/useUserEditor'
+import { SUPPORTED_IMAGE_FILES } from '../../libs/constants'
+import PageLink from '../pageLink'
 
 export default function EditUser({ user }) {
-  const { initialLoading, isNewUser, isUpdating, isUpdated, account, inputFileRef, handleNameChange, handleEmailChange, handleProfileChange, handleThumbnailChange, handleThumbnailUploadingClick, handleSubmit, handleSubmitClick,
-    nameInputProps, emailInputProps, profileInputProps, formErrors } = useUserEditor({ user })
+  const { initialLoading, isNewUser, isUpdating, isUpdated, introductionID, account, inputFileRef, handleNameChange, handleEmailChange, handleProfileChange, handleThumbnailChange, handleThumbnailUploadingClick, handleSubmit, handleSubmitClick,
+    nameInputProps, emailInputProps, profileInputProps, formErrors } = useUserEditor(user)
 
   return (
     <div css={bodyStyle}>
@@ -64,9 +65,19 @@ export default function EditUser({ user }) {
               </Container>
               <Spacer height='40' />
               <Container height='130'>
-                <Textarea size='16' color='gray' borderColor='gray' borderWidth='1px' padding='10' placeholder='自己紹介を入力' maxLength='500' onChange={handleProfileChange} {...profileInputProps} />
+                <Textarea size='16' color='gray' borderColor='gray' borderWidth='1px' padding='10' placeholder='プロフィールを入力' maxLength='500' onChange={handleProfileChange} {...profileInputProps} />
               </Container>
               <Spacer height='20' />
+              {introductionID && introductionID === 0 &&
+                <PageLink path='/lessons/new?is_introduction=true'>
+                  <PlainText color='gray' size='15'>自己紹介の作成</PlainText>
+                </PageLink>
+              }
+              {introductionID && introductionID > 0 &&
+                <PageLink path={`/lessons/${introductionID}/edit`}>
+                  <PlainText color='gray' size='15'>自己紹介の編集</PlainText>
+                </PageLink>
+              }
               <Container height='60'>
                 {formErrors && <div><PlainText size='13' color='var(--error-red)'>
                   {(() => {
