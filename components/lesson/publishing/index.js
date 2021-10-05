@@ -44,9 +44,9 @@ export default function LessonPublishing({ lesson, material }) {
   const { isUpdating, isUpdated, isDisabledPublsishing, sampleTextForSynthesisRef, setting, dispatchSetting, handleSubmitClick } = useSettingUpdater({ lesson, material, bgImages, isLoading })
   const defaultValues = { title: lesson.title, description: lesson.description, ...Object.fromEntries(lesson.references?.map((ref, i) => [`reference${i}`, ref.isbn]) || []) }
   const { register, handleSubmit, formState: { errors }, setValue } = useForm({ defaultValues })
-  const { onChange: handleTitleInputChange, ...titleInputProps } = register('title', { required: true })
-  const { onChange: handleDescriptionTextChange, ...descriptionTextProps } = register('description', { required: true })
-  const { onChange: handleCategorySelectChange, ...categoryIDSelectProps } = register('categoryID', { required: true })
+  const { onChange: handleTitleInputChange, ...titleInputProps } = register('title', { required: !lesson.isIntroduction })
+  const { onChange: handleDescriptionTextChange, ...descriptionTextProps } = register('description', { required: !lesson.isIntroduction })
+  const { onChange: handleCategorySelectChange, ...categoryIDSelectProps } = register('categoryID', { required: !lesson.isIntroduction })
   const { isExtendedOtherSetting, inputFileRef, newReferenceRef, isAddingReference, relationLessonThumbnailURL, isAvatarLoading, avatarRef, avatarLight,
     handleExtendSettingClick, handleTitleChange, handleDescriptionChange, handleThumbnailUploadingClick, handleThumbnailChange, handleStatusChange, handleSubjectChange, handleCategoryChange,
     handlePrevLessonChange, handleNextLessonChange, handleAddReferenceClick, handleRemoveReferenceClick, handleReferenceISBNBlur, handleReferenceNameBlur, handleBgImageChange, handleAvatarChange, handleColorChange } =
@@ -90,7 +90,9 @@ export default function LessonPublishing({ lesson, material }) {
                   </Container>
                   <Spacer height='20' />
                   <Container height='130'>
-                    <Textarea size='14' color='gray' borderColor='lightgray' borderWidth='1px' padding='10' placeholder='授業の概要を入力' maxLength='300' onChange={handleDescriptionChange} {...descriptionTextProps} />
+                    {!lesson.isIntroduction &&
+                      <Textarea size='14' color='gray' borderColor='lightgray' borderWidth='1px' padding='10' placeholder='授業の概要を入力' maxLength='300' onChange={handleDescriptionChange} {...descriptionTextProps} />
+                    }
                   </Container>
                 </ContainerSpacer>
               </FlexItem>
@@ -104,24 +106,26 @@ export default function LessonPublishing({ lesson, material }) {
               </FlexItem>
             </Flex>
 
-            <FormGroup name='カテゴリ'>
-              <Flex>
-                <FlexItem flexBasis='25%'>
-                  <Select size='17' color='gray' options={subjects} value={setting.subjectID} topLabel={null} onChange={handleSubjectChange} />
-                </FlexItem>
-                <Spacer width='30' />
-                <FlexItem flexBasis='75%'>
-                  <Select size='17' color='gray' options={categories} value={setting.categoryID} key={setting.categoryID} {...categoryIDSelectProps} onChange={handleCategoryChange} />
-                </FlexItem>
-              </Flex>
-              <Flex>
-                <FlexItem flexBasis='25%' />
-                <Spacer width='30' />
-                <FlexItem flexBasis='75%'>
-                  <ErrorText isShow={errors?.categoryID} body='単元を選択してください' />
-                </FlexItem>
-              </Flex>
-            </FormGroup>
+            {!lesson.isIntroduction &&
+              <FormGroup name='カテゴリ'>
+                <Flex>
+                  <FlexItem flexBasis='25%'>
+                    <Select size='17' color='gray' options={subjects} value={setting.subjectID} topLabel={null} onChange={handleSubjectChange} />
+                  </FlexItem>
+                  <Spacer width='30' />
+                  <FlexItem flexBasis='75%'>
+                    <Select size='17' color='gray' options={categories} value={setting.categoryID} key={setting.categoryID} {...categoryIDSelectProps} onChange={handleCategoryChange} />
+                  </FlexItem>
+                </Flex>
+                <Flex>
+                  <FlexItem flexBasis='25%' />
+                  <Spacer width='30' />
+                  <FlexItem flexBasis='75%'>
+                    <ErrorText isShow={errors?.categoryID} body='単元を選択してください' />
+                  </FlexItem>
+                </Flex>
+              </FormGroup>
+            }
 
             <FormGroup name='公開範囲'>
               <div>
@@ -133,89 +137,97 @@ export default function LessonPublishing({ lesson, material }) {
                 <PlainText color='gray' size='11'>自分だけが授業を確認できます。</PlainText>
               </Label>
               <Spacer height='30' />
-              <div>
-                <InputRadio id='statusLimited' name='lessonStatus' size='12' color='gray' value='limited' checked={setting.status === 'limited'} onChange={handleStatusChange}>
-                  <PlainText color='gray' size='16'>限定公開</PlainText>
-                </InputRadio>
-              </div>
-              <Label targetFor='statusLimited'>
-                <PlainText color='gray' size='11'>URLを知っている人だけが授業を閲覧できます。</PlainText>
-              </Label>
-              <Spacer height='30' />
+              {!lesson.isIntroduction &&
+                <>
+                  <div>
+                    <InputRadio id='statusLimited' name='lessonStatus' size='12' color='gray' value='limited' checked={setting.status === 'limited'} onChange={handleStatusChange}>
+                      <PlainText color='gray' size='16'>限定公開</PlainText>
+                    </InputRadio>
+                  </div>
+                  <Label targetFor='statusLimited'>
+                    <PlainText color='gray' size='11'>URLを知っている人だけが授業を閲覧できます。</PlainText>
+                  </Label>
+                  <Spacer height='30' />
+                </>
+              }
               <div>
                 <InputRadio id='statusPublic' name='lessonStatus' size='12' color='gray' value='public' checked={setting.status === 'public'} onChange={handleStatusChange}>
                   <PlainText color='gray' size='16'>全体公開</PlainText>
                 </InputRadio>
               </div>
               <Label targetFor='statusPublic'>
-                <PlainText color='gray' size='11'>全ての人が授業を閲覧できます。トップページや検索結果にも表示されます。</PlainText>
+                <PlainText color='gray' size='11'>全ての人が授業を閲覧できます。{!lesson.isIntroduction && 'トップページや検索結果にも表示されます。'}</PlainText>
               </Label>
             </FormGroup>
 
-            <FormGroup name='シリーズ'>
-              <PlainText color='gray' size='13'>前の授業</PlainText>
-              <Flex>
-                <FlexItem flexShrink='0'>
-                  <Container width='170'>
-                    <Aspect16To9Container>
-                      <AbsoluteContainer top='0' left='0'>
-                        <Container width='170' height='96'>
-                          {!relationLessonThumbnailURL.prev && <NoImage textSize='12' color='gray' backgroundColor='lightgray' />}
-                          {relationLessonThumbnailURL.prev && <Image src={relationLessonThumbnailURL.prev} width={170} height={96} objectFit="contain" alt='前の授業サムネイル' />}
-                        </Container>
-                      </AbsoluteContainer>
-                    </Aspect16To9Container>
-                  </Container>
-                </FlexItem>
-                <Spacer width='50' />
-                <Select size='15' color='gray' options={allLessonOptions} topValue='0' value={setting.prevLessonID} disabled={allLessonOptions.length === 0} onChange={handlePrevLessonChange} />
-              </Flex>
-              <Spacer height='30' />
-              <PlainText color='gray' size='13'>次の授業</PlainText>
-              <Flex>
-                <FlexItem flexShrink='0'>
-                  <Container width='170'>
-                    <Aspect16To9Container>
-                      <AbsoluteContainer top='0' left='0'>
-                        <Container width='170' height='96'>
-                          {!relationLessonThumbnailURL.next && <NoImage textSize='12' color='gray' backgroundColor='lightgray' />}
-                          {relationLessonThumbnailURL.next && <Image src={relationLessonThumbnailURL.next} width={170} height={96} objectFit="contain" alt='次の授業サムネイル' />}
-                        </Container>
-                      </AbsoluteContainer>
-                    </Aspect16To9Container>
-                  </Container>
-                </FlexItem>
-                <Spacer width='50' />
-                <Select size='15' color='gray' options={allLessonOptions} topValue='0' value={setting.nextLessonID} disabled={allLessonOptions.length === 0} onChange={handleNextLessonChange} />
-              </Flex>
-            </FormGroup>
+            {!lesson.isIntroduction &&
+              <FormGroup name='シリーズ'>
+                <PlainText color='gray' size='13'>前の授業</PlainText>
+                <Flex>
+                  <FlexItem flexShrink='0'>
+                    <Container width='170'>
+                      <Aspect16To9Container>
+                        <AbsoluteContainer top='0' left='0'>
+                          <Container width='170' height='96'>
+                            {!relationLessonThumbnailURL.prev && <NoImage textSize='12' color='gray' backgroundColor='lightgray' />}
+                            {relationLessonThumbnailURL.prev && <Image src={relationLessonThumbnailURL.prev} width={170} height={96} objectFit="contain" alt='前の授業サムネイル' />}
+                          </Container>
+                        </AbsoluteContainer>
+                      </Aspect16To9Container>
+                    </Container>
+                  </FlexItem>
+                  <Spacer width='50' />
+                  <Select size='15' color='gray' options={allLessonOptions} topValue='0' value={setting.prevLessonID} disabled={allLessonOptions.length === 0} onChange={handlePrevLessonChange} />
+                </Flex>
+                <Spacer height='30' />
+                <PlainText color='gray' size='13'>次の授業</PlainText>
+                <Flex>
+                  <FlexItem flexShrink='0'>
+                    <Container width='170'>
+                      <Aspect16To9Container>
+                        <AbsoluteContainer top='0' left='0'>
+                          <Container width='170' height='96'>
+                            {!relationLessonThumbnailURL.next && <NoImage textSize='12' color='gray' backgroundColor='lightgray' />}
+                            {relationLessonThumbnailURL.next && <Image src={relationLessonThumbnailURL.next} width={170} height={96} objectFit="contain" alt='次の授業サムネイル' />}
+                          </Container>
+                        </AbsoluteContainer>
+                      </Aspect16To9Container>
+                    </Container>
+                  </FlexItem>
+                  <Spacer width='50' />
+                  <Select size='15' color='gray' options={allLessonOptions} topValue='0' value={setting.nextLessonID} disabled={allLessonOptions.length === 0} onChange={handleNextLessonChange} />
+                </Flex>
+              </FormGroup>
+            }
 
-            <FormGroup name='参考図書'>
-              {setting.references && setting.references.map((reference, i) => (
-                <div key={i}>
+            {!lesson.isIntroduction &&
+              <FormGroup name='参考図書'>
+                {setting.references && setting.references.map((reference, i) => (
+                  <div key={i}>
+                    <Flex>
+                      <InputTel size='16' color='gray' borderColor='gray' borderWidth='0 0 1px' placeholder='ISBNを13桁で入力' maxLength='13'
+                        data-index={i} key={reference.isbn} onBlur={handleReferenceISBNBlur} defaultValue={reference.isbn} {...register(`reference${i}`, { required: true, pattern: /^[0-9]{12}[0-9Xx]{1}$/ })} />
+                      <Spacer width='20' />
+                      <Container width='20'>
+                        <IconButton name='square-remove' data-index={i} onClick={handleRemoveReferenceClick} />
+                      </Container>
+                    </Flex>
+                    <InputText size='14' color='gray' borderWidth='0' maxLength='50' placeholder='書名を入力' data-index={i} key={reference.name} defaultValue={reference.name} onBlur={handleReferenceNameBlur} />
+                    <ErrorText isShow={errors && errors[`reference${i}`]} body={errors[`reference${i}`]?.type === 'required' ? 'ISBNを入力してください' : 'ISBNは0〜9の半角数字とXで入力してください'} />
+                    <Spacer height='20' />
+                  </div>
+                ))}
+                {(!setting.references || setting.references.length < 10) && <>
                   <Flex>
-                    <InputTel size='16' color='gray' borderColor='gray' borderWidth='0 0 1px' placeholder='ISBNを13桁で入力' maxLength='13'
-                      data-index={i} key={reference.isbn} onBlur={handleReferenceISBNBlur} defaultValue={reference.isbn} {...register(`reference${i}`, { required: true, pattern: /^[0-9]{12}[0-9Xx]{1}$/ })} />
+                    <InputTel size='16' color='gray' borderColor='gray' borderWidth='0 0 1px' placeholder='ISBNを13桁で入力' maxLength='13' ref={newReferenceRef} />
                     <Spacer width='20' />
                     <Container width='20'>
-                      <IconButton name='square-remove' data-index={i} onClick={handleRemoveReferenceClick} />
+                      <IconButton name='square-add' isProcessing={isAddingReference} onClick={handleAddReferenceClick} />
                     </Container>
                   </Flex>
-                  <InputText size='14' color='gray' borderWidth='0' maxLength='50' placeholder='書名を入力' data-index={i} key={reference.name} defaultValue={reference.name} onBlur={handleReferenceNameBlur} />
-                  <ErrorText isShow={errors && errors[`reference${i}`]} body={errors[`reference${i}`]?.type === 'required' ? 'ISBNを入力してください' : 'ISBNは0〜9の半角数字とXで入力してください'} />
-                  <Spacer height='20' />
-                </div>
-              ))}
-              {(!setting.references || setting.references.length < 10) && <>
-                <Flex>
-                  <InputTel size='16' color='gray' borderColor='gray' borderWidth='0 0 1px' placeholder='ISBNを13桁で入力' maxLength='13' ref={newReferenceRef} />
-                  <Spacer width='20' />
-                  <Container width='20'>
-                    <IconButton name='square-add' isProcessing={isAddingReference} onClick={handleAddReferenceClick} />
-                  </Container>
-                </Flex>
-              </>}
-            </FormGroup>
+                </>}
+              </FormGroup>
+            }
 
             <Flex justifyContent='center'>
               <Container width='130'>
