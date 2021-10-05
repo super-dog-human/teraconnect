@@ -10,7 +10,7 @@ import PlainText from '../../plainText'
 import PageLink from '../../pageLink'
 import useTouchDeviceDetector from '../../../libs/hooks/useTouchDeviceDetector'
 
-export default function ModeSelector({ isIntroduction, onClick }) {
+export default function ModeSelector({ userID, isIntroduction, onClick }) {
   const isTouchDevice = useTouchDeviceDetector()
 
   return (
@@ -86,7 +86,7 @@ export default function ModeSelector({ isIntroduction, onClick }) {
             <div css={skipContainerStyle} />
             <div css={skipContainerStyle}>
               <Flex justifyContent='flex-end'>
-                <PageLink path='/'>
+                <PageLink path={'/users/' + userID}>
                   <PlainText size='14' color='gray'>スキップ</PlainText>
                 </PageLink>
               </Flex>
