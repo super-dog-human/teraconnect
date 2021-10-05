@@ -8,7 +8,7 @@ export default function LinkLabel({ label }) {
   return (
     <div css={labelStyle}>
       <AlignContainer textAlign='center' verticalAlign='middle'>
-        <PlainText color='#717171' fontWeight='300' lineHeight='60' letterSpacing='1'>
+        <PlainText color='var(--text-dark-gray)' fontWeight='300' lineHeight='60' letterSpacing='1'>
           {label.split('').map((char, i) => {
             if (char === 'で' || char === 'す') {
               return <PlainText key={i} size='14'>{char}</PlainText>

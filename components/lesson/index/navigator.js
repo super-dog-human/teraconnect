@@ -100,7 +100,7 @@ export default function Navigator({ isMobile, lesson }) {
 const containerStyle = css({
   width: '100%',
   minHeight: '140px',
-  backgroundColor: '#e2e2e2',
+  backgroundColor: 'var(--bg-gray)',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
