@@ -23,7 +23,7 @@ export default function usePlayer({ id, viewKey, showDialog }) {
     result.then(l => {
       document.title = `${l.author.name} の ${l.title} - TERACONNECT`
       setLesson(l)
-    }).catch(e => setErrorStatus(e.response.status))
+    }).catch(e => setErrorStatus(e.response?.status))
   }, [id, viewKey, fetch])
 
   const fetchGraphicURLs = useCallback(async graphics => {

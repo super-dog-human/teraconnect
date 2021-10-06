@@ -12,7 +12,7 @@ import PageLink from '../../pageLink'
 import ContainerSpacer from '../../containerSpacer'
 
 export default function Menu({ isShow, setIsShow, currentPage }) {
-  const [session, loading] = useSession()
+  const [session, isLoading] = useSession()
 
   function handleBackgroundTouchEnd(e) {
     e.stopPropagation(0)
@@ -69,7 +69,7 @@ export default function Menu({ isShow, setIsShow, currentPage }) {
                 </PageLink>
               }
               <Spacer height='10'/>
-              {!loading && session &&
+              {!isLoading && session &&
                   <ContainerSpacer top='10' bottom='10'>
                     <Flex justifyContent='center'>
                       <PageLink path='/dashboard'>

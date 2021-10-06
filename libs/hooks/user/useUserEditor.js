@@ -171,6 +171,8 @@ export default function useUserEditor(currentUser) {
   }
 
   const fetchProfile = useCallback(() => {
+    setInitialLoading(true)
+
     fetchWithAuth('/users/me').then(user => {
       const thumbnailURL = `${process.env.NEXT_PUBLIC_GOOGLE_STORAGE_BUCKET_URL}/user/${user.id}.png?${Date.now()}`
       setValue('name', user.name)
@@ -181,7 +183,7 @@ export default function useUserEditor(currentUser) {
       dispatchAccount({ type: 'initialize', payload: { id: user.id, name: user.name, email: user.email, thumbnailURL } })
       setInitialLoading(false)
     }).catch(e => {
-      if (e.response.status === 404) {
+      if (e.response?.status === 404) {
         setIsNewUser(true)
         setInitialLoading(false)
         setValue('name', currentUser.name)

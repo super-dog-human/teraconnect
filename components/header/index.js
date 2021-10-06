@@ -22,7 +22,7 @@ import ContainerSpacer from '../containerSpacer'
 export default function Header() {
   const router = useRouter()
   const screenClass = useScreenClass()
-  const [session, loading] = useSession()
+  const [session, isLoading] = useSession()
   const [isHover, setIsHover] = useState(false)
   const [isSearchBoxFocus, setIsSearchBoxFocus] = useState(!!router.query.q)
   const [isShowMenus, setIsShowMenus] = useState(true)
@@ -91,12 +91,12 @@ export default function Header() {
                   <FlexItem flexBasis='150px'>
                     <ContainerSpacer left='30' right='10'>
                       <Container width='110'>
-                        {!loading && !session &&
+                        {!isLoading && !session &&
                           <PageLink path='/login'>
                             <button className="light" css={buttonStyle}>授業をつくる</button>
                           </PageLink>
                         }
-                        {!loading && session &&
+                        {!isLoading && session &&
                           <PageLink path='/dashboard'>
                             <button className="dark" css={buttonStyle}>マイページ</button>
                           </PageLink>

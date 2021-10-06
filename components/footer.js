@@ -10,7 +10,7 @@ import Spacer from './spacer'
 import ContainerSpacer from './containerSpacer'
 
 export default function Footer() {
-  const [session, loading] = useSession()
+  const [session, isLoading] = useSession()
   const isMobile = useMobileDetector()
 
   const backgroundStyle = css({
@@ -44,7 +44,7 @@ export default function Footer() {
     <footer css={backgroundStyle} className="footer-z">
       <div css={bodyStyle}>
         <div css={logoStyle}>
-          {!loading && !session && <div>
+          {!isLoading && !session && <div>
             <PlainText size='13' color='var(--text-gray)' whiteSpace='nowrap'>君の光をさがそう。</PlainText>
             <Spacer height='15' />
             <PageLink path='/'>
@@ -52,7 +52,7 @@ export default function Footer() {
             </PageLink>
           </div>
           }
-          {!loading && session && <div>
+          {!isLoading && session && <div>
             <PlainText size='13' color='var(--text-gray)' whiteSpace='nowrap'>あなたの知識が、誰かを照らす。</PlainText>
             <Spacer height='15' />
             <PageLink path='/'>
