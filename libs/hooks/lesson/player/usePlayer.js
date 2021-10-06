@@ -34,9 +34,17 @@ export default function usePlayer({ id, viewKey, showDialog }) {
     let queryParams = graphicIDs.map(g => 'ids=' + g.graphicID).join('&')
     if (lesson.viewKey) queryParams += `&view_key=${lesson.viewKey}`
 
-    const result = await fetch(`/lessons/${lesson.id}/graphics?${queryParams}`)
-    setGraphicURLs(result)
-  }, [lesson?.id, lesson?.viewKey, graphicURLs, fetch])
+    fetch(`/lessons/${lesson.id}/graphics?${queryParams}`).then(result => {
+      setGraphicURLs(result)
+    }).catch(e => {
+      console.error(e)
+      showDialog({
+        title: '画像エラー',
+        message: '画像の取得に失敗しました。',
+        canDismiss: true,
+      })
+    })
+  }, [lesson?.id, lesson?.viewKey, graphicURLs, fetch, showDialog])
 
   const fetchBody = useCallback(async () => {
     const response = await fetchFile(lesson.bodyURL)
