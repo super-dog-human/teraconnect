@@ -5,6 +5,7 @@ import useMobileDetector from '../../../libs/hooks/useMobileDetector'
 import Flex from '../../flex'
 import FlexItem from '../../flexItem'
 import Spacer from '../../spacer'
+import PageLink from '../../pageLink'
 import Container from '../../container'
 import UserIcon from '../../userIcon'
 import PlainText from '../../plainText'
@@ -20,9 +21,11 @@ export default function Description({ lesson }) {
         <FlexItem flexBasis='40%'>
           <Flex>
             <FlexItem flexBasis='73px'>
-              <Container width='73' height='73'>
-                {lesson && <UserIcon id={lesson?.author.id} name={lesson?.author.name} />}
-              </Container>
+              <PageLink path={'/users/' + lesson?.author.id}>
+                <Container width='73' height='73'>
+                  {lesson && <UserIcon id={lesson?.author.id} name={lesson?.author.name} />}
+                </Container>
+              </PageLink>
             </FlexItem>
             <Spacer width='20' />
             <div>
