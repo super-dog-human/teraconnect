@@ -68,12 +68,12 @@ export default function EditUser({ user }) {
                 <Textarea size='16' color='gray' borderColor='gray' borderWidth='1px' padding='10' placeholder='プロフィールを入力' maxLength='500' onChange={handleProfileChange} {...profileInputProps} />
               </Container>
               <Spacer height='20' />
-              {introductionID && introductionID === 0 &&
+              {introductionID === 0 &&
                 <PageLink path='/lessons/new?is_introduction=true'>
                   <PlainText color='gray' size='15'>自己紹介の作成</PlainText>
                 </PageLink>
               }
-              {introductionID && introductionID > 0 &&
+              {introductionID > 0 &&
                 <PageLink path={`/lessons/${introductionID}/edit`}>
                   <PlainText color='gray' size='15'>自己紹介の編集</PlainText>
                 </PageLink>
