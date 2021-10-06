@@ -17,16 +17,20 @@ export default function useLessonsByCategory({ subjectID, categoryID }) {
 
   const fetchLessons = useCallback(async () => {
     setIsLoading(true)
+
     fetch(`/lessons?category_id=${categoryID}&next_cursor=${fetchCursorRef.current}`).then(result => {
       setIsLoading(false)
-      if (result.lessons) {
-        fetchCursorRef.current = result.nextCursor
-        setHasMore(result.lessons.length % 18 === 0)
-        setLessons(l => [...l, ...result.lessons])
-      } else {
-        setHasMore(false)
-      }
+
+      fetchCursorRef.current = result.nextCursor
+      setHasMore(result.lessons.length % 18 === 0)
+      setLessons(l => [...l, ...result.lessons])
     }).catch(e => {
+      setIsLoading(false)
+
+      if (e.response?.status === 404) {
+        setHasMore(false)
+        return
+      }
       console.error(e)
     })
   }, [fetch, categoryID])
