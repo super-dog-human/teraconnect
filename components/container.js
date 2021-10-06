@@ -4,6 +4,7 @@ import { css } from '@emotion/core'
 
 export default function Container({ children, width, height, minWidth, minHeight, maxWidth, maxHeight, display, invisible, position }) {
   const bodyStyle = css({
+    fontSize: '0',
     display,
     visibility: invisible && 'hidden',
     position,

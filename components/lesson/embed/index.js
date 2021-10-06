@@ -9,13 +9,13 @@ import useYoutubePlayer from '../../../libs/hooks/lesson/player/useYouTubePlayer
 import useResizeDetector from '../../../libs/hooks/useResizeDetector'
 import { useDialogContext } from '../../../libs/contexts/dialogContext'
 
-export default function EmbedLesson({ lesson }) {
+export default function EmbedLesson({ lessonID }) {
   const { showDialog } = useDialogContext()
   const containerRef = useRef()
   const preCanPlayRef = useRef()
   const { hasResize } = useResizeDetector(containerRef)
   const shouldResumeRef = useRef(false)
-  const { isLoading: isBodyLoading, durationSec, backgroundImageURL, avatars, drawings, embeddings, graphics, speeches, graphicURLs, speechURL } = usePlayer({ lesson, errorStatus, showDialog })
+  const { lesson, isLoading: isBodyLoading, durationSec, backgroundImageURL, avatars, drawings, embeddings, graphics, speeches, graphicURLs, speechURL } = usePlayer({ id: lessonID, showDialog })
   const { isLoading: isSpeechLoading, isPlaying: isSpeechPlaying, playSpeech, stopSpeech, updateSpeeche, seekSpeech }
     = useSpeechPlayer({ url: speechURL, durationSec })
   const { isLoading: isYouTubeLoading, isPlaying: isYouTubePlaying, youTubeIDs, playYouTube, stopYouTube, updateYouTube, seekYoutube } = useYoutubePlayer({ durationSec, embeddings })
