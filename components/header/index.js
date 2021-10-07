@@ -65,7 +65,7 @@ export default function Header() {
                       <Container height='60'>
                         <MenuLink isHover={isHover} isCurrent={router.pathname === '/categories'} path='/categories'>
                           <Flex justifyContent='center'>
-                            <Container width='18'><Icon name='book' /></Container>
+                            <Container width='18' height='60'><Icon name='book' /></Container>
                             <Spacer width='10' />
                             <LinkLabel label='教科で探す' />
                           </Flex>
@@ -74,7 +74,7 @@ export default function Header() {
                       <Container height='60'>
                         <MenuLink isHover={isHover} isCurrent={router.pathname === '/users'} path='/users'>
                           <Flex justifyContent='center'>
-                            <Container width='22'><Icon name='graduation-hat' /></Container>
+                            <Container width='22' height='60'><Icon name='graduation-hat' /></Container>
                             <Spacer width='10' />
                             <LinkLabel label='人で探す' />
                           </Flex>
