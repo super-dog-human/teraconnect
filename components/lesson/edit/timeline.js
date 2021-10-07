@@ -3,6 +3,7 @@ import React, { useRef } from 'react'
 import { css } from '@emotion/core'
 import ContainerSpacer from '../../containerSpacer'
 import DragSwappable from '../../dragSwappable'
+import AddLineButton from './addLineButton'
 import ElapsedTime from './line/elapsedTime'
 import LineConfig from './lineConfig/'
 import DropLine from './line/dropLine'
@@ -32,6 +33,7 @@ export default function Timeline() {
       <DropLine ref={dropLineRef} onDrop={handleChildDrop} />
       <LineConfig lineConfig={lineConfig} setLineConfig={setLineConfig} />
       <DragSwappable onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd} onDrop={handleDrop}>
+        {Object.keys(timeline).length === 0 && <AddLineButton setLineConfig={setLineConfig} />}
         {Object.keys(timeline).sort((a, b) => a - b).map((elapsedTime, i) => {
           if (i === 0) lastTimesRef.current = {}
           return (
