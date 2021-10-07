@@ -23,7 +23,7 @@ const Page = ({ user }) => (
 
 const backgroundStyle = css({
   width: '100%',
-  minHeight: 'calc(100vh - 60px)',
+  minHeight: '100%',
   height: '100%',
   backgroundColor: 'var(--bg-light-gray)',
 })

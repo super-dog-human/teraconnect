@@ -27,11 +27,14 @@ export default function EditUser({ user }) {
 
   return (
     <div css={bodyStyle}>
-      {initialLoading && <div css={loadingStyle}>
-        <Container width='50' height='50'>
-          <LoadingIndicator size='100' />
-        </Container>
-      </div>}
+      {initialLoading && <>
+        <Spacer height='100' />
+        <Flex justifyContent='center'>
+          <Container width='50' height='50'>
+            <LoadingIndicator size='100' />
+          </Container>
+        </Flex>
+      </>}
 
       {!initialLoading && <>
         <Spacer height='40' />
@@ -95,8 +98,6 @@ export default function EditUser({ user }) {
             </FlexItem>
           </Flex>
 
-          <Spacer height='20' />
-
           <Flex justifyContent='center'>
             <Container width='120' height='40'>
               <LabelButton color='white' fontSize='15' backgroundColor='var(--dark-purple)' onClick={handleSubmit(handleSubmitClick)}>
@@ -128,14 +129,6 @@ const bodyStyle = css({
   maxWidth: '600px',
   height: '100%',
   margin: 'auto',
-})
-
-const loadingStyle = css({
-  width: '100%',
-  height: 'calc(100vh - 60px)',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
 })
 
 const iconStyle = css({
