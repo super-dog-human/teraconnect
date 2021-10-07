@@ -22,6 +22,6 @@ export default function TransitionContainer({ isShow, duration, children }) {
   }, [isShow])
 
   return transition(
-    (styles, item) => item && <animated.div style={styles}>{isContainerShow && children}</animated.div>
+    (styles, item) => !!item && <animated.div style={styles}>{isContainerShow && children}</animated.div>
   )
 }

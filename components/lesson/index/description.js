@@ -23,7 +23,7 @@ export default function Description({ lesson }) {
             <FlexItem flexBasis='73px'>
               <PageLink path={'/users/' + lesson?.author.id}>
                 <Container width='73' height='73'>
-                  {lesson && <UserIcon id={lesson?.author.id} name={lesson?.author.name} />}
+                  {!!lesson && <UserIcon id={lesson?.author.id} name={lesson?.author.name} />}
                 </Container>
               </PageLink>
             </FlexItem>
@@ -36,7 +36,7 @@ export default function Description({ lesson }) {
         </FlexItem>
         <FlexItem flexBasis='calc(60% - 20px)'>
           <PlainText size='13' color='gray'>
-            {lesson && <MultilineText texts={lesson?.description} />}
+            {!!lesson && <MultilineText texts={lesson?.description} />}
           </PlainText>
         </FlexItem>
       </Flex>

@@ -79,7 +79,7 @@ export default function EditUser({ user }) {
                 </PageLink>
               }
               <Container height='60'>
-                {formErrors && <div><PlainText size='13' color='var(--error-red)'>
+                {!!formErrors && <div><PlainText size='13' color='var(--error-red)'>
                   {(() => {
                     if (formErrors.name?.type === 'required') {
                       return 'ユーザー名を入力してください。'

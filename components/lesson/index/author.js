@@ -14,7 +14,7 @@ export default function Author({ author }) {
       <FlexItem flexBasis='73px'>
         <PageLink path={'/users/' + author?.id}>
           <Container width='73' height='73'>
-            {author && <UserIcon id={author?.id} name={author?.name} />}
+            {!!author && <UserIcon id={author?.id} name={author?.name} />}
           </Container>
         </PageLink>
       </FlexItem>
@@ -22,7 +22,7 @@ export default function Author({ author }) {
       <div>
         <PlainText size='15' color='gray'>{author?.name}</PlainText><br />
         <PlainText size='13' color='gray'>
-          {author && <MultilineText texts={author?.profile} />}
+          {!!author && <MultilineText texts={author?.profile} />}
         </PlainText>
       </div>
     </Flex>

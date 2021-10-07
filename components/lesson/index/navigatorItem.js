@@ -19,7 +19,7 @@ const NavigatorItem = ({ isMobile, isNext, lessonID, otherLessonID, title, thumb
           <FlexItem flexBasis='150px'>
             <Container width='150' height='84'>
               {!thumbnailError && <img src={thumbnailURL} alt={title} css={thumbnailStyle} onError={onThumbnailError} />}
-              {thumbnailError && <NoImage textSize='13' color='var(--soft-white)' backgroundColor='gray' />}
+              {!!thumbnailError && <NoImage textSize='13' color='var(--soft-white)' backgroundColor='gray' />}
             </Container>
           </FlexItem>
           <Spacer width='15'/>

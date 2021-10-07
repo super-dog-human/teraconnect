@@ -33,7 +33,7 @@ export default function ErrorDialog() {
             </div>
             <div css={footerStyle}>
               {error.canDismiss && <button className="light" onClick={handleDismiss}>{error.dismissName || 'キャンセル' }</button>}
-              {error.callback && <button className="dark" onClick={handleCallback}>{error.callbackName || '再試行'}</button>}
+              {!!error.callback && <button className="dark" onClick={handleCallback}>{error.callbackName || '再試行'}</button>}
             </div>
           </div>
         </div>

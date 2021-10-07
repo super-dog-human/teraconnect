@@ -109,7 +109,7 @@ export default function Lesson({ id, viewKey }) {
             {embeddings.length > 0 && <Heading isMobile={isMobile} name='動画'>
               <Embeddings isMobile={isMobile} embeddings={embeddings} />
             </Heading>}
-            {lesson?.references && <Heading isMobile={isMobile} name='参考図書'>
+            {!!lesson?.references && <Heading isMobile={isMobile} name='参考図書'>
               <ReferenceBooks isMobile={isMobile} references={lesson?.references} />
             </Heading>}
             <Heading isMobile={isMobile} name='作者'>

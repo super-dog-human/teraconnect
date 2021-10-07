@@ -48,7 +48,7 @@ export default function Dialog() {
               </div>
               <Flex justifyContent='space-around'>
                 {dialog.canDismiss && <DismissButton onClick={dismissDialog} isProcessing={isProcessing} name={dialog.dismissName} />}
-                {dialog.callback && <ConfirmButton onClick={handleConfirm} isProcessing={isProcessing} name={dialog.callbackName} />}
+                {!!dialog.callback && <ConfirmButton onClick={handleConfirm} isProcessing={isProcessing} name={dialog.callbackName} />}
               </Flex>
             </div>
           </FullscreenContainer>

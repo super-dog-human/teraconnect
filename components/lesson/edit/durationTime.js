@@ -10,13 +10,13 @@ export default function DurationTime() {
 
   return (
     <div css={bodyStyle}>
-      {durationSec && <div>
+      {!!durationSec && <>
         <span css={labelStyle}>収録時間</span>
         <span css={elapsedTimeStyle}>
           {floatSecondsToMinutesFormat(Math.round(durationSec))}
         </span>
-      </div>}
-      { durationSec > 600 && <PlainText size='12' color='var(--error-red)'>収録時間が10分を超えています。</PlainText>}
+      </>}
+      {durationSec > 600 && <PlainText size='12' color='var(--error-red)'>収録時間が10分を超えています。</PlainText>}
     </div>
   )
 }

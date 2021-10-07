@@ -36,13 +36,13 @@ export default function LessonPlayer(props) {
 
   return (
     <Aspect16To9Container>
-      {backgroundImageURL && <BackgroundImage url={backgroundImageURL} />}
+      {!!backgroundImageURL && <BackgroundImage url={backgroundImageURL} />}
       {hasAvatars && <Avatar ref={avatarRef} />}
       {hasDrawings && <Drawing drawingRef={drawingRef} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing} zKind='drawing' />}
       {hasEmbedding && <GeoGebra isPlaying={isPlaying} geoGebra={geoGebra} />}
       {hasEmbedding && <YouTube isPlaying={isPlaying} youTubeIDs={youTubeIDs}/>}
-      {graphic && <Graphic graphic={graphic}/>}
-      {subtitle && <Caption caption={subtitle.caption} />}
+      {!!graphic && <Graphic graphic={graphic}/>}
+      {!!subtitle && <Caption caption={subtitle.caption} />}
       {isShowSubtitle && subtitle && <Subtitle subtitle={subtitle.body} />}
       {!disabledControl && <Controller isLoading={isLoading} isPlaying={isPlaying} isShowSubtitle={isShowSubtitle} isShowFullController={isShowFullController}
         maxTime={parseFloat(durationSec.toFixed(2))} onSubtitleButtonClick={handleSubtitleButtonClick} {...controllerProps} />}
