@@ -1,13 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
 import { css } from '@emotion/core'
-import useCurrentUser from '../../../libs/hooks/user/useCurrentUser'
 import useMobileDetector from '../../../libs/hooks/useMobileDetector'
 import useNarrowScreenDetector from '../../../libs/hooks/useNarrowScreenDetector'
 import useUserLessons from '../../../libs/hooks/user/useUserLessons'
 import EmbedLesson from '../../lesson/embed/'
 import HeaderImage from './headerImage'
-import EditLink from './editLink'
 import BlankIntroduction from './blankIntroduction'
 import LessonLine from './lessonLine'
 import Spacer from '../../spacer'
@@ -19,10 +17,9 @@ import MultilineText from '../../multilineText'
 import LoadingIndicator from '../../loadingIndicator'
 
 export default function ShowUser({ user }) {
-  const currentUser = useCurrentUser()
   const isMobile = useMobileDetector()
   const isNarrowScreen = useNarrowScreenDetector()
-  const { isLoading, lessons } = useUserLessons({ userID: user.id, currentUser })
+  const { isLoading, lessons } = useUserLessons(user.id)
 
   return (
     <div css={backgroundStyle}>
@@ -33,12 +30,7 @@ export default function ShowUser({ user }) {
       <div css={bodyStyle}>
         <div css={containerStyle}>
           <ContainerSpacer left='10' right='10'>
-            <Container height='50'>
-              <Flex justifyContent='right' alignItems='center'>
-                <Spacer height='50' />
-                {user.id === currentUser?.id && <EditLink />}
-              </Flex>
-            </Container>
+            <Spacer height='50' />
 
             <Flex justifyContent='center' flexDirection={isNarrowScreen ? 'column' : 'row'} gap='20px'>
               <div css={playerStyle}>
@@ -46,7 +38,7 @@ export default function ShowUser({ user }) {
                   <EmbedLesson lessonID={user.introductionID} />
                 }
                 {!user.isPublishedIntroduction &&
-                  <BlankIntroduction isMobile={isMobile} user={user} currentUser={currentUser} />
+                  <BlankIntroduction />
                 }
               </div>
               <div css={profileStyle}>
@@ -70,7 +62,7 @@ export default function ShowUser({ user }) {
                   {isLoading && <LoadingIndicator size='30' />}
                   {!isLoading &&
                     <ContainerSpacer left='20'>
-                      <PlainText size='15' color='gray'>授業はありません。</PlainText>
+                      <PlainText size='15' color='gray'>授業はまだありません。</PlainText>
                     </ContainerSpacer>
                   }
                 </Container>
