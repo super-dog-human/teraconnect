@@ -23,11 +23,10 @@ export default function UserMyPage({ user }) {
 
   return (
     <div css={backgroundStyle}>
-
-      <Spacer height='100' />
+      <Spacer height={isMobile ? '50' : '100'} />
 
       <div css={userStyle}>
-        <Flex flexDirection={isMobile ? 'column' : 'row'} justifyContent='space-between'>
+        <Flex flexDirection={isMobile ? 'column' : 'row'} justifyContent='space-between' gap={!isMobile && '50px'}>
           <FlexItem flexBasis='50%'>
             <Flex justifyContent='center'>
               <Container width='200' height='200'>
@@ -67,7 +66,7 @@ export default function UserMyPage({ user }) {
                     <PlainText color='gray' size='13'>合計再生回数</PlainText>
                   </Container>
                   <div css={fullWidthStyle}>
-                    <PlainText color='gray' size='45' fontWeight='bold'>1</PlainText>
+                    <PlainText color='gray' size='45' fontWeight='bold'>-</PlainText>
                     <Spacer width='10' />
                     <Container width='30'>
                       <PlainText color='gray' size='13'>回</PlainText>
@@ -80,7 +79,7 @@ export default function UserMyPage({ user }) {
                     <PlainText color='gray' size='13'>完全再生率</PlainText>
                   </Container>
                   <div css={fullWidthStyle}>
-                    <PlainText color='gray' size='45' fontWeight='bold'>100</PlainText>
+                    <PlainText color='gray' size='45' fontWeight='bold'>-</PlainText>
                     <Spacer width='10' />
                     <Container width='30'>
                       <PlainText color='gray' size='13'>%</PlainText>
@@ -93,7 +92,7 @@ export default function UserMyPage({ user }) {
                     <PlainText color='gray' size='13'>推薦獲得</PlainText>
                   </Container>
                   <div css={fullWidthStyle}>
-                    <PlainText color='gray' size='45' fontWeight='bold'>2</PlainText>
+                    <PlainText color='gray' size='45' fontWeight='bold'>-</PlainText>
                     <Spacer width='10' />
                     <Container width='30'>
                       <PlainText color='gray' size='13'>推薦</PlainText>
@@ -107,7 +106,7 @@ export default function UserMyPage({ user }) {
         </Flex>
       </div>
 
-      <ContainerSpacer top='50' bottom='100'>
+      <ContainerSpacer top='50' bottom={isMobile ? '50' : '90'}>
         <Flex justifyContent='center'>
           <Container width='110' height='30'>
             <LabelButton fontSize='16' color='var(--error-red)' onClick={signOut}>ログアウト</LabelButton>
