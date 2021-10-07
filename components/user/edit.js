@@ -57,15 +57,15 @@ export default function EditUser({ user }) {
           <Flex justifyContent='center'>
             <FlexItem flexBasis='100%'>
               <Container height='25'>
-                <InputText size='20' color='gray' borderWidth='0px 0px 1px 0px' placeholder='名前を入力' onChange={handleNameChange} {...nameInputProps } />
+                <InputText size='20' color='gray' borderWidth='0px 0px 1px 0px' placeholder='名前を入力' maxLength='50' onChange={handleNameChange} {...nameInputProps } />
               </Container>
               <Spacer height='30' />
               <Container height='25'>
-                <InputEmail size='20' color='gray' borderWidth='0px 0px 1px 0px' placeholder='メールアドレスを入力' onChange={handleEmailChange} {...emailInputProps } />
+                <InputEmail size='20' color='gray' borderWidth='0px 0px 1px 0px' placeholder='メールアドレスを入力' maxLength='100' onChange={handleEmailChange} {...emailInputProps } />
               </Container>
               <Spacer height='40' />
               <Container height='130'>
-                <Textarea size='16' color='gray' borderColor='gray' borderWidth='1px' padding='10' placeholder='プロフィールを入力' maxLength='500' onChange={handleProfileChange} {...profileInputProps} />
+                <Textarea size='16' lineHeight='22' color='gray' borderColor='gray' borderWidth='1px' padding='10' placeholder='プロフィールを入力' maxLength='500' onChange={handleProfileChange} {...profileInputProps} />
               </Container>
               <Spacer height='20' />
               {introductionID === 0 &&

@@ -3,12 +3,13 @@ import React from 'react'
 import { css } from '@emotion/core'
 
 const Textarea = React.forwardRef(function textarea(props, ref) {
-  const { size, color, backgroundColor, borderColor, borderWidth, padding, ...inputProps } = props
+  const { size, lineHeight, color, backgroundColor, borderColor, borderWidth, padding, ...inputProps } = props
   const bodySize = padding ? `calc(100% - 2px - ${padding * 2}px)` : 'calc(100% - 2px)'
   const bodyStyle = css({
     width: bodySize,
     height: bodySize,
-    fontSize: `${size}px`,
+    fontSize: size && `${size}px`,
+    lineHeight: lineHeight && `${lineHeight}px`,
     color,
     backgroundColor: backgroundColor || 'inherit',
     borderColor,
