@@ -20,17 +20,15 @@ export default function useLessonsByCategory({ subjectID, categoryID }) {
 
     fetch(`/lessons?category_id=${categoryID}&next_cursor=${fetchCursorRef.current}`).then(result => {
       setIsLoading(false)
+      setHasMore(result.lessons.length === 18)
 
       fetchCursorRef.current = result.nextCursor
-      setHasMore(result.lessons.length % 18 === 0)
       setLessons(l => [...l, ...result.lessons])
     }).catch(e => {
       setIsLoading(false)
+      setHasMore(false)
 
-      if (e.response?.status === 404) {
-        setHasMore(false)
-        return
-      }
+      if (e.response?.status === 404) return
       console.error(e)
     })
   }, [fetch, categoryID])
