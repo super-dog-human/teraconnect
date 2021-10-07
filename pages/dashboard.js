@@ -1,25 +1,31 @@
+/** @jsxImportSource @emotion/react */
 import React from 'react'
+import { css } from '@emotion/core'
 import Head from 'next/head'
 import Layout from '../components/layout'
 import requirePageAuth from '../libs/middlewares/requirePageAuth'
-import { signOut } from 'next-auth/client'
-import PageLink from '../components/pageLink'
+import UserMyPage from '../components/user/mypage/'
 
-const Page = () => {
+const Page = ({ user }) => {
   return (
     <>
       <Head>
-        <title>TERACONNECT</title>
+        <title>マイページ - TERACONNECT</title>
       </Head>
       <Layout>
-        <>
-          <button onClick={() => signOut()}>ログアウト</button>
-          <PageLink path='/users/edit'>編集</PageLink>
-        </>
+        <div css={bodyStyle}>
+          <UserMyPage user={user} />
+        </div>
       </Layout>
     </>
   )
 }
+
+const bodyStyle = css({
+  width: '100%',
+  height: '100%',
+  backgroundColor: 'var(--bg-light-gray)',
+})
 
 export default Page
 
