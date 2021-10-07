@@ -9,7 +9,7 @@ import Container from '../../container'
 import FlexItem from '../../flexItem'
 
 export default function HeaderImage({ url, user, zIndex }) {
-  const bodyStyle = css({
+  const backgroundStyle = css({
     width: '100%',
     height: '250px',
     backgroundColor: 'var(--dark-blue)',
@@ -19,26 +19,34 @@ export default function HeaderImage({ url, user, zIndex }) {
     backgroundPositionX: 'center',
     backgroundPositionY: '55%',
     position: 'fixed',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    top: 60,
     zIndex,
+    top: 60,
   })
 
   return (
-    <div css={bodyStyle}>
-      <FlexItem flexBasis='70px'>
-        <Container width='70' height='70'>
-          <UserIcon id={user.id} />
-        </Container>
-      </FlexItem>
-      <Spacer width='10' />
-      <PlainText size='35' color='white' fontWeight='bold'>
-        <ColorFilter filter='drop-shadow(5px 5px 5px black)'>
-          {user.name}
-        </ColorFilter>
-      </PlainText>
+    <div css={backgroundStyle}>
+      <div css={bodyStyle}>
+        <FlexItem flexBasis='70px'>
+          <Container width='70' height='70'>
+            <UserIcon id={user.id} />
+          </Container>
+        </FlexItem>
+        <Spacer width='10' />
+        <PlainText size='35' color='white' fontWeight='bold'>
+          <ColorFilter filter='drop-shadow(5px 5px 5px black)'>
+            {user.name}
+          </ColorFilter>
+        </PlainText>
+      </div>
     </div>
   )
 }
+
+const bodyStyle = css({
+  height: '100%',
+  marginLeft: '10px',
+  marginRight: '10px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+})
