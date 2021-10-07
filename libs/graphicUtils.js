@@ -40,3 +40,7 @@ export function dataURLToBlob(url, type) {
 
   return new Blob([ab], { type })
 }
+
+export function isPublicThumbnail(url) {
+  return url.startsWith(process.env.NEXT_PUBLIC_GOOGLE_STORAGE_BUCKET_URL)
+}
