@@ -6,14 +6,14 @@ import Layout from '../../components/layout'
 import Lesson from '../../components/lesson/index'
 import getQueryParamsAsProps from '../../libs/middlewares/getQueryParamsAsProps'
 
-const Page = ({ id, viewKey }) => (
+const Page = ({ id, view_key }) => (
   <>
     <Head>
       <title>授業の再生 - TERACONNECT</title>
     </Head>
     <Layout>
       <div css={bodyStyle}>
-        <Lesson id={id} viewKey={viewKey} />
+        <Lesson id={id} viewKey={view_key} />
       </div>
     </Layout>
   </>
