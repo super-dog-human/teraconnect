@@ -16,7 +16,6 @@ export default function useResourceReloader() {
   const { fetchWithAuth } = useFetch()
 
   async function setNextTimer() {
-    // fetchTokenでセッションのexpireが1日延長されてしまうが許容する
     timerRef.current = setTimeout(() => {
       setShouldReload(true)
     }, SIGNED_URL_EXPIRES)

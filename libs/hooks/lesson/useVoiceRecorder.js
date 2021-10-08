@@ -1,6 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
 import useMicrophone from '../useMicrophone'
-import useFetch from '../useFetch'
 import { bufferToWavFile }  from '../../audioUtils'
 
 export default function useVoiceRecorder({ needsUpload=true, lessonID, isRecording, realElapsedTime }) {
@@ -11,7 +10,6 @@ export default function useVoiceRecorder({ needsUpload=true, lessonID, isRecordi
   const [silenceThresholdSec, setSilenceThresholdSec] = useState(1.0)
   const [voiceFile, setVoiceFile] = useState()
   const { isMicReady, setNode } = useMicrophone()
-  const { fetchToken } = useFetch()
 
   function switchRecording() {
     if (!recorderRef.current) return
@@ -46,7 +44,6 @@ export default function useVoiceRecorder({ needsUpload=true, lessonID, isRecordi
   }
 
   async function uploadVoice(body) {
-    body.token = await fetchToken()
     uploaderRef.current.postMessage({ newVoice: body })
   }
 

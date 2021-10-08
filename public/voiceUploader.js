@@ -19,7 +19,7 @@ onmessage = async function(e) {
     case 'newVoice': {
       uploadingCount += 1
 
-      const result = await fetchSignedURL(e.data.newVoice.elapsedTime, e.data.newVoice.durationSec, e.data.newVoice.token)
+      const result = await fetchSignedURL(e.data.newVoice.elapsedTime, e.data.newVoice.durationSec)
       const file = await createMP3(e.data.newVoice.buffers, e.data.newVoice.sampleRate)
       await uploadFile(result.signedURL, file)
       e.data = null
@@ -70,7 +70,7 @@ async function createMP3(rawData, sampleRate) {
   return new Blob(mp3Data, { type: 'audio/mpeg' })
 }
 
-async function fetchSignedURL(elapsedTime, durationSec, token) {
+async function fetchSignedURL(elapsedTime, durationSec) {
   const url = apiURL + '/voice'
   const body = {
     elapsedTime: parseFloat(elapsedTime.toFixed(3)),
@@ -79,8 +79,9 @@ async function fetchSignedURL(elapsedTime, durationSec, token) {
   }
   const option = {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
+    credentials: 'include',
   }
 
   const response = await unfetch(url, option)

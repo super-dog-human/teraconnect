@@ -1,5 +1,5 @@
 import { useRef, useCallback, useEffect } from 'react'
-import { fetch as isoFetch, fetchToken as isoFetchToken, fetchWithAuth as isoFetchWithAuth, post as isoPost } from '../fetch'
+import { fetch as isoFetch, fetchWithAuth as isoFetchWithAuth, post as isoPost } from '../fetch'
 import { createVoice as isoCreateVoice, createGraphics as isoCreateGraphics, createMusic as isoCreateMusic } from '../postResource'
 
 const timeoutMillisec = 1000 * 60
@@ -41,10 +41,6 @@ export default function useFetch() {
     return requestWithAbortAndTimeout(signal => isoFetch(resource, { ...option, signal }))
   }, [requestWithAbortAndTimeout])
 
-  const fetchToken = useCallback(() => {
-    return requestWithAbortAndTimeout(signal => isoFetchToken({ signal }))
-  }, [requestWithAbortAndTimeout])
-
   const fetchWithAuth = useCallback((resource, token) => {
     return requestWithAbortAndTimeout(signal => isoFetchWithAuth(resource, token, { signal }))
   }, [requestWithAbortAndTimeout])
@@ -71,5 +67,5 @@ export default function useFetch() {
     }
   }, [])
 
-  return { fetch, fetchToken, fetchWithAuth, post, createVoice, createGraphics, createMusic }
+  return { fetch, fetchWithAuth, post, createVoice, createGraphics, createMusic }
 }
