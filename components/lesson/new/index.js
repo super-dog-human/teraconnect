@@ -30,7 +30,7 @@ export default function NewLesson({ user }) {
       }
 
       <Spacer height='50' />
-      {!isSelectedMethod && <ModeSelector userID={user.id} isIntroduction={isIntroduction} onClick={handleModeButtonClick} />}
+      {!isSelectedMethod && <ModeSelector isIntroduction={isIntroduction} onClick={handleModeButtonClick} />}
       {!isIntroduction && isSelectedMethod && <TransitionContainer isShow={isSelectedMethod} duration={100}>
         <NewLessonForm {...subjectProps} {...props} />
       </TransitionContainer>}

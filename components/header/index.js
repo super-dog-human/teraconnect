@@ -18,6 +18,7 @@ import MobileHeader from './mobile/'
 import SearchBox from './searchBox'
 import AlgoliaSearchBox from './algoliaSearchBox'
 import ContainerSpacer from '../containerSpacer'
+import LabelButton from '../button/labelButton'
 
 export default function Header() {
   const router = useRouter()
@@ -93,12 +94,20 @@ export default function Header() {
                       <Container width='110'>
                         {!isLoading && !session &&
                           <PageLink path='/login'>
-                            <button className="light" css={buttonStyle}>授業をつくる</button>
+                            <Container width='110' height='39'>
+                              <LabelButton fontSize='15' lineHeight='25' color='var(--text-dark-gray)' borderColor='var(--text-dark-gray)'>
+                                ログイン
+                              </LabelButton>
+                            </Container>
                           </PageLink>
                         }
                         {!isLoading && session &&
                           <PageLink path='/dashboard'>
-                            <button className="dark" css={buttonStyle}>マイページ</button>
+                            <Container width='110' height='39'>
+                              <LabelButton fontSize='15' lineHeight='25' color='white' backgroundColor='var(--dark-gray)' borderColor='var(--dark-gray)'>
+                                マイページ
+                              </LabelButton>
+                            </Container>
                           </PageLink>
                         }
                       </Container>
@@ -128,11 +137,4 @@ const bodyStyle = css({
   height: '60px',
   marginLeft: 'auto',
   marginRight: 'auto',
-})
-
-const buttonStyle = css({
-  width: '110px',
-  height: '39px',
-  fontSize: '15px',
-  lineHeight: '15px',
 })

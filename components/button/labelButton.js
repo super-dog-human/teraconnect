@@ -5,7 +5,7 @@ import useTouchDeviceDetector from '../../libs/hooks/useTouchDeviceDetector'
 
 export default function LabelButton(props) {
   const isTouchDevice = useTouchDeviceDetector()
-  const { children, fontSize, backgroundColor, color, borderColor, hoverBackgroundColor, hoverColor, hoverBorderColor, disabled, ...buttonProps } = props
+  const { children, fontSize, lineHeight, backgroundColor, color, borderColor, hoverBackgroundColor, hoverColor, hoverBorderColor, disabled, ...buttonProps } = props
 
   const bodyStyle = css({
     width: '100%',
@@ -22,6 +22,7 @@ export default function LabelButton(props) {
   const labelStyle = css({
     padding: '6px 12px',
     fontSize: fontSize && `${fontSize}px`,
+    lineHeight: lineHeight && `${lineHeight}px`,
     color,
     opacity: isTouchDevice ? 1 : 0.8,
     ':hover': {

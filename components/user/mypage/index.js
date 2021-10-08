@@ -118,9 +118,10 @@ export default function UserMyPage({ user }) {
         <Container height='100'>
           {isLoading && <LoadingIndicator size='30' />}
           {!isLoading &&
-            <ContainerSpacer left='20'>
+            <Flex justifyContent={isMobile && 'center'}>
+              {!isMobile && <Spacer width='50' />}
               <PlainText size='15' color='gray'>授業はまだありません。</PlainText>
-            </ContainerSpacer>
+            </Flex>
           }
         </Container>
       }

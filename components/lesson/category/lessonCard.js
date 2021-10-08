@@ -21,7 +21,7 @@ export default function LessonCard({ id, userID, title, description }) {
   return (
     <div css={containerStyle}>
       <Container width='300' height='320'>
-        <PageLink path={'/lessons/' + id} passHref>
+        <PageLink path={'/lessons/' + id}>
           <Container width='300' height='169'>
             {!isThumbnailError && <img src={lessonImageURL + id + '/thumbnail.png'} alt={title} css={thumbnailStyle} onError={handleThumbnailError} />}
             {isThumbnailError && <NoImage color='var(--soft-white)' backgroundColor='gray' />}
