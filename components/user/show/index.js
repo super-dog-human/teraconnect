@@ -28,9 +28,9 @@ export default function ShowUser({ user }) {
         <HeaderImage url={user.backgroundImageURL} user={user} />
       </ZContainer>
 
-      <Spacer height='250' />
-
       <ZContainer zIndex='1'>
+        <Spacer height='250' />
+
         <div css={bodyStyle}>
           <div css={containerStyle}>
             <ContainerSpacer left='10' right='10'>
