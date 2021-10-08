@@ -16,7 +16,7 @@ import StatusLabel from './statusLabel'
 import NoImage from '../../noImage'
 
 const LessonLine = ({ isMobile, lesson }) => (
-  <Flex>
+  <Flex justifyContent='space-between'>
     <Flex flexDirection={isMobile ? 'column' : 'row'} gap='20px'>
       <FlexItem flexBasis={!isMobile && '250px'}>
         <LessonLink status={lesson.status} lessonID={lesson.id} viewKey={lesson.viewKey}>
