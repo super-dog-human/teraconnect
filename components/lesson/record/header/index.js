@@ -9,7 +9,7 @@ import RecordingButton from './recordingButton'
 import DrawingConfigPanel from '../drawingController/drawingConfigPanel'
 import DrawingConfigButton from '../drawingController/drawingConfigButton'
 
-export default function LessonRecordHeader({ lessonID, isMicReady, isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, enableEraser, setEnableEraser,
+export default function LessonRecordHeader({ lessonID, materialID, isMicReady, isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, enableEraser, setEnableEraser,
   undoDrawing, clearDrawing, drawingColor, setDrawingColor, drawingLineWidth, setDrawingLineWidth, isShowControlPanel, setIsShowControlPanel }) {
   const { isFinishing } = useLessonRecorderContext()
 
@@ -40,7 +40,7 @@ export default function LessonRecordHeader({ lessonID, isMicReady, isDrawingHide
           <TopLogoLink color="white" />
         </div>
         <div css={fullWidthStyle}>
-          <RecordingButton lessonID={lessonID} isMicReady={isMicReady} />
+          <RecordingButton lessonID={lessonID} materialID={materialID} isMicReady={isMicReady} />
         </div>
         <div css={fullWidthStyle}>
           <Flex justifyContent='center' alignItems='center'>

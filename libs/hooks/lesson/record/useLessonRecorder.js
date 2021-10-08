@@ -111,7 +111,7 @@ export default function useLessonRecorder() {
     return parseFloat(realElapsedTime().toFixed(3))
   }
 
-  function finishRecording(lessonID) {
+  function finishRecording(lessonID, materialID) {
     showDialog({
       title: '授業収録',
       message: '収録を完了します。よろしいですか？',
@@ -119,18 +119,19 @@ export default function useLessonRecorder() {
       dismissName: 'キャンセル',
       callbackName: '確定',
       callback: () => {
-        uploadLesson(lessonID)
+        uploadLesson(lessonID, materialID)
       },
     })
   }
 
-  async function uploadLesson(lessonID) {
+  async function uploadLesson(lessonID, materialID) {
+    console.log('materialID', materialID)
     setIsFinishing(true)
 
     lessonRef.current.durationSec = elapsedFloatTime()
     lessonRef.current.drawings = reCalcDrawingsTime(lessonRef.current.drawings)
 
-    post(`/lessons/${lessonID}/materials`, lessonRef.current, 'PATCH')
+    post(`/lessons/${lessonID}/materials/${materialID}`, lessonRef.current, 'PATCH')
       .then(() => {
         router.push(`/lessons/${lessonID}/edit`)
       }).catch(e => {

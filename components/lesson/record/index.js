@@ -46,7 +46,7 @@ const LessonRecord = React.forwardRef(function LessonRecord({ lesson, hasResize 
 
   return (
     <>
-      <LessonRecordHeader lessonID={lesson.id} isMicReady={isMicReady} isDrawingHide={isDrawingHide} setIsDrawingHide={setIsDrawingHide}
+      <LessonRecordHeader lessonID={lesson.id} materialID={lesson.materialID} isMicReady={isMicReady} isDrawingHide={isDrawingHide} setIsDrawingHide={setIsDrawingHide}
         enablePen={enablePen} setEnablePen={setEnablePen} enableEraser={enableEraser} setEnableEraser={setEnableEraser} undoDrawing={undoDrawing} clearDrawing={clearDrawing} drawingColor={drawingColor} setDrawingColor={setDrawingColor}
         drawingLineWidth={drawingLineWidth} setDrawingLineWidth={setDrawingLineWidth} isShowControlPanel={isShowControlPanel} setIsShowControlPanel={setIsShowControlPanel} />
       <main css={mainStyle} onDragOver={handleAreaDragOver} onDragLeave={handleAreaDragLeave} onDrop={handleAreaDrop} ref={ref}>
