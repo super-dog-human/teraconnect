@@ -109,7 +109,7 @@ export default function UserMyPage({ user }) {
       <ContainerSpacer top='50' bottom={isMobile ? '50' : '90'}>
         <Flex justifyContent='center'>
           <Container width='110' height='30'>
-            <LabelButton fontSize='16' fontWeight='bold' color='var(--error-red)' onClick={signOut}>ログアウト</LabelButton>
+            <LabelButton fontSize='16' fontWeight='bold' color='var(--error-red)' onClick={() => signOut({ callbackUrl: '/' })}>ログアウト</LabelButton>
           </Container>
         </Flex>
       </ContainerSpacer>
