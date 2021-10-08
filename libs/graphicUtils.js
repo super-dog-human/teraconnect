@@ -8,6 +8,7 @@ export function filterAvailableImages(files) {
 
 export function imageToThumbnailURL(original, maxSize, callback) {
   const image = new Image()
+  image.crossOrigin = 'Anonymous'
   image.onload = (() => {
     const ratio = Math.min(maxSize.width / image.naturalWidth, maxSize.height / image.naturalHeight)
     const canvas = document.createElement('canvas')
@@ -30,7 +31,7 @@ export function isAvailableFileSize(file) {
 }
 
 export function dataURLToBlob(url, type) {
-  const byteString = atob(url.split(',')[1])
+  const byteString = window.atob(url.split(',')[1])
   const ab = new ArrayBuffer(byteString.length)
   const ia = new Uint8Array(ab)
 

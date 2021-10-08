@@ -3,9 +3,8 @@ import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import useFetch from '../useFetch'
 import { putFile } from '../../fetch'
-import { filterObject } from '../../utils'
-import { dataURLToBlob } from '../../graphicUtils'
-import { imageToThumbnailURL } from '../../graphicUtils'
+import { filterObject, isDataURL } from '../../utils'
+import { dataURLToBlob, imageToThumbnailURL } from '../../graphicUtils'
 import { useErrorDialogContext } from '../../contexts/errorDialogContext'
 
 const maxThumbnailSize = { width: 250, height: 250 }
@@ -123,8 +122,15 @@ export default function useUserEditor(currentUser) {
 
   async function uploadThumbnail(url) {
     post('/users/me/thumbnail').then(async (r) => {
-      const file = dataURLToBlob(url, 'image/png')
-      uploadImageFile(r.url, file)
+      if (isDataURL(url)) {
+        const file = dataURLToBlob(url, 'image/png')
+        uploadImageFile(r.url, file)
+      } else {
+        imageToThumbnailURL(url, maxThumbnailSize, (url) => {
+          const file = dataURLToBlob(url, 'image/png')
+          uploadImageFile(r.url, file)
+        })
+      }
     }).catch(e => {
       showError({
         message: 'サムネイル作成の準備に失敗しました。',
