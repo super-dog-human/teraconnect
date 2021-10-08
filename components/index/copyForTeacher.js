@@ -130,6 +130,14 @@ const CopyForTeacher = () => {
               </PageLink>
             </Container>
           </Flex>
+          <Spacer height='20' />
+          <Flex justifyContent='center'>
+            <PageLink path='/'>
+              <PlainText color='white' size='15'>
+                つくり方を見る
+              </PlainText>
+            </PageLink>
+          </Flex>
         </ContainerSpacer>
       </div>
     </div>
