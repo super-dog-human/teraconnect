@@ -11,6 +11,7 @@ export default function LabelButton(props) {
     width: '100%',
     height: '100%',
     padding: 0,
+    borderWidth: '1px',
     borderColor,
     backgroundColor,
     cursor: disabled ? 'auto' : 'pointer',
@@ -22,7 +23,7 @@ export default function LabelButton(props) {
   const labelStyle = css({
     padding: '6px 12px',
     fontSize: fontSize && `${fontSize}px`,
-    lineHeight: lineHeight && `${lineHeight}px`,
+    lineHeight: lineHeight && `${lineHeight - 12}px`,
     color,
     opacity: isTouchDevice ? 1 : 0.8,
     ':hover': {

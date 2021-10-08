@@ -124,7 +124,7 @@ const CopyForTeacher = () => {
           <Flex justifyContent='center'>
             <Container width='170' height='55'>
               <PageLink path='/lessons/new'>
-                <LabelButton fontSize='18' color='white' backgroundColor='var(--dark-purple)'>
+                <LabelButton fontSize='18' lineHeight='55' color='white' backgroundColor='var(--dark-purple)'>
                   授業をつくる
                 </LabelButton>
               </PageLink>

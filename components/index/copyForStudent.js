@@ -66,7 +66,7 @@ const AppCopy = () => {
                 <Flex justifyContent='center'>
                   <Container width='170' height='55'>
                     <PageLink path='/search'>
-                      <LabelButton fontSize='18' color='white' backgroundColor='var(--light-powder-blue)'>授業をさがす</LabelButton>
+                      <LabelButton fontSize='18' lineHeight='55' color='white' backgroundColor='var(--light-powder-blue)'>授業をさがす</LabelButton>
                     </PageLink>
                   </Container>
                 </Flex>

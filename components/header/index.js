@@ -95,7 +95,7 @@ export default function Header() {
                         {!isLoading && !session &&
                           <PageLink path='/login'>
                             <Container width='110' height='39'>
-                              <LabelButton fontSize='15' lineHeight='25' color='var(--text-dark-gray)' borderColor='var(--text-dark-gray)'>
+                              <LabelButton fontSize='15' lineHeight='39' color='var(--text-dark-gray)' borderColor='var(--text-dark-gray)'>
                                 ログイン
                               </LabelButton>
                             </Container>
@@ -104,7 +104,7 @@ export default function Header() {
                         {!isLoading && session &&
                           <PageLink path='/dashboard'>
                             <Container width='110' height='39'>
-                              <LabelButton fontSize='15' lineHeight='25' color='white' backgroundColor='var(--dark-gray)' borderColor='var(--dark-gray)'>
+                              <LabelButton fontSize='15' lineHeight='39' color='white' backgroundColor='var(--dark-gray)' borderColor='var(--dark-gray)'>
                                 マイページ
                               </LabelButton>
                             </Container>

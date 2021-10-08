@@ -110,10 +110,10 @@ export default function UserMyPage({ user }) {
         {!isMobile &&
           <>
             <Flex justifyContent='center'>
-              <Container width='150' height='50'>
+              <Container width='150' height='45'>
                 <PageLink path='/lessons/new'>
-                  <LabelButton fontSize='15' color='white' backgroundColor='var(--dark-purple)'>
-                  授業をつくる
+                  <LabelButton fontSize='15' lineHeight='45' color='white' backgroundColor='var(--dark-purple)'>
+                    授業をつくる
                   </LabelButton>
                 </PageLink>
               </Container>
