@@ -85,5 +85,4 @@ const mainStyle = css({
 const bodyStyle = css({
   margin: 'auto',
   maxWidth: '1280px',
-  maxHeight: '720px',
 })

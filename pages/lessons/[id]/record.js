@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import React, { useRef } from 'react'
 import Head from 'next/head'
 import { LessonRecorderProvider } from '../../../libs/contexts/lessonRecorderContext'
@@ -21,9 +20,11 @@ const Page = ({ lesson }) => {
       <Head>
         <title>{lesson.title}の収録 - TERACONNECT</title>
       </Head>
-      <LessonRecorderProvider>
-        <LessonRecord lesson={lesson} ref={containerRef} hasResize={hasResize} />
-      </LessonRecorderProvider>
+      <div>
+        <LessonRecorderProvider>
+          <LessonRecord lesson={lesson} ref={containerRef} hasResize={hasResize} />
+        </LessonRecorderProvider>
+      </div>
       <Footer />
     </>
   )
