@@ -19,7 +19,7 @@ export default function Embeddings({ isMobile, embeddings }) {
           <div css={iframeStyle} key={i}>
             <iframe id="ytplayer" type="text/html" width="300" height="169" src={iframeURL} frameBorder="0" />
             <a href={linkURL} target='_blank' rel="noreferrer">
-              <Flex justifyContent='right'>
+              <Flex justifyContent='right' alignItems='center'>
                 <Container width='15' height='15'><Icon name='foreign-gray' /></Container>
                 <Spacer width='8' />
                 <PlainText size='14' color='gray'>YouTube</PlainText>
