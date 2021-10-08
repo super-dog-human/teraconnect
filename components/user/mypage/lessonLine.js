@@ -13,17 +13,17 @@ import ContainerSpacer from '../../containerSpacer'
 import MultilineText from '../../multilineText'
 import LessonLink from './lessonLink'
 import StatusLabel from './statusLabel'
+import NoImage from '../../noImage'
 
 const LessonLine = ({ isMobile, lesson }) => (
   <Flex>
     <Flex flexDirection={isMobile ? 'column' : 'row'} gap='20px'>
       <FlexItem flexBasis={!isMobile && '250px'}>
         <LessonLink status={lesson.status} lessonID={lesson.id} viewKey={lesson.viewKey}>
-          <Container minWidth='250' minHeight='141'>
-            <div css={thumbnailStyle}>
-              <Image src={lesson.thumbnailURL} width='1600' height='900' objectFit="contain" alt={lesson.title} />
-            </div>
-          </Container>
+          <div css={thumbnailStyle}>
+            {!!lesson.thumbnailURL && <Image src={lesson.thumbnailURL} width='1600' height='900' objectFit="contain" alt={lesson.title} />}
+            {!lesson.thumbnailURL && <NoImage textSize='15' color='var(--soft-white)' backgroundColor='gray' />}
+          </div>
         </LessonLink>
       </FlexItem>
       <div>
@@ -75,6 +75,10 @@ const LessonLine = ({ isMobile, lesson }) => (
 
 const thumbnailStyle = css({
   backgroundColor: 'var(--bg-gray)',
+  width: '100%',
+  height: '100%',
+  minWidth: '250px',
+  minHeight: '141px',
 })
 
 export default LessonLine
