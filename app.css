@@ -43,6 +43,7 @@ body {
   flex-flow: column;
   height: 100%;
   min-height: 100vh;
+  background-color: var(--dark-gray);
 }
 #__next {
   display: inherit;
