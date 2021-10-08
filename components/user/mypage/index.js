@@ -107,6 +107,20 @@ export default function UserMyPage({ user }) {
       </div>
 
       <ContainerSpacer top='50' bottom={isMobile ? '50' : '90'}>
+        {!isMobile &&
+          <>
+            <Flex justifyContent='center'>
+              <Container width='150' height='50'>
+                <PageLink path='/lessons/new'>
+                  <LabelButton fontSize='15' color='white' backgroundColor='var(--dark-purple)'>
+                  授業をつくる
+                  </LabelButton>
+                </PageLink>
+              </Container>
+            </Flex>
+            <Spacer height='30' />
+          </>
+        }
         <Flex justifyContent='center'>
           <Container width='110' height='30'>
             <LabelButton fontSize='16' fontWeight='bold' color='var(--error-red)' onClick={() => signOut({ callbackUrl: '/' })}>ログアウト</LabelButton>
