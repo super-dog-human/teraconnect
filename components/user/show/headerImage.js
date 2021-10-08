@@ -8,7 +8,7 @@ import PlainText from '../../plainText'
 import Container from '../../container'
 import FlexItem from '../../flexItem'
 
-export default function HeaderImage({ url, user, zIndex }) {
+export default function HeaderImage({ url, user }) {
   const backgroundStyle = css({
     width: '100%',
     height: '250px',
@@ -18,8 +18,6 @@ export default function HeaderImage({ url, user, zIndex }) {
     backgroundSize: 'cover',
     backgroundPositionX: 'center',
     backgroundPositionY: '55%',
-    position: 'fixed',
-    zIndex,
     top: 60,
   })
 

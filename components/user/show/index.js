@@ -15,6 +15,7 @@ import ContainerSpacer from '../../containerSpacer'
 import Flex from '../../flex'
 import MultilineText from '../../multilineText'
 import LoadingIndicator from '../../loadingIndicator'
+import ZContainer from '../../zContainer'
 
 export default function ShowUser({ user }) {
   const isMobile = useMobileDetector()
@@ -23,41 +24,44 @@ export default function ShowUser({ user }) {
 
   return (
     <div css={backgroundStyle}>
-      <HeaderImage url={user.backgroundImageURL} user={user} zIndex='0'/>
+      <ZContainer zIndex='0' position='fixed'>
+        <HeaderImage url={user.backgroundImageURL} user={user} />
+      </ZContainer>
 
       <Spacer height='250' />
 
-      <div css={bodyStyle}>
-        <div css={containerStyle}>
-          <ContainerSpacer left='10' right='10'>
-            <Spacer height='50' />
+      <ZContainer zIndex='1'>
+        <div css={bodyStyle}>
+          <div css={containerStyle}>
+            <ContainerSpacer left='10' right='10'>
+              <Spacer height='50' />
 
-            <Flex justifyContent='center' flexDirection={isNarrowScreen ? 'column' : 'row'} gap='20px'>
-              <div css={playerStyle}>
-                {user.isPublishedIntroduction &&
+              <Flex justifyContent='center' flexDirection={isNarrowScreen ? 'column' : 'row'} gap='20px'>
+                <div css={playerStyle}>
+                  {user.isPublishedIntroduction &&
                   <EmbedLesson lessonID={user.introductionID} />
-                }
-                {!user.isPublishedIntroduction &&
+                  }
+                  {!user.isPublishedIntroduction &&
                   <BlankIntroduction />
-                }
-              </div>
-              <div css={profileStyle}>
-                <PlainText color='gray' size='16'>
-                  <MultilineText texts={user.profile} />
-                </PlainText>
-              </div>
-            </Flex>
+                  }
+                </div>
+                <div css={profileStyle}>
+                  <PlainText color='gray' size='16'>
+                    <MultilineText texts={user.profile} />
+                  </PlainText>
+                </div>
+              </Flex>
 
-            <Spacer height='60' />
+              <Spacer height='60' />
 
-            <div>
-              <ContainerSpacer left='10'>
-                <PlainText size='22' color='gray'>
-                  {user.name}の授業
-                </PlainText>
-              </ContainerSpacer>
-              <Spacer height='30' />
-              {lessons.length === 0 &&
+              <div>
+                <ContainerSpacer left='10'>
+                  <PlainText size='22' color='gray'>
+                    {user.name}の授業
+                  </PlainText>
+                </ContainerSpacer>
+                <Spacer height='30' />
+                {lessons.length === 0 &&
                 <Container height='100'>
                   {isLoading && <LoadingIndicator size='30' />}
                   {!isLoading &&
@@ -66,8 +70,8 @@ export default function ShowUser({ user }) {
                     </ContainerSpacer>
                   }
                 </Container>
-              }
-              {lessons.length > 0 &&
+                }
+                {lessons.length > 0 &&
                 <ContainerSpacer left='10' right='10'>
                   <Flex flexDirection='column' gap='50px'>
                     {lessons.map((lesson, i) => (
@@ -77,13 +81,14 @@ export default function ShowUser({ user }) {
                     ))}
                   </Flex>
                 </ContainerSpacer>
-              }
+                }
 
-              <Spacer height='100' />
-            </div>
-          </ContainerSpacer>
+                <Spacer height='100' />
+              </div>
+            </ContainerSpacer>
+          </div>
         </div>
-      </div>
+      </ZContainer>
     </div>
   )
 }
@@ -97,7 +102,6 @@ const backgroundStyle = css({
 const bodyStyle = css({
   backgroundColor: 'var(--bg-light-gray)',
   position: 'relative',
-  zIndex: 1,
 })
 
 const containerStyle = css({
