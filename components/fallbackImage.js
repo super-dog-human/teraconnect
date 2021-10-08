@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/core'
 import NoImage from './noImage'
 
-export default function UserIcon({ url, name }) {
+export default function FallbackImage({ url, name }) {
   const [hasError, setHasError] = useState(false)
 
   function handleError() {
