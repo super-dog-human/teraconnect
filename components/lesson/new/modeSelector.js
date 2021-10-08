@@ -86,7 +86,7 @@ export default function ModeSelector({ isIntroduction, onClick }) {
             <div css={skipContainerStyle} />
             <div css={skipContainerStyle}>
               <Flex justifyContent='flex-end'>
-                <PageLink path='/users/dashboard'>
+                <PageLink path='/dashboard'>
                   <PlainText size='14' color='gray'>スキップ</PlainText>
                 </PageLink>
               </Flex>
