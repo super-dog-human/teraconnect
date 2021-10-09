@@ -21,6 +21,17 @@ const options = {
     signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
     verificationOptions:  {},
   },
+  cookies: {
+    sessionToken: {
+      name: 'session-token',
+      options: {
+        httpOnly: true,
+        sameSite: 'strict',
+        secure: true,
+        domain: process.env.NEXT_PUBLIC_TERACONNECT_COOKIE_DOMAIN,
+      },
+    },
+  },
   pages: {
     // signIn: '/api/auth/signin',  // Displays signin buttons
     // signOut: '/api/auth/signout', // Displays form with sign out button

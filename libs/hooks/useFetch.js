@@ -41,8 +41,8 @@ export default function useFetch() {
     return requestWithAbortAndTimeout(signal => isoFetch(resource, { ...option, signal }))
   }, [requestWithAbortAndTimeout])
 
-  const fetchWithAuth = useCallback((resource, token) => {
-    return requestWithAbortAndTimeout(signal => isoFetchWithAuth(resource, token, { signal }))
+  const fetchWithAuth = useCallback((resource, cookie) => {
+    return requestWithAbortAndTimeout(signal => isoFetchWithAuth(resource, cookie, { signal }))
   }, [requestWithAbortAndTimeout])
 
   const post = useCallback((resource, body, method='POST', header) => {

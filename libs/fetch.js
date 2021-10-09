@@ -1,5 +1,4 @@
 import { default as isoFetch } from 'isomorphic-unfetch'
-import { getSession } from 'next-auth/client'
 
 export async function fetch(resource, option) {
   const url = process.env.NEXT_PUBLIC_TERACONNECT_API_URL + resource
@@ -15,9 +14,9 @@ export async function fetch(resource, option) {
   throw error
 }
 
-export async function fetchWithAuth(resource, token, option={}) {
+export async function fetchWithAuth(resource, cookie, option={}) {
   return fetch(resource, {
-    headers: header(token),
+    headers: header(cookie),
     credentials: 'include',
     ...option
   })
@@ -64,9 +63,9 @@ export async function putFile(url, body, contentType, option={}) {
   throw error
 }
 
-function header(token) {
-  if (token) {
-    return { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
+function header(cookie) {
+  if (cookie) {
+    return { 'Content-Type': 'application/json', cookie }
   } else {
     return { 'Content-Type': 'application/json' }
   }

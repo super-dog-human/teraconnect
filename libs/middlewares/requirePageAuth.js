@@ -1,5 +1,4 @@
 import { getSession } from 'next-auth/client'
-import jwt from 'next-auth/jwt'
 import { fetchWithAuth } from '../fetch'
 
 export default async function requirePageAuth(context) {
@@ -12,15 +11,12 @@ export default async function requirePageAuth(context) {
     return { props: {} }
   }
 
-  const secret = process.env.SECRET
-  const token = await jwt.getToken({ req, secret, raw: true })
-
   if (req.url === '/users/edit') {
     return { props: { user: session.user } }
   }
 
-  return fetchWithAuth('/users/me', token)
-    .then(user => ({ props: { user, token } }))
+  return fetchWithAuth('/users/me', req?.headers.cookie)
+    .then(user => ({ props: { user } }))
     .catch(e => {
       if (e.response?.status === 404) {
         context.res.writeHead(307, { Location: '/users/edit' })
