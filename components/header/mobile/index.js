@@ -55,7 +55,7 @@ const headerStyle = css({
   width: '100%',
   top: 0,
   left: 0,
-  backgroundColor: 'rgba(255,255,255,0.96)',
+  backgroundColor: 'white',
   userSelect: 'none',
 })
 
