@@ -60,7 +60,7 @@ const CopyForTeacher = () => {
                         VRMファイルをアップロードし、<br />
                         好きな姿で教壇に立とう。<br />
                         <PlainText size='10' whiteSpace='nowrap'>
-                          ※容量・ポリゴン数の制限があります。
+                          ※容量・ポリゴン数の制限あり。
                         </PlainText>
                       </PlainText>
                     </div>

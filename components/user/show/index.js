@@ -39,10 +39,10 @@ export default function ShowUser({ user }) {
               <Flex justifyContent='center' flexDirection={isNarrowScreen ? 'column' : 'row'} gap='20px'>
                 <div css={playerStyle}>
                   {user.isPublishedIntroduction &&
-                  <EmbedLesson lessonID={user.introductionID} />
+                    <EmbedLesson lessonID={user.introductionID} />
                   }
                   {!user.isPublishedIntroduction &&
-                  <BlankIntroduction />
+                    <BlankIntroduction />
                   }
                 </div>
                 <div css={profileStyle}>
@@ -62,25 +62,25 @@ export default function ShowUser({ user }) {
                 </ContainerSpacer>
                 <Spacer height='30' />
                 {lessons.length === 0 &&
-                <Container height='100'>
-                  {isLoading && <LoadingIndicator size='30' />}
-                  {!isLoading &&
-                    <ContainerSpacer left='20'>
-                      <PlainText size='15' color='gray'>授業はまだありません。</PlainText>
-                    </ContainerSpacer>
-                  }
-                </Container>
+                  <Container height='100'>
+                    {isLoading && <LoadingIndicator size='30' />}
+                    {!isLoading &&
+                      <ContainerSpacer left='20'>
+                        <PlainText size='15' color='gray'>授業はまだありません。</PlainText>
+                      </ContainerSpacer>
+                    }
+                  </Container>
                 }
                 {lessons.length > 0 &&
-                <ContainerSpacer left='10' right='10'>
-                  <Flex flexDirection='column' gap='50px'>
-                    {lessons.map((lesson, i) => (
-                      <ContainerSpacer key={i} bottom={isMobile && '30'}>
-                        <LessonLine isMobile={isMobile} lesson={lesson} />
-                      </ContainerSpacer>
-                    ))}
-                  </Flex>
-                </ContainerSpacer>
+                  <ContainerSpacer left='10' right='10'>
+                    <Flex flexDirection='column' gap='50px'>
+                      {lessons.map((lesson, i) => (
+                        <ContainerSpacer key={i} bottom={isMobile && '30'}>
+                          <LessonLine isMobile={isMobile} lesson={lesson} />
+                        </ContainerSpacer>
+                      ))}
+                    </Flex>
+                  </ContainerSpacer>
                 }
 
                 <Spacer height='100' />

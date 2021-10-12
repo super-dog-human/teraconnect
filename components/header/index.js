@@ -93,7 +93,7 @@ export default function Header() {
                     <ContainerSpacer left='30' right='10'>
                       <Container width='110'>
                         {!isLoading && !session &&
-                          <PageLink path='/login'>
+                          <PageLink path='/dashboard'>
                             <Container width='110' height='39'>
                               <LabelButton fontSize='15' lineHeight='39' color='var(--text-dark-gray)' borderColor='var(--text-dark-gray)'>
                                 ログイン
