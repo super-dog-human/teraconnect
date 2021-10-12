@@ -3,32 +3,28 @@ import React from 'react'
 import { css } from '@emotion/core'
 import Head from 'next/head'
 import Layout from '../../components/layout'
+import Auth from '../../components/auth'
 import NewLesson from '../../components/lesson/new/'
-import requirePageAuth from '../../libs/middlewares/requirePageAuth'
-import useSessionExpireChecker from '../../libs/hooks/useTokenExpireChecker'
 
-const Page = (props) => {
-  useSessionExpireChecker()
-
-  return (
-    <>
-      <Head>
-        <title>TERACONNECT</title>
-      </Head>
-      <Layout>
+const Page = () => (
+  <>
+    <Head>
+      <title>授業の作成 - TERACONNECT</title>
+    </Head>
+    <Layout>
+      <Auth>
         <div css={backgroundStyle}>
           <div css={bodyStyle}>
-            <NewLesson user={props.user} />
+            <NewLesson />
           </div>
         </div>
-      </Layout>
-    </>
-  )
-}
+      </Auth>
+    </Layout>
+  </>
+)
 
 const backgroundStyle = css({
   width: '100%',
-  minHeight: 'calc(100vh - 60px)',
   height: '100%',
   backgroundColor: 'var(--bg-light-gray)',
 })
@@ -40,7 +36,3 @@ const bodyStyle = css({
 })
 
 export default Page
-
-export async function getServerSideProps(context) {
-  return await requirePageAuth(context)
-}

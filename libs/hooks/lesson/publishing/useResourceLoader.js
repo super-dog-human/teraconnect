@@ -1,9 +1,10 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useRef, useState, useCallback, useEffect } from 'react'
 import useFetch from '../../useFetch'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 import useSubjectsAndCategories from '../useSubjectsAndCategories'
 
-export default function useResourceLoader({ lesson }) {
+export default function useResourceLoader({ lesson, material }) {
+  const initializedRef = useRef(false)
   const { showError } = useErrorDialogContext()
   const [isLoading, setIsLoading] = useState(true)
   const [allLessons, setAllLessons] = useState([])
@@ -18,10 +19,10 @@ export default function useResourceLoader({ lesson }) {
 
   const setSubjectID = useCallback(async() => {
     handleSubjectChange({ target: { value: lesson.subjectID } })
-  }, [handleSubjectChange, lesson.subjectID])
+  }, [handleSubjectChange, lesson?.subjectID])
 
   const fetchLessons = useCallback(async () => {
-    fetchWithAuth('/users/me/lessons').then(r => {
+    return fetchWithAuth('/users/me/lessons').then(r => {
       setAllLessons(r)
       setAllLessonOptions(r.filter(l => l.status === 'public' && l.id !== lesson.id).map(l => ({
         value: l.id,
@@ -38,10 +39,10 @@ export default function useResourceLoader({ lesson }) {
       })
       console.error(e)
     })
-  }, [fetchWithAuth, showError, lesson.id])
+  }, [fetchWithAuth, showError, lesson?.id])
 
-  const fetchBgImages = useCallback(() => {
-    fetch('/background_images').then(r => {
+  const fetchBgImages = useCallback(async () => {
+    return fetch('/background_images').then(r => {
       setBgImages(r)
       setBgImageOptions(r.map(i => ({
         value: i.id,
@@ -59,8 +60,8 @@ export default function useResourceLoader({ lesson }) {
     })
   }, [fetch, showError])
 
-  const fetchAvatars = useCallback(() => {
-    fetchWithAuth('/avatars').then(r => {
+  const fetchAvatars = useCallback(async () => {
+    return fetchWithAuth('/avatars').then(r => {
       setAvatars(r)
       setAvatarOptions(r.map(a => ({
         value: a.id,
@@ -79,15 +80,16 @@ export default function useResourceLoader({ lesson }) {
   }, [fetchWithAuth, showError])
 
   useEffect(() => {
-    if (!isLoading) return
+    if (initializedRef.current) return
+    if (!lesson) return
+    if (!material) return
 
+    initializedRef.current = true
     setSubjectID()
-    fetchLessons()
-    fetchBgImages()
-    fetchAvatars()
-
-    setIsLoading(false)
-  }, [isLoading, setSubjectID, fetchLessons, fetchBgImages, fetchAvatars])
+    Promise.all([fetchLessons(), fetchBgImages(), fetchAvatars()]).then(() => {
+      setIsLoading(false)
+    })
+  }, [isLoading, lesson, material, setSubjectID, fetchLessons, fetchBgImages, fetchAvatars])
 
   useEffect(() => {
     if (!fullCategories) return

@@ -1,11 +1,13 @@
 /** @jsxImportSource @emotion/react */
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import { css } from '@emotion/core'
 import Image from 'next/image'
-import { useForm } from 'react-hook-form'
+import useSessionExpireChecker from '../../../libs/hooks/useTokenExpireChecker'
 import useMobileDetector from '../../../libs/hooks/useMobileDetector'
-import useResourceLoader from '../../../libs/hooks/lesson/publishing/useResourceLoader'
+import useLesson from '../../../libs/hooks/lesson/useLesson'
+import useLessonMaterial from '../../../libs/hooks/lesson/useLessonMaterial'
 import useLessonPublishing from '../../../libs/hooks/lesson/publishing/useLessonPublishing'
+import useResourceLoader from '../../../libs/hooks/lesson/publishing/useResourceLoader'
 import useSynthesisVoiceEditor from '../../../libs/hooks/lesson/useSynthesisVoiceEditor'
 import useSettingUpdater from '../../../libs/hooks/lesson/publishing/useSettingUpdater'
 import Header from '../../authoringHeader'
@@ -38,22 +40,27 @@ import SynthesisVoiceConfig from '../../synthesisVoiceConfig'
 import { isPublicThumbnail } from '../../../libs/graphicUtils'
 import { SUPPORTED_IMAGE_FILES } from '../../../libs/constants'
 
-export default function LessonPublishing({ lesson, material }) {
+export default function LessonPublishing({ lessonID }) {
+  useSessionExpireChecker()
   const isMobile = useMobileDetector()
-  const { isLoading, subjects, categories, allLessons, allLessonOptions, bgImages, bgImageOptions, avatars, avatarOptions, handleSubjectChange: onSubjectChange } = useResourceLoader({ lesson })
-  const { isUpdating, isUpdated, isDisabledPublsishing, sampleTextForSynthesisRef, setting, dispatchSetting, handleSubmitClick } = useSettingUpdater({ lesson, material, bgImages, isLoading })
-  const defaultValues = { title: lesson.title, description: lesson.description, ...Object.fromEntries(lesson.references?.map((ref, i) => [`reference${i}`, ref.isbn]) || []) }
-  const { register, handleSubmit, formState: { errors }, setValue } = useForm({ defaultValues })
-  const { onChange: handleTitleInputChange, ...titleInputProps } = register('title', { required: !lesson.isIntroduction })
-  const { onChange: handleDescriptionTextChange, ...descriptionTextProps } = register('description', { required: !lesson.isIntroduction })
-  const { onChange: handleCategorySelectChange, ...categoryIDSelectProps } = register('categoryID', { required: !lesson.isIntroduction })
-  const { isExtendedOtherSetting, inputFileRef, newReferenceRef, isAddingReference, relationLessonThumbnailURL, isAvatarLoading, avatarRef, avatarLight,
+  const lesson = useLesson(lessonID)
+  const material = useLessonMaterial(lesson)
+  const { isLoading, subjects, categories, allLessons, allLessonOptions, bgImages, bgImageOptions, avatars, avatarOptions, handleSubjectChange: onSubjectChange } = useResourceLoader({ lesson, material })
+  const { isUpdating, isUpdated, isDisabledPublsishing, sampleTextForSynthesisRef, setting, dispatchSetting, handleSubmitClick } = useSettingUpdater({ lessonID, material, bgImages, isLoading })
+  const { register, handleSubmit, errors, titleInputProps, descriptionTextProps, categoryIDSelectProps,
+    isExtendedOtherSetting, inputFileRef, newReferenceRef, isAddingReference, relationLessonThumbnailURL, isAvatarLoading, avatarRef, avatarLight,
     handleExtendSettingClick, handleTitleChange, handleDescriptionChange, handleThumbnailUploadingClick, handleThumbnailChange, handleStatusChange, handleSubjectChange, handleCategoryChange,
     handlePrevLessonChange, handleNextLessonChange, handleAddReferenceClick, handleRemoveReferenceClick, handleReferenceISBNBlur, handleReferenceNameBlur, handleBgImageChange, handleAvatarChange, handleColorChange } =
-      useLessonPublishing({ lesson, material, setFormValue: setValue, handleTitleInputChange, handleDescriptionTextChange, handleCategorySelectChange, isLoading, onSubjectChange, avatars, allLessons, setting, dispatchSetting })
+      useLessonPublishing({ lesson, material, onSubjectChange, avatars, allLessons, setting, dispatchSetting })
   const { setLanguageCode, setName, setSpeakingRate, setPitch, setVolumeGainDb, playVoice, isSynthesizing } =
     useSynthesisVoiceEditor({ dispatchConfig: dispatchSetting, subtitle: sampleTextForSynthesisRef.current, synthesisConfig: setting.voiceSynthesisConfig, dispatchSetting })
   const flexDirection = isMobile ? 'column' : 'row'
+  const [isIntroduction, setIsIntroduction] = useState(false)
+
+  useEffect(() => {
+    if (!lesson) return
+    setIsIntroduction(lesson.isIntroduction)
+  }, [lesson])
 
   return (
     <>
@@ -86,12 +93,12 @@ export default function LessonPublishing({ lesson, material }) {
               <FlexItem flexBasis='100%'>
                 <ContainerSpacer left='20'>
                   <Container height='20'>
-                    <InputText size='18' color='gray' borderWidth='0' placeholder='授業の名前を入力' onChange={handleTitleChange} {...titleInputProps} />
+                    <InputText size='18' color='gray' borderWidth='0' placeholder={isLoading ? '' : '授業の名前を入力'} onChange={handleTitleChange} {...titleInputProps} />
                   </Container>
                   <Spacer height='20' />
                   <Container height='130'>
-                    {!lesson.isIntroduction &&
-                      <Textarea size='14' color='gray' borderColor='lightgray' borderWidth='1px' padding='10' placeholder='授業の概要を入力' maxLength='300' onChange={handleDescriptionChange} {...descriptionTextProps} />
+                    {!lesson?.isIntroduction &&
+                      <Textarea size='15' color='gray' borderColor='lightgray' borderWidth='1px' padding='10' placeholder={isLoading ? '' : '授業の概要を入力'} maxLength='300' onChange={handleDescriptionChange} {...descriptionTextProps} />
                     }
                   </Container>
                 </ContainerSpacer>
@@ -106,7 +113,7 @@ export default function LessonPublishing({ lesson, material }) {
               </FlexItem>
             </Flex>
 
-            {!lesson.isIntroduction &&
+            {!isIntroduction &&
               <FormGroup name='カテゴリ'>
                 <Flex>
                   <FlexItem flexBasis='25%'>
@@ -137,7 +144,7 @@ export default function LessonPublishing({ lesson, material }) {
                 <PlainText color='gray' size='11'>自分だけが授業を確認できます。</PlainText>
               </Label>
               <Spacer height='30' />
-              {!lesson.isIntroduction &&
+              {!isIntroduction &&
                 <>
                   <div>
                     <InputRadio id='statusLimited' name='lessonStatus' size='12' color='gray' value='limited' checked={setting.status === 'limited'} onChange={handleStatusChange}>
@@ -156,11 +163,11 @@ export default function LessonPublishing({ lesson, material }) {
                 </InputRadio>
               </div>
               <Label targetFor='statusPublic'>
-                <PlainText color='gray' size='11'>全ての人が授業を閲覧できます。{!lesson.isIntroduction && 'トップページや検索結果にも表示されます。'}</PlainText>
+                <PlainText color='gray' size='11'>全ての人が授業を閲覧できます。{!isIntroduction && 'トップページや検索結果にも表示されます。'}</PlainText>
               </Label>
             </FormGroup>
 
-            {!lesson.isIntroduction &&
+            {!isIntroduction &&
               <FormGroup name='シリーズ'>
                 <PlainText color='gray' size='13'>前の授業</PlainText>
                 <Flex>
@@ -204,26 +211,26 @@ export default function LessonPublishing({ lesson, material }) {
               </FormGroup>
             }
 
-            {!lesson.isIntroduction &&
+            {!isIntroduction &&
               <FormGroup name='参考図書'>
                 {setting.references && setting.references.map((reference, i) => (
                   <div key={i}>
                     <Flex>
-                      <InputTel size='16' color='gray' borderColor='gray' borderWidth='0 0 1px' placeholder='ISBNを13桁で入力' maxLength='13'
+                      <InputTel size='16' color='gray' borderColor='gray' borderWidth='0 0 1px' placeholder={isLoading ? '' : 'ISBNを13桁で入力'} maxLength='13'
                         data-index={i} key={reference.isbn} onBlur={handleReferenceISBNBlur} defaultValue={reference.isbn} {...register(`reference${i}`, { required: true, pattern: /^[0-9]{12}[0-9Xx]{1}$/ })} />
                       <Spacer width='20' />
                       <Container width='20'>
                         <IconButton name='square-remove' data-index={i} onClick={handleRemoveReferenceClick} />
                       </Container>
                     </Flex>
-                    <InputText size='14' color='gray' borderWidth='0' maxLength='50' placeholder='書名を入力' data-index={i} key={reference.name} defaultValue={reference.name} onBlur={handleReferenceNameBlur} />
+                    <InputText size='14' color='gray' borderWidth='0' maxLength='50' placeholder={isLoading ? '' : '書名を入力'} data-index={i} key={reference.name} defaultValue={reference.name} onBlur={handleReferenceNameBlur} />
                     <ErrorText isShow={errors && errors[`reference${i}`]} body={errors[`reference${i}`]?.type === 'required' ? 'ISBNを入力してください' : 'ISBNは0〜9の半角数字とXで入力してください'} />
                     <Spacer height='20' />
                   </div>
                 ))}
                 {(!setting.references || setting.references.length < 10) && <>
                   <Flex>
-                    <InputTel size='16' color='gray' borderColor='gray' borderWidth='0 0 1px' placeholder='ISBNを13桁で入力' maxLength='13' ref={newReferenceRef} />
+                    <InputTel size='16' color='gray' borderColor='gray' borderWidth='0 0 1px' placeholder={isLoading ? '' : 'ISBNを13桁で入力'} maxLength='13' ref={newReferenceRef} />
                     <Spacer width='20' />
                     <Container width='20'>
                       <IconButton name='square-add' isProcessing={isAddingReference} onClick={handleAddReferenceClick} />
@@ -283,14 +290,14 @@ export default function LessonPublishing({ lesson, material }) {
 
           <Flex justifyContent='center'>
             <Container width='120' height='40'>
-              <LabelButton color='var(--soft-white)' fontSize='15' backgroundColor='var(--dark-purple)' disabled={isDisabledPublsishing} onClick={handleSubmit(handleSubmitClick)}>
-                {!isUpdating && '更新'}
-                {isUpdating && <LoadingIndicator size='20' color='white' />}
+              <LabelButton color='var(--soft-white)' fontSize='15' backgroundColor='var(--dark-purple)' disabled={isLoading || isUpdating || isDisabledPublsishing} onClick={handleSubmit(handleSubmitClick)}>
+                {!isLoading && !isUpdating && '更新'}
+                {(isLoading || isUpdating) && <LoadingIndicator size='20' color='white' />}
               </LabelButton>
             </Container>
           </Flex>
           <Flex justifyContent='center'>
-            {material.durationSec > 600 &&
+            {material?.durationSec > 600 &&
               <ContainerSpacer top='20'>
                 <PlainText size='12' color='var(--error-red)'>収録時間が10分を超えているため、更新できません。</PlainText>
               </ContainerSpacer>

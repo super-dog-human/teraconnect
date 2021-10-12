@@ -27,6 +27,6 @@ const bodyStyle = css({
 
 export default Page
 
-export async function getServerSideProps(context) {
+export function getServerSideProps(context) {
   return getQueryParamsAsProps(context)
 }

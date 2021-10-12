@@ -3,9 +3,11 @@ import { useRouter } from 'next/router'
 import { useDialogContext } from '../../../contexts/dialogContext'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 import useFetch  from '../../useFetch'
+import useCurrentUser from '../../user/useCurrentUser'
 import { useForm } from 'react-hook-form'
 
-export default function useCreatingLesson({ isIntroduction, userID }) {
+export default function useCreatingLesson({ isIntroduction }) {
+  const user = useCurrentUser()
   const selectedMethodRef = useRef('')
   const [isSelectedMethod, setIsSelectedMethod] = useState(false)
   const [isCreating, setIsCreating] = useState(false)
@@ -70,7 +72,7 @@ export default function useCreatingLesson({ isIntroduction, userID }) {
             message: '自己紹介は作成済みです。マイページへ移動します。',
             canDismiss: false,
             callbackName: '移動',
-            callback: () => { router.push(`/users/${userID}`) },
+            callback: () => { router.push(`/users/${user.id}`) },
           })
         } else {
           showError({
@@ -84,7 +86,7 @@ export default function useCreatingLesson({ isIntroduction, userID }) {
       })
   }
 
-  return { isCreating, isSelectedMethod, needsRecordingProps, subjectIDSelectProps, categoryIDSelectProps, titleInputProps,
+  return { user, isCreating, isSelectedMethod, needsRecordingProps, subjectIDSelectProps, categoryIDSelectProps, titleInputProps,
     handleModeButtonClick, handleBackButtonClick, handleSubjectIDSelectChange, handleCategoryIDSelectChange, handleTitleInputChange, formErrors: errors, setValue, handleSubmit, onSubmit
   }
 }

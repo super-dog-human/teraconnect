@@ -7,7 +7,7 @@ import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 
 const maxThumbnailSize = { width: 150, height: 95 }
 
-export default function useImageUploaderBar(id, images, setImages, inputFileRef, selectImageBarRef) {
+export default function useImageUploaderBar(lessonID, images, setImages, inputFileRef, selectImageBarRef) {
   const imageCountRef = useRef(0)
   const { showError } = useErrorDialogContext()
   const { createGraphics } = useFetch()
@@ -56,7 +56,7 @@ export default function useImageUploaderBar(id, images, setImages, inputFileRef,
   }
 
   async function fetchURLsAndUpload(validFiles, temporaryIDs) {
-    createGraphics(id, validFiles).then(results => {
+    createGraphics(lessonID, validFiles).then(results => {
       results.signedURLs.forEach((r, i) => {
         const tmpID = temporaryIDs[i]
         uploadImage(validFiles[i], tmpID, r.fileID, r.signedURL)

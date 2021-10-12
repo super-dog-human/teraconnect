@@ -3,20 +3,23 @@ import React from 'react'
 import { css } from '@emotion/core'
 import Head from 'next/head'
 import Layout from '../../components/layout'
-import requirePageAuth from '../../libs/middlewares/requirePageAuth'
+import Auth from '../../components/auth'
 import EditUser from '../../components/user/edit'
+import getSessionUserAsProps from '../../libs/middlewares/getSessionUserAsProps'
 
 const Page = ({ user }) => (
   <>
     <Head>
-      <title>サインアップ - TERACONNECT</title>
+      <title>ユーザー登録 - TERACONNECT</title>
     </Head>
     <Layout>
-      <div css={backgroundStyle}>
-        <div css={bodyStyle}>
-          <EditUser user={user} />
+      <Auth>
+        <div css={backgroundStyle}>
+          <div css={bodyStyle}>
+            <EditUser user={user} />
+          </div>
         </div>
-      </div>
+      </Auth>
     </Layout>
   </>
 )
@@ -36,6 +39,7 @@ const bodyStyle = css({
 
 export default Page
 
+
 export async function getServerSideProps(context) {
-  return await requirePageAuth(context)
+  return await getSessionUserAsProps(context)
 }

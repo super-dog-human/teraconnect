@@ -12,7 +12,7 @@ import InputHidden from '../../form/inputHidden'
 import LabelButton from '../../button/labelButton'
 import LoadingIndicator from '../../loadingIndicator'
 
-export default function NewLessonForm({ subjects, categories, subjectDisabled, categoryDisabled, handleSubjectChange, isCreating, needsRecordingProps,
+export default function NewLessonForm({ user, subjects, categories, subjectDisabled, categoryDisabled, handleSubjectChange, isCreating, needsRecordingProps,
   subjectIDSelectProps, titleInputProps, categoryIDSelectProps, handleBackButtonClick, handleCategoryIDSelectChange, handleTitleInputChange, formErrors, handleSubmit, onSubmit }) {
 
   return (
@@ -58,7 +58,7 @@ export default function NewLessonForm({ subjects, categories, subjectDisabled, c
             <LabelButton color='var(--dark-purple)' borderColor='var(--dark-purple)' type='button' onClick={handleBackButtonClick}>もどる</LabelButton>
           </Container>
           <Container width='120' height='40'>
-            <LabelButton color='white' backgroundColor='var(--dark-purple)' type='submit' disabled={isCreating}>
+            <LabelButton color='white' backgroundColor='var(--dark-purple)' type='submit' disabled={!user || isCreating}>
               {!isCreating && '作成'}
               {isCreating && <LoadingIndicator size='20' color='white' />}
             </LabelButton>

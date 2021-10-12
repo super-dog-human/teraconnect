@@ -3,19 +3,21 @@ import React from 'react'
 import { css } from '@emotion/core'
 import Head from 'next/head'
 import Layout from '../components/layout'
-import requirePageAuth from '../libs/middlewares/requirePageAuth'
+import Auth from '../components/auth'
 import UserMyPage from '../components/user/mypage/'
 
-const Page = ({ user }) => {
+const Page = () => {
   return (
     <>
       <Head>
         <title>マイページ - TERACONNECT</title>
       </Head>
       <Layout>
-        <div css={bodyStyle}>
-          <UserMyPage user={user} />
-        </div>
+        <Auth>
+          <div css={bodyStyle}>
+            <UserMyPage />
+          </div>
+        </Auth>
       </Layout>
     </>
   )
@@ -28,7 +30,3 @@ const bodyStyle = css({
 })
 
 export default Page
-
-export async function getServerSideProps(context) {
-  return await requirePageAuth(context)
-}

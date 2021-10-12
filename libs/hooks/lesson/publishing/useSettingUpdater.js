@@ -9,7 +9,7 @@ import { updateGeneralSettingCache } from '../../../localStorageUtil'
 const sampleJapaneseText = '合成音声のサンプルです'
 const sampleEnglishText = 'This is a sample of synthesized voice.'
 
-export default function useSettingUpdater({ lesson, material, bgImages, isLoading }) {
+export default function useSettingUpdater({ lessonID, material, bgImages, isLoading }) {
   const [isUpdating, setIsUpdating] = useState(false)
   const [isUpdated, setIsUpdated] = useState(false)
   const [isDisabledPublsishing, setIsDisabledPublsishing] = useState(false)
@@ -114,7 +114,7 @@ export default function useSettingUpdater({ lesson, material, bgImages, isLoadin
       requestBody.hasThumbnail = true
     }
 
-    await post(`/lessons/${lesson.id}?move_thumbnail=${needMoveThumbnail}`, requestBody, 'PATCH')
+    await post(`/lessons/${lessonID}?move_thumbnail=${needMoveThumbnail}`, requestBody, 'PATCH')
       .then(async () => {
         setGeneralSettingToCache()
         newSettingRef.current = {}
@@ -141,7 +141,7 @@ export default function useSettingUpdater({ lesson, material, bgImages, isLoadin
   }
 
   async function uploadThumbnail(url) {
-    post(`/lessons/${lesson.id}/thumbnail?is_public=${setting.status === 'public'}`).then(async (r) => {
+    post(`/lessons/${lessonID}/thumbnail?is_public=${setting.status === 'public'}`).then(async (r) => {
       const file = dataURLToBlob(url, 'image/png')
       uploadImageFile(r.url, file)
     }).catch(e => {
@@ -189,24 +189,27 @@ export default function useSettingUpdater({ lesson, material, bgImages, isLoadin
     const newSetting = filterObject(newSettingRef.current, ['avatar', 'avatarLightColor', 'backgroundImageID', 'backgroundImageURL', 'voiceSynthesisConfig'])
     if (Object.keys(newSetting).length === 0) return
 
-    updateGeneralSettingCache(lesson.id, newSetting)
+    updateGeneralSettingCache(lessonID, newSetting)
   }
 
   useEffect(() => {
+    if (!material?.durationSec) return
+
     const disabled = isLoading || isUpdating || material.durationSec > 600
     setIsDisabledPublsishing(disabled)
-  }, [isLoading, isUpdating, material.durationSec])
+  }, [isLoading, isUpdating, material?.durationSec])
 
 
   useEffect(() => {
     if (sampleTextForSynthesisRef.current) return
+    if (!material?.voiceSynthesisConfig) return
 
     if (material.voiceSynthesisConfig.languageCode === 'ja-JP') {
       sampleTextForSynthesisRef.current = sampleJapaneseText
     } else {
       sampleTextForSynthesisRef.current = sampleEnglishText
     }
-  }, [material.voiceSynthesisConfig])
+  }, [material?.voiceSynthesisConfig])
 
   return { isUpdating, isUpdated, isDisabledPublsishing, sampleTextForSynthesisRef, setting, dispatchSetting, handleSubmitClick }
 }

@@ -1,4 +1,5 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
+import usePublishingForm from './usePublishingForm'
 import useAvatar from '../../lesson/useAvatar'
 import { filterObject, stringValueToRGBA, isValidISBN13 } from '../../../utils'
 import { imageToThumbnailURL } from '../../../graphicUtils'
@@ -6,9 +7,10 @@ import { fetchBookTitle } from '../../../fetchBook'
 
 const maxThumbnailSize = { width: 480, height: 270 }
 
-export default function useLessonPublishing({ lesson, material, setFormValue, handleTitleInputChange, handleDescriptionTextChange, handleCategorySelectChange, isLoading, onSubjectChange, avatars, allLessons, setting, dispatchSetting }) {
+export default function useLessonPublishing({ lesson, material, onSubjectChange, avatars, allLessons, setting, dispatchSetting }) {
   const inputFileRef = useRef()
   const newReferenceRef = useRef()
+  const { register, setFormValue, handleSubmit, errors, handleTitleInputChange, titleInputProps, handleDescriptionTextChange, descriptionTextProps, handleCategorySelectChange, categoryIDSelectProps } = usePublishingForm(lesson)
   const [isExtendedOtherSetting, setIsExtendedOtherSetting] = useState(false)
   const [isAddingReference, setIsAddingReference] = useState(false)
   const [relationLessonThumbnailURL, setRelationLessonThumbnailURL] = useState({})
@@ -142,8 +144,7 @@ export default function useLessonPublishing({ lesson, material, setFormValue, ha
       ...filterObject(material, ['avatarID', 'avatarLightColor', 'backgroundImageID', 'backgroundImageURL', 'voiceSynthesisConfig']),
     }
     dispatchSetting({ type: 'initialize', payload })
-    setFormValue('categoryID', lesson.japaneseCategoryID) // これがないとreact-hook-formのバリデーションエラーになる
-  }, [lesson, material, dispatchSetting, setFormValue])
+  }, [lesson, material, dispatchSetting])
 
   const setRelationLessonURL = useCallback((prevLessonID, nextLessonID) => {
     setRelationLessonThumbnailURL({
@@ -153,21 +154,25 @@ export default function useLessonPublishing({ lesson, material, setFormValue, ha
   }, [allLessons])
 
   useEffect(() => {
-    if (!isLoading) return
+    if (!lesson) return
+    if (!material) return
     setInitialSetting()
-  }, [isLoading, setInitialSetting])
+  }, [lesson, material, setInitialSetting])
 
   useEffect(() => {
+    if (!lesson) return
     if (allLessons.length === 0) return
     setRelationLessonURL(lesson.prevLessonID, lesson.nextLessonID)
-  }, [allLessons.length, lesson.prevLessonID, lesson.nextLessonID, setRelationLessonURL])
+  }, [allLessons.length, lesson, setRelationLessonURL])
 
   useEffect(() => {
     if (!isExtendedOtherSetting) return
+    if (!material?.avatar) return
     setAvatarConfig({ avatar: material.avatar, lightColor: Object.values(avatarLight).toString() })
-  }, [isExtendedOtherSetting, material.avatar, avatarLight, setAvatarConfig])
+  }, [isExtendedOtherSetting, material?.avatar, avatarLight, setAvatarConfig])
 
-  return { isExtendedOtherSetting, inputFileRef, newReferenceRef, isAddingReference, relationLessonThumbnailURL, isAvatarLoading, avatarRef, avatarLight,
+  return { register, handleSubmit, errors, titleInputProps, descriptionTextProps, categoryIDSelectProps,
+    isExtendedOtherSetting, inputFileRef, newReferenceRef, isAddingReference, relationLessonThumbnailURL, isAvatarLoading, avatarRef, avatarLight,
     handleExtendSettingClick, handleTitleChange, handleDescriptionChange, handleThumbnailUploadingClick, handleThumbnailChange, handleStatusChange, handleSubjectChange, handleCategoryChange,
     handlePrevLessonChange, handleNextLessonChange, handleAddReferenceClick, handleRemoveReferenceClick, handleReferenceISBNBlur, handleReferenceNameBlur, handleBgImageChange, handleAvatarChange, handleColorChange }
 }

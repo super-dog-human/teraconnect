@@ -1,8 +1,10 @@
 import { useState, useCallback, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import useFetch from '../useFetch'
 import { useErrorDialogContext } from '../../contexts/errorDialogContext'
 
 export default function useCurrentUser( ) {
+  const router = useRouter()
   const [user, setUser] = useState()
   const { fetchWithAuth } = useFetch()
   const { showError } = useErrorDialogContext()
@@ -12,7 +14,10 @@ export default function useCurrentUser( ) {
       setUser(user)
     }).catch(e => {
       if (e.response?.status === 401) {
-        setUser({}) // 取得前と区別するため空objectをセットする
+        router.reload()
+        return
+      } else if (e.response?.status === 404) {
+        router.push('/users/edit') // ユーザー登録画面へ遷移する
         return
       }
       console.error(e)
@@ -25,7 +30,7 @@ export default function useCurrentUser( ) {
         },
       })
     })
-  }, [fetchWithAuth, showError])
+  }, [fetchWithAuth, router, showError])
 
   useEffect(() => {
     if (user) return

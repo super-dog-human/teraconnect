@@ -13,11 +13,11 @@ import SelectorThumbnail from './selectorThumbnail'
 import DragSwappable from '../../../dragSwappable'
 import { SUPPORTED_IMAGE_FILES } from '../../../../libs/constants'
 
-export default function LessonRecordGraphicController({ id, setSelectedGraphic, initialGraphics, hasDragOver }) {
+export default function LessonRecordGraphicController({ lessonID, setSelectedGraphic, initialGraphics, hasDragOver }) {
   const selectImageBarRef = useRef(null)
   const inputFileRef = useRef(null)
   const { imageID, selectImage, removeImage, images, setImages, moveImage } = useImageControllerBar({ initialGraphics, setSelectedGraphic })
-  const { handleDragOver, handleDragLeave, handleDrop, handleFileChange, handleUploadButtonClick } = useImageUploaderBar(id, images, setImages, inputFileRef, selectImageBarRef)
+  const { handleDragOver, handleDragLeave, handleDrop, handleFileChange, handleUploadButtonClick } = useImageUploaderBar(lessonID, images, setImages, inputFileRef, selectImageBarRef)
   const { isFinishing } = useLessonRecorderContext()
 
   return (

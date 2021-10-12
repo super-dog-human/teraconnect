@@ -1,34 +1,25 @@
 import React from 'react'
 import Head from 'next/head'
-import LessonPublishing from '../../../components/lesson/publishing'
-import requirePageAuth from '../../../libs/middlewares/requirePageAuth'
-import fetchLessonAsProps from '../../../libs/middlewares/fetchLessonAsProps'
-import fetchLessonMaterialAsProps from '../../../libs/middlewares/fetchLessonMaterialAsProps'
-import Footer from '../../../components/footer'
+import getQueryParamsAsProps from '../../../libs/middlewares/getQueryParamsAsProps'
 import { ContextMenuProvider } from '../../../libs/contexts/contextMenuContext'
-import useSessionExpireChecker from '../../../libs/hooks/useTokenExpireChecker'
+import LayoutWithAuth from '../../../components/layoutWithAuth'
+import LessonPublishing from '../../../components/lesson/publishing'
 
-const Page = ({ lesson, material }) => {
-  useSessionExpireChecker()
-
-  return (
-    <>
-      <Head>
-        <title>{lesson.title}の公開設定 - TERACONNECT</title>
-      </Head>
+const Page = ({ id }) => (
+  <>
+    <Head>
+      <title>授業の公開設定 - TERACONNECT</title>
+    </Head>
+    <LayoutWithAuth>
       <ContextMenuProvider>
-        <LessonPublishing lesson={lesson} material={material} />
+        <LessonPublishing lessonID={id} />
       </ContextMenuProvider>
-      <Footer />
-    </>
-  )
-}
+    </LayoutWithAuth>
+  </>
+)
 
 export default Page
 
-export async function getServerSideProps(context) {
-  const authProps = await requirePageAuth(context)
-  const lessonProps = await fetchLessonAsProps(context, authProps.props)
-  const materialID = lessonProps.props.lesson.materialID
-  return fetchLessonMaterialAsProps({ context, materialID, isShort: true, props: lessonProps.props })
+export function getServerSideProps(context) {
+  return getQueryParamsAsProps(context)
 }

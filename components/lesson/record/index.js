@@ -2,8 +2,12 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { css } from '@emotion/core'
 import { useLessonRecorderContext } from '../../../libs/contexts/lessonRecorderContext'
+import usePreventBack from '../../../libs/hooks/lesson/record/usePreventBack'
+import useResizeDetector from '../../../libs/hooks/useResizeDetector'
+import useSessionExpireChecker from '../../../libs/hooks/useTokenExpireChecker'
 import useLessonRecordChangeTabDetector from '../../../libs/hooks/lesson/record/useChangeTabDetector'
 import useRecordResource from '../../../libs/hooks/lesson/record/useRecordResource'
+import useLesson from '../../../libs/hooks/lesson/useLesson'
 import useDragOverDetector from '../../../libs/hooks/useDragOverDetector'
 import useAvatar from '../../../libs/hooks/lesson/useAvatar'
 import useDrawingRecorder from '../../../libs/hooks/lesson/useDrawingRecorder'
@@ -21,18 +25,23 @@ import LessonRandomTips from '../randomTips'
 import VoiceSpectrum from '../../voiceSpectrum'
 import { addPreventSwipeEvent, removePreventSwipeEvent } from '../../../libs/utils'
 
-const LessonRecord = React.forwardRef(function LessonRecord({ lesson, hasResize }, ref) {
+const LessonRecord = ({ lessonID }) => {
+  usePreventBack()
+  useSessionExpireChecker()
+  useLessonRecordChangeTabDetector()
+  const containerRef = useRef(null)
   const drawingRef = useRef()
+  const lesson = useLesson(lessonID)
+  const { hasResize } = useResizeDetector(containerRef)
   const [isLoading, setIsLoading] = useState(true)
   const [bgImageURL, setBgImageURL] = useState()
   const [selectedGraphic, setSelectedGraphic] = useState()
   const [isShowControlPanel, setIsShowControlPanel] = useState(false)
   const [isShowVoiceSpectrum, setIsShowVoiceSpectrum] = useState(true)
-  useLessonRecordChangeTabDetector()
   const { isRecording, realElapsedTime, setRecord } = useLessonRecorderContext()
   const { hasDragOver, handleAreaDragOver, handleAreaDragLeave, handleAreaDrop } = useDragOverDetector()
-  const { bgImages, avatars, graphics } = useRecordResource({ lessonID: lesson.id, setBgImageURL })
-  const { isMicReady, isSpeaking, micDeviceID, setMicDeviceID, silenceThresholdSec, setSilenceThresholdSec } = useVoiceRecorder({ lessonID: lesson.id, isRecording, realElapsedTime })
+  const { bgImages, avatars, graphics } = useRecordResource({ lessonID, setBgImageURL })
+  const { isMicReady, isSpeaking, micDeviceID, setMicDeviceID, silenceThresholdSec, setSilenceThresholdSec } = useVoiceRecorder({ lessonID, isRecording, realElapsedTime })
   const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging, cleanAvatar } = useAvatar({ setIsLoading, isSpeaking, hasResize, movingCallback: setRecord })
   const { isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, enableEraser, setEnableEraser, undoDrawing, clearDrawing, drawingColor, setDrawingColor, drawingLineWidth, setDrawingLineWidth,
     startDrawing, inDrawing, endDrawing } = useDrawingRecorder({ hasResize, drawingRef, startDragging, inDragging, endDragging, setRecord })
@@ -46,10 +55,10 @@ const LessonRecord = React.forwardRef(function LessonRecord({ lesson, hasResize 
 
   return (
     <>
-      <LessonRecordHeader lessonID={lesson.id} materialID={lesson.materialID} isMicReady={isMicReady} isDrawingHide={isDrawingHide} setIsDrawingHide={setIsDrawingHide}
+      <LessonRecordHeader lessonID={lessonID} materialID={lesson?.materialID} isMicReady={isMicReady} isDrawingHide={isDrawingHide} setIsDrawingHide={setIsDrawingHide}
         enablePen={enablePen} setEnablePen={setEnablePen} enableEraser={enableEraser} setEnableEraser={setEnableEraser} undoDrawing={undoDrawing} clearDrawing={clearDrawing} drawingColor={drawingColor} setDrawingColor={setDrawingColor}
         drawingLineWidth={drawingLineWidth} setDrawingLineWidth={setDrawingLineWidth} isShowControlPanel={isShowControlPanel} setIsShowControlPanel={setIsShowControlPanel} />
-      <main css={mainStyle} onDragOver={handleAreaDragOver} onDragLeave={handleAreaDragLeave} onDrop={handleAreaDrop} ref={ref}>
+      <main css={mainStyle} onDragOver={handleAreaDragOver} onDragLeave={handleAreaDragLeave} onDrop={handleAreaDrop} ref={containerRef}>
         <div css={bodyStyle}>
           <Aspect16To9Container>
             <LessonRecordLoadingIndicator isLoading={isLoading} size={15} />
@@ -64,12 +73,12 @@ const LessonRecord = React.forwardRef(function LessonRecord({ lesson, hasResize 
               setSilenceThresholdSec={setSilenceThresholdSec} isShowVoiceSpectrum={isShowVoiceSpectrum} setIsShowVoiceSpectrum={setIsShowVoiceSpectrum} />
           </Aspect16To9Container>
         </div>
-        <LessonRecordGraphicController id={lesson.id} setSelectedGraphic={setSelectedGraphic} initialGraphics={graphics} hasDragOver={hasDragOver} />
+        <LessonRecordGraphicController lessonID={lessonID} setSelectedGraphic={setSelectedGraphic} initialGraphics={graphics} hasDragOver={hasDragOver} />
         <LessonRandomTips />
       </main>
     </>
   )
-})
+}
 
 export default LessonRecord
 

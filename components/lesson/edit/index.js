@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { useRef, useState, useEffect } from 'react'
 import { css } from '@emotion/core'
+import useLesson from '../../../libs/hooks/lesson/useLesson'
 import useMobileDetector from '../../../libs/hooks/useMobileDetector'
 import useLessonCacheController from '../../../libs/hooks/lesson/edit/useLessonCacheController'
 import useLessonUpdater from '../../../libs/hooks/lesson/edit/useLessonUpdater'
@@ -8,6 +9,7 @@ import { useContextMenuContext } from '../../../libs/contexts/contextMenuContext
 import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorContext'
 import { ImageViewerProvider } from '../../../libs/contexts/imageViewerContext'
 import useResourceReloader from '../../../libs/hooks/lesson/edit/useResourceReloader'
+import useSessionExpireChecker from '../../../libs/hooks/useTokenExpireChecker'
 import Loading from './loading'
 import ContextMenu from '../../contextMenu'
 import ImageViwer from '../../imageViewer'
@@ -17,15 +19,17 @@ import DurationTime from './durationTime'
 import GraphicController from './graphicController/'
 import Timeline from './timeline'
 
-export default function LessonEdit({ lesson }) {
+export default function LessonEdit({ lessonID }) {
   const fetchedRef = useRef(false)
   const isMobile = useMobileDetector()
   const [isLoading, setIsLoading] = useState(true)
-  const { clearDiffFlag, clearCache } = useLessonCacheController({ isLoading, lessonID: lesson.id })
+  const { clearDiffFlag, clearCache } = useLessonCacheController({ isLoading, lessonID })
+  const lesson = useLesson(lessonID)
   const { contextMenu, handleDismiss } = useContextMenuContext()
   const { isInitialLoading, fetchResources } = useLessonEditorContext()
-  const { hasResourceDiff, isUpdating, updateLesson, discardLessonDraft } = useLessonUpdater({ lessonID: lesson.id, isLoading, clearDiffFlag, clearCache })
+  const { hasResourceDiff, isUpdating, updateLesson, discardLessonDraft } = useLessonUpdater({ lessonID, isLoading, clearDiffFlag, clearCache })
   useResourceReloader()
+  useSessionExpireChecker()
 
   const bodyStyle = css({
     margin: 'auto',
@@ -57,6 +61,7 @@ export default function LessonEdit({ lesson }) {
   })
 
   useEffect(() => {
+    if (!lesson) return
     if (fetchedRef.current) return
     fetchResources(lesson)
     fetchedRef.current = true
@@ -77,7 +82,7 @@ export default function LessonEdit({ lesson }) {
         <ImageViewerProvider>
           <div css={bodyStyle}>
             <div css={leftSideStyle}>
-              <Preview lessonID={lesson.id}/>
+              <Preview lessonID={lessonID}/>
               <DurationTime />
               <GraphicController />
             </div>

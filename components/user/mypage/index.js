@@ -4,6 +4,7 @@ import { css } from '@emotion/core'
 import { signOut } from 'next-auth/client'
 import PageLink from '../../../components/pageLink'
 import useMobileDetector from '../../../libs/hooks/useMobileDetector'
+import useCurrentUser from '../../../libs/hooks/user/useCurrentUser'
 import useCurrentUserLessons from '../../../libs/hooks/user/useCurrentUserLessons'
 import UserIcon from '../../userIcon'
 import Spacer from '../../spacer'
@@ -17,9 +18,10 @@ import LoadingIndicator from '../../loadingIndicator'
 import LabelButton from '../../button/labelButton'
 import LessonLine from './lessonLine'
 
-export default function UserMyPage({ user }) {
+export default function UserMyPage() {
   const isMobile = useMobileDetector()
-  const { isLoading, lessons } = useCurrentUserLessons()
+  const user = useCurrentUser()
+  const { isLoading, lessons } = useCurrentUserLessons(user)
 
   return (
     <div css={backgroundStyle}>
@@ -30,14 +32,16 @@ export default function UserMyPage({ user }) {
           <FlexItem flexBasis='50%'>
             <Flex justifyContent='center'>
               <Container width='200' height='200'>
-                <UserIcon id={user.id} />
+                {!!user && <UserIcon id={user.id} />}
               </Container>
             </Flex>
             <Spacer height='30' />
             <Flex justifyContent='center'>
-              <PlainText color='gray' size='14'>
-                {user.name}
-              </PlainText>
+              <Container minHeight='20'>
+                <PlainText color='gray' size='14'>
+                  {user?.name}
+                </PlainText>
+              </Container>
             </Flex>
             <Spacer height='20' />
             <Flex justifyContent='center'>

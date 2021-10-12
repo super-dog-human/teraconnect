@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react'
 import useFetch from '../useFetch'
 import { useErrorDialogContext } from '../../contexts/errorDialogContext'
 
-export default function useCurrentUserLessons() {
+export default function useCurrentUserLessons(user) {
   const [isLoading, setIsLoading] = useState(true)
   const [lessons, setLessons] = useState([])
   const { fetchWithAuth } = useFetch()
@@ -16,6 +16,7 @@ export default function useCurrentUserLessons() {
       setLessons(lessons)
     }).catch(e => {
       setIsLoading(false)
+      if (!user) return // ユーザー未登録なら何もしない
       if (e.response?.status === 404) return // なければ何もしない
 
       showError({
@@ -27,11 +28,11 @@ export default function useCurrentUserLessons() {
         },
       })
     })
-  }, [fetchWithAuth, showError])
+  }, [user, fetchWithAuth, showError])
 
   useEffect(() => {
     fetchLessons()
-  }, [fetchLessons])
+  }, [user, fetchLessons])
 
   return { isLoading, lessons }
 }

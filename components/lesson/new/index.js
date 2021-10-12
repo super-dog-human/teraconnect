@@ -2,6 +2,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import useCreatingLesson from '../../../libs/hooks/lesson/new/useCreatingLesson'
 import useSubjectsAndCategories from '../../../libs/hooks/lesson/useSubjectsAndCategories'
+import useSessionExpireChecker from '../../../libs/hooks/useTokenExpireChecker'
 import TransitionContainer from '../../transition/transitionContainer'
 import Container from '../../container'
 import ContainerSpacer from '../../containerSpacer'
@@ -12,11 +13,12 @@ import PlainText from '../../plainText'
 import ModeSelector from './modeSelector'
 import NewLessonForm from './newLessonForm'
 
-export default function NewLesson({ user }) {
+export default function NewLesson() {
   const router = useRouter()
   const isIntroduction = router.query.is_introduction === 'true'
-  const { isSelectedMethod, setValue, handleModeButtonClick, handleSubjectIDSelectChange, ...props } = useCreatingLesson({ isIntroduction, userID: user.id })
+  const { isSelectedMethod, setValue, handleModeButtonClick, handleSubjectIDSelectChange, ...props } = useCreatingLesson({ isIntroduction })
   const subjectProps = useSubjectsAndCategories({ setValue, handleSubjectIDSelectChange })
+  useSessionExpireChecker()
 
   return (
     <>
