@@ -193,23 +193,20 @@ export default function useSettingUpdater({ lessonID, material, bgImages, isLoad
   }
 
   useEffect(() => {
-    if (!material?.durationSec) return
-
     const disabled = isLoading || isUpdating || material.durationSec > 600
     setIsDisabledPublsishing(disabled)
-  }, [isLoading, isUpdating, material?.durationSec])
+  }, [isLoading, isUpdating, material.durationSec])
 
 
   useEffect(() => {
     if (sampleTextForSynthesisRef.current) return
-    if (!material?.voiceSynthesisConfig) return
 
     if (material.voiceSynthesisConfig.languageCode === 'ja-JP') {
       sampleTextForSynthesisRef.current = sampleJapaneseText
     } else {
       sampleTextForSynthesisRef.current = sampleEnglishText
     }
-  }, [material?.voiceSynthesisConfig])
+  }, [material.voiceSynthesisConfig])
 
   return { isUpdating, isUpdated, isDisabledPublsishing, sampleTextForSynthesisRef, setting, dispatchSetting, handleSubmitClick }
 }

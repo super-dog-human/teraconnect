@@ -154,22 +154,18 @@ export default function useLessonPublishing({ lesson, material, onSubjectChange,
   }, [allLessons])
 
   useEffect(() => {
-    if (!lesson) return
-    if (!material) return
     setInitialSetting()
   }, [lesson, material, setInitialSetting])
 
   useEffect(() => {
-    if (!lesson) return
     if (allLessons.length === 0) return
     setRelationLessonURL(lesson.prevLessonID, lesson.nextLessonID)
   }, [allLessons.length, lesson, setRelationLessonURL])
 
   useEffect(() => {
     if (!isExtendedOtherSetting) return
-    if (!material?.avatar) return
     setAvatarConfig({ avatar: material.avatar, lightColor: Object.values(avatarLight).toString() })
-  }, [isExtendedOtherSetting, material?.avatar, avatarLight, setAvatarConfig])
+  }, [isExtendedOtherSetting, material.avatar, avatarLight, setAvatarConfig])
 
   return { register, handleSubmit, errors, titleInputProps, descriptionTextProps, categoryIDSelectProps,
     isExtendedOtherSetting, inputFileRef, newReferenceRef, isAddingReference, relationLessonThumbnailURL, isAvatarLoading, avatarRef, avatarLight,

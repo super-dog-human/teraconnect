@@ -3,7 +3,7 @@ import useFetch from '../../useFetch'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 import useSubjectsAndCategories from '../useSubjectsAndCategories'
 
-export default function useResourceLoader({ lesson, material }) {
+export default function useResourceLoader({ lesson }) {
   const initializedRef = useRef(false)
   const { showError } = useErrorDialogContext()
   const [isLoading, setIsLoading] = useState(true)
@@ -19,7 +19,7 @@ export default function useResourceLoader({ lesson, material }) {
 
   const setSubjectID = useCallback(async() => {
     handleSubjectChange({ target: { value: lesson.subjectID } })
-  }, [handleSubjectChange, lesson?.subjectID])
+  }, [handleSubjectChange, lesson.subjectID])
 
   const fetchLessons = useCallback(async () => {
     return fetchWithAuth('/users/me/lessons').then(r => {
@@ -39,7 +39,7 @@ export default function useResourceLoader({ lesson, material }) {
       })
       console.error(e)
     })
-  }, [fetchWithAuth, showError, lesson?.id])
+  }, [fetchWithAuth, showError, lesson.id])
 
   const fetchBgImages = useCallback(async () => {
     return fetch('/background_images').then(r => {
@@ -81,15 +81,13 @@ export default function useResourceLoader({ lesson, material }) {
 
   useEffect(() => {
     if (initializedRef.current) return
-    if (!lesson) return
-    if (!material) return
 
     initializedRef.current = true
     setSubjectID()
     Promise.all([fetchLessons(), fetchBgImages(), fetchAvatars()]).then(() => {
       setIsLoading(false)
     })
-  }, [isLoading, lesson, material, setSubjectID, fetchLessons, fetchBgImages, fetchAvatars])
+  }, [isLoading, setSubjectID, fetchLessons, fetchBgImages, fetchAvatars])
 
   useEffect(() => {
     if (!fullCategories) return

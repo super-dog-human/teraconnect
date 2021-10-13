@@ -3,13 +3,11 @@ import { useForm } from 'react-hook-form'
 
 export default function usePublishingForm(lesson) {
   const { register, handleSubmit, formState: { errors }, setValue } = useForm()
-  const { onChange: handleTitleInputChange, ...titleInputProps } = register('title', { required: !lesson?.isIntroduction })
-  const { onChange: handleDescriptionTextChange, ...descriptionTextProps } = register('description', { required: !lesson?.isIntroduction })
-  const { onChange: handleCategorySelectChange, ...categoryIDSelectProps } = register('categoryID', { required: !lesson?.isIntroduction })
+  const { onChange: handleTitleInputChange, ...titleInputProps } = register('title', { required: !lesson.isIntroduction })
+  const { onChange: handleDescriptionTextChange, ...descriptionTextProps } = register('description', { required: !lesson.isIntroduction })
+  const { onChange: handleCategorySelectChange, ...categoryIDSelectProps } = register('categoryID', { required: !lesson.isIntroduction })
 
   useEffect(() => {
-    if (!lesson) return
-
     setValue('title', lesson.title)
     setValue('description', lesson.description)
     setValue('categoryID', lesson.japaneseCategoryID) // これがないとreact-hook-formのバリデーションエラーになる
