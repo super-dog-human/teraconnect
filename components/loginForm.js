@@ -2,33 +2,74 @@
 import React from 'react'
 import { css } from '@emotion/core'
 import { signIn } from 'next-auth/client'
+import Flex from './flex'
+import Container from './container'
 import PlainText from './plainText'
 import LabelButton from './button/labelButton'
+import Spacer from './spacer'
 import PageLink from './pageLink'
 
 const LoginForm = () => (
   <div css={bodyStyle}>
-    <PlainText color='gray' size='15'>
-      ログインに使用するアカウントを選択してください。
-    </PlainText>
-    <div>
-      <LabelButton onClick={() => signIn('google')}>
-        Google
-      </LabelButton>
-    </div>
-    <div>
-      <LabelButton onClick={() => signIn('twitter')}>
-        twitter
-      </LabelButton>
-    </div>
+    <Spacer height='50' />
 
-    <PageLink path="/">
-      ユーザー登録
-    </PageLink>
+    <Flex justifyContent='center'>
+      <PlainText color='gray' size='15'>
+        ログインに使用するアカウントを選択してください。
+      </PlainText>
+    </Flex>
+
+    <Spacer height='50' />
+
+    <Flex justifyContent='center'>
+      <Container width='250' height='60'>
+        <LabelButton fontSize='25' lineHeight='50' color='gray' borderColor='var(--text-gray)' onClick={() => signIn('twitter')}>
+          <Flex justifyContent='center' alignItems='center'>
+            <img src="/img/twitter.webp" srcSet="/img/twitter.webp 1x, /img/twitter@2x.webp 2x" alt="" css={iconStyle} />
+            <Spacer width='10' />
+            <span>Twitter</span>
+          </Flex>
+        </LabelButton>
+      </Container>
+    </Flex>
+
+    <Spacer height='30' />
+
+    <Flex justifyContent='center'>
+      <Container width='250' height='60'>
+        <LabelButton fontSize='25' lineHeight='50' color='gray' borderColor='var(--text-gray)' onClick={() => signIn('google')}>
+          <Flex justifyContent='center' alignItems='center'>
+            <img src="/img/google.webp" srcSet="/img/google.webp 1x, /img/google@2x.webp 2x" alt="" css={iconStyle} />
+            <Spacer width='10' />
+            <span>Google</span>
+          </Flex>
+        </LabelButton>
+      </Container>
+    </Flex>
+
+    <Spacer height='50' />
+
+    <Flex justifyContent='center'>
+      <PageLink path="/welcome">
+        <PlainText color='gray' size='15'>
+          新規ユーザー登録
+        </PlainText>
+      </PageLink>
+    </Flex>
+
+    <Spacer height='50' />
   </div>
 )
 
 const bodyStyle = css({
+  maxWidth: '1280px',
+  margin: 'auto',
+})
+
+const iconStyle = css({
+  width: '30px',
+  height: 'auto',
+  objectFit: 'contain',
 })
 
 export default LoginForm
