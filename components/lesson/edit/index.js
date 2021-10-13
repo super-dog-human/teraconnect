@@ -27,7 +27,7 @@ export default function LessonEdit({ lessonID }) {
   const lesson = useLesson(lessonID)
   const { contextMenu, handleDismiss } = useContextMenuContext()
   const { isInitialLoading, fetchResources } = useLessonEditorContext()
-  const { hasResourceDiff, isUpdating, updateLesson, discardLessonDraft } = useLessonUpdater({ lessonID, isLoading, clearDiffFlag, clearCache })
+  const { hasResourceDiff, isUpdating, updateLesson, discardLessonDraft, moveToDashboard } = useLessonUpdater({ lessonID, isLoading, clearDiffFlag, clearCache })
   useResourceReloader()
   useSessionExpireChecker()
 
@@ -77,7 +77,7 @@ export default function LessonEdit({ lessonID }) {
     <>
       <ContextMenu {...contextMenu} handleDismiss={handleDismiss} />
       <Loading isShow={isLoading} />
-      <Header currentPage='edit' showBadge={hasResourceDiff} isUpdating={isUpdating} updateLesson={updateLesson} discardLessonDraft={discardLessonDraft} />
+      <Header currentPage='edit' showBadge={hasResourceDiff} isUpdating={isUpdating} updateLesson={updateLesson} discardLessonDraft={discardLessonDraft} moveToDashboard={moveToDashboard} />
       <main css={mainStyle}>
         <ImageViewerProvider>
           <div css={bodyStyle}>

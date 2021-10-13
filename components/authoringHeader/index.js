@@ -14,7 +14,7 @@ import IconWithBadgeButton from '../button/iconWithBadgeButton'
 import IconButton from '../button/iconButton'
 import { useContextMenuContext } from '../../libs/contexts/contextMenuContext'
 
-export default function Header({ currentPage, showBadge, isUpdating, updateLesson, discardLessonDraft }) {
+export default function Header({ currentPage, showBadge, isUpdating, updateLesson, discardLessonDraft, moveToDashboard }) {
   const router = useRouter()
   const lessonIDRef = useRef(parseInt(router.query.id))
   const [isHover, setIsHover] = useState(false)
@@ -31,8 +31,8 @@ export default function Header({ currentPage, showBadge, isUpdating, updateLesso
   function handleSortDownClick(e) {
     const targetRect = e.currentTarget.getBoundingClientRect()
     setContextMenu({
-      labels: ['上書き保存', '変更の破棄'],
-      actions: [updateLesson, discardLessonDraft],
+      labels: ['上書き保存', '変更の破棄', 'マイページ'],
+      actions: [updateLesson, discardLessonDraft, moveToDashboard],
       position: { fixed: true, x: targetRect.x, y: targetRect.y + targetRect.height },
       disableMenuIndexes: showBadge ? [] : [0],
     })

@@ -79,6 +79,10 @@ export default function useLessonUpdater({ lessonID, isLoading, clearDiffFlag, c
     router.reload()
   }
 
+  function moveToDashboard () {
+    router.push('/dashboard')
+  }
+
   useEffect(() => {
     if (isLoading) return
     isLoadedRef.current = true
@@ -112,5 +116,5 @@ export default function useLessonUpdater({ lessonID, isLoading, clearDiffFlag, c
     storeUploadableResource({ speeches })
   }, [speeches, storeUploadableResource])
 
-  return { hasResourceDiff, isUpdating, updateLesson, discardLessonDraft }
+  return { hasResourceDiff, isUpdating, updateLesson, discardLessonDraft, moveToDashboard }
 }
