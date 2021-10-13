@@ -79,6 +79,7 @@ const thumbnailStyle = css({
   height: '100%',
   minWidth: '250px',
   minHeight: '141px',
+  fontSize: '0', // サムネイル画像下部の余白をなくす
 })
 
 export default LessonLine
