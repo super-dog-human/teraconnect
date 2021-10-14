@@ -22,8 +22,12 @@ export default function NewLessonForm({ user, subjects, categories, subjectDisab
       <Flex justifyContent='center'>
         <div css={formStyle}>
           <Flex gap='30px'>
-            <Select color='gray' size='17' topLabel='教科を選択' topValue='' options={subjects} disabled={subjectDisabled} onChange={handleSubjectChange} {...subjectIDSelectProps} />
-            <Select color='gray' size='17' topLabel='単元を選択' topValue='' options={categories} disabled={categoryDisabled} onChange={handleCategoryIDSelectChange} {...categoryIDSelectProps} />
+            <div css={selectorStyle}>
+              <Select color='gray' size='17' topLabel='教科を選択' topValue='' options={subjects} disabled={subjectDisabled} onChange={handleSubjectChange} {...subjectIDSelectProps} />
+            </div>
+            <div css={selectorStyle}>
+              <Select color='gray' size='17' topLabel='単元を選択' topValue='' options={categories} disabled={categoryDisabled} onChange={handleCategoryIDSelectChange} {...categoryIDSelectProps} />
+            </div>
           </Flex>
           <Spacer height='30' />
           <Container height='25'>
@@ -74,4 +78,10 @@ const formStyle = css({
   maxWidth: '580px',
   marginLeft: '10px',
   marginRight: '10px',
+})
+
+const selectorStyle = css({
+  width: '100%',
+  height: '25px',
+
 })
