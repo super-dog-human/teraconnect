@@ -83,7 +83,7 @@ export default function Footer() {
           <PlainText color='var(--border-gray)' size='16' fontWeight='bold' whiteSpace='nowrap'>サービスについて</PlainText>
           <ContainerSpacer top='10' bottom='5'>
             <PlainText size='14' lineHeight='25' whiteSpace='nowrap'>
-              <PageLink path="/">TERACONNECTとは</PageLink>
+              <PageLink path="/about">TERACONNECTとは</PageLink>
             </PlainText>
           </ContainerSpacer>
           <ContainerSpacer top='5' bottom='5'>

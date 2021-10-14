@@ -18,6 +18,7 @@ export default function useUserEditor(currentUser) {
   const [isNewUser, setIsNewUser] = useState(false)
   const [isUpdating, setIsUpdating] = useState(false)
   const [isUpdated, setIsUpdated] = useState(false)
+  const [isAgreedToTerms, setIsAgreedToTerms] = useState(false)
   const [introductionID, setIntroductionID] = useState()
   const { register, handleSubmit, formState: { errors }, setValue } = useForm({})
   const { onChange: handleNameInputChange, ...nameInputProps } = register('name', { required: true })
@@ -80,6 +81,10 @@ export default function useUserEditor(currentUser) {
 
   function handleThumbnailUploadingClick() {
     inputFileRef.current.click()
+  }
+
+  function handleAgreeToTermsClick() {
+    setIsAgreedToTerms(s => !s)
   }
 
   function handleSubmitClick() {
@@ -214,7 +219,7 @@ export default function useUserEditor(currentUser) {
     fetchProfile()
   }, [account, fetchProfile])
 
-  return { initialLoading, isNewUser, isUpdating, isUpdated, introductionID, account, inputFileRef,
-    handleNameChange, handleEmailChange, handleProfileChange, handleThumbnailChange, handleThumbnailUploadingClick, handleSubmit, handleSubmitClick,
+  return { initialLoading, isNewUser, isUpdating, isUpdated, isAgreedToTerms, introductionID, account, inputFileRef,
+    handleNameChange, handleEmailChange, handleProfileChange, handleThumbnailChange, handleThumbnailUploadingClick, handleSubmit, handleAgreeToTermsClick, handleSubmitClick,
     nameInputProps, emailInputProps, profileInputProps, formErrors: errors }
 }

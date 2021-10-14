@@ -2,7 +2,7 @@
 import React from 'react'
 import { css } from '@emotion/core'
 
-export default function PlainText({ children, size, color, lineHeight, fontWeight, letterSpacing, fontFamily, whiteSpace, textShadow }) {
+export default function PlainText({ children, size, color, lineHeight, fontWeight, letterSpacing, fontFamily, whiteSpace, textShadow, userSelect }) {
   const bodyStyle = css({
     color,
     lineHeight: lineHeight && `${lineHeight}px`,
@@ -13,6 +13,7 @@ export default function PlainText({ children, size, color, lineHeight, fontWeigh
     fontFamily,
     whiteSpace,
     textShadow,
+    userSelect,
   })
 
   return (

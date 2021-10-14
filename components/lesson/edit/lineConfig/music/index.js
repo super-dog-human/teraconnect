@@ -26,12 +26,12 @@ export default function Music(props) {
 
       <ContainerSpacer left='50' right='50' bottom='40'>
         <Flex>
-          <InputRadio id={'embedding-play'} name='graphicLine' size='16' color='var(--soft-white)'
+          <InputRadio id='embeddingPlay' name='graphicLine' size='16' color='var(--soft-white)'
             value='start' checked={config.action === 'start'} disabled={isProcessing} onChange={handleActionChange}>
             <PlainText size='13' lineHeight='18' color='var(--soft-white)'>再生</PlainText>
           </InputRadio>
           <Spacer width='30' />
-          <InputRadio id={'embedding-stop'} name='graphicLine' size='16' color='var(--soft-white)'
+          <InputRadio id='embeddingStop' name='graphicLine' size='16' color='var(--soft-white)'
             value='stop' checked={config.action === 'stop'} disabled={isProcessing} onChange={handleActionChange}>
             <PlainText size='13' lineHeight='18' color='var(--soft-white)'>停止</PlainText>
           </InputRadio>

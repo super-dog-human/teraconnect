@@ -9,13 +9,18 @@ import LabelButton from './button/labelButton'
 import Spacer from './spacer'
 import PageLink from './pageLink'
 
-const LoginForm = () => (
+const LoginForm = ({ isSignUp }) => (
   <div css={bodyStyle}>
     <Spacer height='50' />
 
     <Flex justifyContent='center'>
       <PlainText color='gray' size='15'>
-        ログインに使用するアカウントを選択してください。
+        {isSignUp && <>
+          ユーザー登録に使用するアカウントを選択してください。<br />
+          連携が成功すると、ユーザー登録画面へ移動します。
+        </>
+        }
+        {!isSignUp && 'ログインに使用するアカウントを選択してください。'}
       </PlainText>
     </Flex>
 
@@ -49,15 +54,19 @@ const LoginForm = () => (
 
     <Spacer height='50' />
 
-    <Flex justifyContent='center'>
-      <PageLink path="/welcome">
-        <PlainText color='gray' size='15'>
-          新規ユーザー登録
-        </PlainText>
-      </PageLink>
-    </Flex>
+    {!isSignUp &&
+      <>
+        <Flex justifyContent='center'>
+          <PageLink path="/about?show_navigate=true">
+            <PlainText color='gray' size='15'>
+              新規ユーザー登録
+            </PlainText>
+          </PageLink>
+        </Flex>
 
-    <Spacer height='50' />
+        <Spacer height='50' />
+      </>
+    }
   </div>
 )
 

@@ -12,6 +12,7 @@ import FlexItem from '../flexItem'
 import InputFile from '../form/inputFile'
 import InputText from '../form/inputText'
 import InputEmail from '../form/inputEmail'
+import InputCheckbox from '../form/inputCheckbox'
 import Textarea from '../form/textarea'
 import IconButton from '../button/iconButton'
 import LabelButton from '../button/labelButton'
@@ -22,7 +23,8 @@ import { SUPPORTED_IMAGE_FILES } from '../../libs/constants'
 import PageLink from '../pageLink'
 
 export default function EditUser({ user }) {
-  const { initialLoading, isNewUser, isUpdating, isUpdated, introductionID, account, inputFileRef, handleNameChange, handleEmailChange, handleProfileChange, handleThumbnailChange, handleThumbnailUploadingClick, handleSubmit, handleSubmitClick,
+  const { initialLoading, isNewUser, isUpdating, isUpdated, isAgreedToTerms, introductionID, account, inputFileRef,
+    handleNameChange, handleEmailChange, handleProfileChange, handleThumbnailChange, handleThumbnailUploadingClick, handleAgreeToTermsClick, handleSubmit, handleSubmitClick,
     nameInputProps, emailInputProps, profileInputProps, formErrors } = useUserEditor(user)
 
   return (
@@ -81,6 +83,19 @@ export default function EditUser({ user }) {
                   <PlainText color='gray' size='15'>自己紹介の編集</PlainText>
                 </PageLink>
               }
+              {isNewUser &&
+                <Flex alignItems='center'>
+                  <InputCheckbox id='agreeToTerms' size='15' borderColor='gray' checkColor='gray' checked={isAgreedToTerms} onChange={handleAgreeToTermsClick} />
+                  <Spacer width='10' />
+                  <PlainText size='15' lineHeight='22' color='gray' userSelect='none'>
+                    <PageLink path='/terms_of_use' target='_blank'>
+                      <PlainText color='var(--dark-purple)' fontWeight='500'>
+                        利用規約
+                      </PlainText>
+                    </PageLink>に同意する
+                  </PlainText>
+                </Flex>
+              }
               <Container height='60'>
                 {!!formErrors && <div><PlainText size='13' color='var(--error-red)'>
                   {(() => {
@@ -100,7 +115,7 @@ export default function EditUser({ user }) {
 
           <Flex justifyContent='center'>
             <Container width='120' height='40'>
-              <LabelButton color='white' fontSize='15' backgroundColor='var(--dark-purple)' onClick={handleSubmit(handleSubmitClick)}>
+              <LabelButton color='white' fontSize='15' backgroundColor={isNewUser && !isAgreedToTerms ? 'gray' : 'var(--dark-purple)'} onClick={handleSubmit(handleSubmitClick)} disabled={(isNewUser && !isAgreedToTerms) || isUpdating}>
                 {!isUpdating && isNewUser && '登録'}
                 {!isUpdating && !isNewUser && '更新'}
                 {isUpdating && <LoadingIndicator size='20' color='white' />}

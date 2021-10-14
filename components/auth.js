@@ -2,16 +2,18 @@
 import React from 'react'
 import { css } from '@emotion/core'
 import { useSession } from 'next-auth/client'
+import { useRouter } from 'next/router'
 import LoginForm from './loginForm'
 
 const Auth = ({ children }) => {
   const [session, isLoading] = useSession()
   const isLoggedIn = !!session?.user
+  const router = useRouter()
 
   return (
     <div css={bodyStyle}>
       {!isLoading && isLoggedIn && children}
-      {!isLoading && !isLoggedIn && <LoginForm />}
+      {!isLoading && !isLoggedIn && <LoginForm isSignUp={router.query.sign_up === 'true'} />}
     </div>
   )
 }
