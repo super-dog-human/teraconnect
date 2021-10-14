@@ -11,6 +11,7 @@ import useLesson from '../../../libs/hooks/lesson/useLesson'
 import useDragOverDetector from '../../../libs/hooks/useDragOverDetector'
 import useAvatar from '../../../libs/hooks/lesson/useAvatar'
 import useDrawingRecorder from '../../../libs/hooks/lesson/useDrawingRecorder'
+import useAudioVisualizer from '../../../libs/hooks/useAudioVisualizer'
 import useVoiceRecorder from '../../../libs/hooks/lesson/useVoiceRecorder'
 import Aspect16To9Container from '../../aspect16To9Container'
 import LessonRecordHeader from './header'
@@ -41,7 +42,8 @@ const LessonRecord = ({ lessonID }) => {
   const { isRecording, realElapsedTime, setRecord } = useLessonRecorderContext()
   const { hasDragOver, handleAreaDragOver, handleAreaDragLeave, handleAreaDrop } = useDragOverDetector()
   const { bgImages, avatars, graphics } = useRecordResource({ lessonID, setBgImageURL })
-  const { isMicReady, isSpeaking, micDeviceID, setMicDeviceID, silenceThresholdSec, setSilenceThresholdSec } = useVoiceRecorder({ lessonID, isRecording, realElapsedTime })
+  const { createAnalyzer, canvasRef: audioVisualizerRef } = useAudioVisualizer()
+  const { isMicReady, isSpeaking, setMicDeviceID, silenceThresholdSec, setSilenceThresholdSec } = useVoiceRecorder({ lessonID, isRecording, realElapsedTime, createAnalyzer })
   const { setAvatarConfig, avatarRef, startDragging, inDragging, endDragging, cleanAvatar } = useAvatar({ setIsLoading, isSpeaking, hasResize, movingCallback: setRecord })
   const { isDrawingHide, setIsDrawingHide, enablePen, setEnablePen, enableEraser, setEnableEraser, undoDrawing, clearDrawing, drawingColor, setDrawingColor, drawingLineWidth, setDrawingLineWidth,
     startDrawing, inDrawing, endDrawing } = useDrawingRecorder({ hasResize, drawingRef, startDragging, inDragging, endDragging, setRecord })
@@ -62,7 +64,7 @@ const LessonRecord = ({ lessonID }) => {
         <div css={bodyStyle}>
           <Aspect16To9Container>
             <LoadingIndicator isLoading={isLoading} size={15} />
-            <VoiceSpectrum micDeviceID={micDeviceID} isShow={isShowVoiceSpectrum} setIsShow={setIsShowVoiceSpectrum} />
+            <VoiceSpectrum isShow={isShowVoiceSpectrum} setIsShow={setIsShowVoiceSpectrum} canvasRef={audioVisualizerRef} />
             <LessonBackgroundImage url={bgImageURL} />
             <LessonGraphic graphic={selectedGraphic} />
             <LessonAvatar ref={avatarRef} onMouseDown={startDragging} onMouseMove={inDragging} onMouseUp={endDragging} onMouseLeave={endDragging}

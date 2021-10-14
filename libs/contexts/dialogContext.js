@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useCallback } from 'react'
 
 const DialogContext = React.createContext({
   dialog: null,
@@ -12,9 +12,9 @@ const DialogProvider = ({ children }) => {
   const [dialog, setDialog] = useState()
   const [isProcessing, setIsProcessing] = useState(false)
 
-  function showDialog(dialog) {
+  const showDialog = useCallback(dialog => {
     setDialog(dialog)
-  }
+  }, [])
 
   async function confirmDialog(isSkipConfirm) {
     setIsProcessing(true)

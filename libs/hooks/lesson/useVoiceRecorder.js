@@ -1,31 +1,32 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useCallback, useEffect } from 'react'
 import useMicrophone from '../useMicrophone'
 import { bufferToWavFile }  from '../../audioUtils'
 
-export default function useVoiceRecorder({ needsUpload=true, lessonID, isRecording, realElapsedTime }) {
+export default function useVoiceRecorder({ needsUpload=true, lessonID, isRecording, realElapsedTime, createAnalyzer }) {
   const recorderRef = useRef()
   const uploaderRef = useRef()
   const [isSpeaking, setIsSpeaking] = useState(false)
+  const [shouldSetupMic, setShouldUpdateMic] = useState(false)
   const [micDeviceID, setMicDeviceID] = useState()
   const [silenceThresholdSec, setSilenceThresholdSec] = useState(1.0)
   const [voiceFile, setVoiceFile] = useState()
   const { isMicReady, setNode } = useMicrophone()
 
-  function switchRecording() {
+  const switchRecording = useCallback(() => {
     if (!recorderRef.current) return
     recorderRef.current.port.postMessage({ isRecording })
-  }
+  }, [isRecording])
 
-  function terminalCurrentRecorder() {
+  const terminalCurrentRecorder = useCallback(() => {
     if (!recorderRef.current) return
     recorderRef.current.port.postMessage({ isTerminal: true })
-  }
+  }, [])
 
-  function terminalUploader() {
+  const terminalUploader = useCallback(() => {
     uploaderRef.current.postMessage({ isTerminal: true })
-  }
+  }, [])
 
-  function handleRecorderMessage(command) {
+  const handleRecorderMessage = useCallback(command => {
     Object.keys(command).forEach(async k => {
       switch(k) {
       case 'isSpeaking':
@@ -41,16 +42,16 @@ export default function useVoiceRecorder({ needsUpload=true, lessonID, isRecordi
         return
       }
     })
-  }
+  }, [needsUpload])
 
   async function uploadVoice(body) {
     uploaderRef.current.postMessage({ newVoice: body })
   }
 
-  function updateSilenceThresholdSec() {
+  const updateSilenceThresholdSec = useCallback(() => {
     if(!recorderRef.current) return
     recorderRef.current.port.postMessage({ changeThreshold: silenceThresholdSec })
-  }
+  }, [silenceThresholdSec])
 
   useEffect(() => {
     uploaderRef.current = new Worker('/voiceUploader.js')
@@ -60,13 +61,17 @@ export default function useVoiceRecorder({ needsUpload=true, lessonID, isRecordi
       terminalCurrentRecorder()
       terminalUploader()
     }
-  }, [])
+  }, [lessonID, terminalCurrentRecorder, terminalUploader])
 
   useEffect(() => {
-    if (!micDeviceID) return
+    if(!micDeviceID) return
+    setShouldUpdateMic(true)
+  }, [micDeviceID])
+
+  useEffect(() => {
+    if (!shouldSetupMic) return
 
     terminalCurrentRecorder()
-
     setNode(micDeviceID, async(ctx, micInput) => {
       await ctx.audioWorklet.addModule('/voiceRecorderProcessor.js')
       recorderRef.current = new AudioWorkletNode(ctx, 'recorder')
@@ -79,20 +84,27 @@ export default function useVoiceRecorder({ needsUpload=true, lessonID, isRecordi
         handleRecorderMessage(e.data)
       }
       updateSilenceThresholdSec()
-      micInput.connect(recorderRef.current)
-      recorderRef.current.connect(ctx.destination)
+
+      if (createAnalyzer) {
+        const analyzer = createAnalyzer(ctx)
+        micInput.connect(analyzer).connect(recorderRef.current).connect(ctx.destination)
+      } else {
+        micInput.connect(recorderRef.current).connect(ctx.destination)
+      }
 
       if (isRecording) switchRecording()
+
+      setShouldUpdateMic(false)
     })
-  }, [micDeviceID])
+  }, [shouldSetupMic, micDeviceID, needsUpload, isRecording, realElapsedTime, createAnalyzer, terminalCurrentRecorder, setNode, handleRecorderMessage, updateSilenceThresholdSec, switchRecording])
 
   useEffect(() => {
     switchRecording()
-  }, [isRecording])
+  }, [isRecording, switchRecording])
 
   useEffect(() => {
     updateSilenceThresholdSec()
-  }, [silenceThresholdSec])
+  }, [silenceThresholdSec, updateSilenceThresholdSec])
 
-  return { isMicReady, isSpeaking, micDeviceID, setMicDeviceID, silenceThresholdSec, setSilenceThresholdSec, voiceFile }
+  return { isMicReady, isSpeaking, setMicDeviceID, silenceThresholdSec, setSilenceThresholdSec, voiceFile }
 }

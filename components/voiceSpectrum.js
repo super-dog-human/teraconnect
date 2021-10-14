@@ -3,15 +3,12 @@ import React, { useState, useRef, useEffect } from 'react'
 import { css } from '@emotion/core'
 import { Hidden } from 'react-grid-system'
 import Draggable from 'react-draggable'
-import useAudioVisualizer from '../libs/hooks/useAudioVisualizer'
 import useDraggableBounds from '../libs/hooks/useDraggableBounds'
 
-export default function VoiceSpectrum({ micDeviceID, isShow, setIsShow }) {
+export default function VoiceSpectrum({ isShow, setIsShow, canvasRef }) {
   const [isHover, setIsHover] = useState(false)
   const draggableRef = useRef(null)
-  const canvasRef = useRef(null)
   const { bounds, setBounds } = useDraggableBounds()
-  useAudioVisualizer(micDeviceID, canvasRef)
 
   const bodyStyle = css({
     display: isShow ? 'block' : 'none',
@@ -47,7 +44,6 @@ export default function VoiceSpectrum({ micDeviceID, isShow, setIsShow }) {
   function handleMouseLeave() {
     setIsHover(false)
   }
-
 
   function handleCloseClick() {
     setIsShow(!isShow)

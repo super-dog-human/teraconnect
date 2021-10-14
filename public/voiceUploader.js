@@ -12,7 +12,7 @@ onmessage = async function(e) {
   Object.keys(e.data).forEach(async(k) => {
     switch(k) {
     case 'initialize': {
-      lessonID = e.data.initialize.lessonID
+      lessonID = parseInt(e.data.initialize.lessonID)
       apiURL = e.data.initialize.apiURL
       return
     }

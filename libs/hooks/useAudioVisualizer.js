@@ -1,9 +1,48 @@
-import { useRef, useEffect } from 'react'
-import useMicrophone from './useMicrophone'
+import { useRef, useCallback, useEffect } from 'react'
 
-export default function useAudioVisualizer(micDeviceID, canvasRef) {
+export default function useAudioVisualizer() {
+  const canvasRef = useRef()
   const canvasCtxRef = useRef()
-  const { setNode } = useMicrophone()
+  const analyserRef = useRef()
+  const bufferLengthRef = useRef()
+  const dataArrayRef = useRef()
+  const sliceWidthRef = useRef()
+
+  const drawVisual = useCallback(() => {
+    requestAnimationFrame(drawVisual)
+
+    analyserRef.current.getByteFrequencyData(dataArrayRef.current)
+    canvasCtxRef.current.clearRect(0, 0, canvasCtxRef.current.canvas.width, canvasCtxRef.current.canvas.height)
+    canvasCtxRef.current.beginPath()
+
+    let x = 0
+
+    for(var i = 0; i < bufferLengthRef.current; i++) {
+      const v = dataArrayRef.current[i] / 128.0
+      const y = v * canvasCtxRef.current.canvas.height / 2
+
+      if (i === 0) {
+        canvasCtxRef.current.moveTo(x, canvasCtxRef.current.canvas.height - y)
+      } else {
+        canvasCtxRef.current.lineTo(x, canvasCtxRef.current.canvas.height - y)
+      }
+
+      x += sliceWidthRef.current
+    }
+
+    canvasCtxRef.current.stroke()
+  }, [])
+
+  const createAnalyzer = useCallback(ctx => {
+    analyserRef.current = ctx.createAnalyser()
+    analyserRef.current.fftSize = 2048
+    bufferLengthRef.current = analyserRef.current.frequencyBinCount
+    dataArrayRef.current = new Uint8Array(bufferLengthRef.current)
+    sliceWidthRef.current = canvasCtxRef.current.canvas.width * 1.0 / bufferLengthRef.current
+
+    drawVisual()
+    return analyserRef.current
+  }, [drawVisual])
 
   useEffect(() => {
     canvasCtxRef.current = canvasRef.current.getContext('2d')
@@ -12,48 +51,7 @@ export default function useAudioVisualizer(micDeviceID, canvasRef) {
     canvasCtxRef.current.clearRect(0, 0, canvasCtxRef.current.canvas.width, canvasCtxRef.current.canvas.height)
     canvasCtxRef.current.strokeStyle = 'white'
     canvasCtxRef.current.lineWidth = 5
-  }, [canvasRef])
+  }, [])
 
-  useEffect(() => {
-    if (!micDeviceID) return
-
-    let analyser
-    let dataArray
-    let bufferLength
-    setNode(micDeviceID, (ctx, micInput) => {
-      analyser = ctx.createAnalyser()
-      analyser.fftSize = 2048
-      micInput.connect(analyser)
-
-      bufferLength = analyser.frequencyBinCount
-      dataArray = new Uint8Array(bufferLength)
-
-      requestAnimationFrame(drawVisual)
-    })
-
-    function drawVisual() {
-      requestAnimationFrame(drawVisual)
-      analyser.getByteFrequencyData(dataArray)
-      canvasCtxRef.current.clearRect(0, 0, canvasCtxRef.current.canvas.width, canvasCtxRef.current.canvas.height)
-      canvasCtxRef.current.beginPath()
-
-      const sliceWidth = canvasCtxRef.current.canvas.width * 1.0 / bufferLength
-      let x = 0
-
-      for(var i = 0; i < bufferLength; i++) {
-        const v = dataArray[i] / 128.0
-        const y = v * canvasCtxRef.current.canvas.height / 2
-
-        if (i === 0) {
-          canvasCtxRef.current.moveTo(x, canvasCtxRef.current.canvas.height - y)
-        } else {
-          canvasCtxRef.current.lineTo(x, canvasCtxRef.current.canvas.height - y)
-        }
-
-        x += sliceWidth
-      }
-
-      canvasCtxRef.current.stroke()
-    }
-  }, [micDeviceID, setNode])
+  return { createAnalyzer, canvasRef }
 }

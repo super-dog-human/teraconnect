@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useCallback, useEffect } from 'react'
 import * as THREE from 'three'
 
 export default function useTimeCounter() {
@@ -28,9 +28,9 @@ export default function useTimeCounter() {
     }
   }
 
-  function realElapsedTime() {
+  const realElapsedTime = useCallback(() => {
     return realTimeRef.current
-  }
+  }, [])
 
   useEffect(() => {
     clockRef.current = new THREE.Clock()
