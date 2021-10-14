@@ -23,10 +23,10 @@ const options = {
   },
   cookies: {
     sessionToken: {
-      name: 'session-token',
+      name: '__Secure-session-token',
       options: {
         httpOnly: true,
-        sameSite: 'strict',
+        sameSite: 'lax',
         secure: true,
         domain: process.env.NEXT_PUBLIC_TERACONNECT_COOKIE_DOMAIN,
       },
