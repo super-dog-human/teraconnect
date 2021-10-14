@@ -14,7 +14,7 @@ import useDrawingRecorder from '../../../libs/hooks/lesson/useDrawingRecorder'
 import useVoiceRecorder from '../../../libs/hooks/lesson/useVoiceRecorder'
 import Aspect16To9Container from '../../aspect16To9Container'
 import LessonRecordHeader from './header'
-import LessonRecordLoadingIndicator from './loadingIndicator'
+import LoadingIndicator from './loadingIndicator'
 import SettingPanel from './settingPanel'
 import LessonRecordGraphicController from './graphicController'
 import LessonBackgroundImage from '../backgroundImage'
@@ -61,7 +61,7 @@ const LessonRecord = ({ lessonID }) => {
       <main css={mainStyle} onDragOver={handleAreaDragOver} onDragLeave={handleAreaDragLeave} onDrop={handleAreaDrop} ref={containerRef}>
         <div css={bodyStyle}>
           <Aspect16To9Container>
-            <LessonRecordLoadingIndicator isLoading={isLoading} size={15} />
+            <LoadingIndicator isLoading={isLoading} size={15} />
             <VoiceSpectrum micDeviceID={micDeviceID} isShow={isShowVoiceSpectrum} setIsShow={setIsShowVoiceSpectrum} />
             <LessonBackgroundImage url={bgImageURL} />
             <LessonGraphic graphic={selectedGraphic} />

@@ -113,15 +113,15 @@ export default function About({ isShowNavigate }) {
         {isShowNavigate &&
           <>
             <Flex justifyContent='space-between'>
-              <Container width='150' height='39'>
-                <LabelButton fontSize='15' lineHeight='39' color='var(--text-dark-gray)' borderColor='var(--text-dark-gray)' onClick={() => { router.back() }}>
+              <Container width='150' height='45'>
+                <LabelButton fontSize='15' lineHeight='45' color='var(--text-dark-gray)' borderColor='var(--text-dark-gray)' onClick={() => { router.back() }}>
                   もどる
                 </LabelButton>
               </Container>
 
               <PageLink path='/users/edit?sign_up=true'>
-                <Container width='150' height='39'>
-                  <LabelButton fontSize='15' lineHeight='39' color='white' backgroundColor='var(--dark-purple)'>
+                <Container width='150' height='45'>
+                  <LabelButton fontSize='15' lineHeight='45' color='white' backgroundColor='var(--dark-purple)'>
                     ユーザー登録
                   </LabelButton>
                 </Container>
