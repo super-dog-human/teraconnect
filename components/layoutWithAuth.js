@@ -20,26 +20,21 @@ const LayoutWithAuth = ({ children }) => {
         </>
       }
       {!isLoading && !isLoggedIn &&
-        <div css={bodyStyle}>
-          <header css={headerStyle}>
-            <Container width='181'>
-              <TopLogoLink color="white" />
-            </Container>
-          </header>
+      <>
+        <header css={headerStyle}>
+          <Container width='181'>
+            <TopLogoLink color="white" />
+          </Container>
+        </header>
+        <main>
           <LoginForm />
-          <Footer />
-        </div>
+        </main>
+        <Footer />
+      </>
       }
     </>
   )
 }
-
-const bodyStyle = css({
-  width: '100%',
-  minHeight: '100vh',
-  height: '100%',
-  backgroundColor: 'var(--bg-light-gray)',
-})
 
 const headerStyle = css({
   backgroundColor: 'var(--dark-gray)',
