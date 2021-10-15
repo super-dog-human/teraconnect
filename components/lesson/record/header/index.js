@@ -61,7 +61,7 @@ export default function LessonRecordHeader({ lessonID, materialID, isMicReady, i
         <div>
           <DrawingConfigButton name='settings' disabled={isFinishing} isSelected={isShowControlPanel} onClick={handleSettingPanel} />
         </div>
-        <Spacer width='20' />
+        <Spacer width='50' />
       </div>
     </header>
   )

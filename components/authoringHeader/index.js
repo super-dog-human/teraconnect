@@ -72,17 +72,17 @@ export default function Header({ currentPage, showBadge, isUpdating, updateLesso
               </Flex>
             </div>
           </FlexItem>
-          <FlexItem flexBasis='100px'>
-            <Container width='100' height='40'>
+          <FlexItem flexBasis='70px'>
+            <Container width='70' height='40'>
               {currentPage === 'edit' &&
-              <Flex>
-                <Container width='40' height='40'>
-                  <IconWithBadgeButton name='save' padding='10' showBadge={showBadge} isProcessing={isUpdating} disabled={isUpdating} onClick={updateLesson} />
-                </Container>
-                <Container width='10'>
-                  <IconButton name='sort-down' disabled={isUpdating} onMouseDown={handleSortDownClick} />
-                </Container>
-              </Flex>
+                <Flex>
+                  <Container width='40' height='40'>
+                    <IconWithBadgeButton name='save' padding='10' showBadge={showBadge} isProcessing={isUpdating} disabled={isUpdating} onClick={updateLesson} />
+                  </Container>
+                  <Container width='10'>
+                    <IconButton name='sort-down' disabled={isUpdating} onMouseDown={handleSortDownClick} />
+                  </Container>
+                </Flex>
               }
             </Container>
           </FlexItem>
