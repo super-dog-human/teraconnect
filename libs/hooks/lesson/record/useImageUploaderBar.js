@@ -56,7 +56,7 @@ export default function useImageUploaderBar(lessonID, images, setImages, inputFi
   }
 
   async function fetchURLsAndUpload(validFiles, temporaryIDs) {
-    createGraphics(lessonID, validFiles).then(results => {
+    createGraphics(parseInt(lessonID), validFiles).then(results => {
       results.signedURLs.forEach((r, i) => {
         const tmpID = temporaryIDs[i]
         uploadImage(validFiles[i], tmpID, r.fileID, r.signedURL)
