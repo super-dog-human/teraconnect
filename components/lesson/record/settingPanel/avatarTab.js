@@ -58,7 +58,9 @@ export default function AvatarTab({ avatars, setConfig, cleanAvatar }) {
 
   return (
     <ContainerSpacer top='30' left='50' right='50'>
-      <Select options={selectOptions} onChange={handleAvatarChange} topLabel={null} color='var(--soft-white)' />
+      <Container height='25'>
+        <Select size='15' options={selectOptions} onChange={handleAvatarChange} topLabel={null} color='var(--soft-white)' />
+      </Container>
       <Spacer height='40' />
       <Flex>
         <PlainText size='13' color='var(--border-gray)'>環境光</PlainText>

@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React from 'react'
+import React, { useState } from 'react'
 import { css } from '@emotion/core'
 import 'react-tabs/style/react-tabs.css'
 import Draggable from 'react-draggable'
@@ -15,9 +15,14 @@ import VoiceRecorderTab from './voiceRecorderTab'
 
 export default function SettingPanel({ isShow, setIsShow, bgImages, setBgImageURL, avatars, setAvatarConfig, cleanAvatar,
   setMicDeviceID, setSilenceThresholdSec, isShowVoiceSpectrum, silenceThresholdSec, setIsShowVoiceSpectrum }) {
+  const [tabIndex, setTabIndex] = useState(0)
 
   function handleClose() {
     setIsShow(false)
+  }
+
+  function handleTabTouch(e) {
+    setTabIndex(parseInt(e.currentTarget.dataset.index))
   }
 
   resetIdCounter()
@@ -31,20 +36,25 @@ export default function SettingPanel({ isShow, setIsShow, bgImages, setBgImageUR
     maxWidth: '700px',
     backgroundColor: 'var(--dark-gray)',
     borderRadius: '5px',
-    filter: 'drop-shadow(2px 2px 2px gray)',
   })
 
   return (
     <Draggable handle=".drag-handle">
       <div css={bodyStyle} className='modal-panel-z'>
         <TabContainer minHeight='300'>
-          <Tabs forceRenderTabPanel={true}>
+          <Tabs forceRenderTabPanel={true} selectedIndex={tabIndex} onSelect={() => {}}>
             <DragHandler>
               <TabList>
                 <TabListWithCloseButton onClose={handleClose} color='var(--soft-white)'>
-                  <Tab><AlignContainer textAlign='center'><PlainText size='14'>背景</PlainText></AlignContainer></Tab>
-                  <Tab><AlignContainer textAlign='center'><PlainText size='14'>アバター</PlainText></AlignContainer></Tab>
-                  <Tab><AlignContainer textAlign='center'><PlainText size='14'>マイク設定</PlainText></AlignContainer></Tab>
+                  <Tab data-index={0} onClick={handleTabTouch} onTouchEnd={handleTabTouch}>
+                    <AlignContainer textAlign='center'><PlainText size='14'>背景</PlainText></AlignContainer>
+                  </Tab>
+                  <Tab data-index={1} onClick={handleTabTouch} onTouchEnd={handleTabTouch}>
+                    <AlignContainer textAlign='center'><PlainText size='14'>アバター</PlainText></AlignContainer>
+                  </Tab>
+                  <Tab data-index={2} onClick={handleTabTouch} onTouchEnd={handleTabTouch}>
+                    <AlignContainer textAlign='center'><PlainText size='14'>マイク設定</PlainText></AlignContainer>
+                  </Tab>
                 </TabListWithCloseButton>
               </TabList>
             </DragHandler>

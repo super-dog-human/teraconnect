@@ -37,7 +37,9 @@ export default function VoiceRecorderTab({ setMicDeviceID, setSilenceThresholdSe
 
   return (
     <ContainerSpacer top='30' left='50' right='50'>
-      <Select options={deviceOptions} onChange={hanldeMicChange} topLabel={null} color='var(--soft-white)' />
+      <Container height='25'>
+        <Select size='15' options={deviceOptions} onChange={hanldeMicChange} topLabel={null} color='var(--soft-white)' />
+      </Container>
 
       <Spacer height='30' />
 
