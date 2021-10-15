@@ -9,17 +9,19 @@ import AbsoluteContainer from '../../../absoluteContainer'
 import { useContextMenuContext } from '../../../../libs/contexts/contextMenuContext'
 import { useImageViewerContext } from '../../../../libs/contexts/imageViewerContext'
 
-export default function ThumbnailController({ graphicID, graphic, swapGraphic, removeGraphic }) {
+export default function ThumbnailController({ graphicID, graphic, swapGraphic, removeGraphic, isTouchDevice }) {
   const { setContextMenu } = useContextMenuContext()
   const { setImage } = useImageViewerContext()
-  const [isButtonShow, setIsButtonShow] = useState(false)
+  const [isButtonShow, setIsButtonShow] = useState(isTouchDevice)
 
   function handleEnter() {
+    if (isTouchDevice) return
     if (graphic.isUploading) return
     setIsButtonShow(true)
   }
 
   function handleLeave() {
+    if (isTouchDevice) return
     setIsButtonShow(false)
   }
 

@@ -8,7 +8,7 @@ function easeOutSine(x) {
   return Math.sin((x * Math.PI) / 2)
 }
 
-export default function ScrollArrow({ direction, targetRef }) {
+export default function ScrollArrow({ direction, targetRef, isTouchDevice }) {
   const initializedRef = useRef(false)
   const isHoverRef = useRef(false)
   const animationIDRef = useRef()
@@ -61,15 +61,6 @@ export default function ScrollArrow({ direction, targetRef }) {
     }
   }
 
-  const iconStyle = css({
-    display: 'block',
-    width: '33px',
-    height: 'auto',
-    cursor: 'pointer',
-    margin: 'auto',
-    transform: direction === 'left' ? 'rotate(180deg)' : 'none',
-  })
-
   useEffect(() => {
     if (initializedRef.current) false
 
@@ -79,17 +70,26 @@ export default function ScrollArrow({ direction, targetRef }) {
     initializedRef.current = true
   }, [initializedRef, targetRef])
 
+  const iconStyle = css({
+    display: 'block',
+    width: '33px',
+    height: 'auto',
+    cursor: 'pointer',
+    margin: 'auto',
+    transform: direction === 'left' ? 'rotate(180deg)' : 'none',
+  })
+
+  const buttonStyle = css({
+    opacity: isTouchDevice ? 1 : 0.3,
+    transition: 'opacity 0.5s',
+    ':hover': {
+      opacity: 1,
+    },
+  })
+
   return (
     <button css={buttonStyle} onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave}>
       <img src="/img/icon/double-arrows.svg" css={iconStyle} alt='画像エリアスクロールボタン' />
     </button>
   )
 }
-
-const buttonStyle = css({
-  opacity: '0.3',
-  transition: 'opacity 0.5s',
-  ':hover': {
-    opacity: '1',
-  },
-})

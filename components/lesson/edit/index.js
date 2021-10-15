@@ -3,6 +3,7 @@ import React, { useRef, useState, useEffect } from 'react'
 import { css } from '@emotion/core'
 import useLesson from '../../../libs/hooks/lesson/useLesson'
 import useMobileDetector from '../../../libs/hooks/useMobileDetector'
+import useTouchDeviceDetector from '../../../libs/hooks/useTouchDeviceDetector'
 import useLessonCacheController from '../../../libs/hooks/lesson/edit/useLessonCacheController'
 import useLessonUpdater from '../../../libs/hooks/lesson/edit/useLessonUpdater'
 import { useContextMenuContext } from '../../../libs/contexts/contextMenuContext'
@@ -22,6 +23,7 @@ import Timeline from './timeline'
 export default function LessonEdit({ lessonID }) {
   const fetchedRef = useRef(false)
   const isMobile = useMobileDetector()
+  const isTouchDevice = useTouchDeviceDetector()
   const [isLoading, setIsLoading] = useState(true)
   const { clearDiffFlag, clearCache } = useLessonCacheController({ isLoading, lessonID })
   const lesson = useLesson(lessonID)
@@ -84,10 +86,10 @@ export default function LessonEdit({ lessonID }) {
             <div css={leftSideStyle}>
               <Preview lessonID={lessonID}/>
               <DurationTime />
-              <GraphicController />
+              <GraphicController isTouchDevice={isTouchDevice} />
             </div>
             <div css={rightSideStyle}>
-              <Timeline />
+              <Timeline isTouchDevice={isTouchDevice} />
             </div>
           </div>
           <ImageViwer />

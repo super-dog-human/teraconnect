@@ -13,7 +13,7 @@ import SelectorThumbnail from './selectorThumbnail'
 import DragSwappable from '../../../dragSwappable'
 import { SUPPORTED_IMAGE_FILES } from '../../../../libs/constants'
 
-export default function LessonRecordGraphicController({ lessonID, setSelectedGraphic, initialGraphics, hasDragOver }) {
+export default function LessonRecordGraphicController({ lessonID, setSelectedGraphic, initialGraphics, hasDragOver, isTouchDevice }) {
   const selectImageBarRef = useRef(null)
   const inputFileRef = useRef(null)
   const { imageID, selectImage, removeImage, images, setImages, moveImage } = useImageControllerBar({ initialGraphics, setSelectedGraphic })
@@ -27,7 +27,7 @@ export default function LessonRecordGraphicController({ lessonID, setSelectedGra
 
         {images.length === 0 && (
           <UploadingWideButton hasDragOver={hasDragOver} onDragOver={handleDragOver} onDragLeave={handleDragLeave}
-            onDrop={handleDrop} onClick={handleUploadButtonClick} disabled={isFinishing} />
+            onDrop={handleDrop} onClick={handleUploadButtonClick} disabled={isFinishing} isTouchDevice={isTouchDevice} />
         )}
 
         {images.length > 0 && (
@@ -41,16 +41,16 @@ export default function LessonRecordGraphicController({ lessonID, setSelectedGra
                 <div css={selectImageBarStyle} ref={selectImageBarRef}>
                   <DragSwappable onDragOver={moveImage} isSwapImmediately={true}>
                     {images.map((image, i) =>
-                      <SelectorThumbnail image={image} key={i} onClick={selectImage} onRemoveClick={removeImage} isSelected={image.id === imageID} isFinishing={isFinishing} />
+                      <SelectorThumbnail image={image} key={i} onClick={selectImage} onRemoveClick={removeImage} isSelected={image.id === imageID} isFinishing={isFinishing} isTouchDevice={isTouchDevice} />
                     )}
                   </DragSwappable>
                 </div>
               </Col>
               <Col sm={1} css={centeringStyle}>
-                <ScrollArrow direction="right" targetRef={selectImageBarRef} />
+                <ScrollArrow direction="right" targetRef={selectImageBarRef} isTouchDevice={isTouchDevice} />
               </Col>
               <Col sm={1} css={centeringStyle}>
-                <UploadingButton onClick={handleUploadButtonClick} disabled={isFinishing} />
+                <UploadingButton onClick={handleUploadButtonClick} disabled={isFinishing} isTouchDevice={isTouchDevice} />
               </Col>
             </Row>
           </Container>
@@ -63,7 +63,7 @@ export default function LessonRecordGraphicController({ lessonID, setSelectedGra
 const bodyStyle = css({
   width: '100%',
   height: '120px',
-  backgroundColor: 'rgba(255, 255, 255, 0.6)',
+  backgroundColor: 'gray',
 })
 
 const controllerStyle = css({

@@ -3,7 +3,7 @@ import React from 'react'
 import { css } from '@emotion/core'
 import ImageUploadingIcon from './uploadingIcon'
 
-export default function uploadingWideButton({ hasDragOver, onDragOver,onDragLeave, onDrop, onClick, disabled }) {
+export default function uploadingWideButton({ hasDragOver, onDragOver,onDragLeave, onDrop, onClick, disabled, isTouchDevice }) {
   const buttonStyle = css({
     display: 'block',
     width: '80%',
@@ -15,7 +15,7 @@ export default function uploadingWideButton({ hasDragOver, onDragOver,onDragLeav
     color: 'white',
     border: '2px var(--border-gray) dashed',
     borderStyle: 'dashed',
-    opacity: hasDragOver ? 1 : 0.7,
+    opacity: hasDragOver || isTouchDevice ? 1 : 0.7,
     ':hover': {
       opacity: 1,
     },

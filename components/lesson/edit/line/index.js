@@ -3,14 +3,16 @@ import React, { useState } from 'react'
 import { css } from '@emotion/core'
 import ErrorNotice from './errorNotice'
 
-export default function LessonLine({ hasError, kind, isLineProcessing, children }) {
-  const [isEditButtonShow, setIsEditButtonShow] = useState(false)
+export default function LessonLine({ hasError, kind, isLineProcessing, isTouchDevice, children }) {
+  const [isEditButtonShow, setIsEditButtonShow] = useState(isTouchDevice)
 
   function handleMouseOver() {
+    if (isTouchDevice) return
     setIsEditButtonShow(true)
   }
 
   function handleMouseLeave() {
+    if (isTouchDevice) return
     setIsEditButtonShow(false)
   }
 

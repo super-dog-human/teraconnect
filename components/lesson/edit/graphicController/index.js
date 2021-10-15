@@ -17,7 +17,7 @@ import { useErrorDialogContext } from '../../../../libs/contexts/errorDialogCont
 import { useDialogContext } from '../../../../libs/contexts/dialogContext'
 import { SUPPORTED_IMAGE_FILES } from '../../../../libs/constants'
 
-export default function GraphicController() {
+export default function GraphicController({ isTouchDevice }) {
   const { setGraphics, graphicURLs, setGraphicURLs } = useLessonEditorContext()
   const { showDialog } = useDialogContext()
   const { showError } = useErrorDialogContext()
@@ -34,7 +34,7 @@ export default function GraphicController() {
       <div css={containerStyle} ref={graphicContainerRef}>
         {Object.keys(graphicURLs).map(graphicID => (
           <div css={thumbnailStyle} key={graphicID}>
-            <ThumbnailController graphicID={graphicID} graphic={graphicURLs[graphicID]} swapGraphic={selectLocalImage} removeGraphic={confirmRemovingGraphic} />
+            <ThumbnailController graphicID={graphicID} graphic={graphicURLs[graphicID]} swapGraphic={selectLocalImage} removeGraphic={confirmRemovingGraphic} isTouchDevice={isTouchDevice} />
           </div>
         ))}
       </div>

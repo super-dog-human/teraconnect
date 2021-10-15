@@ -20,7 +20,7 @@ import useUpdateSpeechLine from '../../../libs/hooks/lesson/edit/timeline/useUpd
 import useLineConfig from '../../../libs/hooks/lesson/edit/useLineConfig'
 import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorContext'
 
-export default function Timeline() {
+export default function Timeline({ isTouchDevice }) {
   const dropLineRef = useRef()
   const lastTimesRef = useRef({})
   const { timeline, drawings, swapLine, updateLine } = useLessonEditorContext()
@@ -45,7 +45,7 @@ export default function Timeline() {
                     timeline[elapsedTime][kind].map((line, kindIndex) => {
                       const hasError = hasDoubleTimeError({ lastTimesRef, elapsedTime, kind, line })
                       return (
-                        <LessonLine key={`${i}-${kindIndex}`} kind={kind} hasError={hasError} isLineProcessing={isLineProcessing}>
+                        <LessonLine key={`${i}-${kindIndex}`} kind={kind} hasError={hasError} isLineProcessing={isLineProcessing} isTouchDevice={isTouchDevice}>
                           {kind === 'avatar'    && <LessonLineAvatar avatar={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
                           {kind === 'drawing'   && <LessonLineDrawing drawings={drawings} drawing={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}
                           {kind === 'embedding' && <LessonLineEmbedding embedding={line} index={kindIndex} handleEditClick={handleEditButtonClick} />}

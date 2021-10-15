@@ -4,6 +4,7 @@ import { css } from '@emotion/core'
 import { useLessonRecorderContext } from '../../../libs/contexts/lessonRecorderContext'
 import usePreventBack from '../../../libs/hooks/lesson/record/usePreventBack'
 import useResizeDetector from '../../../libs/hooks/useResizeDetector'
+import useTouchDeviceDetector from '../../../libs/hooks/useTouchDeviceDetector'
 import useSessionExpireChecker from '../../../libs/hooks/useTokenExpireChecker'
 import useLessonRecordChangeTabDetector from '../../../libs/hooks/lesson/record/useChangeTabDetector'
 import useRecordResource from '../../../libs/hooks/lesson/record/useRecordResource'
@@ -22,7 +23,7 @@ import LessonBackgroundImage from '../backgroundImage'
 import LessonAvatar from '../avatar'
 import LessonGraphic from '../graphic'
 import LessonDrawing from '../drawing'
-import LessonRandomTips from '../randomTips'
+import RandomTips from './randomTips'
 import VoiceSpectrum from '../../voiceSpectrum'
 import { addPreventSwipeEvent, removePreventSwipeEvent } from '../../../libs/utils'
 
@@ -34,6 +35,7 @@ const LessonRecord = ({ lessonID }) => {
   const drawingRef = useRef()
   const lesson = useLesson(lessonID)
   const { hasResize } = useResizeDetector(containerRef)
+  const isTouchDevice = useTouchDeviceDetector()
   const [isLoading, setIsLoading] = useState(true)
   const [bgImageURL, setBgImageURL] = useState()
   const [selectedGraphic, setSelectedGraphic] = useState()
@@ -61,22 +63,24 @@ const LessonRecord = ({ lessonID }) => {
         enablePen={enablePen} setEnablePen={setEnablePen} enableEraser={enableEraser} setEnableEraser={setEnableEraser} undoDrawing={undoDrawing} clearDrawing={clearDrawing} drawingColor={drawingColor} setDrawingColor={setDrawingColor}
         drawingLineWidth={drawingLineWidth} setDrawingLineWidth={setDrawingLineWidth} isShowControlPanel={isShowControlPanel} setIsShowControlPanel={setIsShowControlPanel} />
       <main css={mainStyle} onDragOver={handleAreaDragOver} onDragLeave={handleAreaDragLeave} onDrop={handleAreaDrop} ref={containerRef}>
-        <div css={bodyStyle}>
-          <Aspect16To9Container>
-            <LoadingIndicator isLoading={isLoading} size={15} />
-            <VoiceSpectrum isShow={isShowVoiceSpectrum} setIsShow={setIsShowVoiceSpectrum} canvasRef={audioVisualizerRef} />
-            <LessonBackgroundImage url={bgImageURL} />
-            <LessonGraphic graphic={selectedGraphic} />
-            <LessonAvatar ref={avatarRef} onMouseDown={startDragging} onMouseMove={inDragging} onMouseUp={endDragging} onMouseLeave={endDragging}
-              onTouchStart={startDragging} onTouchMove={inDragging} onTouchEnd={endDragging} onTouchCancel={endDragging} />
-            <LessonDrawing isHide={isDrawingHide} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing} drawingRef={drawingRef} zKind='drawing' />
-            <SettingPanel isShow={isShowControlPanel} setIsShow={setIsShowControlPanel} bgImages={bgImages} setBgImageURL={setBgImageURL}
-              avatars={avatars} setAvatarConfig={setAvatarConfig} cleanAvatar={cleanAvatar} setMicDeviceID={setMicDeviceID} silenceThresholdSec={silenceThresholdSec}
-              setSilenceThresholdSec={setSilenceThresholdSec} isShowVoiceSpectrum={isShowVoiceSpectrum} setIsShowVoiceSpectrum={setIsShowVoiceSpectrum} />
-          </Aspect16To9Container>
+        <div css={backgroundStyle}>
+          <div css={bodyStyle}>
+            <Aspect16To9Container>
+              <LoadingIndicator isLoading={isLoading} size={15} />
+              <VoiceSpectrum isShow={isShowVoiceSpectrum} setIsShow={setIsShowVoiceSpectrum} canvasRef={audioVisualizerRef} />
+              <LessonBackgroundImage url={bgImageURL} />
+              <LessonGraphic graphic={selectedGraphic} />
+              <LessonAvatar ref={avatarRef} onMouseDown={startDragging} onMouseMove={inDragging} onMouseUp={endDragging} onMouseLeave={endDragging}
+                onTouchStart={startDragging} onTouchMove={inDragging} onTouchEnd={endDragging} onTouchCancel={endDragging} />
+              <LessonDrawing isHide={isDrawingHide} startDrawing={startDrawing} inDrawing={inDrawing} endDrawing={endDrawing} drawingRef={drawingRef} zKind='drawing' />
+              <SettingPanel isShow={isShowControlPanel} setIsShow={setIsShowControlPanel} bgImages={bgImages} setBgImageURL={setBgImageURL}
+                avatars={avatars} setAvatarConfig={setAvatarConfig} cleanAvatar={cleanAvatar} setMicDeviceID={setMicDeviceID} silenceThresholdSec={silenceThresholdSec}
+                setSilenceThresholdSec={setSilenceThresholdSec} isShowVoiceSpectrum={isShowVoiceSpectrum} setIsShowVoiceSpectrum={setIsShowVoiceSpectrum} />
+            </Aspect16To9Container>
+          </div>
         </div>
-        <LessonRecordGraphicController lessonID={lessonID} setSelectedGraphic={setSelectedGraphic} initialGraphics={graphics} hasDragOver={hasDragOver} />
-        <LessonRandomTips />
+        <LessonRecordGraphicController lessonID={lessonID} setSelectedGraphic={setSelectedGraphic} initialGraphics={graphics} hasDragOver={hasDragOver} isTouchDevice={isTouchDevice} />
+        <RandomTips />
       </main>
     </>
   )
@@ -89,8 +93,12 @@ const mainStyle = css({
   width: '100%',
   height: '100%',
   marginTop: '60px',
-  backgroundColor: 'var(--back-movie-black)',
+  backgroundColor: 'var(--bg-light-gray)',
   userSelect: 'none',
+})
+
+const backgroundStyle = css({
+  backgroundColor: 'var(--back-movie-black)',
 })
 
 const bodyStyle = css({

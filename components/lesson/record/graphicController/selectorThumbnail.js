@@ -3,15 +3,17 @@ import React, { useRef, useState } from 'react'
 import { css } from '@emotion/core'
 import LoadingIndicator from '../../../loadingIndicator'
 
-export default function SelectorThumbnail({ image, onClick, onRemoveClick, isSelected, isFinishing }) {
+export default function SelectorThumbnail({ image, onClick, onRemoveClick, isSelected, isFinishing, isTouchDevice }) {
   const imageRef = useRef()
-  const [isHover, setIsHover] = useState(false)
+  const [isHover, setIsHover] = useState(isTouchDevice)
 
   function handleMouseEnter() {
+    if (isTouchDevice) return
     setIsHover(true)
   }
 
-  function hanldeMouseLeave( ){
+  function hanldeMouseLeave() {
+    if (isTouchDevice) return
     setIsHover(false)
   }
 
@@ -42,9 +44,9 @@ export default function SelectorThumbnail({ image, onClick, onRemoveClick, isSel
     alignItems: 'center',
     padding: 0,
     border: 'none',
-    opacity: '0.5',
+    opacity: isTouchDevice ? 1 : 0.5,
     ':hover': {
-      opacity: '1',
+      opacity: 1,
     },
   })
 

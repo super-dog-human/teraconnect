@@ -36,6 +36,8 @@ export default function SettingPanel({ isShow, setIsShow, bgImages, setBgImageUR
     maxWidth: '700px',
     backgroundColor: 'var(--dark-gray)',
     borderRadius: '5px',
+    filter: 'drop-shadow(2px 2px 2px gray)',
+    willChange: 'filter', // safariの描画ゴミ抑止のためGPUを使用する
   })
 
   return (
