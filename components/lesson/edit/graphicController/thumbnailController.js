@@ -26,13 +26,12 @@ export default function ThumbnailController({ graphicID, graphic, swapGraphic, r
   }
 
   function handleMenuClick(e) {
+    const { x, y } = e.currentTarget.getBoundingClientRect()
     setContextMenu({
       labels: ['差し替え', '削除'],
       actions: [() => swapGraphic(graphicID), () => removeGraphic(graphicID)],
-      position: { fixed: false, x: e.pageX, y: e.pageY },
+      position: { fixed: false, x: x + 11, y: y + 22 + window.pageYOffset },
     })
-
-    e.stopPropagation()
   }
 
   function handleThumbnailClick(e) {
@@ -51,7 +50,7 @@ export default function ThumbnailController({ graphicID, graphic, swapGraphic, r
       </Container>
       {isButtonShow && <AbsoluteContainer right='3px' bottom='5px'>
         <Container width='22' height='22'>
-          <IconButton name='more' onMouseDown={handleMenuClick} />
+          <IconButton name='more' onMouseDown={handleMenuClick} onTouchEnd={handleMenuClick} />
         </Container>
       </AbsoluteContainer>}
     </div>
