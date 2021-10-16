@@ -10,7 +10,7 @@ export default function DialogHeader({ onCloseClick, closeButtonDisabled }) {
     <DragHandler>
       <AlignContainer textAlign='right'>
         <Container width='36' height='36' display='inline-block'>
-          <IconButton name={'close'} padding='10' onClick={onCloseClick} disabled={closeButtonDisabled} />
+          <IconButton name={'close'} padding='10' onClick={onCloseClick} onTouchEnd={onCloseClick} disabled={closeButtonDisabled} />
         </Container>
       </AlignContainer>
     </DragHandler>
