@@ -2,8 +2,8 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { css } from '@emotion/core'
 import useLesson from '../../../libs/hooks/lesson/useLesson'
-import useMobileDetector from '../../../libs/hooks/useMobileDetector'
 import useTouchDeviceDetector from '../../../libs/hooks/useTouchDeviceDetector'
+import useNarrowScreenDetector from '../../../libs/hooks/useNarrowScreenDetector'
 import useLessonCacheController from '../../../libs/hooks/lesson/edit/useLessonCacheController'
 import useLessonUpdater from '../../../libs/hooks/lesson/edit/useLessonUpdater'
 import { useContextMenuContext } from '../../../libs/contexts/contextMenuContext'
@@ -16,15 +16,17 @@ import ContextMenu from '../../contextMenu'
 import ImageViwer from '../../imageViewer'
 import Header from '../../authoringHeader'
 import Preview from './preview'
+import PreviewSwitchBar from './previewSwitchBar'
 import DurationTime from './durationTime'
 import GraphicController from './graphicController/'
 import Timeline from './timeline'
 
 export default function LessonEdit({ lessonID }) {
   const fetchedRef = useRef(false)
-  const isMobile = useMobileDetector()
   const isTouchDevice = useTouchDeviceDetector()
+  const isNarrowScreen = useNarrowScreenDetector()
   const [isLoading, setIsLoading] = useState(true)
+  const [showPreview, setShowPreview] = useState(true)
   const { clearDiffFlag, clearCache } = useLessonCacheController({ isLoading, lessonID })
   const lesson = useLesson(lessonID)
   const { contextMenu, handleDismiss } = useContextMenuContext()
@@ -33,33 +35,38 @@ export default function LessonEdit({ lessonID }) {
   useResourceReloader()
   useSessionExpireChecker()
 
+  const mainStyle = css({
+    width: '100%',
+    height: !isNarrowScreen && 'calc(100vh - 60px)', // ヘッダの分を差し引いた画面の高さいっぱいに要素を表示
+    marginTop: '60px',
+    backgroundColor: 'var(--bg-light-gray)',
+    userSelect: 'none',
+  })
+
   const bodyStyle = css({
     margin: 'auto',
     maxWidth: '1280px',
     height: '100%',
     display: 'flex',
-    flexDirection: isMobile ? 'column' : 'row',
+    gap: '10px',
+    flexDirection: isNarrowScreen ? 'column' : 'row',
   })
 
   const leftSideStyle = css({
-    display: 'flex',
+    display: !isNarrowScreen || showPreview ? 'flex' : 'none',
     flexDirection: 'column',
     flexGrow: 4,
-    maxWidth: isMobile ? '100%' : '450px',
+    maxWidth: isNarrowScreen ? '100%' : '450px',
     height: 'calc(100% - 80px)',
-    marginTop: '40px',
-    marginLeft: '10px',
-    marginBottom: '40px',
+    margin: '40px 10px',
   })
 
   const rightSideStyle = css({
+    display: !isNarrowScreen || !showPreview ? 'block' : 'none',
     flexGrow: 6,
-    maxWidth: isMobile ? '100%' : '830px',
+    maxWidth: isNarrowScreen ? '100%' : '830px',
     height: 'calc(100% - 80px)',
-    marginTop: '40px',
-    marginLeft: '50px',
-    marginRight: '10px',
-    marginBottom: '40px',
+    margin: '40px 10px',
   })
 
   useEffect(() => {
@@ -82,6 +89,7 @@ export default function LessonEdit({ lessonID }) {
       <Header currentPage='edit' showBadge={hasResourceDiff} isUpdating={isUpdating} updateLesson={updateLesson} discardLessonDraft={discardLessonDraft} moveToDashboard={moveToDashboard} />
       <main css={mainStyle}>
         <ImageViewerProvider>
+          {isNarrowScreen && <PreviewSwitchBar showPreview={showPreview} setShowPreview={setShowPreview} />}
           <div css={bodyStyle}>
             <div css={leftSideStyle}>
               <Preview lessonID={lessonID}/>
@@ -89,7 +97,7 @@ export default function LessonEdit({ lessonID }) {
               <GraphicController isTouchDevice={isTouchDevice} />
             </div>
             <div css={rightSideStyle}>
-              <Timeline isTouchDevice={isTouchDevice} />
+              <Timeline isTouchDevice={isTouchDevice} isNarrowScreen={isNarrowScreen} />
             </div>
           </div>
           <ImageViwer />
@@ -98,12 +106,3 @@ export default function LessonEdit({ lessonID }) {
     </>
   )
 }
-
-const mainStyle = css({
-  width: '100%',
-  height: 'calc(100vh - 60px)', // ヘッダの分を差し引いた画面の高さいっぱいに要素を表示
-  marginTop: '60px',
-  backgroundColor: 'var(--bg-light-gray)',
-  userSelect: 'none',
-})
-

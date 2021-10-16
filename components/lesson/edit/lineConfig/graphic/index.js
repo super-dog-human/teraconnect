@@ -13,7 +13,7 @@ import { useLessonEditorContext } from '../../../../../libs/contexts/lessonEdito
 export default function Graphic({ index, initialConfig, closeCallback }) {
   const [config, dispatchConfig] = useReducer(configReducer, initialConfig)
   const { graphicURLs, updateLine } = useLessonEditorContext()
-  const [invalidSelected, setInvalidSelected] = useState()
+  const [isInvalidSelected, setIsInvalidSelected] = useState(false)
 
   function configReducer(state, { type, payload }) {
     switch (type) {
@@ -39,6 +39,7 @@ export default function Graphic({ index, initialConfig, closeCallback }) {
   }
 
   function handleConfirm(changeAfterLineElapsedTime) {
+    if (isInvalidSelected) return
 
     if (config.action === 'hide') {
       delete config.graphicID
@@ -54,9 +55,9 @@ export default function Graphic({ index, initialConfig, closeCallback }) {
 
   useEffect(() => {
     if (config.action === 'show' && !config.graphicID) {
-      setInvalidSelected(true)
+      setIsInvalidSelected(true)
     } else {
-      setInvalidSelected(false)
+      setIsInvalidSelected(false)
     }
   }, [config])
 
@@ -88,7 +89,7 @@ export default function Graphic({ index, initialConfig, closeCallback }) {
 
       <Container height='60'>
         <ContainerSpacer left='50' right='50'>
-          <DialogFooter elapsedTime={config.elapsedTime} dispatchConfig={dispatchConfig} onConfirm={handleConfirm} onCancel={handleCancel} disabled={invalidSelected} />
+          <DialogFooter elapsedTime={config.elapsedTime} dispatchConfig={dispatchConfig} onConfirm={handleConfirm} onCancel={handleCancel} />
         </ContainerSpacer>
       </Container>
     </>

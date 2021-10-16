@@ -67,7 +67,9 @@ export default function VoiceRecorderTab({ setMicDeviceID, setSilenceThresholdSe
         </Container>
         <Container height='30'>
           <InputCheckbox id='spectrumCheckbox' size='18' borderColor='var(--border-gray)' checkColor='var(--soft-white)' checked={isShowVoiceSpectrum} onChange={handleSpectrumShowChange}>
-            <PlainText size='13' color='var(--border-gray)' lineHeight='30'>表示する</PlainText>
+            <Flex alignItems='center'>
+              <PlainText size='13' color='var(--border-gray)'>表示する</PlainText>
+            </Flex>
           </InputCheckbox>
         </Container>
       </Flex>

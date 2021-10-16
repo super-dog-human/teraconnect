@@ -47,10 +47,10 @@ export default function SynthesisVoiceConfig({ isProcessing, synthesisConfig, se
       <Spacer height='40' />
       <Row>
         <Col md={4}>
-          <Select options={SYNTHESIS_VOICE_LANGUAGE_NAMES} topLabel={null} value={synthesisConfig.languageCode} color={textColor} backgroundColor={backgroundColor} onChange={handleLanguageCodeChange} />
+          <Select size='14' options={SYNTHESIS_VOICE_LANGUAGE_NAMES} topLabel={null} value={synthesisConfig.languageCode} color={textColor} backgroundColor={backgroundColor} onChange={handleLanguageCodeChange} />
         </Col>
         <Col md={4}>
-          <Select options={voiceNames} topLabel={null} value={synthesisConfig.name} color={textColor} backgroundColor={backgroundColor} onChange={setName} />
+          <Select size='14' options={voiceNames} topLabel={null} value={synthesisConfig.name} color={textColor} backgroundColor={backgroundColor} onChange={setName} />
         </Col>
         <Col md={3}></Col>
         <Col md={1}>

@@ -20,7 +20,7 @@ import useUpdateSpeechLine from '../../../libs/hooks/lesson/edit/timeline/useUpd
 import useLineConfig from '../../../libs/hooks/lesson/edit/useLineConfig'
 import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorContext'
 
-export default function Timeline({ isTouchDevice }) {
+export default function Timeline({ isTouchDevice, isNarrowScreen }) {
   const dropLineRef = useRef()
   const lastTimesRef = useRef({})
   const { timeline, drawings, swapLine, updateLine } = useLessonEditorContext()
@@ -31,9 +31,9 @@ export default function Timeline({ isTouchDevice }) {
   return (
     <div css={bodyStyle}>
       <DropLine ref={dropLineRef} onDrop={handleChildDrop} />
-      <LineConfig lineConfig={lineConfig} setLineConfig={setLineConfig} />
+      <LineConfig lineConfig={lineConfig} setLineConfig={setLineConfig} isTouchDevice={isTouchDevice} />
       <DragSwappable onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd} onDrop={handleDrop}>
-        {Object.keys(timeline).length === 0 && <AddLineButton setLineConfig={setLineConfig} />}
+        {Object.keys(timeline).length === 0 && <AddLineButton isNarrowScreen={isNarrowScreen} setLineConfig={setLineConfig} />}
         {Object.keys(timeline).sort((a, b) => a - b).map((elapsedTime, i) => {
           if (i === 0) lastTimesRef.current = {}
           return (

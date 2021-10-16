@@ -28,12 +28,12 @@ export default function Music(props) {
         <Flex>
           <InputRadio id='embeddingPlay' name='graphicLine' size='16' color='var(--soft-white)'
             value='start' checked={config.action === 'start'} disabled={isProcessing} onChange={handleActionChange}>
-            <PlainText size='13' lineHeight='18' color='var(--soft-white)'>再生</PlainText>
+            <PlainText size='14' lineHeight='18' color='var(--soft-white)'>再生</PlainText>
           </InputRadio>
           <Spacer width='30' />
           <InputRadio id='embeddingStop' name='graphicLine' size='16' color='var(--soft-white)'
             value='stop' checked={config.action === 'stop'} disabled={isProcessing} onChange={handleActionChange}>
-            <PlainText size='13' lineHeight='18' color='var(--soft-white)'>停止</PlainText>
+            <PlainText size='14' lineHeight='18' color='var(--soft-white)'>停止</PlainText>
           </InputRadio>
         </Flex>
 
@@ -42,9 +42,11 @@ export default function Music(props) {
             <>
               <Spacer height='30' />
               <Flex>
-                <Container width='550'>
-                  <Select color='var(--soft-white)' options={musicOptions} topLabel={null} value={config.backgroundMusicID} onChange={handleMusicChange} />
-                </Container>
+                <FlexItem flexBasis='500px'>
+                  <Container height='30'>
+                    <Select size='15' color='var(--soft-white)' options={musicOptions} topLabel={null} value={config.backgroundMusicID} onChange={handleMusicChange} />
+                  </Container>
+                </FlexItem>
                 <Spacer width='20' />
                 <Container width='30' height='30'>
                   <IconButton name={isPlaying ? 'pause' : 'play'} backgroundColor='var(--dark-gray)' borderColor='var(--border-dark-gray)' padding='8' onClick={handlePlayClick} />
@@ -62,11 +64,15 @@ export default function Music(props) {
                   <Flex>
                     <Spacer width='10' />
                     <InputCheckbox id='fadeInCheckbox' size='15' borderColor='var(--border-gray)' checkColor='var(--soft-white)' checked={config.isFading} onChange={handleFadeChange}>
-                      <PlainText size='13' color='var(--soft-white)'>フェードイン</PlainText>
+                      <Flex alignItems='center'>
+                        <PlainText size='13' color='var(--soft-white)'>フェードイン</PlainText>
+                      </Flex>
                     </InputCheckbox>
                     <Spacer width='40' />
                     <InputCheckbox id='loopCheckbox' size='15' borderColor='var(--border-gray)' checkColor='var(--soft-white)' checked={config.isLoop} onChange={handleLoopChange}>
-                      <PlainText size='13' color='var(--soft-white)'>ループ</PlainText>
+                      <Flex alignItems='center'>
+                        <PlainText size='13' color='var(--soft-white)'>ループ</PlainText>
+                      </Flex>
                     </InputCheckbox>
                   </Flex>
                 </FlexItem>
@@ -96,7 +102,9 @@ export default function Music(props) {
             <ContainerSpacer left='10' right='10'>
               <Spacer height='30' />
               <InputCheckbox id='fadeInCheckbox' size='15' borderColor='var(--border-gray)' checkColor='var(--soft-white)' checked={config.isFading} onChange={handleFadeChange}>
-                <PlainText size='13' color='var(--soft-white)'>フェードアウト</PlainText>
+                <Flex alignItems='center'>
+                  <PlainText size='13' color='var(--soft-white)'>フェードアウト</PlainText>
+                </Flex>
               </InputCheckbox>
             </ContainerSpacer>
           }

@@ -12,7 +12,7 @@ import Music from './music/'
 import Speech from './speech/'
 import { useLessonEditorContext } from '../../../../libs/contexts/lessonEditorContext'
 
-export default function LineConfig({ lineConfig, setLineConfig }) {
+export default function LineConfig({ lineConfig, setLineConfig, isTouchDevice }) {
   const[isShow, setIsShow] = useState(false)
   const { deleteLine } = useLessonEditorContext()
 
@@ -35,12 +35,12 @@ export default function LineConfig({ lineConfig, setLineConfig }) {
   const dialogStyle = css({
     backgroundColor: 'var(--dark-gray)',
     position: 'absolute',
-    top: '30%',
-    left: 'calc(50% - 100px)',
+    top: '20%',
+    left: lineConfig.action === 'newLine' ? 'calc(50% - 300px)' : 'calc(50% - 350px)',
     borderRadius: '5px',
+    width: lineConfig.action === 'newLine' ? '600px' : '700px',
     filter: 'drop-shadow(2px 2px 2px gray)',
-    width: '80%',
-    maxWidth: lineConfig.action === 'newLine' ? '600px' : '700px',
+    willChange: 'filter', // safariの描画ゴミ抑止のためGPUを使用する
   })
 
   return (
@@ -48,7 +48,7 @@ export default function LineConfig({ lineConfig, setLineConfig }) {
       {isShow && <FullscreenContainer position='fixed' zKind='modal-panel'>
         <Draggable handle=".drag-handle">
           <div css={dialogStyle}>
-            {lineConfig.action === 'newLine'   && <NewLine elapsedTime={lineConfig.elapsedTime} setLineConfig={setLineConfig} /> }
+            {lineConfig.action === 'newLine'   && <NewLine elapsedTime={lineConfig.elapsedTime} setLineConfig={setLineConfig} isTouchDevice={isTouchDevice} /> }
             {lineConfig.action === 'avatar'    && <Avatar    index={lineConfig.index} initialConfig={lineConfig.line} closeCallback={handleClose} />}
             {lineConfig.action === 'drawing'   && <Drawing   index={lineConfig.index} initialConfig={lineConfig.line} closeCallback={handleClose} />}
             {lineConfig.action === 'embedding' && <Embedding index={lineConfig.index} initialConfig={lineConfig.line} closeCallback={handleClose} />}

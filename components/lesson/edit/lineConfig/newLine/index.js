@@ -11,7 +11,7 @@ import Icon from '../../../../icon'
 import DialogHeader from '../configDialog/dialogHeader'
 import useAddingNewLing from '../../../../../libs/hooks/lesson/edit/timeline/useAddingNewLine'
 
-export default function NewLine({ elapsedTime, setLineConfig }) {
+export default function NewLine({ elapsedTime, setLineConfig, isTouchDevice }) {
   const { addLineButtons, buttonDescription, handleMouseEnter, handleMouseLeave, handleButtonClick, handleCancel } = useAddingNewLing({ elapsedTime, setLineConfig })
 
   return (
@@ -46,12 +46,14 @@ export default function NewLine({ elapsedTime, setLineConfig }) {
           ))}
         </Flex>
       </ContainerSpacer>
-      <ContainerSpacer top='20' bottom='30' left='60' right='60'>
-        <Container height='30'>
-          <AlignContainer textAlign='center'>
-            <PlainText size='13' color='var(--soft-white)'>{buttonDescription}</PlainText>
-          </AlignContainer>
-        </Container>
+      <ContainerSpacer top={!isTouchDevice && '20'} bottom='30' left='60' right='60'>
+        {!isTouchDevice &&
+          <Container height='30'>
+            <AlignContainer textAlign='center'>
+              <PlainText size='13' color='var(--soft-white)'>{buttonDescription}</PlainText>
+            </AlignContainer>
+          </Container>
+        }
       </ContainerSpacer>
     </>
   )

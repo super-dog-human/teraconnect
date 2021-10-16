@@ -64,7 +64,9 @@ export default function DialogElapsedTime({ elapsedTime, dispatchConfig, isCheck
         {hasChangedElapsedTime &&
           <Flex>
             <InputCheckbox id='involveAfteLinesCheckbox' size='16' borderColor='var(--border-gray)' checkColor='var(--soft-white)' checked={isCheck} onChange={onCheckingChange}>
-              <PlainText size='11' color='var(--border-gray)'>後続の行にも時間変更を波及</PlainText>
+              <Flex alignItems='center'>
+                <PlainText size='11' color='var(--border-gray)'>後続の行にも時間変更を波及</PlainText>
+              </Flex>
             </InputCheckbox>
           </Flex>
         }

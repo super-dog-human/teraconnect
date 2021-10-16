@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useRef, useEffect } from 'react'
 import { css } from '@emotion/core'
+import useResizeDetector from '../../../libs/hooks/useResizeDetector'
 import LessonPlayer from '../player/'
 import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorContext'
 import useLessonPlayer from '../../../libs/hooks/lesson/useLessonPlayer'
@@ -11,13 +12,15 @@ import useYoutubePlayer from '../../../libs/hooks/lesson/player/useYouTubePlayer
 export default function Preview({ lessonID }) {
   const shouldResumeRef = useRef(false)
   const preCanPlayRef = useRef()
+  const containerRef = useRef()
+  const { hasResize } = useResizeDetector(containerRef)
   const [graphicURLs, setGraphicURLs] = useState({})
   const { durationSec, generalSetting, avatars, drawings, embeddings, graphics, graphicURLs: originalGraphicURLs, musics, musicURLs, speeches } = useLessonEditorContext()
   const { isLoading: isSpeechLoading, isPlaying: isSpeechPlaying, playSpeeches, stopSpeeches, updateSpeeches, seekSpeeches } = useSpeechesPlayer({ lessonID, durationSec, speeches })
   const { isLoading: isMusicLoading, isPlaying: isMusicPlaying, playMusics, stopMusics, updateMusics, seekMusics } = useMusicsPlayer({ durationSec, musics, musicURLs })
   const { isLoading: isYouTubeLoading, isPlaying: isYouTubePlaying, youTubeIDs, playYouTube, stopYouTube, updateYouTube, seekYoutube } = useYoutubePlayer({ durationSec, embeddings })
   const { isAvatarLoading, startPlaying, stopPlaying, handleSeekChange: handlePlayerSeekChange, isPlaying, ...playerProps } =
-    useLessonPlayer({ durationSec, avatar: generalSetting.avatar, avatarLightColor: generalSetting.avatarLightColor, avatars, drawings, embeddings, graphics, speeches, graphicURLs, updateSpeeches, updateMusics, updateYouTube })
+    useLessonPlayer({ durationSec, hasResize, avatar: generalSetting.avatar, avatarLightColor: generalSetting.avatarLightColor, avatars, drawings, embeddings, graphics, speeches, graphicURLs, updateSpeeches, updateMusics, updateYouTube })
 
   function handlePlayButtonClick() {
     if (isPlaying) {
@@ -72,7 +75,7 @@ export default function Preview({ lessonID }) {
   }, [isAvatarLoading, isSpeechLoading, isMusicLoading, isYouTubeLoading, isPlaying, isMusicPlaying, isSpeechPlaying, isYouTubePlaying, playSpeeches, playMusics, playYouTube, startPlaying, stopSpeeches, stopMusics, stopYouTube, stopPlaying])
 
   return (
-    <div css={bodyStyle}>
+    <div css={bodyStyle} ref={containerRef}>
       <LessonPlayer isLoading={isAvatarLoading || isSpeechLoading || isMusicLoading || isYouTubeLoading} isPlaying={isPlaying} isShowFullController={true}
         durationSec={durationSec} backgroundImageURL={generalSetting.backgroundImageURL} hasAvatars={true} hasDrawings={true} hasEmbedding={true}
         onPlayButtonClick={handlePlayButtonClick} onSeekChange={handleSeekChange} onSeekUp={handleSeekUp} youTubeIDs={youTubeIDs} {...playerProps} />
@@ -81,6 +84,5 @@ export default function Preview({ lessonID }) {
 }
 
 const bodyStyle = css({
-  width: '450px',
-  height: '253px',
+  width: '100%',
 })

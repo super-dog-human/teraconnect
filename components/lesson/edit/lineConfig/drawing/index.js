@@ -16,11 +16,11 @@ export default function Drawing({ index, initialConfig, closeCallback }) {
     <>
       <DialogHeader onCloseClick={handleCancel} closeButtonDisabled={isRecording} />
 
-      {initialActionRef.current === 'draw' &&
+      {selectedAction === 'draw' &&
         <DrawingEditor config={config} selectedAction={selectedAction} setSelectedAction={setSelectedAction} startElapsedTime={startElapsedTimeRef.current} sameTimeIndex={index}
           isRecording={isRecording} setIsRecording={setIsRecording} drawings={previewDrawings} setDrawings={setPreviewDrawings} />
       }
-      {initialActionRef.current !== 'draw' &&
+      {selectedAction !== 'draw' &&
         <DrawingActionEditor initialAction={initialActionRef.current} selectedAction={selectedAction} setSelectedAction={setSelectedAction} />
       }
       <Spacer height='30' />

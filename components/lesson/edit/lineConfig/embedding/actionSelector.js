@@ -21,7 +21,7 @@ export default function ActionSelector({ selectedAction, dispatchConfig, disable
           <Flex alignItems='center'>
             <InputRadio id={`embedding${label.action}`} name='embeddingLine' size='16' color='var(--soft-white)'
               value={label.action} checked={selectedAction === label.action} disabled={disabled} onChange={handleChange}>
-              <PlainText size='13' lineHeight='18' color='var(--soft-white)'>{label.body}</PlainText>
+              <PlainText size='14' lineHeight='18' color='var(--soft-white)'>{label.body}</PlainText>
             </InputRadio>
             <Spacer width='30' />
           </Flex>

@@ -69,7 +69,7 @@ const containerStyle = css({
 })
 
 const thumbnailStyle = css({
-  flex: 'calc(50% - 40px) 0',
+  width: '185px',
   margin: '15px 20px',
 })
 

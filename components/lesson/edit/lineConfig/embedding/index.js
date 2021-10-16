@@ -27,7 +27,7 @@ export default function Embedding(props) {
           <Spacer height='30' />
           {config.action === 'show' &&
             <Container width='150' height='30'>
-              <Select color='var(--soft-white)' value={config.serviceName} options={serviceOptions} topLabel={null} onChange={handleServiceChange} />
+              <Select size='15' color='var(--soft-white)' value={config.serviceName} options={serviceOptions} topLabel={null} onChange={handleServiceChange} />
             </Container>
           }
         </Flex>
