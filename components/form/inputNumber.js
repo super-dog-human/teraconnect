@@ -5,6 +5,7 @@ import { css } from '@emotion/core'
 const InputNumber = React.forwardRef(function inputNumber(props, ref) {
   const { size, color, textAlign, backgroundColor, borderColor, borderWidth, maxLength, ...inputProps } = props
   const bodyStyle = css({
+    WebkitAppearance: 'none',
     width: 'calc(100% - 2px)',
     height: '100%',
     fontSize: `${size}px`,
@@ -15,6 +16,7 @@ const InputNumber = React.forwardRef(function inputNumber(props, ref) {
     borderColor,
     borderWidth,
     borderStyle: 'solid',
+    borderRadius: 0,
     padding: '0px',
     margin: '0px',
     ':focus': {
