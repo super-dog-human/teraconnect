@@ -41,7 +41,7 @@ export default function Footer() {
   })
 
   return (
-    <footer css={backgroundStyle} className="footer-z">
+    <footer css={backgroundStyle}>
       <div css={bodyStyle}>
         <div css={logoStyle}>
           {!isLoading && !session && <div>

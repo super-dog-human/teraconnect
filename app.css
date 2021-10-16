@@ -122,15 +122,12 @@ button.light:hover {
   z-index: 10000;
 }
 .indicator-z {
-  z-index: 1300;
-}
-.context-menu-z {
   z-index: 1200;
 }
-.header-z {
+.context-menu-z {
   z-index: 1100;
 }
-.footer-z {
+.header-z {
   z-index: 1000;
 }
 .modal-panel-z {
