@@ -6,21 +6,6 @@ import PlainText from '../../../plainText'
 export default function ActionLabel({ kind, action }) {
   const [label, setLabel] = useState('')
 
-  const labelByKind = useCallback((kind, action) => {
-    switch(kind) {
-    case 'avatar':
-      return avatarLabel(action)
-    case 'drawing':
-      return drawingLabel(action)
-    case 'embedding':
-      return embeddingLabel(action)
-    case 'graphic':
-      return graphicLabel(action)
-    case 'music':
-      return musicLabel(action)
-    }
-  }, [avatarLabel, drawingLabel, embeddingLabel, graphicLabel, musicLabel])
-
   const avatarLabel = useCallback(() => {
     return 'アバター移動'
   }, [])
@@ -61,6 +46,21 @@ export default function ActionLabel({ kind, action }) {
       return 'BGMの停止'
     }
   }, [])
+
+  const labelByKind = useCallback((kind, action) => {
+    switch(kind) {
+    case 'avatar':
+      return avatarLabel(action)
+    case 'drawing':
+      return drawingLabel(action)
+    case 'embedding':
+      return embeddingLabel(action)
+    case 'graphic':
+      return graphicLabel(action)
+    case 'music':
+      return musicLabel(action)
+    }
+  }, [avatarLabel, drawingLabel, embeddingLabel, graphicLabel, musicLabel])
 
   useEffect(() => {
     setLabel(labelByKind(kind, action))
