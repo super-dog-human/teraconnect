@@ -6,14 +6,14 @@ export default function ContextMenu({ labels=[], actions=[], position={}, disabl
   const [isShow, setIsShow] = useState(false)
   const [menuPosition, setMenuPosition] = useState({})
   const menuRef = useRef()
-  const positionAdjustedRef = useRef(false)
+  const isPositionAdjustedRef = useRef(false)
 
   const bodyStyle = css({
     position: position.fixed ? 'fixed' : 'absolute',
     top: 0,
     left: 0,
-    width: '100vw',
-    height: '100vh',
+    width: `${document.body.scrollWidth}px`,
+    height: `${document.body.scrollHeight}px`,
     filter: 'drop-shadow(2px 2px 2px gray)',
     userSelect: 'none',
   })
@@ -32,7 +32,7 @@ export default function ContextMenu({ labels=[], actions=[], position={}, disabl
     if (Object.keys(labels).length > 0) {
       setMenuPosition({ x: position.x, y: position.y })
       setIsShow(true)
-      positionAdjustedRef.current = false
+      isPositionAdjustedRef.current = false
     } else {
       setIsShow(false)
     }
@@ -40,18 +40,18 @@ export default function ContextMenu({ labels=[], actions=[], position={}, disabl
 
   useEffect(() => {
     if (!isShow) return
-    if (positionAdjustedRef.current) return
-    positionAdjustedRef.current = true
+    if (isPositionAdjustedRef.current) return
+    isPositionAdjustedRef.current = true
 
     // 表示後にしかmenuRefのサイズが確定しないのでuseEffect内で表示位置を調整
     let x = menuPosition.x
     let y = menuPosition.y
-    if (window.innerWidth <= menuPosition.x + menuRef.current.clientWidth) {
-      x = window.innerWidth - menuRef.current.clientWidth
+    if (window.innerWidth <= menuPosition.x + menuRef.current.clientWidth - window.scrollX) {
+      x = window.innerWidth - menuRef.current.clientWidth + window.scrollX
     }
 
-    if (window.innerHeight <= menuPosition.y + menuRef.current.clientHeight) {
-      y = window.innerHeight - menuRef.current.clientHeight
+    if (window.innerHeight <= menuPosition.y + menuRef.current.clientHeight - window.scrollY) {
+      y = window.innerHeight - menuRef.current.clientHeight + window.scrollY
     }
 
     setMenuPosition({ x, y })
