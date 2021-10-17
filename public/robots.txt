@@ -1,5 +1,15 @@
 User-Agent: *
 Disallow: /
 Allow: /$
-Allow: /lessons/new$
-Allow: /how_to$
+Allow: /categories$
+Allow: /users$
+Allow: /search$
+Allow: /how_to_search$
+Allow: /how_to_create$
+Allow: /faq$
+Allow: /about$
+Allow: /license$
+Allow: /ours$
+Allow: /terms_of_use$
+Allow: /lessons/*$
+Disallow: /lessons/*/*$
