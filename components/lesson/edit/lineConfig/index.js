@@ -39,6 +39,7 @@ export default function LineConfig({ lineConfig, setLineConfig, isTouchDevice })
     left: lineConfig.action === 'newLine' ? 'calc(50% - 300px)' : 'calc(50% - 350px)',
     borderRadius: '5px',
     width: lineConfig.action === 'newLine' ? '600px' : '700px',
+    touchAction: 'none',
     filter: 'drop-shadow(2px 2px 2px gray)',
     willChange: 'filter', // safariの描画ゴミ抑止のためGPUを使用する
   })
