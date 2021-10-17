@@ -1,6 +1,6 @@
 import useFetch from './useFetch'
 
-export default function useSynthesisVoice(voiceSynthesisConfig) {
+export default function useSynthesisVoice(defaultConfig) {
   const { post } = useFetch()
 
   function createSynthesisVoiceFile({ lessonID, subtitle, synthesisConfig }) {
@@ -9,11 +9,11 @@ export default function useSynthesisVoice(voiceSynthesisConfig) {
     const request = {
       'lessonID': lessonID,
       'text': subtitle,
-      'languageCode': synthesisConfig?.languageCode || voiceSynthesisConfig.languageCode,
-      'name': synthesisConfig?.name || voiceSynthesisConfig.name,
-      'speakingRate': parseFloat(synthesisConfig?.speakingRate) || voiceSynthesisConfig.speakingRate,
-      'pitch': isNaN(pitch) ? voiceSynthesisConfig.pitch : pitch,                 // 0になりうる値は偽として評価されてしまうのでisNaNでチェック
-      'volumeGainDb': isNaN(volume) ? voiceSynthesisConfig.volumeGainDb : volume, // 同上
+      'languageCode': synthesisConfig?.languageCode || defaultConfig.languageCode,
+      'name': synthesisConfig?.name || defaultConfig.name,
+      'speakingRate': parseFloat(synthesisConfig?.speakingRate) || defaultConfig.speakingRate,
+      'pitch': isNaN(pitch) ? defaultConfig.pitch : pitch,                 // 0になりうる値は偽として評価されてしまうのでisNaNでチェック
+      'volumeGainDb': isNaN(volume) ? defaultConfig.volumeGainDb : volume, // 同上
     }
 
     return post('/synthesis_voice', request)

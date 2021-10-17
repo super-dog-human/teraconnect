@@ -43,7 +43,7 @@ export default function LessonPublishingForm({ isMobile, isIntroduction, lesson,
     handlePrevLessonChange, handleNextLessonChange, handleAddReferenceClick, handleRemoveReferenceClick, handleReferenceISBNBlur, handleReferenceNameBlur, handleBgImageChange, handleAvatarChange, handleColorChange } =
       useLessonPublishing({ lesson, material, onSubjectChange, avatars, allLessons, setting, dispatchSetting })
   const { setLanguageCode, setName, setSpeakingRate, setPitch, setVolumeGainDb, playVoice, isSynthesizing } =
-    useSynthesisVoiceEditor({ dispatchConfig: dispatchSetting, subtitle: sampleTextForSynthesisRef.current, synthesisConfig: setting.voiceSynthesisConfig, dispatchSetting })
+    useSynthesisVoiceEditor({ dispatchConfig: dispatchSetting, subtitle: sampleTextForSynthesisRef.current, synthesisConfig: setting.voiceSynthesisConfig, defaultSynthesisConfig: material.voiceSynthesisConfig })
 
   return (
     <>
