@@ -5,7 +5,7 @@ export default function useAddingNewLine({ elapsedTime, setLineConfig }) {
   const addLineButtons = [
     { kind: 'speech',    label: '音声',      description: 'マイクで音声を録音したり、合成音声を作成します。' },
     { kind: 'graphic',   label: '画像',      description: 'アップロードした画像を表示・非表示します。' },
-    { kind: 'drawing',   label: '板書',      description: '自由な線を描いたり消したりします。' },
+    { kind: 'drawing',   label: '板書',      description: 'フリーハンドで線を描いたり消したりします。' },
     { kind: 'avatar',    label: 'アバター',   description: 'アバターの位置や大きさを変更します。' },
     { kind: 'embedding', label: '埋め込み',   description: 'YouTubeやGeoGebraを授業内で再生します。' },
     { kind: 'music',     label: 'BGM',       description: '音楽を再生・停止します。' },
@@ -64,7 +64,7 @@ export default function useAddingNewLine({ elapsedTime, setLineConfig }) {
     })
 
     newLineRef.current = {}
-  }, [avatars, drawings, embeddings, graphics, musics, speeches])
+  }, [avatars, drawings, embeddings, graphics, musics, speeches, setLineConfig])
 
   return { addLineButtons, buttonDescription, handleMouseEnter, handleMouseLeave, handleButtonClick, handleCancel }
 }
