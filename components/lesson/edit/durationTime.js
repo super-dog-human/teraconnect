@@ -25,7 +25,7 @@ const bodyStyle = css({
   height: '70px',
   marginTop: '20px',
   textAlign: 'right',
-  color: 'gray', // fixme
+  color: 'gray',
 })
 
 const labelStyle = css({

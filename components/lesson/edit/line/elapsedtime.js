@@ -12,7 +12,7 @@ export default function ElapsedTime({ elapsedTime }) {
 }
 
 const bodyStyle = css({
-  color: 'lightGray', // fixme
+  color: 'gray',
   fontSize: '15px',
   lineHeight: '55px',
   letterSpacing: '1px',
