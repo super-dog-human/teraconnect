@@ -6,6 +6,7 @@ import useLessonPublishing from '../../../libs/hooks/lesson/publish/useLessonPub
 import useResourceLoader from '../../../libs/hooks/lesson/publish/useResourceLoader'
 import useSynthesisVoiceEditor from '../../../libs/hooks/lesson/useSynthesisVoiceEditor'
 import useSettingUpdater from '../../../libs/hooks/lesson/publish/useSettingUpdater'
+import useLessonDeleter from '../../../libs/hooks/lesson/publish/useLessonDeleter'
 import Container from '../../container'
 import ContainerSpacer from '../../containerSpacer'
 import Aspect16To9Container from '../../aspect16To9Container'
@@ -44,6 +45,7 @@ export default function LessonPublishingForm({ isMobile, isIntroduction, lesson,
       useLessonPublishing({ lesson, material, onSubjectChange, avatars, allLessons, setting, dispatchSetting })
   const { setLanguageCode, setName, setSpeakingRate, setPitch, setVolumeGainDb, playVoice, isSynthesizing } =
     useSynthesisVoiceEditor({ dispatchConfig: dispatchSetting, subtitle: sampleTextForSynthesisRef.current, synthesisConfig: setting.voiceSynthesisConfig, defaultSynthesisConfig: material.voiceSynthesisConfig })
+  const { handleDeleteClick } = useLessonDeleter({lessonID: lesson.id})
 
   return (
     <>
@@ -275,6 +277,20 @@ export default function LessonPublishingForm({ isMobile, isIntroduction, lesson,
             <SynthesisVoiceConfig isProcessing={isSynthesizing} synthesisConfig={setting.voiceSynthesisConfig} setLanguageCode={setLanguageCode} setName={setName}
               setSpeakingRate={setSpeakingRate} setPitch={setPitch} setVolumeGainDb={setVolumeGainDb} playVoice={playVoice} />
           </FormGroup>
+
+          {!isIntroduction &&
+            <FormGroup name='管理'>
+              <div css={centeringInFormStyle}>
+                <Flex justifyContent='center'>
+                  <Container width='140' height='40'>
+                    <LabelButton color='var(--error-red)' fontSize='14' onClick={handleDeleteClick}>
+                      授業を完全に削除
+                    </LabelButton>
+                  </Container>
+                </Flex>
+              </div>
+            </FormGroup>
+          }
         </TransitionContainer>
       </ContainerSpacer>
 
@@ -343,4 +359,8 @@ const pickerStyle = css({
     width: '100px',
     height: '120px',
   },
+})
+
+const centeringInFormStyle = css({
+  marginRight: '5%',
 })
