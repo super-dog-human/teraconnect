@@ -62,7 +62,7 @@ export default function Header({ currentPage, showBadge, isUpdating, updateLesso
                     <PlainText color='white' size='14' lineHeight='60' letterSpacing='5'>編集</PlainText>
                   </Flex>
                 </MenuLink>
-                <MenuLink isHover={isHover} page='publishing' currentPage={currentPage} path={`/lessons/${lessonIDRef.current}/publishing`}>
+                <MenuLink isHover={isHover} page='publish' currentPage={currentPage} path={`/lessons/${lessonIDRef.current}/publish`}>
                   <Flex justifyContent='center'>
                     <Container width='23' height='60'><Icon name='cloud-upload' /></Container>
                     <Spacer width='10' />

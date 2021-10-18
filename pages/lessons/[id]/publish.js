@@ -3,7 +3,7 @@ import Head from 'next/head'
 import getQueryParamsAsProps from '../../../libs/middlewares/getQueryParamsAsProps'
 import { ContextMenuProvider } from '../../../libs/contexts/contextMenuContext'
 import LayoutWithAuth from '../../../components/layoutWithAuth'
-import LessonPublishing from '../../../components/lesson/publishing'
+import LessonPublish from '../../../components/lesson/publish'
 
 const Page = ({ id }) => (
   <>
@@ -12,7 +12,7 @@ const Page = ({ id }) => (
     </Head>
     <LayoutWithAuth>
       <ContextMenuProvider>
-        <LessonPublishing lessonID={id} />
+        <LessonPublish lessonID={id} />
       </ContextMenuProvider>
     </LayoutWithAuth>
   </>

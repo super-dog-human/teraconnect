@@ -13,7 +13,7 @@ import Flex from '../../flex'
 import LoadingIndicator from '../../loadingIndicator'
 import LessonPublishingForm from './form'
 
-export default function LessonPublishing({ lessonID }) {
+export default function LessonPublish({ lessonID }) {
   useSessionExpireChecker()
   const isMobile = useMobileDetector()
   const lesson = useLesson(lessonID)
@@ -21,7 +21,7 @@ export default function LessonPublishing({ lessonID }) {
 
   return (
     <>
-      <Header currentPage='publishing' />
+      <Header currentPage='publish' />
       <main css={mainStyle}>
         <div css={bodyStyle}>
           <Spacer height='70' />
