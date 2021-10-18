@@ -1,4 +1,5 @@
 import { TEN_MB as maxFileByteSize, SUPPORTED_IMAGE_FILES } from './constants'
+import { extentionNameTo3Chars } from './utils'
 
 export function filterAvailableImages(files) {
   return Array.from(files)
@@ -44,4 +45,16 @@ export function dataURLToBlob(url, type) {
 
 export function isPublicThumbnail(url) {
   return url.startsWith(process.env.NEXT_PUBLIC_GOOGLE_STORAGE_BUCKET_URL)
+}
+
+export function requestNewGraphicsBody(lessonID, files) {
+  const fileRequests = files.map(file => {
+    return {
+      entity: 'graphic',
+      extension: extentionNameTo3Chars(file.type.substr(6)),
+      contentType: file.type
+    }
+  })
+
+  return { lessonID, fileRequests }
 }

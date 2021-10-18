@@ -3,10 +3,10 @@ import useFetch from '../../useFetch'
 import { putFile } from '../../../fetch'
 import { useRouter } from 'next/router'
 import { filterObject } from '../../../utils'
-import { filterAvailableImages, isAvailableFileSize } from '../../../graphicUtils'
+import { filterAvailableImages, isAvailableFileSize, requestNewGraphicsBody } from '../../../graphicUtils'
 
 export default function useGraphicController({ showDialog, showError, setGraphics, setGraphicURLs }) {
-  const { fetchWithAuth, post, createGraphics  } = useFetch()
+  const { fetchWithAuth, post  } = useFetch()
   const router = useRouter()
   const inputFileRef = useRef()
   const targetGraphicID = useRef()
@@ -120,7 +120,8 @@ export default function useGraphicController({ showDialog, showError, setGraphic
   }
 
   async function createNewGraphic(file) {
-    return createGraphics(lessonIDRef.current, filterAvailableImages([file])).catch(e => {
+    const body = requestNewGraphicsBody(lessonIDRef.current, filterAvailableImages([file]))
+    return post('/graphics', body).catch(e => {
       const err = new Error()
       err.dialog = {
         message: '新しい画像の作成に失敗しました。',

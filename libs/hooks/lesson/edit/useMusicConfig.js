@@ -3,7 +3,7 @@ import { useLessonEditorContext } from '../../../contexts/lessonEditorContext'
 import useAudioPlayer from '../../useAudioPlayer'
 import { useDialogContext } from '../../../contexts/dialogContext'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
-import useFetch from '../../../hooks/useFetch'
+import useFetch from '../../useFetch'
 import { putFile } from '../../../fetch'
 import { TEN_MB as maxFileByteSize } from '../../../constants'
 
@@ -14,9 +14,9 @@ export default function useMusicConfig({ index, initialConfig, closeCallback }) 
   const { isPlaying, createAudio, switchAudio, changeVolume } = useAudioPlayer()
   const inputFileRef = useRef()
   const [musicOptions, setMusicOptions] = useState([])
-  const { createMusic } = useFetch()
   const { showDialog } = useDialogContext()
   const { showError } = useErrorDialogContext()
+  const { post } = useFetch()
 
   function configReducer(state, { type, payload }) {
     switch (type) {
@@ -64,7 +64,7 @@ export default function useMusicConfig({ index, initialConfig, closeCallback }) 
     createNewMusic(file, fileName)
 
     function createNewMusic(file, fileName) {
-      createMusic(fileName).then(result => {
+      post('/background_musics', { name: fileName }).then(result => {
         uploadMusicFile(result, file, fileName)
       }).catch(e => {
         showError({

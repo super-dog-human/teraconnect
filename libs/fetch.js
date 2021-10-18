@@ -1,10 +1,10 @@
 import { default as isoFetch } from 'isomorphic-unfetch'
 
-export async function fetch(resource, option) {
+export async function fetch(resource, option, callback) {
   const url = process.env.NEXT_PUBLIC_TERACONNECT_API_URL + resource
   const response = await isoFetch(url, option)
-
   if (response.ok) {
+    if (callback) callback(response)
     return await response.json()
   }
 
@@ -14,18 +14,25 @@ export async function fetch(resource, option) {
   throw error
 }
 
-export async function fetchWithAuth(resource, cookie, option={}) {
-  return fetch(resource, {
-    headers: header(cookie),
-    credentials: 'include',
-    ...option
-  })
+export async function fetchWithAuth(resource, cookie, option={}, callback) {
+  return fetch(
+    resource,
+    {
+      headers: header(cookie), // サーバーからのリクエストではcookieを手動で付与する必要がある
+      credentials: 'include',  // クライアントからのリクエストでは自動でcookieが付与される
+      ...option
+    },
+    callback
+  )
 }
 
-export async function post(resource, body, method='POST', customHeader, option={}) {
+export async function post(resource, body, method='POST', option={}, csrfToken) {
+  const headers = header()
+  if (csrfToken) headers['X-CSRF-Token'] = csrfToken
+
   return fetch(resource, {
     method,
-    headers: customHeader || header(),
+    headers,
     body: JSON.stringify(body),
     credentials: 'include',
     ...option,

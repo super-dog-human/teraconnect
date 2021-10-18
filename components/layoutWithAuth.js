@@ -2,6 +2,7 @@
 import React from 'react'
 import { css } from '@emotion/core'
 import { useSession } from 'next-auth/client'
+import InputHidden from './form/inputHidden'
 import Container from './container'
 import TopLogoLink from './topLogoLink'
 import LoginForm from './loginForm'
@@ -15,6 +16,7 @@ const LayoutWithAuth = ({ children }) => {
     <>
       {!isLoading && isLoggedIn &&
         <>
+          <InputHidden id='csrfToken' />
           {children}
           <Footer />
         </>

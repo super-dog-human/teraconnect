@@ -6,8 +6,8 @@ import useSynthesisVoice from '../../useSynthesisVoice'
 import useAudioPlayer from '../../useAudioPlayer'
 import { isBlobURL } from '../../../utils'
 import fetch from 'isomorphic-unfetch'
+import useFetch from '../../useFetch'
 import { putFile } from '../../../fetch'
-import { createVoice } from '../../../postResource'
 import { wavToMp3 } from '../../../audioUtils'
 import { voiceURL } from '../../../speechUtils'
 
@@ -21,6 +21,7 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
   const [isProcessing, setIsProcessing] = useState(false)
   const { createSynthesisVoiceFile } = useSynthesisVoice(generalSetting.voiceSynthesisConfig)
   const { createAudio } = useAudioPlayer()
+  const { post } = useFetch()
 
   function configReducer(state, { type, payload }) {
     switch (type) {
@@ -140,7 +141,7 @@ export default function useSpeechConfig({ index, initialConfig, closeCallback })
     async function createHumanVoice(blobURL, elapsedTime, durationSec) {
       const file = await (await fetch(blobURL)).blob()
       const mp3File = (file.type === 'audio/wav') ? await wavToMp3(file) : file
-      const voice = await createVoice(elapsedTime, durationSec, lessonIDRef.current)
+      const voice = await post('/voice', { elapsedTime, durationSec, lessonID: lessonIDRef.current })
       await putFile(voice.signedURL, mp3File, mp3File.type)
       return voice
     }

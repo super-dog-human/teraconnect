@@ -3,7 +3,7 @@ import useFetch from '../../useFetch'
 import { putFile } from '../../../fetch'
 import { useRouter } from 'next/router'
 import { generateRandomID } from '../../../utils'
-import { filterAvailableImages, isAvailableFileSize, imageToThumbnailURL } from '../../../graphicUtils'
+import { filterAvailableImages, isAvailableFileSize, imageToThumbnailURL, requestNewGraphicsBody } from '../../../graphicUtils'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 
 const maxThumbnailSize = { width: 150, height: 95 }
@@ -15,7 +15,7 @@ export default function useGraphicUploader({ graphicURLs, setGraphicURLs }) {
   const graphicContainerRef = useRef()
   const inputMultiFileRef = useRef()
   const lessonIDRef = useRef(parseInt(router.query.id))
-  const { createGraphics } = useFetch()
+  const { post } = useFetch()
   const { showError } = useErrorDialogContext()
 
   function handleUploadButtonClick() {
@@ -56,7 +56,8 @@ export default function useGraphicUploader({ graphicURLs, setGraphicURLs }) {
   }
 
   function createNewGraphic(lessonID, files, tempIDs) {
-    createGraphics(lessonID, files).then(result => {
+    const body = requestNewGraphicsBody(lessonID, files)
+    post('/graphics', body).then(result => {
       uploadAndSetGraphics(files, tempIDs, result.signedURLs)
     }).catch(e => {
       showError({

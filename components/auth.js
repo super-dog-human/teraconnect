@@ -3,6 +3,7 @@ import React from 'react'
 import { css } from '@emotion/core'
 import { useSession } from 'next-auth/client'
 import { useRouter } from 'next/router'
+import InputHidden from './form/inputHidden'
 import LoginForm from './loginForm'
 
 const Auth = ({ children }) => {
@@ -12,6 +13,7 @@ const Auth = ({ children }) => {
 
   return (
     <div css={bodyStyle}>
+      <InputHidden id='csrfToken' />
       {!isLoading && isLoggedIn && children}
       {!isLoading && !isLoggedIn && <LoginForm isSignUp={router.query.sign_up === 'true'} />}
     </div>

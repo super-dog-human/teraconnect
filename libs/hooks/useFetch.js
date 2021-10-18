@@ -1,7 +1,5 @@
 import { useRef, useCallback, useEffect } from 'react'
 import { fetch as isoFetch, fetchWithAuth as isoFetchWithAuth, post as isoPost } from '../fetch'
-import { createVoice as isoCreateVoice, createGraphics as isoCreateGraphics, createMusic as isoCreateMusic } from '../postResource'
-
 const timeoutMillisec = 1000 * 60
 
 class TimeoutError extends Error {
@@ -41,24 +39,19 @@ export default function useFetch() {
     return requestWithAbortAndTimeout(signal => isoFetch(resource, { ...option, signal }))
   }, [requestWithAbortAndTimeout])
 
-  const fetchWithAuth = useCallback((resource, cookie) => {
-    return requestWithAbortAndTimeout(signal => isoFetchWithAuth(resource, cookie, { signal }))
+  const fetchWithAuth = useCallback(resource => {
+    const callback = response => {
+      const csrfToken = response.headers.get('x-csrf-token')
+      if (csrfToken) {
+        document.getElementById('csrfToken').value = csrfToken
+      }
+    }
+    return requestWithAbortAndTimeout(signal => isoFetchWithAuth(resource, null, { signal }, callback))
   }, [requestWithAbortAndTimeout])
 
-  const post = useCallback((resource, body, method='POST', header) => {
-    return requestWithAbortAndTimeout(signal => isoPost(resource, body, method, header, { signal }))
-  }, [requestWithAbortAndTimeout])
-
-  const createVoice = useCallback((elapsedTime, durationSec, lessonID) => {
-    return requestWithAbortAndTimeout(signal => isoCreateVoice(elapsedTime, durationSec, lessonID, { signal }))
-  }, [requestWithAbortAndTimeout])
-
-  const createGraphics = useCallback((lessonID, files) => {
-    return requestWithAbortAndTimeout(signal => isoCreateGraphics(lessonID, files, { signal }))
-  }, [requestWithAbortAndTimeout])
-
-  const createMusic = useCallback(fileName => {
-    return requestWithAbortAndTimeout(signal => isoCreateMusic(fileName, { signal }))
+  const post = useCallback((resource, body, method='POST') => {
+    const csrfToken = document.getElementById('csrfToken').value
+    return requestWithAbortAndTimeout(signal => isoPost(resource, body, method, { signal }, csrfToken))
   }, [requestWithAbortAndTimeout])
 
   useEffect(() => {
@@ -67,5 +60,5 @@ export default function useFetch() {
     }
   }, [])
 
-  return { fetch, fetchWithAuth, post, createVoice, createGraphics, createMusic }
+  return { fetch, fetchWithAuth, post }
 }

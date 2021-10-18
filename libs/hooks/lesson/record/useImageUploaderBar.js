@@ -2,7 +2,7 @@ import { useRef, useEffect } from 'react'
 import useFetch from '../../useFetch'
 import { putFile } from '../../../fetch'
 import { generateRandomID } from '../../../utils'
-import { filterAvailableImages, isAvailableFileSize, imageToThumbnailURL } from '../../../graphicUtils'
+import { filterAvailableImages, isAvailableFileSize, imageToThumbnailURL, requestNewGraphicsBody } from '../../../graphicUtils'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 
 const maxThumbnailSize = { width: 150, height: 95 }
@@ -10,7 +10,7 @@ const maxThumbnailSize = { width: 150, height: 95 }
 export default function useImageUploaderBar(lessonID, images, setImages, inputFileRef, selectImageBarRef) {
   const imageCountRef = useRef(0)
   const { showError } = useErrorDialogContext()
-  const { createGraphics } = useFetch()
+  const { post } = useFetch()
 
   function handleDrop(e) {
     uploadImages(e.dataTransfer.files)
@@ -56,7 +56,8 @@ export default function useImageUploaderBar(lessonID, images, setImages, inputFi
   }
 
   async function fetchURLsAndUpload(validFiles, temporaryIDs) {
-    createGraphics(parseInt(lessonID), validFiles).then(results => {
+    const body = requestNewGraphicsBody(parseInt(lessonID), validFiles)
+    post('/graphics', body).then(results => {
       results.signedURLs.forEach((r, i) => {
         const tmpID = temporaryIDs[i]
         uploadImage(validFiles[i], tmpID, r.fileID, r.signedURL)
