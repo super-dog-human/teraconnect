@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { Provider } from 'next-auth/client'
 import { ScreenClassProvider } from 'react-grid-system'
@@ -28,6 +29,9 @@ export default function App ({ Component, pageProps }) {
 
   return (
     <>
+      <Head>
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0" />
+      </Head>
       <Provider session={pageProps.session}>
         <ScreenClassProvider>
           <ErrorDialogProvider>

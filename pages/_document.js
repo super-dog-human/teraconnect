@@ -18,7 +18,6 @@ export default class MyDocument extends Document {
       <Html lang="ja-JP">
         <Head nonce={nonce}>
           <meta name="description" content="アバターを通じて簡単に授業を収録・編集し、公開できるプラットフォームです。" />
-          <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0" />
           <meta name="google-site-verification" content={process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION} />
           <meta httpEquiv="Content-Security-Policy" content={csp} />
           <script src='https://www.youtube.com/iframe_api' nonce={nonce} />
