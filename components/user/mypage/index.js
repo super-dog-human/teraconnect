@@ -38,9 +38,13 @@ export default function UserMyPage() {
             <Spacer height='30' />
             <Flex justifyContent='center'>
               <Container minHeight='20'>
-                <PlainText color='gray' size='14'>
-                  {user?.name}
-                </PlainText>
+                {
+                  <PageLink path={`/users/${user?.id}`}>
+                    <PlainText color='gray' size='14'>
+                      {user?.name}
+                    </PlainText>
+                  </PageLink>
+                }
               </Container>
             </Flex>
             <Spacer height='20' />
