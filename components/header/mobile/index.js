@@ -29,12 +29,14 @@ export default function MobileHeader() {
       {router.pathname === '/search' && <SearchBar handleMenuTouchEnd={handleMenuTouchEnd} />}
       {router.pathname !== '/search' &&
         <>
-          <PageLink path='/'>
-            <Flex justifyContent='center' alignItems='center'>
-              <Spacer height='60' />
-              <img src={'/img/logo_black.png'} srcSet={'/img/logo_black.png 1x, /img/logo_black@2x.png 2x'} alt='TERACONNECTロゴ' css={logoStyle} />
-            </Flex>
-          </PageLink>
+          <Flex justifyContent='center' alignItems='center'>
+            <Spacer height='60' />
+            <div css={logoContainerStyle}>
+              <PageLink path='/'>
+                <img src={'/img/logo_black.png'} srcSet={'/img/logo_black.png 1x, /img/logo_black@2x.png 2x'} alt='TERACONNECTロゴ' css={logoStyle} />
+              </PageLink>
+            </div>
+          </Flex>
           <AbsoluteContainer top='0' right='0'>
             <Flex alignItems='center'>
               <Spacer height='60'/>
@@ -57,6 +59,10 @@ const headerStyle = css({
   left: 0,
   backgroundColor: 'white',
   userSelect: 'none',
+})
+
+const logoContainerStyle = css({
+  fontSize: 0,
 })
 
 const logoStyle = css({
