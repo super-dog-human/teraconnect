@@ -7,8 +7,10 @@ import Container from '../container'
 import LoadingIndicator from '../loadingIndicator'
 import PlainText from '../plainText'
 import AlignContainer from '../alignContainer'
+import useTouchDeviceDetector from '../../libs/hooks/useTouchDeviceDetector'
 
 export default function IconWithBadgeButton({ name, padding, showBadge, badgeColor, badgeNum, badgeNumColor, disabled, isProcessing, onClick, onMouseDown }) {
+  const isTouchDevice = useTouchDeviceDetector()
   const bodyStyle = css({
     display: 'block',
     position: 'relative',
@@ -17,7 +19,7 @@ export default function IconWithBadgeButton({ name, padding, showBadge, badgeCol
     padding: padding ? `${padding}px` : '0px',
     fontSize: 0,
     'img': {
-      opacity: 0.7,
+      opacity: !isTouchDevice && 0.7,
     },
     ':hover img': {
       opacity: !disabled && 1,
