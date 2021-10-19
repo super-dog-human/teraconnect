@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
 import { css } from '@emotion/core'
+import useTouchDeviceDetector from '../../libs/hooks/useTouchDeviceDetector'
 import userUsers from '../../libs/hooks/user/useUsers'
 import Spacer from '../spacer'
 import PlainText from '../plainText'
@@ -10,8 +11,10 @@ import Flex from '../flex'
 import LoadingIndicator from '../loadingIndicator'
 import Hr from '../hr'
 import UserLine from './userLine'
+import MobileUserLine from './mobileUserLine'
 
 export default function Users() {
+  const isTouchDevice = useTouchDeviceDetector()
   const { isLoading, hasMore, terminationRef, users } = userUsers()
 
   return (
@@ -29,7 +32,8 @@ export default function Users() {
           <Spacer height='20' />
 
           {users.map((user, i) => <ContainerSpacer key={i} top='40' bottom='40'>
-            <UserLine user={user} />
+            {isTouchDevice && <MobileUserLine user={user} />}
+            {!isTouchDevice && <UserLine user={user} />}
           </ContainerSpacer>)}
 
           {hasMore &&
