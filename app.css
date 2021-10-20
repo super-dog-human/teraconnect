@@ -122,18 +122,21 @@ button.light:hover {
   z-index: 10000;
 }
 .indicator-z {
-  z-index: 1200;
+  z-index: 1300;
 }
 .context-menu-z {
-  z-index: 1100;
+  z-index: 1200;
 }
 .header-z {
-  z-index: 1000;
+  z-index: 1100;
 }
 .modal-panel-z {
-  z-index: 900;
+  z-index: 1000;
 }
 .overay-ui-z {
+  z-index: 900;
+}
+.footer-z {
   z-index: 800;
 }
 .subtitle-z {
