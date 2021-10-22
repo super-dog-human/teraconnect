@@ -25,7 +25,7 @@ export default function ShowUser({ user }) {
   return (
     <div css={backgroundStyle}>
       <ZContainer zIndex='0' position='fixed'>
-        <HeaderImage url={user.backgroundImageURL} user={user} />
+        <HeaderImage url={user.backgroundImageURL} user={user} isMobile={isMobile} />
       </ZContainer>
 
       <ZContainer zIndex='1'>

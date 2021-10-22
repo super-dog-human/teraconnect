@@ -8,7 +8,7 @@ import PlainText from '../../plainText'
 import Container from '../../container'
 import FlexItem from '../../flexItem'
 
-export default function HeaderImage({ url, user }) {
+export default function HeaderImage({ url, user, isMobile }) {
   const backgroundStyle = css({
     width: '100%',
     height: '250px',
@@ -30,7 +30,7 @@ export default function HeaderImage({ url, user }) {
           </Container>
         </FlexItem>
         <Spacer width='10' />
-        <PlainText size='35' color='white' fontWeight='bold'>
+        <PlainText size={isMobile ? '20' : '35'} color='white' fontWeight='bold'>
           <ColorFilter filter='drop-shadow(5px 5px 5px black)'>
             {user.name}
           </ColorFilter>
