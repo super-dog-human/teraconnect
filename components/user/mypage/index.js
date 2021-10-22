@@ -27,138 +27,150 @@ export default function UserMyPage() {
     <div css={backgroundStyle}>
       <Spacer height={isMobile ? '50' : '100'} />
 
-      <div css={userStyle}>
-        <Flex flexDirection={isMobile ? 'column' : 'row'} justifyContent='space-between' gap={!isMobile && '50px'}>
-          <FlexItem flexBasis='50%'>
-            <Flex justifyContent='center'>
-              <Container width='200' height='200'>
-                {!!user && <UserIcon id={user.id} />}
-              </Container>
-            </Flex>
-            <Spacer height='30' />
-            <Flex justifyContent='center'>
-              <Container minHeight='20'>
-                {
-                  <PageLink path={`/users/${user?.id}`}>
-                    <PlainText color='gray' size='14'>
-                      {user?.name}
-                    </PlainText>
-                  </PageLink>
-                }
-              </Container>
-            </Flex>
-            <Spacer height='20' />
-            <Flex justifyContent='center'>
-              <PageLink path='/users/edit'>
-                <Container height='22'>
-                  <Flex alignItems='center'>
-                    <Spacer height='22' />
-                    <Container width='15' height='15'>
-                      <Icon name='edit-gray' />
-                    </Container>
-                    <Spacer width='5' />
-                    <PlainText color='var(--text-dark-gray)' size='13'>
-                      プロフィール・自己紹介を編集
-                    </PlainText>
-                  </Flex>
-                </Container>
-              </PageLink>
-            </Flex>
-            <Spacer height='30' />
-          </FlexItem>
-          <FlexItem flexBasis='50%'>
-            <Container height='200'>
-              <Flex flexDirection='column' alignItems='strech'>
-                <Flex alignItems='center'>
-                  <Container width='200'>
-                    <PlainText color='gray' size='13'>合計再生回数</PlainText>
-                  </Container>
-                  <div css={fullWidthStyle}>
-                    <PlainText color='gray' size='45' fontWeight='bold'>-</PlainText>
-                    <Spacer width='10' />
-                    <Container width='30'>
-                      <PlainText color='gray' size='13'>回</PlainText>
-                    </Container>
-                    <Spacer width='10' />
-                  </div>
-                </Flex>
-                <Flex alignItems='baseline'>
-                  <Container width='200'>
-                    <PlainText color='gray' size='13'>完全再生率</PlainText>
-                  </Container>
-                  <div css={fullWidthStyle}>
-                    <PlainText color='gray' size='45' fontWeight='bold'>-</PlainText>
-                    <Spacer width='10' />
-                    <Container width='30'>
-                      <PlainText color='gray' size='13'>%</PlainText>
-                    </Container>
-                    <Spacer width='10' />
-                  </div>
-                </Flex>
-                <Flex alignItems='baseline'>
-                  <Container width='200'>
-                    <PlainText color='gray' size='13'>推薦獲得</PlainText>
-                  </Container>
-                  <div css={fullWidthStyle}>
-                    <PlainText color='gray' size='45' fontWeight='bold'>-</PlainText>
-                    <Spacer width='10' />
-                    <Container width='30'>
-                      <PlainText color='gray' size='13'>推薦</PlainText>
-                    </Container>
-                    <Spacer width='10' />
-                  </div>
-                </Flex>
-              </Flex>
-            </Container>
-          </FlexItem>
-        </Flex>
-      </div>
-
-      <ContainerSpacer top='50' bottom={isMobile ? '50' : '90'}>
-        {!isMobile &&
-          <>
-            <Flex justifyContent='center'>
-              <Container width='150' height='45'>
-                <PageLink path='/lessons/new'>
-                  <LabelButton fontSize='15' lineHeight='45' color='white' backgroundColor='var(--dark-purple)'>
-                    授業をつくる
-                  </LabelButton>
-                </PageLink>
-              </Container>
-            </Flex>
-            <Spacer height='30' />
-          </>
-        }
+      {!user && <>
         <Flex justifyContent='center'>
-          <Container width='110' height='30'>
-            <LabelButton fontSize='16' fontWeight='bold' color='var(--error-red)' onClick={() => signOut({ callbackUrl: '/' })}>ログアウト</LabelButton>
+          <Container width='50' height='50'>
+            <LoadingIndicator size='100' />
           </Container>
         </Flex>
-      </ContainerSpacer>
+      </>}
 
-      {lessons.length === 0 &&
-        <Container height='100'>
-          {isLoading && <LoadingIndicator size='30' />}
-          {!isLoading &&
-            <Flex justifyContent={isMobile && 'center'}>
-              {!isMobile && <Spacer width='50' />}
-              <PlainText size='15' color='gray'>授業はまだありません。</PlainText>
+      {!!user &&
+        <>
+          <div css={userStyle}>
+            <Flex flexDirection={isMobile ? 'column' : 'row'} justifyContent='space-between' gap={!isMobile && '50px'}>
+              <FlexItem flexBasis='50%'>
+                <Flex justifyContent='center'>
+                  <Container width='200' height='200'>
+                    {!!user && <UserIcon id={user.id} />}
+                  </Container>
+                </Flex>
+                <Spacer height='30' />
+                <Flex justifyContent='center'>
+                  <Container minHeight='20'>
+                    {
+                      <PageLink path={`/users/${user?.id}`}>
+                        <PlainText color='gray' size='14'>
+                          {user?.name}
+                        </PlainText>
+                      </PageLink>
+                    }
+                  </Container>
+                </Flex>
+                <Spacer height='20' />
+                <Flex justifyContent='center'>
+                  <PageLink path='/users/edit'>
+                    <Container height='22'>
+                      <Flex alignItems='center'>
+                        <Spacer height='22' />
+                        <Container width='15' height='15'>
+                          <Icon name='edit-gray' />
+                        </Container>
+                        <Spacer width='5' />
+                        <PlainText color='var(--text-dark-gray)' size='13'>
+                          プロフィール・自己紹介を編集
+                        </PlainText>
+                      </Flex>
+                    </Container>
+                  </PageLink>
+                </Flex>
+                <Spacer height='30' />
+              </FlexItem>
+              <FlexItem flexBasis='50%'>
+                <Container height='200'>
+                  <Flex flexDirection='column' alignItems='strech'>
+                    <Flex alignItems='center'>
+                      <Container width='200'>
+                        <PlainText color='gray' size='13'>合計再生回数</PlainText>
+                      </Container>
+                      <div css={fullWidthStyle}>
+                        <PlainText color='gray' size='45' fontWeight='bold'>-</PlainText>
+                        <Spacer width='10' />
+                        <Container width='30'>
+                          <PlainText color='gray' size='13'>回</PlainText>
+                        </Container>
+                        <Spacer width='10' />
+                      </div>
+                    </Flex>
+                    <Flex alignItems='baseline'>
+                      <Container width='200'>
+                        <PlainText color='gray' size='13'>完全再生率</PlainText>
+                      </Container>
+                      <div css={fullWidthStyle}>
+                        <PlainText color='gray' size='45' fontWeight='bold'>-</PlainText>
+                        <Spacer width='10' />
+                        <Container width='30'>
+                          <PlainText color='gray' size='13'>%</PlainText>
+                        </Container>
+                        <Spacer width='10' />
+                      </div>
+                    </Flex>
+                    <Flex alignItems='baseline'>
+                      <Container width='200'>
+                        <PlainText color='gray' size='13'>推薦獲得</PlainText>
+                      </Container>
+                      <div css={fullWidthStyle}>
+                        <PlainText color='gray' size='45' fontWeight='bold'>-</PlainText>
+                        <Spacer width='10' />
+                        <Container width='30'>
+                          <PlainText color='gray' size='13'>推薦</PlainText>
+                        </Container>
+                        <Spacer width='10' />
+                      </div>
+                    </Flex>
+                  </Flex>
+                </Container>
+              </FlexItem>
             </Flex>
+          </div>
+
+          <ContainerSpacer top='50' bottom={isMobile ? '50' : '90'}>
+            {!isMobile &&
+              <>
+                <Flex justifyContent='center'>
+                  <Container width='150' height='45'>
+                    <PageLink path='/lessons/new'>
+                      <LabelButton fontSize='15' lineHeight='45' color='white' backgroundColor='var(--dark-purple)'>
+                        授業をつくる
+                      </LabelButton>
+                    </PageLink>
+                  </Container>
+                </Flex>
+                <Spacer height='30' />
+              </>
+            }
+            <Flex justifyContent='center'>
+              <Container width='110' height='30'>
+                <LabelButton fontSize='16' fontWeight='bold' color='var(--error-red)' onClick={() => signOut({ callbackUrl: '/' })}>ログアウト</LabelButton>
+              </Container>
+            </Flex>
+          </ContainerSpacer>
+
+          {lessons.length === 0 &&
+            <Container height='100'>
+              {isLoading && <LoadingIndicator size='30' />}
+              {!isLoading &&
+                <Flex justifyContent={isMobile && 'center'}>
+                  {!isMobile && <Spacer width='50' />}
+                  <PlainText size='15' color='gray'>授業はまだありません。</PlainText>
+                </Flex>
+              }
+            </Container>
           }
-        </Container>
-      }
 
-      {lessons.length > 0 &&
-        <ContainerSpacer left='20' right='20'>
-          {lessons.map((lesson, i) => (
-            <ContainerSpacer key={i} bottom='50'>
-              <LessonLine isMobile={isMobile} lesson={lesson} />
+          {lessons.length > 0 &&
+            <ContainerSpacer left='20' right='20'>
+              {lessons.map((lesson, i) => (
+                <ContainerSpacer key={i} bottom='50'>
+                  <LessonLine isMobile={isMobile} lesson={lesson} />
+                </ContainerSpacer>
+              ))}
             </ContainerSpacer>
-          ))}
-        </ContainerSpacer>
-      }
+          }
 
-      <Spacer height='50' />
+          <Spacer height='50' />
+        </>
+      }
     </div>
   )
 }
