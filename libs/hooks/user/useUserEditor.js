@@ -176,7 +176,6 @@ export default function useUserEditor(currentUser) {
     if (isNewUser) {
       router.push('/lessons/new?is_introduction=true')
     }
-    setIsNewUser(false)
     setIsUpdating(false)
     setIsUpdated(true)
   }
