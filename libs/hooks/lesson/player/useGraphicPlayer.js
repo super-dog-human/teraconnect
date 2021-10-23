@@ -6,9 +6,10 @@ export default function useGraphicPlayer({ elapsedTimeRef, graphics, graphicURLs
   const updateGraphic = useCallback(() => {
     const newGraphic = graphics.slice().reverse().find(g => g.elapsedTime <= elapsedTimeRef.current)
 
+    // requestAnimationFrame経由で呼ばれた場合、最新のstateが取得できないのでsetState中でgraphicを取得する。
     setGraphic(currentGraphic => {
-      // requestAnimationFrame経由で呼ばれた場合、最新のstateが取得できないのでsetState中でgraphicを取得する
-      if (newGraphic && newGraphic.action === 'show') {
+      // 編集画面で未確定の新規行はgraphicIDがないのでチェックする
+      if (newGraphic && newGraphic.action === 'show' && newGraphic.graphicID) {
         if (!currentGraphic || currentGraphic.id !== newGraphic.graphicID) {
           const url = graphicURLs[newGraphic.graphicID]
           return { id: newGraphic.graphicID, src: url }
