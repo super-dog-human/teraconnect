@@ -32,8 +32,8 @@ export default function Timeline({ isTouchDevice, isNarrowScreen }) {
     <div css={bodyStyle}>
       <DropLine ref={dropLineRef} onDrop={handleChildDrop} />
       <LineConfig lineConfig={lineConfig} setLineConfig={setLineConfig} isTouchDevice={isTouchDevice} />
+      {Object.keys(timeline).length === 0 && <AddLineButton isNarrowScreen={isNarrowScreen} setLineConfig={setLineConfig} />}
       <DragSwappable onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd} onDrop={handleDrop}>
-        {Object.keys(timeline).length === 0 && <AddLineButton isNarrowScreen={isNarrowScreen} setLineConfig={setLineConfig} />}
         {Object.keys(timeline).sort((a, b) => a - b).map((elapsedTime, i) => {
           if (i === 0) lastTimesRef.current = {}
           return (
