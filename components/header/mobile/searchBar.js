@@ -81,7 +81,7 @@ const SearchBar = ({ handleMenuTouchEnd, isSearchStalled, refine }) => {
                       <IconButton name='search' onTouchEnd={handleSearchButtonTouchEnd} />
                     }
                   </Container>
-                  <Container width='40'>
+                  <Container width='45'>
                     <IconButton name='menu' padding='11' onTouchEnd={handleMenuTouchEnd} />
                   </Container>
                 </Flex>
