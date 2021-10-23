@@ -64,7 +64,7 @@ export default function LessonEdit({ lessonID }) {
   const rightSideStyle = css({
     display: !isNarrowScreen || !showPreview ? 'block' : 'none',
     flexGrow: 6,
-    maxWidth: isNarrowScreen ? '100%' : '830px',
+    maxWidth: isNarrowScreen ? '100%' : '780px',
     height: 'calc(100% - 80px)',
     margin: '40px 10px',
   })
