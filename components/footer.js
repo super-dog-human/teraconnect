@@ -106,7 +106,7 @@ export default function Footer() {
           </ContainerSpacer>
           <ContainerSpacer top='5' bottom='5'>
             <PlainText size='14' lineHeight='25' whiteSpace='nowrap'>
-              <a href="https://goo.gl/forms/Rmp3dNKN7ZsDoF2k2">お問い合わせ</a>
+              <a href="https://forms.gle/xJxc7spEDEDxLBRY6">お問い合わせ</a>
             </PlainText>
           </ContainerSpacer>
         </FlexItem>
