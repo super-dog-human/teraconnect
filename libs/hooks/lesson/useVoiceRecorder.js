@@ -1,5 +1,6 @@
 import { useRef, useState, useCallback, useEffect } from 'react'
 import useMicrophone from '../useMicrophone'
+import useFetch from '../useFetch'
 import { bufferToWavFile }  from '../../audioUtils'
 
 export default function useVoiceRecorder({ needsUpload=true, lessonID, isRecording, realElapsedTime, createAnalyzer }) {
@@ -10,6 +11,7 @@ export default function useVoiceRecorder({ needsUpload=true, lessonID, isRecordi
   const [micDeviceID, setMicDeviceID] = useState()
   const [silenceThresholdSec, setSilenceThresholdSec] = useState(1.0)
   const [voiceFile, setVoiceFile] = useState()
+  const { post } = useFetch()
   const { isMicReady, setNode } = useMicrophone()
 
   const switchRecording = useCallback(() => {
@@ -25,6 +27,23 @@ export default function useVoiceRecorder({ needsUpload=true, lessonID, isRecordi
   const terminalUploader = useCallback(() => {
     uploaderRef.current.postMessage({ isTerminal: true })
   }, [])
+
+  const fetchSignedURL = useCallback(async (elapsedTime, durationSec) => {
+    const body = {
+      elapsedTime: parseFloat(elapsedTime.toFixed(3)),
+      durationSec: parseFloat(durationSec.toFixed(3)),
+      lessonID: parseInt(lessonID),
+    }
+    return await post('/voice', body)
+  }, [lessonID, post])
+
+  const uploadVoice = useCallback(body => {
+    fetchSignedURL(body.elapsedTime, body.durationSec).then(result => {
+      uploaderRef.current.postMessage({ newVoice: { ...body, signedURL: result.signedURL } })
+    }).catch(e => {
+      console.error(e) // エラーが起きたらこの声のアップロードは諦める
+    })
+  }, [fetchSignedURL])
 
   const handleRecorderMessage = useCallback(command => {
     Object.keys(command).forEach(async k => {
@@ -42,11 +61,7 @@ export default function useVoiceRecorder({ needsUpload=true, lessonID, isRecordi
         return
       }
     })
-  }, [needsUpload])
-
-  async function uploadVoice(body) {
-    uploaderRef.current.postMessage({ newVoice: body })
-  }
+  }, [needsUpload, uploadVoice])
 
   const updateSilenceThresholdSec = useCallback(() => {
     if(!recorderRef.current) return
@@ -55,7 +70,6 @@ export default function useVoiceRecorder({ needsUpload=true, lessonID, isRecordi
 
   useEffect(() => {
     uploaderRef.current = new Worker('/voiceUploader.js')
-    uploaderRef.current.postMessage({ initialize: { lessonID, apiURL: process.env.NEXT_PUBLIC_TERACONNECT_API_URL } })
 
     return () => {
       terminalCurrentRecorder()

@@ -5,23 +5,15 @@ const bitRate = 128
 const encodeBlockSize = 1152
 let mp3Encoder
 let uploadingCount = 0
-let lessonID
-let apiURL
 
 onmessage = async function(e) {
   Object.keys(e.data).forEach(async(k) => {
     switch(k) {
-    case 'initialize': {
-      lessonID = parseInt(e.data.initialize.lessonID)
-      apiURL = e.data.initialize.apiURL
-      return
-    }
     case 'newVoice': {
       uploadingCount += 1
 
-      const result = await fetchSignedURL(e.data.newVoice.elapsedTime, e.data.newVoice.durationSec)
       const file = await createMP3(e.data.newVoice.buffers, e.data.newVoice.sampleRate)
-      await uploadFile(result.signedURL, file)
+      await uploadFile(e.data.newVoice.signedURL, file)
       e.data = null
 
       uploadingCount -= 1
@@ -68,25 +60,6 @@ async function createMP3(rawData, sampleRate) {
   mp3Data.push(new Int8Array(mp3Encoder.flush()))
 
   return new Blob(mp3Data, { type: 'audio/mpeg' })
-}
-
-async function fetchSignedURL(elapsedTime, durationSec) {
-  const url = apiURL + '/voice'
-  const body = {
-    elapsedTime: parseFloat(elapsedTime.toFixed(3)),
-    durationSec: parseFloat(durationSec.toFixed(3)),
-    lessonID,
-  }
-  const option = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-    credentials: 'include',
-  }
-
-  const response = await unfetch(url, option)
-  if (!response.ok) throw new Error(response.statusText)
-  return response.json()
 }
 
 async function uploadFile(url, file) {
