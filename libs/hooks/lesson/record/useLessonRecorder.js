@@ -125,7 +125,6 @@ export default function useLessonRecorder() {
   }
 
   async function uploadLesson(lessonID, materialID) {
-    console.log('materialID', materialID)
     setIsFinishing(true)
 
     lessonRef.current.durationSec = elapsedFloatTime()
