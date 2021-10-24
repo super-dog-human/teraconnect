@@ -242,6 +242,7 @@ export default function LessonPublishingForm({ isMobile, isIntroduction, lesson,
           </Container>
         </Flex>
 
+        {!isExtendedOtherSetting && <Spacer height='50' />}
         <TransitionContainer isShow={isExtendedOtherSetting} duration={300}>
           <FormGroup name='背景・アバター'>
             <Flex>
@@ -294,8 +295,6 @@ export default function LessonPublishingForm({ isMobile, isIntroduction, lesson,
         </TransitionContainer>
       </ContainerSpacer>
 
-      <Spacer height='50' />
-
       <Flex justifyContent='center'>
         <Container width='120' height='40'>
           <LabelButton color='var(--soft-white)' fontSize='15' backgroundColor='var(--dark-purple)' disabled={isLoading || isUpdating || isDisabledPublsishing} onClick={handleSubmit(handleSubmitClick)}>
@@ -321,6 +320,8 @@ export default function LessonPublishingForm({ isMobile, isIntroduction, lesson,
           </FlashContainer>
         </Container>
       </Flex>
+
+      <Spacer height='50' />
     </>
   )
 }
