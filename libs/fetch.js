@@ -53,7 +53,6 @@ export async function fetchFile(url) {
   throw error
 }
 
-
 // Cloud Storageへのファイルアップロードのみに使用
 export async function putFile(url, body, contentType, option={}) {
   const response = await isoFetch(url, {
