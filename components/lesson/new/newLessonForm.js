@@ -45,7 +45,7 @@ export default function NewLessonForm({ user, subjects, categories, subjectDisab
               {(() => {
                 if (formErrors.subjectID) {
                   return '教科を選択してください。'
-                } else if (formErrors.categoryID) {
+                } else if (formErrors.japaneseCategoryID) {
                   return '単元を選択してください。'
                 } else if (formErrors.title) {
                   return 'タイトルを入力してください。'
