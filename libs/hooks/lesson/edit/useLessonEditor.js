@@ -101,7 +101,7 @@ export default function useLessonEditor() {
     return createTimeline(filterObject(material, ['avatars', 'drawings', 'embeddings', 'graphics', 'speeches', 'musics']))
 
     async function fetchAndSetSpeechWithVoice(material) {
-      const conditions = [!material.speeches, lessonRef.current.needsRecording, material.created === material.updated]
+      const conditions = [!material.speeches, lessonRef.current.needsRecording]
       if (conditions.every(v => v)) {
         const voices = await fetchWithAuth(`/voices?lesson_id=${lessonRef.current.id}`)
           .catch(e => {
