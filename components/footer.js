@@ -3,6 +3,7 @@ import React from 'react'
 import { css } from '@emotion/core'
 import { useSession } from 'next-auth/client'
 import useMobileDetector from '../libs/hooks/useMobileDetector'
+import Flex from './flex'
 import FlexItem from './flexItem'
 import PlainText from './plainText'
 import PageLink from './pageLink'
@@ -45,7 +46,9 @@ export default function Footer() {
       <div css={bodyStyle}>
         <div css={logoStyle}>
           {!isLoading && !session && <div>
-            <PlainText size='13' color='var(--text-gray)' whiteSpace='nowrap'>君の光をさがそう。</PlainText>
+            <Flex justifyContent='center'>
+              <PlainText size='13' color='var(--text-gray)' whiteSpace='nowrap'>君の光をさがそう。</PlainText>
+            </Flex>
             <Spacer height='15' />
             <PageLink path='/'>
               <img src="/img/logo_black.png" srcSet="/img/logo_black.png 1x, /img/logo_black@2x.png 2x" width="181" height="25" alt='TERACONNECTロゴ' />

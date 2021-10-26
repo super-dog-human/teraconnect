@@ -20,9 +20,19 @@ export default function About({ isShowNavigate }) {
       <ContainerSpacer left='50' right='50'>
         <Spacer height='100' />
 
-        <PlainText size='35'>
-          TERACONNECTで、できること。
-        </PlainText>
+        <div>
+          <PlainText size='35'>
+            TERACONNECTで、できること。
+          </PlainText>
+        </div>
+
+        <Spacer height='50' />
+
+        <div>
+          <PlainText size='18'>
+            TERACONNECTは、PCやタブレットで簡単に授業が作成・閲覧できる、授業公開プラットフォームです。
+          </PlainText>
+        </div>
 
         <Spacer height='100' />
 
@@ -39,8 +49,7 @@ export default function About({ isShowNavigate }) {
                 <Spacer height='30' />
                 <Flex justifyContent='right'>
                   <PlainText size='15'>
-                    TERACONNECTは、PCやタブレットで簡単に授業が作成・閲覧できる、<br />
-                    授業公開プラットフォームです。動画の1/10以下の通信量で、<br />
+                    動画の1/10以下の通信量を実現し、PCやスマートフォンなどを使って<br />
                     誰もが学習手段へアクセスできる環境を目指しています。
                   </PlainText>
                 </Flex>
