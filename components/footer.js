@@ -88,7 +88,7 @@ export default function Footer() {
           </ContainerSpacer>
           <ContainerSpacer top='5' bottom='5'>
             <PlainText size='14' lineHeight='25' whiteSpace='nowrap'>
-              <PageLink path="/">ライセンス表記</PageLink>
+              <PageLink path="/licenses">ライセンス表記</PageLink>
             </PlainText>
           </ContainerSpacer>
           <ContainerSpacer top='5' bottom='5'>
