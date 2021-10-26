@@ -12,4 +12,5 @@ Allow: /license$
 Allow: /ours$
 Allow: /terms_of_use$
 Allow: /lessons/*$
+Disallow: /lessons/*?view_key=
 Disallow: /lessons/*/*$
