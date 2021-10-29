@@ -65,24 +65,6 @@ export default function Footer() {
           }
         </div>
         <FlexItem>
-          <PlainText color='var(--border-gray)' size='16' fontWeight='bold' whiteSpace='nowrap'>使いかた</PlainText>
-          <ContainerSpacer top='10' bottom='5'>
-            <PlainText size='14' lineHeight='25' whiteSpace='nowrap'>
-              <PageLink path='/'>授業をさがす</PageLink>
-            </PlainText>
-          </ContainerSpacer>
-          <ContainerSpacer top='5' bottom='5'>
-            <PlainText size='14' lineHeight='25' whiteSpace='nowrap'>
-              <PageLink path='/'>授業をつくる</PageLink>
-            </PlainText>
-          </ContainerSpacer>
-          <ContainerSpacer top='5' bottom='5'>
-            <PlainText size='14' lineHeight='25' whiteSpace='nowrap'>
-              <PageLink path='/'>よくある質問</PageLink>
-            </PlainText>
-          </ContainerSpacer>
-        </FlexItem>
-        <FlexItem>
           <PlainText color='var(--border-gray)' size='16' fontWeight='bold' whiteSpace='nowrap'>サービスについて</PlainText>
           <ContainerSpacer top='10' bottom='5'>
             <PlainText size='14' lineHeight='25' whiteSpace='nowrap'>
@@ -94,9 +76,17 @@ export default function Footer() {
               <PageLink path="/licenses">ライセンス表記</PageLink>
             </PlainText>
           </ContainerSpacer>
+        </FlexItem>
+        <FlexItem>
+          <PlainText color='var(--border-gray)' size='16' fontWeight='bold' whiteSpace='nowrap'>使いかた</PlainText>
           <ContainerSpacer top='5' bottom='5'>
             <PlainText size='14' lineHeight='25' whiteSpace='nowrap'>
-              <PageLink path="/">運営者</PageLink>
+              <PageLink path='/how_to_record'>授業の収録</PageLink>
+            </PlainText>
+          </ContainerSpacer>
+          <ContainerSpacer top='5' bottom='5'>
+            <PlainText size='14' lineHeight='25' whiteSpace='nowrap'>
+              <PageLink path='/how_to_edit'>授業の編集</PageLink>
             </PlainText>
           </ContainerSpacer>
         </FlexItem>
@@ -110,6 +100,11 @@ export default function Footer() {
           <ContainerSpacer top='5' bottom='5'>
             <PlainText size='14' lineHeight='25' whiteSpace='nowrap'>
               <a href="https://forms.gle/xJxc7spEDEDxLBRY6">お問い合わせ</a>
+            </PlainText>
+          </ContainerSpacer>
+          <ContainerSpacer top='5' bottom='5'>
+            <PlainText size='14' lineHeight='25' whiteSpace='nowrap'>
+              <PageLink path="/">運営者</PageLink>
             </PlainText>
           </ContainerSpacer>
         </FlexItem>
