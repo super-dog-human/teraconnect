@@ -180,7 +180,6 @@ const HowToRecord = () => (
           <RecordImage name='10' alt='' />
         </div>
 
-
         <Spacer height='100' />
 
         <div>

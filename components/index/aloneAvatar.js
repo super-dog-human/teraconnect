@@ -70,7 +70,7 @@ export default function AloneAvatar() {
     const canvasStyle = avatarRef.current.children[0].style
     const opacity = parseFloat(canvasStyle.opacity) || 0
     if (opacity >= 1) return
-    canvasStyle.opacity = opacity + 0.01
+    canvasStyle.opacity = opacity + 0.02
     requestAnimationFrame(startAnimation)
   }, [avatarRef])
 

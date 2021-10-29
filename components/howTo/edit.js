@@ -71,7 +71,6 @@ const HowToEdit = () => (
           <EditImage name='4' alt='' />
         </div>
 
-
         <Spacer height='100' />
 
         <div>
@@ -280,7 +279,7 @@ const HowToEdit = () => (
         <Spacer height='50' />
 
         <div>
-          <DetailText>収録中は、描画ペン以外の操作が無効になります。収録を停止する際は、再度収録ボタンを押してください。</DetailText>
+          <DetailText>収録中は、描画以外の操作が無効になります。収録の停止は、再度収録ボタンを押してください。</DetailText>
           <EditImage name='17' alt='' />
         </div>
 
@@ -299,7 +298,6 @@ const HowToEdit = () => (
           <EditImage name='18' alt='' />
         </div>
 
-
         <Spacer height='100' />
 
         <div>
@@ -315,7 +313,6 @@ const HowToEdit = () => (
           <PlainText size='12'>※表示のみに対応しており、ボタンやプレーヤーを操作することはできません。</PlainText>
           <EditImage name='19' alt='' />
         </div>
-
 
         <Spacer height='100' />
 

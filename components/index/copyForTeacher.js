@@ -41,7 +41,7 @@ const CopyForTeacher = () => {
           <FlexItem flexBasis='40%'>
             <Container>
               <ContainerSpacer left={!isMobile && 20} right={!isMobile && 20} bottom='60'>
-                <img src="/img/pc_authoring.png" alt="Webブラウザで簡単に授業を作成・編集" css={authoringImageStyle} />
+                <img src="/img/pc_authoring.webp" srcSet="/img/pc_authoring.webp 1x, /img/pc_authoring@2x.webp 2x" width="487px" height="277px" alt="Webブラウザで簡単に授業を作成・編集" css={authoringImageStyle} />
               </ContainerSpacer>
             </Container>
           </FlexItem>
@@ -123,7 +123,7 @@ const CopyForTeacher = () => {
         <ContainerSpacer top='70' bottom='100'>
           <Flex justifyContent='center'>
             <Container width='170' height='55'>
-              <PageLink path='/lessons/new'>
+              <PageLink path='/dashboard'>
                 <LabelButton fontSize='18' lineHeight='55' color='white' backgroundColor='var(--dark-purple)'>
                   授業をつくる
                 </LabelButton>
@@ -132,7 +132,7 @@ const CopyForTeacher = () => {
           </Flex>
           <Spacer height='20' />
           <Flex justifyContent='center'>
-            <PageLink path='/'>
+            <PageLink path='/how_to_record'>
               <PlainText color='white' size='15'>
                 つくり方を見る
               </PlainText>
