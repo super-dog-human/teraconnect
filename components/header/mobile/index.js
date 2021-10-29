@@ -41,7 +41,7 @@ export default function MobileHeader() {
             <Flex alignItems='center'>
               <Spacer height='60'/>
               <Container width='45'>
-                <IconButton name='menu' padding='11' onTouchEnd={handleMenuTouchEnd} />
+                <IconButton name='menu' padding='11' onClick={handleMenuTouchEnd} />
               </Container>
             </Flex>
           </AbsoluteContainer>

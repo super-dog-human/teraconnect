@@ -87,11 +87,11 @@ export default function Menu({ isShow, setIsShow, currentPage }) {
 }
 
 const backgroundStyle = css({
-  positin: 'absolute',
-  top: '-60px',
+  position: 'fixed',
+  top: '60px',
   right: '0',
   width: '100vw',
-  height: 'calc(100vh - 60px)',
+  height: '100vh',
 })
 
 const bodyStyle = css({
