@@ -15,6 +15,7 @@ import useLessonPlayer from '../../../libs/hooks/lesson/useLessonPlayer'
 import usePlayer from '../../../libs/hooks/lesson/player/usePlayer'
 import useSpeechPlayer from '../../../libs/hooks/lesson/player/useSpeechPlayer'
 import useYoutubePlayer from '../../../libs/hooks/lesson/player/useYouTubePlayer'
+import useViewCounter from '../../../libs/hooks/lesson/player/useViewCounter'
 import useResizeDetector from '../../../libs/hooks/useResizeDetector'
 import useMobileDetector from '../../../libs/hooks/useMobileDetector'
 import { useDialogContext } from '../../../libs/contexts/dialogContext'
@@ -33,6 +34,7 @@ export default function Lesson({ id, viewKey }) {
   const { isLoading: isYouTubeLoading, isPlaying: isYouTubePlaying, youTubeIDs, playYouTube, stopYouTube, updateYouTube, seekYoutube } = useYoutubePlayer({ durationSec, embeddings })
   const { isPlaying, isAvatarLoading, initializeElapsedTime, startPlaying, stopPlaying, handleSeekChange: handlePlayerSeekChange, ...playerProps }
     = useLessonPlayer({ durationSec, hasResize, avatar: lesson?.avatar, avatarLightColor: lesson?.avatarLightColor, avatars, drawings, embeddings, graphics, speeches, graphicURLs, updateSpeeches: updateSpeeche, updateYouTube })
+  const startViewing = useViewCounter({ lesson })
 
   const handlePlayButtonClick = useCallback(() => {
     if (isPlaying) {
@@ -41,12 +43,13 @@ export default function Lesson({ id, viewKey }) {
       stopSpeech()
       stopYouTube()
     } else {
+      startViewing()
       startPlaying()
 
       playSpeech()
       playYouTube()
     }
-  }, [isPlaying, stopSpeech, stopYouTube, stopPlaying, startPlaying, playSpeech, playYouTube])
+  }, [isPlaying, startViewing, stopSpeech, stopYouTube, stopPlaying, startPlaying, playSpeech, playYouTube])
 
   function handleSeekChange(e) {
     handlePlayerSeekChange(e)

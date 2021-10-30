@@ -50,7 +50,8 @@ export default function useFetch() {
   }, [requestWithAbortAndTimeout])
 
   const post = useCallback((resource, body, method='POST') => {
-    const csrfToken = document.getElementById('csrfToken').value
+    const tokenElement = document.getElementById('csrfToken')
+    const csrfToken = tokenElement ? tokenElement.value : ''
     return requestWithAbortAndTimeout(signal => isoPost(resource, body, method, { signal }, csrfToken))
   }, [requestWithAbortAndTimeout])
 
