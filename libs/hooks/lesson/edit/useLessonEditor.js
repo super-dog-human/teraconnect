@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useCallback, useEffect } from 'react'
 import { useErrorDialogContext } from '../../../contexts/errorDialogContext'
 import { createTimeline } from '../../../lessonLineUtils'
 import { filterObject } from '../../../utils'
@@ -157,7 +157,7 @@ export default function useLessonEditor() {
     }
   }
 
-  function fetchMusicURLs() {
+  const fetchMusicURLs = useCallback(() => {
     fetchWithAuth('/background_musics').then(r => {
       setMusicURLs(r.reduce((acc, r) => {
         acc[r.id] = { name: r.name, url: r.url }
@@ -172,18 +172,22 @@ export default function useLessonEditor() {
       })
       console.error(e)
     })
-  }
+  }, [fetchWithAuth, showError])
 
-  function updateLessonDuration() {
+  const updateLessonDuration = useCallback(() => {
+    if (Object.keys(timeline).length === 0) {
+      setDurationSec(0)
+      return
+    }
+
     const totalDurationSec = Math.max(...Object.keys(timeline).map(elapsedTime => {
       const maxDurationSec = Math.max(...Object.keys(timeline[elapsedTime]).map(kind => (
         Math.max(...timeline[elapsedTime][kind].map(m => m.durationSec || 0))
       )))
       return parseFloat(elapsedTime) + maxDurationSec
     }))
-
     setDurationSec(totalDurationSec)
-  }
+  }, [timeline])
 
   function updateTimeline() {
     setTimeline(createTimeline({ avatars, drawings, embeddings, graphics, musics, speeches }))
@@ -191,12 +195,11 @@ export default function useLessonEditor() {
 
   useEffect(() => {
     fetchMusicURLs()
-  }, [])
+  }, [fetchMusicURLs])
 
   useEffect(() => {
-    if (Object.keys(timeline).length === 0) return
     updateLessonDuration()
-  }, [timeline])
+  }, [timeline, updateLessonDuration])
 
   useEffect(() => {
     if (isInitialLoading) return
