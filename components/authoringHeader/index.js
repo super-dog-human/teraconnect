@@ -48,7 +48,7 @@ export default function Header({ currentPage, showBadge, isUpdating, updateLesso
           <FlexItem flexBasis='40%'>
             <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
               <Flex justifyContent='space-between' gap='20px'>
-                <MenuLink isHover={isHover} page='analytics' currentPage={currentPage} path='/'>
+                <MenuLink isHover={isHover} page='analytics' currentPage={currentPage} path={`/lessons/${lessonIDRef.current}/analytics`}>
                   <Flex justifyContent='center'>
                     <Container width='20' height='60'><Icon name='analytics' /></Container>
                     <Spacer width='10' />
