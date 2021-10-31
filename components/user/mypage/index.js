@@ -84,7 +84,9 @@ export default function UserMyPage() {
                         <PlainText color='gray' size='13'>合計再生回数</PlainText>
                       </Container>
                       <div css={fullWidthStyle}>
-                        <PlainText color='gray' size='45' fontWeight='bold'>-</PlainText>
+                        <PlainText color='gray' size='45' fontWeight='bold'>
+                          {user.totalLessonViewCount >= 10 ? user.totalLessonViewCount.toLocaleString() : '-'}
+                        </PlainText>
                         <Spacer width='10' />
                         <Container width='30'>
                           <PlainText color='gray' size='13'>回</PlainText>
