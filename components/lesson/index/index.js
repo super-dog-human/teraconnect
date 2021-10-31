@@ -99,12 +99,13 @@ export default function Lesson({ id, viewKey }) {
       <Head>
         {!!lesson && `<title>${lesson.author.name} の ${lesson.title} - TERACONNECT</title>`}
         <meta name="twitter:card" content="player" />
-        <meta name="twitter:site" content="@TERACONNECT1" />
+        <meta name="twitter:site" content="TERACONNECT" />
         <meta name="twitter:title" content="あなたの光が、誰かを照らす - TERACONNECT" />
-        <meta name="twitter:image" content={`${process.env.NEXT_PUBLIC_TERACONNECT_FRONT_URL}/img/logo_black@2x.png`} />
         <meta name="twitter:player" content={`${process.env.NEXT_PUBLIC_TERACONNECT_FRONT_URL}/lessons/embed/${id}?view_key=${viewKey}`} />
+        <meta name="twitter:url" content={`${process.env.NEXT_PUBLIC_TERACONNECT_FRONT_URL}/lessons/${id}`} />
         <meta name="twitter:player:width" content="640" />
         <meta name="twitter:player:height" content="360" />
+        <meta name="og:image" content={`${process.env.NEXT_PUBLIC_TERACONNECT_FRONT_URL}/img/logo_square.png`} />
       </Head>
       <ImageViewerProvider>
         <div css={bodyStyle} ref={containerRef}>
