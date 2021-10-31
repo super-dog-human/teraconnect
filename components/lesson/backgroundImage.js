@@ -14,13 +14,12 @@ const bodyStyle = css({
   position: 'absolute',
   top: 0,
   fontSize: 0, // next/imageで出力されるトップレベルの要素がinline-blockなので余白をなくすために指定
+  width: '100%',
 })
 
 const imageStyle = css({
   width: '100%',
   height: 'auto',
-  maxWidth: '1280px',
-  maxHeight: '720px',
   objectFit: 'contain',
 })
 
