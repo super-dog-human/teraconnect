@@ -27,6 +27,7 @@ export default function useFetch() {
       request(abortController.signal).then(r => {
         resolve(r)
       }).catch(e => {
+        if (e.name === 'AbortError') return
         reject(e)
       }).finally(() => {
         clearTimeout(timeout)
