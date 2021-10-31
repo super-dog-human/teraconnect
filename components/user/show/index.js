@@ -75,9 +75,7 @@ export default function ShowUser({ user }) {
                   <ContainerSpacer left='10' right='10'>
                     <Flex flexDirection='column' gap='50px'>
                       {lessons.map((lesson, i) => (
-                        <ContainerSpacer key={i} bottom={isMobile && '30'}>
-                          <LessonLine isMobile={isMobile} lesson={lesson} />
-                        </ContainerSpacer>
+                        <LessonLine key={i} isMobile={isMobile} lesson={lesson} />
                       ))}
                     </Flex>
                   </ContainerSpacer>
