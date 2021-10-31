@@ -102,11 +102,6 @@ export default function Footer() {
               <a href="https://forms.gle/xJxc7spEDEDxLBRY6">お問い合わせ</a>
             </PlainText>
           </ContainerSpacer>
-          <ContainerSpacer top='5' bottom='5'>
-            <PlainText size='14' lineHeight='25' whiteSpace='nowrap'>
-              <PageLink path="/">運営者</PageLink>
-            </PlainText>
-          </ContainerSpacer>
         </FlexItem>
       </div>
     </footer>
