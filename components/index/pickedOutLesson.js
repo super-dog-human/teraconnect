@@ -2,10 +2,10 @@
 import React from 'react'
 import { css } from '@emotion/core'
 import Container from '../container'
-import Aspect16To9Container from '../aspect16To9Container'
 import Spacer from '../spacer'
 import PlainText from '../plainText'
 import ContainerSpacer from '../containerSpacer'
+import EmbedLesson from '../lesson/embed'
 
 const PickupedLesson = () => (
   <div css={containerStyle}>
@@ -35,7 +35,7 @@ const PickupedLesson = () => (
 
       <div css={thumbnailStyle}>
         <Container maxWidth='650'>
-          <Aspect16To9Container />
+          <EmbedLesson id='6206094825226240' />
         </Container>
       </div>
 
