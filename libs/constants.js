@@ -1,6 +1,6 @@
 export const RATIO_16_TO_9 = 0.5625
 export const ONE_DAY_SECONDS = 86400000
-export const GA_TRACKING_ID = 'UA-120790122-1'
+export const GA_TRACKING_ID = 'G-9PE3978HYD'
 export const SYNTHESIS_VOICE_LANGUAGE_NAMES = [
   { value: 'ja-JP', label: '日本語' },
   { value: 'en-US', label: '英語' },
