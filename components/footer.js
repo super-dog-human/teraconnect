@@ -28,7 +28,7 @@ export default function Footer() {
     margin: 'auto',
     display: 'flex',
     justifyContent: 'space-evenly',
-    alignItems: isMobile ? 'center' : 'start',
+    alignItems: 'center',
     flexWrap: 'wrap',
     flexDirection: isMobile ? 'column' : 'row',
     gap: '30px 0px',
