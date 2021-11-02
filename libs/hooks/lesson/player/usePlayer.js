@@ -84,7 +84,16 @@ export default function usePlayer({ id, viewKey, showDialog }) {
       setIsLoading(false)
       showDialog({
         title: '授業の準備中',
-        message: '授業を準備しています。10分ほど経ってから再度読み込んでください。',
+        message: '新しい授業を準備しています。10分ほど経ってから再度読み込んでください。',
+        canDismiss: true,
+      })
+    } else if (lesson?.published !== lesson?.updated) {
+      loadedRef.current = true
+
+      setIsLoading(false)
+      showDialog({
+        title: '授業の準備中',
+        message: '授業を更新中です。10分ほど経ってから再度読み込んでください。',
         canDismiss: true,
       })
     } else if (lesson) {
