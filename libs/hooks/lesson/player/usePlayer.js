@@ -33,7 +33,7 @@ export default function usePlayer({ id, viewKey, showDialog }) {
     let queryParams = graphicIDs.map(g => 'ids=' + g.graphicID).join('&')
     if (lesson.viewKey) queryParams += `&view_key=${lesson.viewKey}`
 
-    fetch(`/lessons/${lesson.id}/graphics?${queryParams}`).then(result => {
+    await fetch(`/lessons/${lesson.id}/graphics?${queryParams}`).then(result => {
       setGraphicURLs(result)
     }).catch(e => {
       console.error(e)
