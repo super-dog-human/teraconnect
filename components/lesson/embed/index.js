@@ -33,10 +33,12 @@ export default function EmbedLesson({ id, viewKey  }) {
       stopPlaying()
     } else {
       startViewing()
-      startPlaying()
 
+      // 下記の二つはelapsedTimeをplayerとは別で管理しているので、先にこちらを実行する
       playSpeech()
       playYouTube()
+
+      startPlaying()
     }
   }, [isPlaying, startViewing, stopSpeech, stopYouTube, stopPlaying, startPlaying, playSpeech, playYouTube])
 
