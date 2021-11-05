@@ -25,7 +25,7 @@ export default function EmbedLesson({ id, viewKey  }) {
     = useLessonPlayer({ durationSec, hasResize, avatar: lesson?.avatar, avatarLightColor: lesson?.avatarLightColor, avatars, drawings, embeddings, graphics, speeches, graphicURLs, updateSpeeches: updateSpeeche, updateYouTube })
   const startViewing = useViewCounter({ lesson })
 
-  const handlePlayButtonClick = useCallback(() => {
+  const handlePlayButtonClick = useCallback(async () => {
     if (isPlaying) {
       stopSpeech()
       stopYouTube()
@@ -35,7 +35,7 @@ export default function EmbedLesson({ id, viewKey  }) {
       startViewing()
 
       // 下記の二つはelapsedTimeをplayerとは別で管理しているので、先にこちらを実行する
-      playSpeech()
+      await playSpeech()
       playYouTube()
 
       startPlaying()
