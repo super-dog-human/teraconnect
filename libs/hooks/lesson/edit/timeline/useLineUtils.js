@@ -1,5 +1,5 @@
 export default function useLineUtils({ avatars, drawings, embeddings, graphics, musics, speeches,
-  setAvatars, setDrawings, setEmbeddings, setGraphics, setSpeeches, setMusics, timeline }) {
+  setAvatars, setDrawings, setEmbeddings, setGraphics, setSpeeches, setMusics }) {
 
   function shiftElapsedTime({ fromElapsedTime, offsetTime }) {
     allMaterialNames().forEach(kind => {
@@ -47,19 +47,6 @@ export default function useLineUtils({ avatars, drawings, embeddings, graphics, 
     })
   }
 
-  function lastTimeline() {
-    const lastElapsedTime = sortedElapsedTimes().slice(-1)[0]
-    return timeline[lastElapsedTime]
-  }
-
-  function sortedElapsedTimes() {
-    return Object.keys(timeline).sort((a, b) => a - b)
-  }
-
-  function maxDurationSecInLine(line) {
-    return Math.max(...Object.keys(line).flatMap(kind => line[kind].map(k => k.durationSec || 0)))
-  }
-
   function nextElapsedTime(elapsedTime) {
     const time = Math.min(...allMaterials().map(materials => (
       Math.min(...materials.map(m => m.elapsedTime).filter(e => e > elapsedTime))
@@ -101,6 +88,5 @@ export default function useLineUtils({ avatars, drawings, embeddings, graphics, 
     return [avatars, drawings, embeddings, graphics, musics, speeches]
   }
 
-  return { shiftElapsedTime, updateMaterial, deleteMaterial, lastTimeline, sortedElapsedTimes, maxDurationSecInLine,
-    nextElapsedTime, nextElapsedTimeByKind, calcTime, targetMaterial, allMaterialNames, allMaterials }
+  return { shiftElapsedTime, updateMaterial, deleteMaterial, nextElapsedTime, nextElapsedTimeByKind, targetMaterial, allMaterialNames, allMaterials }
 }

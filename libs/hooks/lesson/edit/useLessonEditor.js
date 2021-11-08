@@ -5,7 +5,6 @@ import { filterObject } from '../../../utils'
 import useAddingLine from './timeline/useAddingLine'
 import useUpdatingLine from './timeline/useUpdatingLine'
 import useDeletionLine from './timeline/useDeletionLine'
-import useSwappingLine from './timeline/useSwappingLine'
 import useLineUtils from './timeline/useLineUtils'
 import useFetch from '../../useFetch'
 import { isExistsCache, getCache } from '../../../localStorageUtil'
@@ -26,13 +25,12 @@ export default function useLessonEditor() {
   const [speeches, setSpeeches] = useState([])
   const { fetchWithAuth, post } = useFetch()
   const { showError } = useErrorDialogContext()
-  const { shiftElapsedTime, updateMaterial, deleteMaterial, lastTimeline, sortedElapsedTimes, maxDurationSecInLine, nextElapsedTime, nextElapsedTimeByKind, calcTime, targetMaterial, allMaterialNames, allMaterials } =
-    useLineUtils({ avatars, drawings, embeddings, graphics, musics, speeches, setAvatars, setDrawings, setEmbeddings, setGraphics, setSpeeches, setMusics, timeline })
+  const { shiftElapsedTime, updateMaterial, deleteMaterial, nextElapsedTime, nextElapsedTimeByKind, targetMaterial, allMaterialNames, allMaterials } =
+    useLineUtils({ avatars, drawings, embeddings, graphics, musics, speeches, setAvatars, setDrawings, setEmbeddings, setGraphics, setSpeeches, setMusics })
   const { addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast } =
     useAddingLine({ lessonRef, durationSec, targetMaterial })
   const { updateLine } = useUpdatingLine({ shiftElapsedTime, nextElapsedTimeByKind, updateMaterial, targetMaterial })
   const { deleteLine } = useDeletionLine({ shiftElapsedTime, nextElapsedTime, deleteMaterial, targetMaterial, allMaterialNames })
-  const { swapLine } = useSwappingLine({ lastTimeline, sortedElapsedTimes, maxDurationSecInLine, calcTime, targetMaterial, allMaterialNames })
 
   async function fetchResources(lesson) {
     lessonRef.current = lesson
@@ -208,5 +206,5 @@ export default function useLessonEditor() {
 
   return { isInitialLoading, lesson: lessonRef.current, fetchResources, durationSec, timeline, generalSetting, setGeneralSetting,
     avatars, drawings, embeddings, graphics, graphicURLs, musics, musicURLs, setMusicURLs, speeches, setEmbeddings, setGraphics, setGraphicURLs,
-    updateLine, deleteLine, swapLine, addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast }
+    updateLine, deleteLine, addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast }
 }

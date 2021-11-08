@@ -23,7 +23,6 @@ const LessonEditorContext = React.createContext({
   setGraphicURLs: () => {},
   updateLine: () => {},
   deleteLine: () => {},
-  swapLine: () => {},
   addAvatarLine: () => {},
   addDrawingLine: () => {},
   addEmbeddingLine: () => {},
@@ -36,13 +35,13 @@ const LessonEditorContext = React.createContext({
 const LessonEditorProvider = ({ children }) => {
   const { isInitialLoading, lesson, fetchResources, durationSec, timeline, generalSetting, setGeneralSetting,
     avatars, embeddings, graphics, graphicURLs, drawings, musics, musicURLs, setMusicURLs, speeches, setEmbeddings, setGraphics, setGraphicURLs,
-    updateLine, deleteLine, swapLine, addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast } = useLessonEditor()
+    updateLine, deleteLine, addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast } = useLessonEditor()
 
   return (
     <LessonEditorContext.Provider value={{
       isInitialLoading, lesson, fetchResources, durationSec, timeline, generalSetting, setGeneralSetting,
       avatars, embeddings, graphics, graphicURLs, drawings, musics, musicURLs, setMusicURLs, speeches, setEmbeddings, setGraphics, setGraphicURLs,
-      updateLine, deleteLine, swapLine, addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast
+      updateLine, deleteLine, addAvatarLine, addDrawingLine, addEmbeddingLine, addGraphicLine, addMusicLine, addSpeechLine, addSpeechLineToLast
     }}>
       {children}
     </LessonEditorContext.Provider>

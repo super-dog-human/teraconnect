@@ -1,14 +1,11 @@
 import React, { useRef } from 'react'
 
-export default function DragSwappable({ children, onDragStart, onDragOver, onDragEnd, onDrop, isSwapImmediately=false }) {
+export default function DragSwappable({ children, onDragOver }) {
   const indexRef = useRef()
   const prevTargetRef = useRef()
 
   function handleDragStart(e) {
     indexRef.current = targetIndex(e)
-
-    if (!onDragStart) return
-    onDragStart(e)
   }
 
   function handleDragOver(e) {
@@ -21,18 +18,7 @@ export default function DragSwappable({ children, onDragStart, onDragOver, onDra
     if (!onDragOver) return
     onDragOver(indexRef, currentIndex, e)
 
-    if (isSwapImmediately) indexRef.current = currentIndex
-  }
-
-  function handleDragEnd(e) {
-    if (!onDragEnd) return
-    onDragEnd(e)
-  }
-
-  function handleDrop(e) {
-    if (!onDrop) return
-
-    onDrop(indexRef.current, targetIndex(e))
+    indexRef.current = currentIndex
   }
 
   function targetIndex(e) {
@@ -42,7 +28,7 @@ export default function DragSwappable({ children, onDragStart, onDragOver, onDra
   return (
     <>
       {children.map((c, i) => (
-        <div key={i} data-index={i} onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd} onDrop={handleDrop} draggable={true}>
+        <div key={i} data-index={i} onDragStart={handleDragStart} onDragOver={handleDragOver} draggable={true}>
           {c}
         </div>
       ))}

@@ -39,7 +39,7 @@ export default function LessonRecordGraphicController({ lessonID, setSelectedGra
               </Col>
               <Col sm={8}>
                 <div css={selectImageBarStyle} ref={selectImageBarRef}>
-                  <DragSwappable onDragOver={moveImage} isSwapImmediately={true}>
+                  <DragSwappable onDragOver={moveImage}>
                     {images.map((image, i) =>
                       <SelectorThumbnail image={image} key={i} onClick={selectImage} onRemoveClick={removeImage} isSelected={image.id === imageID} isFinishing={isFinishing} isTouchDevice={isTouchDevice} />
                     )}
