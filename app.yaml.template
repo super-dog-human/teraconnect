@@ -1,7 +1,5 @@
 runtime: nodejs14
 service: default
-automatic_scaling:
-  min_instances: 1
 env_variables:
   NEXTAUTH_URL: ""
   GOOGLE_CLIENT_ID: ""
