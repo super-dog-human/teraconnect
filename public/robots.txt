@@ -4,12 +4,10 @@ Allow: /$
 Allow: /categories$
 Allow: /users$
 Allow: /search$
-Allow: /how_to_search$
-Allow: /how_to_create$
-Allow: /faq$
+Allow: /how_to_record$
+Allow: /how_to_edit$
 Allow: /about$
 Allow: /license$
-Allow: /ours$
 Allow: /terms_of_use$
 Allow: /lessons/*$
 Disallow: /lessons/*?view_key=
