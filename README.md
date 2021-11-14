@@ -19,8 +19,7 @@ $ python3 vreducer.py foo.vrm -s -t 64,64
 
 ```bash
 $ gcloud config set project teraconnect-staging
-$ mv .env.production .env.production.true
-$ mv .env.staging .env.production
+$ mv .env.production .env.production.true && mv .env.staging .env.production
 $ yarn build && gcloud app deploy --appyaml=app.staging.yaml -v stg0
 
 $ gcloud config set project teraconnect-209509
