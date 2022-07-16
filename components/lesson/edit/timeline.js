@@ -5,7 +5,7 @@ import ContainerSpacer from '../../containerSpacer'
 import AddLineButton from './addLineButton'
 import ElapsedTime from './line/elapsedTime'
 import LineConfig from './lineConfig/'
-import Hr from '../../hr'
+import TimeShifterLine from './timeShifter/line'
 import LessonLine from './line/'
 import LessonLineAvatar from './line/avatar'
 import LessonLineDrawing from './line/drawing'
@@ -51,7 +51,7 @@ export default function Timeline({ isTouchDevice, isNarrowScreen }) {
               </div>
             </div>
             {Object.keys(timeline).length - 1 > i && <ContainerSpacer left='60'>
-              <Hr color='#dedede' />
+              <TimeShifterLine />
             </ContainerSpacer>}
           </React.Fragment>
         )
