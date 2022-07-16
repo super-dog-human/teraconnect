@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
 import { css } from '@emotion/core'
-import { useSession } from 'next-auth/client'
+import { useSession } from 'next-auth/react'
 import Container from '../../container'
 import Spacer from '../../spacer'
 import TransitionContainer from '../../transition/transitionContainer'

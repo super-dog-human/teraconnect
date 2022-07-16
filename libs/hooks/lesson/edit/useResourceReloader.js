@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
-import { useSession } from 'next-auth/client'
+import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import useFetch from '../../useFetch'
 import { useLessonEditorContext } from '../../../contexts/lessonEditorContext'

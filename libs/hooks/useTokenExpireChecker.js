@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
-import { useSession, getSession } from 'next-auth/client'
+import { useSession, getSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 
 export default function useSessionExpireChecker() {

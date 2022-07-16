@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { Provider } from 'next-auth/client'
+import { Provider } from 'next-auth/react'
 import { ScreenClassProvider } from 'react-grid-system'
 import { ErrorDialogContext, ErrorDialogProvider } from '../libs/contexts/errorDialogContext'
 import ErrorBoundary from '../components/errorBoundary'

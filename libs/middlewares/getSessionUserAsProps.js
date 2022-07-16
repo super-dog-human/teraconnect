@@ -1,4 +1,4 @@
-import { getSession } from 'next-auth/client'
+import { getSession } from 'next-auth/react'
 
 export default async function getSessionUserAsProps(context) {
   const req = context.req
