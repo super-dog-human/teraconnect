@@ -23,7 +23,7 @@ import LabelButton from '../button/labelButton'
 export default function Header() {
   const router = useRouter()
   const screenClass = useScreenClass()
-  const [session, isLoading] = useSession()
+  const { data: session, status } = useSession()
   const [isHover, setIsHover] = useState(false)
   const [isSearchBoxFocus, setIsSearchBoxFocus] = useState(!!router.query.q)
   const [isShowMenus, setIsShowMenus] = useState(true)
@@ -92,7 +92,7 @@ export default function Header() {
                   <FlexItem flexBasis='150px'>
                     <ContainerSpacer left='30' right='10'>
                       <Container width='110'>
-                        {!isLoading && !session &&
+                        {status !== 'loading' && !session &&
                           <PageLink path='/dashboard'>
                             <Container width='110' height='39'>
                               <LabelButton fontSize='15' lineHeight='39' color='var(--text-dark-gray)' borderColor='var(--text-dark-gray)'>
@@ -101,7 +101,7 @@ export default function Header() {
                             </Container>
                           </PageLink>
                         }
-                        {!isLoading && session &&
+                        {status !== 'loading' && session &&
                           <PageLink path='/dashboard'>
                             <Container width='110' height='39'>
                               <LabelButton fontSize='15' lineHeight='39' color='white' backgroundColor='var(--dark-gray)' borderColor='var(--dark-gray)'>

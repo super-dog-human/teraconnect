@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { Provider } from 'next-auth/react'
+import { SessionProvider } from 'next-auth/react'
 import { ScreenClassProvider } from 'react-grid-system'
 import { ErrorDialogContext, ErrorDialogProvider } from '../libs/contexts/errorDialogContext'
 import ErrorBoundary from '../components/errorBoundary'
@@ -32,7 +32,7 @@ export default function App ({ Component, pageProps }) {
       <Head>
         <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0" />
       </Head>
-      <Provider session={pageProps.session}>
+      <SessionProvider session={pageProps.session}>
         <ScreenClassProvider>
           <ErrorDialogProvider>
             <DialogProvider>
@@ -48,7 +48,7 @@ export default function App ({ Component, pageProps }) {
             </DialogProvider>
           </ErrorDialogProvider>
         </ScreenClassProvider>
-      </Provider>
+      </SessionProvider>
     </>
   )
 }

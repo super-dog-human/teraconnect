@@ -9,19 +9,19 @@ import LoginForm from './loginForm'
 import Footer from './footer'
 
 const LayoutWithAuth = ({ children }) => {
-  const [session, isLoading] = useSession()
+  const { data: session, status } = useSession()
   const isLoggedIn = !!session?.user
 
   return (
     <>
-      {!isLoading && isLoggedIn &&
+      {status !== 'loading' && isLoggedIn &&
         <>
           <InputHidden id='csrfToken' />
           {children}
           <Footer />
         </>
       }
-      {!isLoading && !isLoggedIn &&
+      {status !== 'loading' && !isLoggedIn &&
       <>
         <header css={headerStyle}>
           <Container width='181'>

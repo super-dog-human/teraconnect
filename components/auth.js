@@ -7,15 +7,15 @@ import InputHidden from './form/inputHidden'
 import LoginForm from './loginForm'
 
 const Auth = ({ children }) => {
-  const [session, isLoading] = useSession()
+  const { data: session, status } = useSession()
   const isLoggedIn = !!session?.user
   const router = useRouter()
 
   return (
     <div css={bodyStyle}>
       <InputHidden id='csrfToken' />
-      {!isLoading && isLoggedIn && children}
-      {!isLoading && !isLoggedIn && <LoginForm isSignUp={router.query.sign_up === 'true'} />}
+      {status !== 'loading' && isLoggedIn && children}
+      {status !== 'loading' && !isLoggedIn && <LoginForm isSignUp={router.query.sign_up === 'true'} />}
     </div>
   )
 }
