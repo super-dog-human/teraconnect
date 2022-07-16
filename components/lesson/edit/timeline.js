@@ -67,7 +67,6 @@ const bodyStyle = css({
 })
 
 const lineStyle = css({
-  cursor: 'pointer',
   display: 'flex',
   paddingTop: '5px',
   paddingBottom: '5px',

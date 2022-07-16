@@ -18,7 +18,7 @@ const Licenses = () => (
         <Spacer height='50' />
 
         <div>
-          <PlainText color='gray' size='25'>
+          <PlainText color='gray' size='30'>
             画像
           </PlainText>
         </div>

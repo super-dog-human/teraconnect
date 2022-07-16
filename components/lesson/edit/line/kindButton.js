@@ -8,10 +8,11 @@ import LoadingIndicator from '../../../loadingIndicator'
 
 export default function KindButton({ kind, isLoading, isPlaying, status, onClick }) {
   const imageStyle = css({
+    cursor: 'pointer',
     width: '20px',
     filter: status ? isPlaying ? 'contrast(300%)' : 'grayscale(0)' : 'grayscale(1) brightness(180%)',
     ':hover': {
-      opacity: status ? '0.6' : '1',
+      opacity: status ? '0.8' : '1',
     },
   })
 

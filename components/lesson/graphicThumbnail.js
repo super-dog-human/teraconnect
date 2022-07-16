@@ -33,6 +33,7 @@ const imageStyle = css({
   width: '175px',
   height: '100px',
   objectFit: 'contain',
+  cursor: 'pointer',
 })
 
 export default GraphicThumbnail
