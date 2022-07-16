@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import { useSession } from 'next-auth/react'
 import InputHidden from './form/inputHidden'
 import Container from './container'

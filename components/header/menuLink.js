@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import Container from '../container'
 import AlignContainer from '../alignContainer'
 import PageLink from '../pageLink'

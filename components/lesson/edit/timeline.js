@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useRef } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import ContainerSpacer from '../../containerSpacer'
 import AddLineButton from './addLineButton'
 import ElapsedTime from './line/elapsedTime'

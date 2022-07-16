@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useRef, useState, useCallback, useEffect } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import useResizeDetector from '../../libs/hooks/useResizeDetector'
 import useAvatar from '../../libs/hooks/lesson/useAvatar'
 import Flex from '../flex'

@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import { useLessonRecorderContext } from '../../../../libs/contexts/lessonRecorderContext'
 import Flex from '../../../flex'
 import Container from '../../../container'

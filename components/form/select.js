@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 
 const Select = React.forwardRef((props, ref) => {
   const { options, topLabel, topValue, size, color, backgroundColor, ...selectProps } = props

@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 
 export default function RecordingIcon({ isRecording }) {
   const recordingStyle = css({

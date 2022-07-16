@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import useMobileDetector from '../../../libs/hooks/useMobileDetector'
 import useNarrowScreenDetector from '../../../libs/hooks/useNarrowScreenDetector'
 import useUserLessons from '../../../libs/hooks/user/useUserLessons'

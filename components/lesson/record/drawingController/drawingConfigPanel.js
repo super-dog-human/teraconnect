@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import Vr from '../../../Vr'
 import Spacer from '../../../spacer'
 import FullScreenContainer from '../../../fullscreenContainer'

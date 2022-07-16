@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 
 export default function TabContainer({ children, minHeight }) {
   const bodyStyle = css({

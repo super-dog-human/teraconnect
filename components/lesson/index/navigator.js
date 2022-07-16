@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import NavigatorItem from './navigatorItem'
 
 const lessonImageURL = process.env.NEXT_PUBLIC_GOOGLE_STORAGE_BUCKET_URL + '/lesson/'

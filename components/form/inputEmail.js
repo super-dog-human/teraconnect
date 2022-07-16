@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 
 const InputEmail = React.forwardRef(function inputEmail(props, ref) {
   const { size, color, textAlign, backgroundColor, borderColor, borderWidth, padding, ...inputProps } = props

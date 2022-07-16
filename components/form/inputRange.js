@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 
 const InputRange = React.forwardRef(function inputRange(props, ref) {
   const { color, ...inputProps } = props

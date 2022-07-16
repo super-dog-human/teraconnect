@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
 import { useRouter } from 'next/router'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import useLessonsByCategory from '../../../libs/hooks/lesson/useLessonsByCategory'
 import useTouchDeviceDetector from '../../../libs/hooks/useTouchDeviceDetector'
 import Flex from '../../flex'

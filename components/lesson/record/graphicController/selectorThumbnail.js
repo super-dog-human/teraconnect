@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useRef, useState } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import LoadingIndicator from '../../../loadingIndicator'
 
 export default function SelectorThumbnail({ image, onClick, onRemoveClick, isSelected, isFinishing, isTouchDevice }) {

@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import ErrorNotice from './errorNotice'
 
 export default function LessonLine({ hasError, kind, isLineProcessing, isTouchDevice, children }) {

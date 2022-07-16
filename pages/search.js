@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import { Configure, InstantSearch } from 'react-instantsearch-dom'
 import Head from 'next/head'
 import Layout from '../components/layout'

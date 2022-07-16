@@ -2,7 +2,7 @@
 import React from 'react'
 import Container from '../container'
 import IconButton from '../button/iconButton'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 
 export default function TabListWithCloseButton({ onClose, color, disabled, children }) {
   const tabListStyle = css({

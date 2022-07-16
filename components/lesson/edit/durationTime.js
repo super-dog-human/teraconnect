@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import { useLessonEditorContext } from '../../../libs/contexts/lessonEditorContext'
 import { floatSecondsToMinutesFormat } from '../../../libs/utils'
 import PlainText from '../../plainText'

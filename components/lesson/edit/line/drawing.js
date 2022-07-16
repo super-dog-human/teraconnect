@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import ContainerSpacer from '../../../containerSpacer'
 import DrawingPreview from './drawingPreview'
 import KindIcon from './kindIcon'

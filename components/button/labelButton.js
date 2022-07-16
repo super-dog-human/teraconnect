@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import useTouchDeviceDetector from '../../libs/hooks/useTouchDeviceDetector'
 
 export default function LabelButton(props) {

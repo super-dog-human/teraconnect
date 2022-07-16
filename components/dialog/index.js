@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useRef } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import { useDialogContext } from '../../libs/contexts/dialogContext'
 import DismissButton from './dismissButton'
 import ConfirmButton from './confirmButton'

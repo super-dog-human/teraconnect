@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import GraphicThumbnail from '../graphicThumbnail'
 import MobileGraphicThumbnail from './mobileGraphicThumbnail'
 import Container from '../../container'

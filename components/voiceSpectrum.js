@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useRef, useEffect } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import { Hidden } from 'react-grid-system'
 import Draggable from 'react-draggable'
 import useDraggableBounds from '../libs/hooks/useDraggableBounds'

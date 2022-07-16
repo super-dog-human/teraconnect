@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 
 export default function FlipIconButton({ name, flipName, backgroundColor, color, borderColor, padding='0', onClick }) {
   const [isHover, setIsHover] = useState(false)

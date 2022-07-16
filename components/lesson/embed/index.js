@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useRef, useCallback, useEffect } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import LessonPlayer from '../player/'
 import useLessonPlayer from '../../../libs/hooks/lesson/useLessonPlayer'
 import usePlayer from '../../../libs/hooks/lesson/player/usePlayer'

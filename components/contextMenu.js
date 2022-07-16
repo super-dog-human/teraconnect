@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useRef, useEffect } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 
 export default function ContextMenu({ labels=[], actions=[], position={}, disableMenuIndexes=[], handleDismiss }) {
   const [isShow, setIsShow] = useState(false)

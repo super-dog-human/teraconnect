@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import Flex from '../../../flex'
 import Container from '../../../container'
 import IconButton from '../../../button/iconButton'

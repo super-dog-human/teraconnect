@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import Container from '../../container'
 import LoadingIndicator from '../../loadingIndicator'
 import AbsoluteContainer from '../../absoluteContainer'

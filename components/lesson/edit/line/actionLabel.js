@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useCallback, useEffect } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import PlainText from '../../../plainText'
 
 export default function ActionLabel({ kind, action }) {

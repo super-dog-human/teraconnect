@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import Spacer from './spacer'
 import ContainerSpacer from './containerSpacer'
 import PlainText from './plainText'

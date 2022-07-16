@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useRef, useCallback, useEffect } from 'react'
 import Head from 'next/head'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import LessonPlayer from '../player/'
 import Description from './description'
 import Navigator from './navigator'

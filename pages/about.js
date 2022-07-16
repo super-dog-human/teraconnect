@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import getQueryParamsAsProps from '../libs/middlewares/getQueryParamsAsProps'
 import Head from 'next/head'
 import Layout from '../components/layout'

@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import useSessionExpireChecker from '../../../libs/hooks/useTokenExpireChecker'
 import useMobileDetector from '../../../libs/hooks/useMobileDetector'
 import useLesson from '../../../libs/hooks/lesson/useLesson'

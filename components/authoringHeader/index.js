@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useRef, useState } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import { useRouter } from 'next/router'
 import Container from '../container'
 import Spacer from '../spacer'

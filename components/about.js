@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import { useRouter } from 'next/router'
 import Spacer from './spacer'
 import PlainText from './plainText'

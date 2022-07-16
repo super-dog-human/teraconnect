@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import Image from 'next/image'
 import Flex from '../../flex'
 import FlexItem from '../../flexItem'

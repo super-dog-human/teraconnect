@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useEffect, useState } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import FallbackImage from './fallbackImage'
 
 const iconURL = process.env.NEXT_PUBLIC_GOOGLE_STORAGE_BUCKET_URL + '/user/'

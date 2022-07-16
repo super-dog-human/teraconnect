@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 
 export default function PlainText({ children, size, color, lineHeight, fontWeight, letterSpacing, fontFamily, whiteSpace, textShadow, userSelect }) {
   const bodyStyle = css({

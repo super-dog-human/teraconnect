@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import Draggable from 'react-draggable'
 import FullscreenContainer from '../../../fullscreenContainer'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import NewLine from './newLine/'
 import Avatar from './avatar/'
 import Drawing from './drawing/'

@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 
 const LessonAvatar = React.forwardRef(function lessonAvatar(props, ref) {
   return (

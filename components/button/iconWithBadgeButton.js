@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import Icon from '../icon'
 import AbsoluteContainer from '../absoluteContainer'
 import Container from '../container'

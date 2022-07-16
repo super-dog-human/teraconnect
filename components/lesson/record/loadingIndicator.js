@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import LoadingIndicator from '../../../components/loadingIndicator'
 import { useLessonRecorderContext } from '../../../libs/contexts/lessonRecorderContext'
 

@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useRef, useCallback, useEffect } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import ColorPicker from './colorPicker'
 import Spacer from './spacer'
 import useUnmountRef from '../libs/hooks/useUnmountRef'

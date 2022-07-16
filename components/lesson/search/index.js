@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import { connectInfiniteHits, connectSearchBox, PoweredBy } from 'react-instantsearch-dom'
 import { useInView } from 'react-intersection-observer'
 import Flex from '../../flex'

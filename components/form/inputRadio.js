@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/creactore'
 
 const InputRadio = React.forwardRef(function inputRadio(props, ref) {
   const { id, size, color, children, ...inputProps } = props

@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useEffect, useState } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import { useScreenClass } from 'react-grid-system'
 import useMobileDetector from '../../libs/hooks/useMobileDetector'
 import { useRouter } from 'next/router'

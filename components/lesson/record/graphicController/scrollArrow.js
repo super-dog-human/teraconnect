@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useRef, useEffect } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 
 const frameUnit = 20
 

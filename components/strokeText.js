@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useRef, useEffect, useState } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 
 export default function StrokeText({ children, parentWidth, sizeVW, color, borderColor }) {
   const containerRef = useRef()

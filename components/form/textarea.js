@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 
 const Textarea = React.forwardRef(function textarea(props, ref) {
   const { size, lineHeight, color, backgroundColor, borderColor, borderWidth, padding, ...inputProps } = props

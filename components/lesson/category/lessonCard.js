@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import PageLink from '../../pageLink'
 import Flex from '../../flex'
 import FlexItem from '../../flexItem'

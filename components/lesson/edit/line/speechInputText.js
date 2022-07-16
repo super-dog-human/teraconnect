@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import InputText from '../../../form/inputText'
 
 const SpeechInputText = React.forwardRef(function SpeechInputText(props, ref) {

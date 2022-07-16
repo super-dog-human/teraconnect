@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useRef, useState, useEffect } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import { useLessonRecorderContext } from '../../../libs/contexts/lessonRecorderContext'
 import usePreventBack from '../../../libs/hooks/lesson/record/usePreventBack'
 import useResizeDetector from '../../../libs/hooks/useResizeDetector'

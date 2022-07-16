@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { useEffect, useState } from 'react'
 import { Highlight } from 'react-instantsearch-dom'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import PageLink from '../../pageLink'
 import Flex from '../../flex'
 import FlexItem from '../../flexItem'

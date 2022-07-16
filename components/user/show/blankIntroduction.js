@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import Aspect16To9Container from '../../aspect16To9Container'
 import PlainText from '../../plainText'
 

@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 
 const Label = React.forwardRef(function label({ cursor, targetFor, children }, ref) {
   const bodyStyle = css({

@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import { signIn } from 'next-auth/react'
 import Flex from './flex'
 import Container from './container'

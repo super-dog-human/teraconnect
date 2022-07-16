@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from 'react'
 import { HexColorPicker } from 'react-colorful'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import InputText from './form/inputText'
 import Container from './container'
 import 'react-colorful/dist/index.css'

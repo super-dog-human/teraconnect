@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 
 export default function ContainerSpacer({ children, top, right, bottom, left }) {
   const bodyStyle = css({

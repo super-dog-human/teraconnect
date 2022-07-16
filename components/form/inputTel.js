@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 
 const InputTel = React.forwardRef(function inputTel(props, ref) {
   const { size, color, backgroundColor, borderColor, borderWidth, onlyNumeric, ...inputProps } = props

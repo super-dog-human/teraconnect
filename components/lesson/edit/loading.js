@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useRef } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import Container from '../../container'
 import Flex from '../../flex'
 import Spacer from '../../spacer'

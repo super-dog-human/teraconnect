@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 
 export default function Flex({ children, flexDirection, justifyContent, alignItems, alignContent, flexWrap, gap, afterWidth }) {
   const bodyStyle = css({

@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useEffect, useState } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import LoadingIndicator from './loadingIndicator'
 import { useImageViewerContext } from '../libs/contexts/imageViewerContext'
 

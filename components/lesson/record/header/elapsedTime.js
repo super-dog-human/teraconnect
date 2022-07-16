@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState, useEffect } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import { floatSecondsToMinutesFormat } from '../../../../libs/utils'
 
 export default function ElapsedTime({ elapsedSeconds }) {

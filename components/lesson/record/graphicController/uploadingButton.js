@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import UploadingIcon from './uploadingIcon'
 
 export default function uploadingButton({ onClick, disabled, isTouchDevice }) {

@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useRef } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import { Container, Row, Col } from 'react-grid-system'
 import useImageUploaderBar from '../../../../libs/hooks/lesson/record/useImageUploaderBar'
 import useImageControllerBar from '../../../../libs/hooks/lesson/record/useImageControllerBar'

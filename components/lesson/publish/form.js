@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, {useEffect, useState} from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import Image from 'next/image'
 import useLessonPublishing from '../../../libs/hooks/lesson/publish/useLessonPublishing'
 import useResourceLoader from '../../../libs/hooks/lesson/publish/useResourceLoader'

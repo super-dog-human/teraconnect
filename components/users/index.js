@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import useTouchDeviceDetector from '../../libs/hooks/useTouchDeviceDetector'
 import userUsers from '../../libs/hooks/user/useUsers'
 import Spacer from '../spacer'

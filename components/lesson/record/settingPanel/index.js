@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import 'react-tabs/style/react-tabs.css'
 import Draggable from 'react-draggable'
 import { Tab, Tabs, TabList, TabPanel, resetIdCounter } from 'react-tabs'

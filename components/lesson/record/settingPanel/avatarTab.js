@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useRef, useState, useEffect } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import { RgbaColorPicker } from 'react-colorful'
 import 'react-colorful/dist/index.css'
 import Flex from '../../../flex'

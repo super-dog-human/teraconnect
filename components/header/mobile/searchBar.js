@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useRef, useState, useEffect } from 'react'
-import { css } from '@emotion/core'
+import { css } from '@emotion/react'
 import { useRouter } from 'next/router'
 import { connectSearchBox } from 'react-instantsearch-dom'
 import Flex from '../../flex'
