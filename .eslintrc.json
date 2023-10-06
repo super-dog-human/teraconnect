@@ -8,7 +8,8 @@
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
-    "next"
+    "next",
+    "next/babel"
   ],
   "globals": {
     "Atomics": "readonly",
